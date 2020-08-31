@@ -44,7 +44,8 @@ If you want to pull central updates in both lxplus and github, I suggest you to 
     
 ## Suggestions for the common use of this repo
 
-In order to avoid facing angry github, before performing any changes in the lxplus repo, I recommend to pull every central updates you haven't in lxplus itself yet. Moreover, it could be better if you make a pull request right after you committed anything.
+In order to avoid facing angry github, before performing any changes in the lxplus repo, I recommend to pull every central updates you haven't in lxplus itself yet, when it's possible. Moreover, it could be better if you make a pull request right after you committed anything.
+
 # nanoAOD-tools: central README
 Tools for working with NanoAOD (requiring only python + root, not CMSSW)
 
