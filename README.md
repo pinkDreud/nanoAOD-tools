@@ -30,7 +30,7 @@ In this way, you can commit and push in your github repo any changes you made in
     git commit -a -m "anything useful to describe your changes"
     git push
     
-As usual, if add/remove any file, run
+As usual, if you add/remove any file, run
     
     git add/rm <your-local-file>
     
@@ -42,11 +42,7 @@ If you want to pull central updates in both lxplus and github, I suggest you to 
 
     git pull upstream VBS_PG
     
-## Suggestions for the common use of this repo
-
-In order to avoid facing angry github, before performing any changes in the lxplus repo, I recommend to pull every central updates you haven't in lxplus itself yet, when it's possible. Moreover, it could be better if you make a pull request right after you committed anything.
-
-# nanoAOD-tools: central README
+# nanoAOD-tools: CMS-central README
 Tools for working with NanoAOD (requiring only python + root, not CMSSW)
 
 ## Checkout instructions: standalone
