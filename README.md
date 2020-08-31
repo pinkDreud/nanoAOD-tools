@@ -1,4 +1,51 @@
-# nanoAOD-tools
+# nanoAOD-tools: README for PG users
+Tools for working with NanoAOD (requiring only python + root, not CMSSW)
+
+## Fork instructions
+
+First of all, make sure the active branch of this repo is "VBS_PG" and not master. 
+If you are reading these lines, you should already be in the right branch.
+
+After that, fork the repo and verify that, in your github, the default branch of nanoAOD-tools is VBS_PG. Otherwise, you can set that in "Settings".
+
+## Let's work in LXPLUS 
+At this stage you can log in your lxplus. As I'm working with CMSSW_10_5_0, it would be nice we work with the same CMSSW release.
+
+Anyway, after the routine procedure after logged in and moved in your favourite CMSSW_X_Y_Z/src, run the following command line:
+    
+    git clone git@github.com:<your_github_name>/nanoAOD-tools.git PhysicsTools/NanoAODTools
+    cd PhysicsTools/NanoAODTools
+    cmsenv
+    scram b
+
+It's important that, before locally cloning the repo, you have made sure the default branch of YOUR github repo is VBS_PG. If "master" is the default one, then you will clone all my W' stuff (good, but not great)
+
+After cloned, run:
+
+    git branch -u origin/VBS_PG
+    git remote add upstream git@github:anpicci/nanoAOD-tools.git
+    
+In this way, you can commit and push in your github repo any changes you made in lxplus in the right branch, as follows:
+
+    git commit -a -m "anything useful to describe your changes"
+    git push
+    
+As usual, if add/remove any file, run
+    
+    git add/rm <your-local-file>
+    
+before commiting-and-pushing.
+
+If you want your changes to appear in central (i.e., this one) repo, in order to share your work with the other people working with it, make a pull request from browser and send me an email to inform me about your update.
+
+If you want to pull central updates in both lxplus and github, I suggest you to run this command line:
+
+    git pull upstream VBS_PG
+    
+## Suggestions for the common use of this repo
+
+In order to avoid facing angry github, before performing any changes in the lxplus repo, I recommend to pull every central updates you haven't in lxplus itself yet. Moreover, it could be better if you make a pull request right after you committed anything.
+# nanoAOD-tools: central README
 Tools for working with NanoAOD (requiring only python + root, not CMSSW)
 
 ## Checkout instructions: standalone
