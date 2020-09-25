@@ -6,6 +6,7 @@ import copy as copy
 from os import path
 import array
 import types
+
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 def Chi_TopMass(mT):
@@ -55,6 +56,64 @@ def deltaR(eta1,phi1,eta2=None,phi2=None):
         return deltaR(eta1.eta,eta1.phi,phi1.eta,phi1.phi)
     ## otherwise
     return math.hypot(eta1-eta2, deltaPhi(phi1,phi2))
+
+def doesOverlap(eta1, phi1, eta2, phi2):
+    if deltaR(eta1, phi1, eta2, phi2)<0.4: return False
+    return True
+
+def FindSecondJet(jet, jetCollection):
+    k=0
+    for k in range(len(jetCollection)):
+        if jetCollection[k].pt<30:
+            return -1
+        if abs(jet.eta-jetCollection[k].eta)>2.5:
+            return k
+    return -1
+
+def SelectMuon(muCollection):
+    i=0
+    for i in range(len(muCollection)):
+        if not muCollection[i].isGlobal: continue
+        if muCollection[i].pt<35: continue
+        if abs(muCollection[i].eta)>2.4: continue 
+        if muCollection[i].pfRelIso03_all>0.15: continue 
+        return i
+    return -1
+
+def SelectTau(tauCollection):
+    i=0
+    for i in range(len(tauCollection)):
+        if tauCollection[i].idMVAnewDM2017v2<8: continue #medium WP
+        if tauCollection[i].pt<30: continue
+        if abs(tauCollection[i].eta)>2.4: continue
+        return i
+    return -1
+
+def BVeto(jetCollection):
+    k=0
+    for k in range(len(jetCollection)):
+        if jetCollection[k].btagCSVV2<0.5803: continue #b-tag WP from https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
+        if jetCollection[k].pt<30: return True
+    return False
+
+
+def IsNotTheSameObject(obj1, obj2):
+    if obj1.pt==obj2.pt and obj1.eta==obj2.eta and obj1.phi==obj2.phi: return False
+    return True
+
+def LepVetoOneCollection(GoodLepton, collection, relIsoCut, ptCut, etaCut):
+    i=0
+    for i in range(len(collection)):
+        lep=collection[i]
+        if IsNotTheSameObject(GoodLepton, lep): 
+            if lep.pfRelIso03_all>relIsoCut: continue
+            if lep.pt<ptCut: continue
+            if abs(lep.eta)>etaCut: continue
+            return False
+    return True
+
+def LepVeto(GoodLepton, ElectronCollection, MuonCollection):
+    return LepVetoOneCollection(GoodLepton, ElectronCollection, 0.0994, 15, 2.4)*LepVetoOneCollection(GoodLepton, MuonCollection, 0.25, 10, 2.4)
 
 def closest(obj,collection,presel=lambda x,y: True):
     ret = None; drMin = 999
@@ -1540,6 +1599,7 @@ class systWeights(object):
             if addPDF:
                 if not useOnlyNominal:
                     filesout[MAX+(MAX+1)*(c)].Close()
+
 ###############################################
 ###        End of tree_skimmer_utlis        ###
 ###############################################
