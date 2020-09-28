@@ -27,7 +27,8 @@ ROOT.gROOT.SetBatch()
 
 chain = ROOT.TChain('Events')
 print(chain)
-chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WpWp_EWK_2017_nanoAOD_file_prova.root")
+#chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WpWp_EWK_2017_nanoAOD_file_prova.root")
+chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WJets_102x_prova.root")
 
 print("Number of events in chain " + str(chain.GetEntries()))
 print("Number of events in tree from chain " + str((chain.GetTree()).GetEntries()))
@@ -39,6 +40,7 @@ print("Number of entries: " +str(tree.GetEntries()))
 print("tree: ", tree)
 
 cut=[0 for i in range(9)]
+badTau=0
 
 for i in range(tree.GetEntries()):
     
@@ -56,13 +58,7 @@ for i in range(tree.GetEntries()):
     
     #trigger
     if not (HLT.IsoMu27 or HLT.Ele32_WPTight_Gsf_L1DoubleEG): continue
-    noGoodTau=False
-    for i in range(len(taus)):
-        if taus[i].idMVAoldDM2017v1<4:
-            noGoodTau=True
-            break
-    if noGoodTau: continue
-
+    
     cut[0]+=1
     #reinserisci tagli con espressioni lambda
     #controlla lunghezza lista
@@ -83,9 +79,11 @@ for i in range(tree.GetEntries()):
     if len(taus)<1: continue
     indexGoodTau=SelectTau(taus)
     if indexGoodTau<0: continue
-    cut[3]+=1
     GoodTau=taus[indexGoodTau]
- 
+   
+    if(deltaR(GoodTau.eta, GoodTau.phi, GoodMu.eta, GoodMu.phi)<0.4): continue 
+    cut[3]+=1
+    
     #leptone e tau dello stesso segno
     if not GoodTau.charge==GoodMu.charge: continue
     cut[4]+=1
@@ -113,24 +111,12 @@ for i in range(tree.GetEntries()):
     if metCut(met): continue
     cut[8]+=1
 
+print("il numero di tau coincidenti con mu is"+ str(badTau))
 
 print("numero di eventi selezionati: ")
 for i in range (0,9):
-    print(cut[i])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    efficienza=0.0
+    if i==0: efficienza=cut[i]*1.0/tree.GetEntries()
+    else: efficienza=cut[i]*1.0/cut[i-1]
+    print("taglio: " + str(i)+ " # eventi: "+ str(cut[i]) + " efficienza del taglio: "+ str(efficienza))
 

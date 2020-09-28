@@ -80,8 +80,7 @@ def SelectMuon(muCollection):
 
 def SelectTau(tauCollection):
     for i in range(len(tauCollection)):
-        print(tauCollection[i].idMVAoldDM2017v1)
-        if tauCollection[i].idMVAoldDM2017v1<8: continue #tight WP
+        if tauCollection[i].idDeepTau2017v2p1VSjet<16:  continue #tight WP
         if tauCollection[i].pt<30: continue
         if abs(tauCollection[i].eta)>2.4: continue
         return i
