@@ -62,7 +62,6 @@ def doesOverlap(eta1, phi1, eta2, phi2):
     return True
 
 def FindSecondJet(jet, jetCollection):
-    k=0
     for k in range(len(jetCollection)):
         if jetCollection[k].pt<30:
             return -1
@@ -71,7 +70,6 @@ def FindSecondJet(jet, jetCollection):
     return -1
 
 def SelectMuon(muCollection):
-    i=0
     for i in range(len(muCollection)):
         if not muCollection[i].isGlobal: continue
         if muCollection[i].pt<35: continue
@@ -81,16 +79,14 @@ def SelectMuon(muCollection):
     return -1
 
 def SelectTau(tauCollection):
-    i=0
     for i in range(len(tauCollection)):
-        if tauCollection[i].idMVAnewDM2017v2<8: continue #medium WP
+        if tauCollection[i].idDeepTau2017v2p1VSjet<16:  continue #tight WP
         if tauCollection[i].pt<30: continue
         if abs(tauCollection[i].eta)>2.4: continue
         return i
     return -1
 
 def BVeto(jetCollection):
-    k=0
     for k in range(len(jetCollection)):
         if jetCollection[k].btagCSVV2<0.5803: continue #b-tag WP from https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
         if jetCollection[k].pt<30: return True
@@ -98,8 +94,9 @@ def BVeto(jetCollection):
 
 
 def IsNotTheSameObject(obj1, obj2):
-    if obj1.pt==obj2.pt and obj1.eta==obj2.eta and obj1.phi==obj2.phi: return False
+    if obj1==obj2: return False
     return True
+    
 
 def LepVetoOneCollection(GoodLepton, collection, relIsoCut, ptCut, etaCut):
     i=0
@@ -114,6 +111,27 @@ def LepVetoOneCollection(GoodLepton, collection, relIsoCut, ptCut, etaCut):
 
 def LepVeto(GoodLepton, ElectronCollection, MuonCollection):
     return LepVetoOneCollection(GoodLepton, ElectronCollection, 0.0994, 15, 2.4)*LepVetoOneCollection(GoodLepton, MuonCollection, 0.25, 10, 2.4)
+
+def JetSelection(jetCollection):
+    if jetCollection==None: return -999
+    GoodJet=jetCollection[0]
+    secondJetIndex=FindSecondJet(GoodJet, jetCollection)
+    if secondJetIndex>0: return GoodJet, jetCollection[secondJetIndex]
+    else:
+        jetCollection.remove(GoodJet)
+        if len(jetCollection)==1:
+            return -999
+        else: return JetSelection(jetCollection)
+
+
+def JetCut(jet1, jet2):
+    if (jet1+jet2).M()<500: return True
+    return False
+
+def metCut(met):
+    if met.pt<40: return True
+    return False
+
 
 def closest(obj,collection,presel=lambda x,y: True):
     ret = None; drMin = 999
