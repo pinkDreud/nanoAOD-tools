@@ -28,7 +28,7 @@ ROOT.gROOT.SetBatch()
 chain = ROOT.TChain('Events')
 print(chain)
 #chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WpWp_EWK_2017_nanoAOD_file_prova.root")
-chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WJets_102x_prova.root")
+chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WpWp_EWK_2017_nanoAOD_file_prova.root")
 
 print("Number of events in chain " + str(chain.GetEntries()))
 print("Number of events in tree from chain " + str((chain.GetTree()).GetEntries()))
@@ -77,11 +77,10 @@ for i in range(tree.GetEntries()):
     cut[2]+=1
     #selezione tau
     if len(taus)<1: continue
-    indexGoodTau=SelectTau(taus)
+    indexGoodTau=SelectTau(taus, GoodMu)
     if indexGoodTau<0: continue
     GoodTau=taus[indexGoodTau]
    
-    if(deltaR(GoodTau.eta, GoodTau.phi, GoodMu.eta, GoodMu.phi)<0.4): continue 
     cut[3]+=1
     
     #leptone e tau dello stesso segno
@@ -91,7 +90,7 @@ for i in range(tree.GetEntries()):
     #prova lista con funzione ricorsiva per scegliere i jet
     if len(jets)<2: continue
     if jets[0].pt<30: continue
-    outputJetSel=JetSelection(list(jets))
+    outputJetSel=JetSelection(list(jets), GoodTau, GoodMu)
     if outputJetSel==-999: continue
     jet1, jet2=outputJetSel
     cut[5]+=1
