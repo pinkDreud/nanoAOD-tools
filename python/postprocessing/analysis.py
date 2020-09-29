@@ -39,8 +39,21 @@ tree = InputTree(chain)
 print("Number of entries: " +str(tree.GetEntries()))
 print("tree: ", tree)
 
-cut=[0 for i in range(9)]
-badTau=0
+
+
+Cut_dict = {1: ['Trigger             ', 0, 0.0],
+            2: ['Lepton selection    ', 0, 0.0],
+            3: ['Lepton Veto         ', 0, 0.0],
+            4: ['Tau selection       ', 0, 0.0],
+            5: ['Same charge tau lep ', 0, 0.0],
+            6: ['Jet Selection       ', 0, 0.0],
+            7: ['BVeto               ', 0, 0.0],
+            8: ['M_jj>500 GeV        ', 0, 0.0],
+            9: ['MET>40 GeV          ', 0, 0.0],
+        }
+
+
+nEntriesTotal=tree.GetEntries()
 
 for i in range(tree.GetEntries()):
     
@@ -58,8 +71,7 @@ for i in range(tree.GetEntries()):
     
     #trigger
     if not (HLT.IsoMu27 or HLT.Ele32_WPTight_Gsf_L1DoubleEG): continue
-    
-    cut[0]+=1
+    Cut_dict[1][1]+=1  
     #reinserisci tagli con espressioni lambda
     #controlla lunghezza lista
     #prendi primo el. lista
@@ -70,22 +82,22 @@ for i in range(tree.GetEntries()):
     indexGoodMu=SelectMuon(muons)
     if indexGoodMu<0: continue
     GoodMu=muons[indexGoodMu]
-    cut[1]+=1
+    Cut_dict[2][1]+=1  
 
     #veto su leptoni poco isolati addizionali
     if not LepVeto(GoodMu, electrons, muons): continue
-    cut[2]+=1
+    Cut_dict[3][1]+=1  
     #selezione tau
     if len(taus)<1: continue
     indexGoodTau=SelectTau(taus, GoodMu)
     if indexGoodTau<0: continue
     GoodTau=taus[indexGoodTau]
    
-    cut[3]+=1
+    Cut_dict[4][1]+=1  
     
     #leptone e tau dello stesso segno
     if not GoodTau.charge==GoodMu.charge: continue
-    cut[4]+=1
+    Cut_dict[5][1]+=1  
     #due jet da segnatura VBS
     #prova lista con funzione ricorsiva per scegliere i jet
     if len(jets)<2: continue
@@ -93,29 +105,26 @@ for i in range(tree.GetEntries()):
     outputJetSel=JetSelection(list(jets), GoodTau, GoodMu)
     if outputJetSel==-999: continue
     jet1, jet2=outputJetSel
-    cut[5]+=1
+    Cut_dict[6][1]+=1  
     #fin qui tutti i tagli applicati si possono implementare nella preselezione, solo selezione degli oggetti nello stato finale
 
     #bveto
     if BVeto(jets): continue
-    cut[6]+=1
+    Cut_dict[7][1]+=1  
     LeadJet=ROOT.TLorentzVector()
     SubleadJet=ROOT.TLorentzVector()
     LeadJet.SetPtEtaPhiM(jet1.pt, jet1.eta, jet1.phi, jet1.mass)
     SubleadJet.SetPtEtaPhiM(jet2.pt, jet2.eta, jet2.phi, jet2.mass) 
     #taglio massa invariante jet
     if JetCut(LeadJet, SubleadJet): continue
-    cut[7]+=1
+    Cut_dict[8][1]+=1  
     #taglio sulla met
     if metCut(met): continue
-    cut[8]+=1
+    Cut_dict[9][1]+=1  
 
-print("il numero di tau coincidenti con mu is"+ str(badTau))
+for i in range(1,10):
+    if i==1: Cut_dict[i][2]=Cut_dict[i][1]*1.0/nEntriesTotal
+    else: Cut_dict[i][2]=Cut_dict[i][1]*1.0/Cut_dict[i-1][1]
 
-print("numero di eventi selezionati: ")
-for i in range (0,9):
-    efficienza=0.0
-    if i==0: efficienza=cut[i]*1.0/tree.GetEntries()
-    else: efficienza=cut[i]*1.0/cut[i-1]
-    print("taglio: " + str(i)+ " # eventi: "+ str(cut[i]) + " efficienza del taglio: "+ str(efficienza))
-
+for cutname, counts in Cut_dict.items():
+    print counts[0], "\tcountings: ", counts[1], "\tefficiency: ", counts[2]
