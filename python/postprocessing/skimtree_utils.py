@@ -61,12 +61,13 @@ def doesOverlap(eta1, phi1, eta2, phi2):
     if deltaR(eta1, phi1, eta2, phi2)<0.4: return False
     return True
 
-def FindSecondJet(jet, jetCollection):
+def FindSecondJet(jet, jetCollection, GoodTau, GoodMu):
     for k in range(len(jetCollection)):
         if jetCollection[k].pt<30:
             return -1
         if abs(jet.eta-jetCollection[k].eta)>2.5:
-            return k
+            if deltaR(jet.eta, jet.phi, GoodTau.eta, GoodTau.phi)>0.4 or deltaR(jet.eta, jet.phi, GoodMu.eta, GoodMu.phi)>0.4:
+                return k
     return -1
 
 def SelectMuon(muCollection):
@@ -78,8 +79,9 @@ def SelectMuon(muCollection):
         return i
     return -1
 
-def SelectTau(tauCollection):
+def SelectTau(tauCollection, GoodMuon):
     for i in range(len(tauCollection)):
+        if deltaR(tauCollection[i].eta, tauCollection[i].phi, GoodMuon.eta, GoodMuon.phi)<0.4: continue
         if tauCollection[i].idDeepTau2017v2p1VSjet<16:  continue #tight WP
         if tauCollection[i].pt<30: continue
         if abs(tauCollection[i].eta)>2.4: continue
@@ -112,16 +114,26 @@ def LepVetoOneCollection(GoodLepton, collection, relIsoCut, ptCut, etaCut):
 def LepVeto(GoodLepton, ElectronCollection, MuonCollection):
     return LepVetoOneCollection(GoodLepton, ElectronCollection, 0.0994, 15, 2.4)*LepVetoOneCollection(GoodLepton, MuonCollection, 0.25, 10, 2.4)
 
-def JetSelection(jetCollection):
+
+#semplifica la macro
+def JetSelection(jetCollection, GoodTau, GoodMu):
     if jetCollection==None: return -999
+    #select higher pT jet
     GoodJet=jetCollection[0]
-    secondJetIndex=FindSecondJet(GoodJet, jetCollection)
+    #if the jet matches in dR one of the previously selected particles (e, tau), than it searches in the other jets
+    if deltaR(GoodJet.eta, GoodJet.phi, GoodTau.eta, GoodTau.phi)<0.4 or deltaR(GoodJet.eta, GoodJet.phi, GoodMu.eta, GoodMu.phi)<0.4: 
+        jetCollection.remove(GoodJet)
+        if len(jetCollection)==1:
+             return -999
+        return JetSelection(jetCollection, GoodTau, GoodMu)
+    #searches for the best second jet
+    secondJetIndex=FindSecondJet(GoodJet, jetCollection, GoodTau, GoodMu)
     if secondJetIndex>0: return GoodJet, jetCollection[secondJetIndex]
     else:
         jetCollection.remove(GoodJet)
         if len(jetCollection)==1:
             return -999
-        else: return JetSelection(jetCollection)
+        else: return JetSelection(jetCollection, GoodTau, GoodMu)
 
 
 def JetCut(jet1, jet2):
