@@ -41,22 +41,22 @@ print("tree: ", tree)
 
 
 
-Cut_dict = {1: ['Trigger             ', 0, 0.0],
-            2: ['Lepton selection    ', 0, 0.0],
-            3: ['Lepton Veto         ', 0, 0.0],
-            4: ['Tau selection       ', 0, 0.0],
-            5: ['Same charge tau lep ', 0, 0.0],
-            6: ['Jet Selection       ', 0, 0.0],
-            7: ['BVeto               ', 0, 0.0],
-            8: ['M_jj>500 GeV        ', 0, 0.0],
-            9: ['MET>40 GeV          ', 0, 0.0],
+Cut_dict = {1: ['Trigger             ', 0, 0.0, 0.0],
+            2: ['Lepton selection    ', 0, 0.0, 0.0],
+            3: ['Lepton Veto         ', 0, 0.0, 0.0],
+            4: ['Tau selection       ', 0, 0.0, 0.0],
+            5: ['Same charge tau lep ', 0, 0.0, 0.0],
+            6: ['Jet Selection       ', 0, 0.0, 0.0],
+            7: ['BVeto               ', 0, 0.0, 0.0],
+            8: ['M_jj>500 GeV        ', 0, 0.0, 0.0],
+            9: ['MET>40 GeV          ', 0, 0.0, 0.0],
         }
 
 
 nEntriesTotal=tree.GetEntries()
 
 for i in range(tree.GetEntries()):
-    
+  
     event = Event(tree,i)
     electrons = Collection(event, "Electron")
     muons = Collection(event, "Muon")
@@ -123,8 +123,12 @@ for i in range(tree.GetEntries()):
     Cut_dict[9][1]+=1  
 
 for i in range(1,10):
-    if i==1: Cut_dict[i][2]=Cut_dict[i][1]*1.0/nEntriesTotal
-    else: Cut_dict[i][2]=Cut_dict[i][1]*1.0/Cut_dict[i-1][1]
+    if i==1:
+        Cut_dict[i][2]=Cut_dict[i][1]*1.0/nEntriesTotal
+        Cut_dict[i][3]=Cut_dict[i][1]*1.0/nEntriesTotal
+    else:
+        Cut_dict[i][2]=Cut_dict[i][1]*1.0/Cut_dict[i-1][1]
+        Cut_dict[i][3]=Cut_dict[i][1]*1.0/nEntriesTotal
 
 for cutname, counts in Cut_dict.items():
-    print counts[0], "\tcountings: ", counts[1], "\tefficiency: ", counts[2]
+    print counts[0], "\tcountings: ", counts[1], "\teff. wrt. previous: ", counts[2], "\teff wrt. total: ", counts[3]

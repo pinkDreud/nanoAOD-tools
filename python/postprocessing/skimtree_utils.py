@@ -9,6 +9,25 @@ import types
 
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
+WP_btagger = {
+  "CSVv2":{
+    "L": 0.5803,
+    "M": 0.8838,
+    "T": 0.9693,
+  },
+  "DeepCSV":{
+    "L": 0.1522,
+    "M": 0.4941,
+    "T": 0.8001,
+  },
+  "DeepFlv":{
+    "L": 0.0521,
+    "M": 0.3033,
+    "T": 0.7489,
+  },
+}
+
+
 def Chi_TopMass(mT):
   sigma = 28.8273
   mST = 174.729
@@ -82,17 +101,23 @@ def SelectMuon(muCollection):
 def SelectTau(tauCollection, GoodMuon):
     for i in range(len(tauCollection)):
         if deltaR(tauCollection[i].eta, tauCollection[i].phi, GoodMuon.eta, GoodMuon.phi)<0.4: continue
-        if tauCollection[i].idDeepTau2017v2p1VSjet<16:  continue #tight WP
+        if not (tauCollection[i].idDeepTau2017v2p1VSjet>15 and (tauCollection[i].idDeepTau2017v2p1VSe>1 or tauCollection[i].idDeepTau2017v2p1VSmu>1) and tauCollection[i].idDecayModeNewDMs):  continue #tight WP
         if tauCollection[i].pt<30: continue
         if abs(tauCollection[i].eta)>2.4: continue
         return i
     return -1
 
 def BVeto(jetCollection):
+    veto = False
     for k in range(len(jetCollection)):
-        if jetCollection[k].btagCSVV2<0.5803: continue #b-tag WP from https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
-        if jetCollection[k].pt<30: return True
-    return False
+        if (jetCollection[k].btagCSVV2>WP_btagger["CSVv2"]["L"])*(jetCollection[k].pt>30):
+            veto = True
+            break
+        else: continue
+    return veto
+        #if jetCollection[k].btagCSVV2<0.5803: continue #b-tag WP from https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
+        #if jetCollection[k].pt>30.: return True
+    #return False
 
 
 def IsNotTheSameObject(obj1, obj2):
