@@ -85,7 +85,7 @@ def FindSecondJet(jet, jetCollection, GoodTau, GoodMu):
         if jetCollection[k].pt<30:
             return -1
         if abs(jet.eta-jetCollection[k].eta)>2.5:
-            if deltaR(jet.eta, jet.phi, GoodTau.eta, GoodTau.phi)>0.4 or deltaR(jet.eta, jet.phi, GoodMu.eta, GoodMu.phi)>0.4:
+            if deltaR(jet.eta, jet.phi, GoodTau.eta, GoodTau.phi)>0.5 or deltaR(jet.eta, jet.phi, GoodMu.eta, GoodMu.phi)>0.5:
                 return k
     return -1
 
@@ -100,8 +100,10 @@ def SelectMuon(muCollection):
 
 def SelectTau(tauCollection, GoodMuon):
     for i in range(len(tauCollection)):
-        if deltaR(tauCollection[i].eta, tauCollection[i].phi, GoodMuon.eta, GoodMuon.phi)<0.4: continue
-        if not (tauCollection[i].idDeepTau2017v2p1VSjet>15 and (tauCollection[i].idDeepTau2017v2p1VSe>1 or tauCollection[i].idDeepTau2017v2p1VSmu>1) and tauCollection[i].idDecayModeNewDMs):  continue #tight WP
+        if deltaR(tauCollection[i].eta, tauCollection[i].phi, GoodMuon.eta, GoodMuon.phi)<0.5: continue
+        if not (tauCollection[i].idDeepTau2017v2p1VSjet>=16 and tauCollection[i].idDeepTau2017v2p1VSe>=2 and tauCollection[i].idDeepTau2017v2p1VSmu>=2 and tauCollection[i].idDecayModeNewDMs):
+        #if not(tauCollection[i].idMVAoldDM2017v1 >=8 and tauCollection[i].idAntiEle2018 >= 2 and tauCollection[i].idAntiMu >= 1):
+          continue #medium WP
         if tauCollection[i].pt<30: continue
         if abs(tauCollection[i].eta)>2.4: continue
         return i
@@ -146,7 +148,7 @@ def JetSelection(jetCollection, GoodTau, GoodMu):
     #select higher pT jet
     GoodJet=jetCollection[0]
     #if the jet matches in dR one of the previously selected particles (e, tau), than it searches in the other jets
-    if deltaR(GoodJet.eta, GoodJet.phi, GoodTau.eta, GoodTau.phi)<0.4 or deltaR(GoodJet.eta, GoodJet.phi, GoodMu.eta, GoodMu.phi)<0.4: 
+    if deltaR(GoodJet.eta, GoodJet.phi, GoodTau.eta, GoodTau.phi)<0.5 or deltaR(GoodJet.eta, GoodJet.phi, GoodMu.eta, GoodMu.phi)<0.4: 
         jetCollection.remove(GoodJet)
         if len(jetCollection)==1:
              return -999

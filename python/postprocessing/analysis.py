@@ -28,7 +28,8 @@ ROOT.gROOT.SetBatch()
 chain = ROOT.TChain('Events')
 print(chain)
 #chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WpWp_EWK_2017_nanoAOD_file_prova.root")
-chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WpWp_EWK_2017_nanoAOD_file_prova.root")
+#chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WpWp_EWK_2017_nanoAOD_file_prova.root")
+chain.Add("WpWpJJ_EWK_2018.root")
 
 print("Number of events in chain " + str(chain.GetEntries()))
 print("Number of events in tree from chain " + str((chain.GetTree()).GetEntries()))
@@ -38,7 +39,6 @@ print("Type of tree from chain " + str(type(chain.GetTree())))
 tree = InputTree(chain)
 print("Number of entries: " +str(tree.GetEntries()))
 print("tree: ", tree)
-
 
 
 Cut_dict = {1: ['Trigger             ', 0, 0.0, 0.0],
@@ -131,4 +131,4 @@ for i in range(1,10):
         Cut_dict[i][3]=Cut_dict[i][1]*1.0/nEntriesTotal
 
 for cutname, counts in Cut_dict.items():
-    print counts[0], "\tcountings: ", counts[1], "\teff. wrt. previous: ", counts[2], "\teff wrt. total: ", counts[3]
+    print counts[0], "\tcountings: ", round(counts[1], 4), "\teff. wrt. previous: ", round(counts[2], 4), "\teff wrt. total: ", round(counts[3], 4)
