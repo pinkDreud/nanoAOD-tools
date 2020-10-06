@@ -6,6 +6,7 @@ import copy as copy
 from os import path
 import array
 import types
+from CutsAndValues import *
 
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
@@ -82,37 +83,37 @@ def doesOverlap(eta1, phi1, eta2, phi2):
 
 def FindSecondJet(jet, jetCollection, GoodTau, GoodMu):
     for k in range(len(jetCollection)):
-        if jetCollection[k].pt<30:
+        if abs(jetCollection[k].eta)>ETA_CUT_JET: continue
+        if jetCollection[k].pt<PT_CUT_JET:
             return -1
-        if abs(jet.eta-jetCollection[k].eta)>2.5:
-            if deltaR(jet.eta, jet.phi, GoodTau.eta, GoodTau.phi)>0.5 or deltaR(jet.eta, jet.phi, GoodMu.eta, GoodMu.phi)>0.5:
+        if abs(jet.eta-jetCollection[k].eta)>DELTAETA_JJ_CUT:
+            if deltaR(jet.eta, jet.phi, GoodTau.eta, GoodTau.phi)>DR_OVERLAP_CONE_TAU or deltaR(jet.eta, jet.phi, GoodMu.eta, GoodMu.phi)>DR_OVERLAP_CONE_OTHER:
                 return k
     return -1
 
 def SelectMuon(muCollection):
     for i in range(len(muCollection)):
         if not muCollection[i].isGlobal: continue
-        if muCollection[i].pt<35: continue
-        if abs(muCollection[i].eta)>2.4: continue 
-        if muCollection[i].pfRelIso03_all>0.15: continue 
+        if muCollection[i].pt<PT_CUT_MU: continue
+        if abs(muCollection[i].eta)>ETA_CUT_MU: continue 
+        if muCollection[i].pfRelIso03_all>ISO_CUT_MU: continue 
         return i
     return -1
 
 def SelectTau(tauCollection, GoodMuon):
     for i in range(len(tauCollection)):
-        if deltaR(tauCollection[i].eta, tauCollection[i].phi, GoodMuon.eta, GoodMuon.phi)<0.5: continue
-        if not (tauCollection[i].idDeepTau2017v2p1VSjet>=16 and tauCollection[i].idDeepTau2017v2p1VSe>=2 and tauCollection[i].idDeepTau2017v2p1VSmu>=2 and tauCollection[i].idDecayModeNewDMs):
-        #if not(tauCollection[i].idMVAoldDM2017v1 >=8 and tauCollection[i].idAntiEle2018 >= 2 and tauCollection[i].idAntiMu >= 1):
+        if deltaR(tauCollection[i].eta, tauCollection[i].phi, GoodMuon.eta, GoodMuon.phi)<DR_OVERLAP_CONE_TAU: continue
+        if not (tauCollection[i].idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET and tauCollection[i].idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and tauCollection[i].idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and tauCollection[i].idDecayModeNewDMs):
           continue #medium WP
-        if tauCollection[i].pt<30: continue
-        if abs(tauCollection[i].eta)>2.4: continue
+        if tauCollection[i].pt<PT_CUT_TAU: continue
+        if abs(tauCollection[i].eta)>ETA_CUT_TAU: continue
         return i
     return -1
 
 def BVeto(jetCollection):
     veto = False
     for k in range(len(jetCollection)):
-        if (jetCollection[k].btagCSVV2>WP_btagger["CSVv2"]["L"])*(jetCollection[k].pt>30):
+        if (jetCollection[k].btagCSVV2>WP_btagger[BTAG_ALGO][BTAG_WP])*(jetCollection[k].pt>BTAG_PT_CUT)*abs(jetCollection[k].eta<BTAG_ETA_CUT):
             veto = True
             break
         else: continue
@@ -139,7 +140,8 @@ def LepVetoOneCollection(GoodLepton, collection, relIsoCut, ptCut, etaCut):
     return True
 
 def LepVeto(GoodLepton, ElectronCollection, MuonCollection):
-    return LepVetoOneCollection(GoodLepton, ElectronCollection, 0.0994, 15, 2.4)*LepVetoOneCollection(GoodLepton, MuonCollection, 0.25, 10, 2.4)
+    return LepVetoOneCollection(GoodLepton, ElectronCollection, REL_ISO_CUT_LEP_VETO_ELE, PT_CUT_LEP_VETO_ELE, ETA_CUT_LEP_VETO_ELE)*LepVetoOneCollection(GoodLepton, MuonCollection, REL_ISO_CUT_LEP_VETO_MU, PT_CUT_LEP_VETO_MU, ETA_CUT_LEP_VETO_MU)
+
 
 
 #semplifica la macro
@@ -148,11 +150,12 @@ def JetSelection(jetCollection, GoodTau, GoodMu):
     #select higher pT jet
     GoodJet=jetCollection[0]
     #if the jet matches in dR one of the previously selected particles (e, tau), than it searches in the other jets
-    if deltaR(GoodJet.eta, GoodJet.phi, GoodTau.eta, GoodTau.phi)<0.5 or deltaR(GoodJet.eta, GoodJet.phi, GoodMu.eta, GoodMu.phi)<0.4: 
+    if deltaR(GoodJet.eta, GoodJet.phi, GoodTau.eta, GoodTau.phi)<DR_OVERLAP_CONE_TAU or deltaR(GoodJet.eta, GoodJet.phi, GoodMu.eta, GoodMu.phi)<DR_OVERLAP_CONE_OTHER: 
         jetCollection.remove(GoodJet)
         if len(jetCollection)==1:
              return -999
         return JetSelection(jetCollection, GoodTau, GoodMu)
+    
     #searches for the best second jet
     secondJetIndex=FindSecondJet(GoodJet, jetCollection, GoodTau, GoodMu)
     if secondJetIndex>0: return GoodJet, jetCollection[secondJetIndex]
@@ -164,11 +167,11 @@ def JetSelection(jetCollection, GoodTau, GoodMu):
 
 
 def JetCut(jet1, jet2):
-    if (jet1+jet2).M()<500: return True
+    if (jet1+jet2).M()<M_JJ_CUT: return True
     return False
 
 def metCut(met):
-    if met.pt<40: return True
+    if met.pt<MET_CUT: return True
     return False
 
 
