@@ -45,7 +45,7 @@
   <link rel="assets" href="https://github.githubassets.com/">
   
 
-  <meta name="request-id" content="EE46:FC86:133571B8:1BF5C31F:5F7C1B0C" data-pjax-transient="true"/><meta name="html-safe-nonce" content="93d1164e5b39f809a389852d566ef7f4961a91e6" data-pjax-transient="true"/><meta name="visitor-payload" content="eyJyZWZlcnJlciI6IiIsInJlcXVlc3RfaWQiOiJFRTQ2OkZDODY6MTMzNTcxQjg6MUJGNUMzMUY6NUY3QzFCMEMiLCJ2aXNpdG9yX2lkIjoiNjMxNDc3MzYwNjY4NTIxOTU5NiIsInJlZ2lvbl9lZGdlIjoiZnJhIiwicmVnaW9uX3JlbmRlciI6ImZyYSJ9" data-pjax-transient="true"/><meta name="visitor-hmac" content="f7cb5777f9c5478bc20be67f617dd15aaade297671d2378a026cdc1e01b985f4" data-pjax-transient="true"/><meta name="cookie-consent-required" content="false" data-pjax-transient="true"/>
+  <meta name="request-id" content="8B84:A561:19A34A73:25E670A6:5F7C1F46" data-pjax-transient="true"/><meta name="html-safe-nonce" content="7465981fac9b6036b7fd0f68fa705a461586ad26" data-pjax-transient="true"/><meta name="visitor-payload" content="eyJyZWZlcnJlciI6IiIsInJlcXVlc3RfaWQiOiI4Qjg0OkE1NjE6MTlBMzRBNzM6MjVFNjcwQTY6NUY3QzFGNDYiLCJ2aXNpdG9yX2lkIjoiNTI2NTE1NjAzNDE2NjI2NzcxOCIsInJlZ2lvbl9lZGdlIjoiZnJhIiwicmVnaW9uX3JlbmRlciI6ImZyYSJ9" data-pjax-transient="true"/><meta name="visitor-hmac" content="797a1171ca527d7d2b5eb318fd20be34c67821732274775e63641880bcb8e1de" data-pjax-transient="true"/><meta name="cookie-consent-required" content="false" data-pjax-transient="true"/>
 
     <meta name="hovercard-subject-tag" content="repository:224708583" data-pjax-transient>
 
@@ -295,7 +295,7 @@
           spellcheck="false"
           autocomplete="off"
           >
-          <input type="hidden" data-csrf="true" class="js-data-jump-to-suggestions-path-csrf" value="8cT5Rv64vC0/+wg6y/dhf/VVJYNL96vQK/ZEaAeFzaeFfbLHx5T4NNBZMH4qxFcLHohQEv7PX7vUjC6J8+uV6A==" />
+          <input type="hidden" data-csrf="true" class="js-data-jump-to-suggestions-path-csrf" value="F+Sc1FNc/dHKdGrIgJn4TrBVaMhLj1FpdcwS3VQOLoPFpYVgm7UCGzddhRoCi0yMsCtj836oPi8LcFkQqcBh7w==" />
           <input type="hidden" class="js-site-search-type-field" name="type" >
             <img src="https://github.githubassets.com/images/search-key-slash.svg" alt="" class="mr-2 header-search-key-slash">
 
@@ -766,77 +766,17 @@
 
 
     <div class="Box d-flex flex-column flex-shrink-0 mb-3">
-      
-  <div class="Box-header Box-header--blue Details js-details-container">
-      <div class="d-flex flex-items-center">
-        <span class="flex-shrink-0 ml-n1 mr-n1 mt-n1 mb-n1">
-          <a rel="author" data-skip-pjax="true" data-hovercard-type="user" data-hovercard-url="/users/anpicci/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/anpicci"><img class="avatar avatar-user" src="https://avatars0.githubusercontent.com/u/44297061?s=48&amp;v=4" width="24" height="24" alt="@anpicci" /></a>
-        </span>
-        <div class="flex-1 d-flex flex-items-center ml-3 min-width-0">
-          <div class="css-truncate css-truncate-overflow">
-            <a class="text-bold link-gray-dark" rel="author" data-hovercard-type="user" data-hovercard-url="/users/anpicci/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/anpicci">anpicci</a>
-
-              <span>
-                <a data-pjax="true" title="analysis updates" class="link-gray" href="/anpicci/nanoAOD-tools/commit/76aa5079458726f3bb88fe5faaabf91553731b26">analysis updates</a>
-              </span>
-          </div>
-
-
-          <span class="ml-2">
-            <include-fragment accept="text/fragment+html" src="/anpicci/nanoAOD-tools/commit/76aa5079458726f3bb88fe5faaabf91553731b26/rollup?direction=e" class="d-inline"></include-fragment>
-          </span>
+      <include-fragment src="/anpicci/nanoAOD-tools/contributors/VBS_PG/python/postprocessing/skimtree_utils.py" class="commit-loader">
+        <div class="Box-header Box-header--blue d-flex flex-items-center">
+          <div class="Skeleton avatar avatar-user flex-shrink-0 ml-n1 mr-n1 mt-n1 mb-n1" style="width:24px;height:24px;"></div>
+          <div class="Skeleton Skeleton--text col-5 ml-2">&nbsp;</div>
         </div>
-        <div class="ml-3 d-flex flex-shrink-0 flex-items-center flex-justify-end text-gray no-wrap">
-          <span class="d-none d-md-inline">
-            <span>Latest commit</span>
-            <a class="text-small text-mono link-gray" href="/anpicci/nanoAOD-tools/commit/76aa5079458726f3bb88fe5faaabf91553731b26" data-pjax>76aa507</a>
-            <span itemprop="dateModified"><relative-time datetime="2020-10-05T11:56:34Z" class="no-wrap">Oct 5, 2020</relative-time></span>
-          </span>
 
-          <a data-pjax href="/anpicci/nanoAOD-tools/commits/VBS_PG/python/postprocessing/skimtree_utils.py" class="ml-3 no-wrap link-gray-dark no-underline">
-            <svg text="gray" height="16" class="octicon octicon-history text-gray" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.643 3.143L.427 1.927A.25.25 0 000 2.104V5.75c0 .138.112.25.25.25h3.646a.25.25 0 00.177-.427L2.715 4.215a6.5 6.5 0 11-1.18 4.458.75.75 0 10-1.493.154 8.001 8.001 0 101.6-5.684zM7.75 4a.75.75 0 01.75.75v2.992l2.028.812a.75.75 0 01-.557 1.392l-2.5-1A.75.75 0 017 8.25v-3.5A.75.75 0 017.75 4z"></path></svg>
-            <span class="d-none d-sm-inline">
-              <strong>History</strong>
-            </span>
-          </a>
+        <div class="Box-body d-flex flex-items-center" >
+          <div class="Skeleton Skeleton--text col-1">&nbsp;</div>
+          <span class="text-red h6 loader-error">Cannot retrieve contributors at this time</span>
         </div>
-      </div>
-
-  </div>
-
-  <div class="Box-body d-flex flex-items-center flex-auto border-bottom-0 flex-wrap" >
-    <details class="details-reset details-overlay details-overlay-dark lh-default text-gray-dark float-left mr-3" id="blob_contributors_box">
-      <summary class="link-gray-dark">
-        <svg text="gray" height="16" class="octicon octicon-people text-gray" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.5 3.5a2 2 0 100 4 2 2 0 000-4zM2 5.5a3.5 3.5 0 115.898 2.549 5.507 5.507 0 013.034 4.084.75.75 0 11-1.482.235 4.001 4.001 0 00-7.9 0 .75.75 0 01-1.482-.236A5.507 5.507 0 013.102 8.05 3.49 3.49 0 012 5.5zM11 4a.75.75 0 100 1.5 1.5 1.5 0 01.666 2.844.75.75 0 00-.416.672v.352a.75.75 0 00.574.73c1.2.289 2.162 1.2 2.522 2.372a.75.75 0 101.434-.44 5.01 5.01 0 00-2.56-3.012A3 3 0 0011 4z"></path></svg>
-        <strong>2</strong>
-        
-        contributors
-      </summary>
-      <details-dialog
-        class="Box Box--overlay d-flex flex-column anim-fade-in fast"
-        aria-label="Users who have contributed to this file"
-        src="/anpicci/nanoAOD-tools/contributors-list/VBS_PG/python/postprocessing/skimtree_utils.py" preload>
-        <div class="Box-header">
-          <button class="Box-btn-octicon btn-octicon float-right" type="button" aria-label="Close dialog" data-close-dialog>
-            <svg class="octicon octicon-x" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg>
-          </button>
-          <h3 class="Box-title">
-            Users who have contributed to this file
-          </h3>
-        </div>
-        <include-fragment class="octocat-spinner my-3" aria-label="Loading..."></include-fragment>
-      </details-dialog>
-    </details>
-      <span class="">
-    <a class="avatar-link" data-hovercard-type="user" data-hovercard-url="/users/pinkDreud/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/anpicci/nanoAOD-tools/commits/VBS_PG/python/postprocessing/skimtree_utils.py?author=pinkDreud">
-      <img class="avatar mr-2 avatar-user" src="https://avatars2.githubusercontent.com/u/50661613?s=48&amp;v=4" width="24" height="24" alt="@pinkDreud" /> 
-</a>    <a class="avatar-link" data-hovercard-type="user" data-hovercard-url="/users/anpicci/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/anpicci/nanoAOD-tools/commits/VBS_PG/python/postprocessing/skimtree_utils.py?author=anpicci">
-      <img class="avatar mr-2 avatar-user" src="https://avatars0.githubusercontent.com/u/44297061?s=48&amp;v=4" width="24" height="24" alt="@anpicci" /> 
-</a>
-</span>
-
-  </div>
-    </div>
+</include-fragment>    </div>
 
 
 
