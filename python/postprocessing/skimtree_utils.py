@@ -6,6 +6,8 @@ import copy as copy
 from os import path
 import array
 import types
+from CutsAndValues import *
+
 
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
@@ -91,17 +93,17 @@ def FindSecondJet(jet, jetCollection, GoodTau, GoodMu):
 
 def SelectMuon(muCollection):
     for i in range(len(muCollection)):
-        if not muCollection[i].isGlobal: continue
-        if muCollection[i].pt<35: continue
-        if abs(muCollection[i].eta)>2.4: continue 
-        if muCollection[i].pfRelIso03_all>0.15: continue 
+        if not muCollection[i].isGlobal:                continue
+        if muCollection[i].pt            <PT_CUT_MU:    continue
+        if abs(muCollection[i].eta)      >ETA_CUT_MU:   continue 
+        if muCollection[i].pfRelIso03_all>ISO_CUT_MU:   continue 
         return i
     return -1
 
 def SelectTau(tauCollection, GoodMuon):
     for i in range(len(tauCollection)):
-        if deltaR(tauCollection[i].eta, tauCollection[i].phi, GoodMuon.eta, GoodMuon.phi)<0.4: continue
-        if not (tauCollection[i].idDeepTau2017v2p1VSjet>15 and (tauCollection[i].idDeepTau2017v2p1VSe>1 or tauCollection[i].idDeepTau2017v2p1VSmu>1) and tauCollection[i].idDecayModeNewDMs):  continue #tight WP
+        if deltaR(tauCollection[i].eta, tauCollection[i].phi, GoodMuon.eta, GoodMuon.phi)<DR_OVERLAP_CONE: continue
+        if not (tauCollection[i].idDeepTau2017v2p1VSjet>ID_TAU_RECO_DEEPTAU_VSJET and (tauCollection[i].idDeepTau2017v2p1VSe>ID_TAU_RECO_DEEPTAU_VSELE or tauCollection[i].idDeepTau2017v2p1VSmu>ID_TAU_RECO_DEEPTAU_VSMU) and tauCollection[i].idDecayModeNewDMs):  continue #Medium WP vs jets, vvloose vs e, mu
         if tauCollection[i].pt<30: continue
         if abs(tauCollection[i].eta)>2.4: continue
         return i
@@ -130,14 +132,14 @@ def LepVetoOneCollection(GoodLepton, collection, relIsoCut, ptCut, etaCut):
     for i in range(len(collection)):
         lep=collection[i]
         if IsNotTheSameObject(GoodLepton, lep): 
-            if lep.pfRelIso03_all>relIsoCut: continue
-            if lep.pt<ptCut: continue
-            if abs(lep.eta)>etaCut: continue
+            if lep.pfRelIso03_all>relIsoCut:    continue
+            if lep.pt<ptCut:                    continue
+            if abs(lep.eta)>etaCut:             continue
             return False
     return True
 
 def LepVeto(GoodLepton, ElectronCollection, MuonCollection):
-    return LepVetoOneCollection(GoodLepton, ElectronCollection, 0.0994, 15, 2.4)*LepVetoOneCollection(GoodLepton, MuonCollection, 0.25, 10, 2.4)
+   return LepVetoOneCollection(GoodLepton, ElectronCollection, REL_ISO_CUT_LEP_VETO_ELE, PT_CUT_LEP_VETO_ELE, ETA_CUT_LEP_VETO_ELE)*LepVetoOneCollection(GoodLepton, MuonCollection, REL_ISO_CUT_LEP_VETO_MU, PT_CUT_LEP_VETO_MU, ETA_CUT_LEP_VETO_MU)
 
 
 #semplifica la macro
