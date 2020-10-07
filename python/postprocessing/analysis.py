@@ -30,6 +30,7 @@ print(chain)
 #chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WpWp_EWK_2017_nanoAOD_file_prova.root")
 #chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WpWp_EWK_2017_nanoAOD_file_prova.root")
 chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WpWp_EWK_2017_nanoAOD_file_prova.root")
+#chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/TTTo2L2Nu_102X_prova.root")
 
 print("Number of events in chain " + str(chain.GetEntries()))
 print("Number of events in tree from chain " + str((chain.GetTree()).GetEntries()))
@@ -41,22 +42,21 @@ print("Number of entries: " +str(tree.GetEntries()))
 print("tree: ", tree)
 
 
-Cut_dict = {1: ['Trigger             ', 0, 0.0, 0.0],
-            2: ['Lepton selection    ', 0, 0.0, 0.0],
-            3: ['Lepton Veto         ', 0, 0.0, 0.0],
-            4: ['Tau selection       ', 0, 0.0, 0.0],
-            5: ['Same charge tau lep ', 0, 0.0, 0.0],
-            6: ['Jet Selection       ', 0, 0.0, 0.0],
-            7: ['BVeto               ', 0, 0.0, 0.0],
-            8: ['M_jj>500 GeV        ', 0, 0.0, 0.0],
-            9: ['MET>40 GeV          ', 0, 0.0, 0.0],
+Cut_dict = {1: ['Trigger             ', 0, 0.0, 0.0, 0.0, 0.0],
+            2: ['Lepton selection    ', 0, 0.0, 0.0, 0.0, 0.0],
+            3: ['Lepton Veto         ', 0, 0.0, 0.0, 0.0, 0.0],
+            4: ['Tau selection       ', 0, 0.0, 0.0, 0.0, 0.0],
+            5: ['Same charge tau lep ', 0, 0.0, 0.0, 0.0, 0.0],
+            6: ['Jet Selection       ', 0, 0.0, 0.0, 0.0, 0.0],
+            7: ['BVeto               ', 0, 0.0, 0.0, 0.0, 0.0],
+            8: ['M_jj>500 GeV        ', 0, 0.0, 0.0, 0.0, 0.0],
+            9: ['MET>40 GeV          ', 0, 0.0, 0.0, 0.0, 0.0],
         }
 
 
 nEntriesTotal=tree.GetEntries()
 
 for i in range(tree.GetEntries()):
-  
     event = Event(tree,i)
     electrons = Collection(event, "Electron")
     muons = Collection(event, "Muon")
@@ -94,7 +94,8 @@ for i in range(tree.GetEntries()):
     
     #tau selection
     if len(taus)<1: continue
-    indexGoodTau=SelectTau(taus, GoodMu)
+    UseDeepTau=True
+    indexGoodTau=SelectTau(taus, GoodMu, UseDeepTau) #it takes as arguments the collection of taus, the selected muon and a boolen to decide if the reco happens with the MVA (false) or DeepTau (true)
     if indexGoodTau<0: continue
     GoodTau=taus[indexGoodTau]
     Cut_dict[4][1]+=1  
@@ -134,9 +135,22 @@ for i in range(1,10):
     if i==1:
         Cut_dict[i][2]=Cut_dict[i][1]*1.0/nEntriesTotal
         Cut_dict[i][3]=Cut_dict[i][1]*1.0/nEntriesTotal
+        Cut_dict[i][4]=math.sqrt(Cut_dict[i][2]*(1-Cut_dict[i][2])/nEntriesTotal)
+        Cut_dict[i][5]=math.sqrt(Cut_dict[i][3]*(1-Cut_dict[i][2])/nEntriesTotal)
     else:
-        Cut_dict[i][2]=Cut_dict[i][1]*1.0/Cut_dict[i-1][1]
-        Cut_dict[i][3]=Cut_dict[i][1]*1.0/nEntriesTotal
+        if Cut_dict[i-1][1]<=0 or Cut_dict[i][1]==0:
+            Cut_dict[i][2]=-999
+            Cut_dict[i][3]=Cut_dict[i][1]*1.0/nEntriesTotal
+            Cut_dict[i][4]=-999
+            Cut_dict[i][5]=-999
+        else:
+            Cut_dict[i][2]=Cut_dict[i][1]*1.0/Cut_dict[i-1][1]
+            Cut_dict[i][3]=Cut_dict[i][1]*1.0/nEntriesTotal
+            Cut_dict[i][4]=math.sqrt(Cut_dict[i][2]*(1-Cut_dict[i][2])/Cut_dict[i][1]*1.0)
+            Cut_dict[i][5]=math.sqrt(Cut_dict[i][3]*(1-Cut_dict[i][2])/nEntriesTotal)
 
 for cutname, counts in Cut_dict.items():
-    print counts[0], "\tcountings: ", round(counts[1], 4), "\teff. wrt. previous: ", round(counts[2], 4), "\teff wrt. total: ", round(counts[3], 4)
+    print counts[0], "\tcountings: ", round(counts[1], 4), "\teff. wrt. previous: ", round(counts[2], 4),"\pm", round(counts[4], 4), "\teff wrt. total: ", round(counts[3], 4), "\pm", round(counts[5], 4)
+
+
+
