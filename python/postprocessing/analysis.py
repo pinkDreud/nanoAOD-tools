@@ -31,6 +31,9 @@ print(chain)
 #chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WpWp_EWK_2017_nanoAOD_file_prova.root")
 chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WpWp_EWK_2017_nanoAOD_file_prova.root")
 #chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/TTTo2L2Nu_102X_prova.root")
+#chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WJets2017_102X/WJets_1.root")
+#chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WJets2017_102X/WJets_2.root")
+#chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WJets2017_102X/WJets_3.root")
 
 print("Number of events in chain " + str(chain.GetEntries()))
 print("Number of events in tree from chain " + str((chain.GetTree()).GetEntries()))
@@ -68,46 +71,71 @@ for i in range(tree.GetEntries()):
 
     if i%5000==0: print("Processing event n. ---- "+str(i))
 
+    
     #better trigger management?
-    TRIGGER_SINGLEELE=HLT.Ele32_WPTight_Gsf_L1DoubleEG
-    TRIGGER_SINGLEMU=HLT.IsoMu27
-    TRIGGER=TRIGGER_SINGLEELE or TRIGGER_SINGLEMU
+    Trigger_SingleEle=HLT.Ele32_WPTight_Gsf_L1DoubleEG
+    Trigger_SingleMu=HLT.IsoMu27
     
-    if not TRIGGER: continue
+    Trigger=Trigger_SingleEle or Trigger_SingleMu
     
+    SingleEle=False
+    SingleMu=False
+    MuEle=False
+
+    if Trigger_SingleEle and not Trigger_SingleMu: SingleEle=True
+    if Trigger_SingleMu and not Trigger_SingleEle: SingleMu=True
+    if Trigger_SingleEle and Trigger_SingleMu: MuEle=True
+    
+    HighestLepPt=-999
+    if MuEle:
+        for mu in muons:
+            if mu.pt>HighestLepPt: HighestLepPt=mu.pt
+        for ele in electrons:
+            if ele.pt>HighestLepPt:
+                SingleEle=True
+                break
+        if SingleEle==False and HighestLepPt>0: SingleMu=True
+
+
+    if not Trigger: continue
+    
+    leptons=muons
+    if SingleEle==True: leptons=electrons
+    if SingleMu==True:  leptons=muons
+    
+
     Cut_dict[1][1]+=1  
 
     #TODO cuts as lambda expression to have a much cleaner code
 
     #lepton selection -- only muons in this phase, just not to bother with double counting events
-    
-    if len(muons)<1: continue
-    indexGoodMu=SelectMuon(muons)
-    if indexGoodMu<0: continue
+    if len(leptons)<1: continue
+    indexGoodLep=SelectLepton(leptons, SingleMu)
+    if indexGoodLep<0: continue
 
-    GoodMu=muons[indexGoodMu]
+    GoodLep=leptons[indexGoodLep]
     Cut_dict[2][1]+=1  
 
     #veto on additional loosely isolated leptons
-    if not LepVeto(GoodMu, electrons, muons): continue
+    if not LepVeto(GoodLep, electrons, muons): continue
     Cut_dict[3][1]+=1  
     
     #tau selection
     if len(taus)<1: continue
     UseDeepTau=True
-    indexGoodTau=SelectTau(taus, GoodMu, UseDeepTau) #it takes as arguments the collection of taus, the selected muon and a boolen to decide if the reco happens with the MVA (false) or DeepTau (true)
+    indexGoodTau=SelectTau(taus, GoodLep, UseDeepTau) #it takes as arguments the collection of taus, the selected muon and a boolen to decide if the reco happens with the MVA (false) or DeepTau (true)
     if indexGoodTau<0: continue
     GoodTau=taus[indexGoodTau]
     Cut_dict[4][1]+=1  
     
     #Same sign tau & lepton
-    if not GoodTau.charge==GoodMu.charge: continue
+    if not GoodTau.charge==GoodLep.charge: continue
     Cut_dict[5][1]+=1
     
     #jet selection
     if len(jets)<2: continue
     if jets[0].pt<PT_CUT_JET or abs(jets[0].eta)>ETA_CUT_JET: continue
-    outputJetSel=JetSelection(list(jets), GoodTau, GoodMu)
+    outputJetSel=JetSelection(list(jets), GoodTau, GoodLep)
     if outputJetSel==-999: continue
     jet1, jet2=outputJetSel
     Cut_dict[6][1]+=1 
