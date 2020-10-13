@@ -91,12 +91,23 @@ def FindSecondJet(jet, jetCollection, GoodTau, GoodMu):
                 return k
     return -1
 
-def SelectMuon(muCollection):
-    for i in range(len(muCollection)):
-        if not muCollection[i].isGlobal: continue
-        if muCollection[i].pt<PT_CUT_MU: continue
-        if abs(muCollection[i].eta)>ETA_CUT_MU: continue 
-        if muCollection[i].pfRelIso03_all>ISO_CUT_MU: continue 
+def SelectLepton(lepCollection, isMu): #isMu==True -> muons else Ele 
+    pT_cut=-999
+    eta_cut=-999
+    iso_cut=-999
+    if isMu:
+        pT_cut=PT_CUT_MU
+        eta_cut=ETA_CUT_MU
+        iso_cut=ISO_CUT_MU
+    else:
+        pT_cut=PT_CUT_ELE
+        eta_cut=ETA_CUT_ELE
+        iso_cut=ISO_CUT_ELE
+    for i in range(len(lepCollection)):
+        if isMu and not lepCollection[i].isGlobal: continue    
+        if lepCollection[i].pt<pT_cut: continue
+        if abs(lepCollection[i].eta)>eta_cut: continue 
+        if lepCollection[i].pfRelIso03_all>iso_cut: continue 
         return i
     return -1
 
