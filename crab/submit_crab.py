@@ -19,11 +19,7 @@ def cfg_writer(sample, isMC, outdir):
     #f.write("from CRABClient.UserUtilities import config, getUsernameFromSiteDB\n")
     f.write("\nconfig = Configuration()\n")
     f.write("config.section_('General')\n")
-<<<<<<< HEAD
-    f.write("config.General.requestName = '"+sample.label+"_for_trigger'\n")
-=======
     f.write("config.General.requestName = '"+sample.label+"'\n")
->>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
     if not isMC:
         f.write("config.General.instance = 'preprod'\n") #needed to solve a bug with Oracle server... 
     f.write("config.General.transferLogs=True\n")
@@ -73,10 +69,7 @@ def crab_script_writer(sample, outpath, isMC, modules, presel):
     f.write("from PhysicsTools.NanoAODTools.postprocessing.examples.MCweight_writer import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.examples.MET_HLT_Filter import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.examples.preselection import *\n")
-<<<<<<< HEAD
     f.write("from PhysicsTools.NanoAODTools.postprocessing.examples.trigger_preselection import *\n")
-=======
->>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.PrefireCorr import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.lepSFProducer import *\n")
@@ -127,24 +120,6 @@ def crab_script_writer(sample, outpath, isMC, modules, presel):
     f_sh.write("fi\n")
     f_sh.close()
 
-<<<<<<< HEAD
-=======
-def PSet_writer(sample):
-    f = open("PSet.py", "w")
-    f.write("import FWCore.ParameterSet.Config as cms\n")
-    f.write("process = cms.Process('NANO')\n")
-    f.write("process.source = cms.Source('PoolSource', fileNames = cms.untracked.vstring(),\n")
-    #       lumisToProcess=cms.untracked.VLuminosityBlockRange("254231:1-254231:24")
-    f.write(")\n")
-    f.write("process.source.fileNames = [\n")
-    f.write("        '../../NanoAOD/test/lzma.root' ##you can change only this line\n")
-    f.write("]\n")
-    f.write("process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10))\n")
-    f.write("process.output = cms.OutputModule('PoolOutputModule', fileName = cms.untracked.string('"+sample.label+".root'))\n")
-    f.write("process.out = cms.EndPath(process.output)\n")
-    f.close()
-
->>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
 if not(opt.dat in sample_dict.keys()):
     print sample_dict.keys()
 dataset = sample_dict[opt.dat]
@@ -164,10 +139,7 @@ resubmit = opt.resub
 getout = opt.gout
 #Writing the configuration file
 for sample in samples:
-<<<<<<< HEAD
-    for_trigger = True
-=======
->>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
+    for_trigger = False
     print 'Launching sample ' + sample.label
     if submit:
         #Writing the script file 
@@ -180,27 +152,15 @@ for sample in samples:
             isMC = False
             presel = "Flag_goodVertices && Flag_globalSuperTightHalo2016Filter && Flag_HBHENoiseFilter && Flag_HBHENoiseIsoFilter && Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_BadPFMuonFilter "
             if year == '2016' and sample.runP != 'H':
-<<<<<<< HEAD
-                presel += " && (HLT_PFHT800 || HLT_PFHT900 || HLT_Mu50 || HLT_TkMu50 || HLT_Ele115_CaloIdVT_GsfTrkIdT || HLT_Ele32_eta2p1_WPTight_Gsf_v)"
+                presel += " && (HLT_PFHT800 || HLT_PFHT900 || HLT_Mu50 || HLT_TkMu50 || HLT_Ele115_CaloIdVT_GsfTrkIdT || HLT_Ele32_WPTight_Gsf_v)"
             elif year == '2016' and sample.runP == 'H':
-                presel += " && (HLT_PFHT900 || HLT_Mu50 || HLT_TkMu50 || HLT_Ele115_CaloIdVT_GsfTrkIdT || HLT_Ele32_eta2p1_WPTight_Gsf_v)"
+                presel += " && (HLT_PFHT900 || HLT_Mu50 || HLT_TkMu50 || HLT_Ele115_CaloIdVT_GsfTrkIdT || HLT_Ele32_WPTight_Gsf_v)"
             elif year == '2017' and sample.runP != 'B':
                 presel += " && (HLT_PFHT780 || HLT_PFHT890 || HLT_Mu50 || HLT_Ele115_CaloIdVT_GsfTrkIdT || HLT_Ele35_WPTight_Gsf_v)"
             elif year == '2017' and sample.runP == 'B':
                 presel += " && (HLT_PFHT780 || HLT_PFHT890 || HLT_Mu50 || HLT_Ele35_WPTight_Gsf_v)"
             elif year == '2018':
                 presel += " && (HLT_PFHT780 || HLT_PFHT890 || HLT_Mu50 || HLT_Ele115_CaloIdVT_GsfTrkIdT || HLT_Ele35_WPTight_Gsf_v)"
-=======
-                presel += " && (HLT_PFHT800 || HLT_PFHT900 || HLT_Mu50 || HLT_TkMu50 || HLT_Ele115_CaloIdVT_GsfTrkIdT)"
-            elif year == '2016' and sample.runP == 'H':
-                presel += " && (HLT_PFHT900 || HLT_Mu50 || HLT_TkMu50 || HLT_Ele115_CaloIdVT_GsfTrkIdT)"
-            elif year == '2017' and sample.runP != 'B':
-                presel += " && (HLT_PFHT780 || HLT_PFHT890 || HLT_Mu50 || HLT_Ele115_CaloIdVT_GsfTrkIdT)"
-            elif year == '2017' and sample.runP == 'B':
-                presel += " && (HLT_PFHT780 || HLT_PFHT890 || HLT_Mu50)"
-            elif year == '2018':
-                presel += " && (HLT_PFHT780 || HLT_PFHT890 || HLT_Mu50 || HLT_Ele115_CaloIdVT_GsfTrkIdT)"
->>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
         else:
             isMC = True
             presel = ""
@@ -208,7 +168,6 @@ for sample in samples:
         print 'The flag isMC is: ' + str(isMC)
 
         print "Producing crab configuration file"
-<<<<<<< HEAD
         cfg_writer(sample, isMC, "Trigger")
         
         if isMC:
@@ -219,15 +178,6 @@ for sample in samples:
             modules = "preselection(), metCorrector(), fatJetCorrector()" # Put here all the modules you want to be runned by crab
             if for_trigger:
                 modules = "trigger_preselection()"
-=======
-        cfg_writer(sample, isMC, "OutDir")
-        
-        
-        if isMC:
-            modules = "MCweight_writer(),  " + met_hlt_mod + ", preselection(), " + lep_mod + ", " + pu_mod + ", " + btag_mod + ", PrefCorr(), metCorrector(), fatJetCorrector()" # Put here all the modules you want to be runned by crab
-        else:
-            modules = "preselection(), metCorrector(), fatJetCorrector()" # Put here all the modules you want to be runned by crab
->>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
             
         print "Producing crab script"
         crab_script_writer(sample,'/eos/user/'+str(os.environ.get('USER')[0]) + '/'+str(os.environ.get('USER'))+'/Wprime/nosynch/', isMC, modules, presel)
@@ -239,7 +189,6 @@ for sample in samples:
 
     elif kill:
         print "Killing crab jobs..."
-<<<<<<< HEAD
         if for_trigger:
             os.system("crab kill -d crab_" + sample.label + '_for_trigger')
             os.system("rm -rf crab_" + sample.label + '_for_trigger')
@@ -267,21 +216,5 @@ for sample in samples:
             os.system("crab getoutput -d crab_" + sample.label + "_for_trigger --xrootd > ./macros/files/" + sample.label + ".txt")
         else:
             os.system("crab getoutput -d crab_" + sample.label + " --xrootd > ./macros/files/" + sample.label + ".txt")
-=======
-        os.system("crab kill -d crab_" + sample.label)
-        os.system("rm -rf crab_" + sample.label)
-
-    elif resubmit:
-        print "Resubmitting crab jobs..."
-        os.system("crab resubmit -d crab_" + sample.label)
-        
-    elif status:
-        print "Checking crab jobs status..."
-        os.system("crab status -d crab_" + sample.label)
-        
-    elif getout:
-        print "crab getoutput -d crab_" + sample.label + " --xrootd > ./macros/files/" + sample.label + ".txt"
-        os.system("crab getoutput -d crab_" + sample.label + " --xrootd > ./macros/files/" + sample.label + ".txt")
->>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
         #for i in xrange(1, 969):
         #os.system("crab getoutput -d crab_" + sample.label + " --outputpath=/eos/user/"+str(os.environ.get('USER')[0]) + "/"+str(os.environ.get('USER'))+"/Wprime/nosynch/" + sample.label + "/ --jobids="+str(i))
