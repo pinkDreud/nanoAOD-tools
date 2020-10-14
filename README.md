@@ -15,7 +15,6 @@ Anyway, after the routine procedure after logged in and moved in your favourite 
     
     git clone git@github.com:<your_github_name>/nanoAOD-tools.git PhysicsTools/NanoAODTools
     cd PhysicsTools/NanoAODTools
-    cmsenv
     scram b
 
 It's important that, before locally cloning the repo, you have made sure the default branch of YOUR github repo is VBS_PG. If "master" is the default one, then you will clone all my W' stuff (good, but not great)
