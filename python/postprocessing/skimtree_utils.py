@@ -6,8 +6,34 @@ import copy as copy
 from os import path
 import array
 import types
+<<<<<<< HEAD
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
+=======
+from CutsAndValues import *
+
+ROOT.PyConfig.IgnoreCommandLineOptions = True
+
+WP_btagger = {
+  "CSVv2":{
+    "L": 0.5803,
+    "M": 0.8838,
+    "T": 0.9693,
+  },
+  "DeepCSV":{
+    "L": 0.1522,
+    "M": 0.4941,
+    "T": 0.8001,
+  },
+  "DeepFlv":{
+    "L": 0.0521,
+    "M": 0.3033,
+    "T": 0.7489,
+  },
+}
+
+
+>>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
 def Chi_TopMass(mT):
   sigma = 28.8273
   mST = 174.729
@@ -56,6 +82,120 @@ def deltaR(eta1,phi1,eta2=None,phi2=None):
     ## otherwise
     return math.hypot(eta1-eta2, deltaPhi(phi1,phi2))
 
+<<<<<<< HEAD
+=======
+def doesOverlap(eta1, phi1, eta2, phi2):
+    if deltaR(eta1, phi1, eta2, phi2)<0.4: return False
+    return True
+
+def FindSecondJet(jet, jetCollection, GoodTau, GoodMu):
+    for k in range(len(jetCollection)):
+        if abs(jetCollection[k].eta)>ETA_CUT_JET: continue
+        if jetCollection[k].pt<PT_CUT_JET:
+            return -1
+        if abs(jet.eta-jetCollection[k].eta)>DELTAETA_JJ_CUT:
+            if deltaR(jet.eta, jet.phi, GoodTau.eta, GoodTau.phi)>DR_OVERLAP_CONE_TAU or deltaR(jet.eta, jet.phi, GoodMu.eta, GoodMu.phi)>DR_OVERLAP_CONE_OTHER:
+                return k
+    return -1
+
+def SelectLepton(lepCollection, isMu): #isMu==True -> muons else Ele 
+    pT_cut=-999
+    eta_cut=-999
+    iso_cut=-999
+    if isMu:
+        pT_cut=PT_CUT_MU
+        eta_cut=ETA_CUT_MU
+        iso_cut=ISO_CUT_MU
+    else:
+        pT_cut=PT_CUT_ELE
+        eta_cut=ETA_CUT_ELE
+        iso_cut=ISO_CUT_ELE
+    for i in range(len(lepCollection)):
+        if isMu and not lepCollection[i].isGlobal: continue    
+        if lepCollection[i].pt<pT_cut: continue
+        if abs(lepCollection[i].eta)>eta_cut: continue 
+        if lepCollection[i].pfRelIso03_all>iso_cut: continue 
+        return i
+    return -1
+
+def SelectTau(tauCollection, GoodMuon, DeepTau):
+    for i in range(len(tauCollection)):
+        if deltaR(tauCollection[i].eta, tauCollection[i].phi, GoodMuon.eta, GoodMuon.phi)<DR_OVERLAP_CONE_TAU: continue
+        if DeepTau:
+            if not (tauCollection[i].idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET and tauCollection[i].idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and tauCollection[i].idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and tauCollection[i].idDecayModeNewDMs):   continue #medium WP
+        else:
+            if not (tauCollection[i].idMVAoldDM2017v1>=ID_TAU_RECO_MVA and tauCollection[i].idAntiMu>=ID_TAU_ANTIMU and tauCollection[i].idAntiEle>=ID_TAU_ANTIELE): continue
+        if tauCollection[i].pt<PT_CUT_TAU: continue
+        if abs(tauCollection[i].eta)>ETA_CUT_TAU: continue
+        return i
+    return -1
+
+def BVeto(jetCollection):
+    veto = False
+    for k in range(len(jetCollection)):
+        if (jetCollection[k].btagCSVV2>WP_btagger[BTAG_ALGO][BTAG_WP])*(jetCollection[k].pt>BTAG_PT_CUT)*abs(jetCollection[k].eta<BTAG_ETA_CUT):
+            veto = True
+            break
+        else: continue
+    return veto
+        #if jetCollection[k].btagCSVV2<0.5803: continue #b-tag WP from https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
+        #if jetCollection[k].pt>30.: return True
+    #return False
+
+
+def IsNotTheSameObject(obj1, obj2):
+    if obj1==obj2: return False
+    return True
+    
+
+def LepVetoOneCollection(GoodLepton, collection, relIsoCut, ptCut, etaCut):
+    i=0
+    for i in range(len(collection)):
+        lep=collection[i]
+        if IsNotTheSameObject(GoodLepton, lep): 
+            if lep.pfRelIso03_all>relIsoCut: continue
+            if lep.pt<ptCut: continue
+            if abs(lep.eta)>etaCut: continue
+            return False
+    return True
+
+def LepVeto(GoodLepton, ElectronCollection, MuonCollection):
+    return LepVetoOneCollection(GoodLepton, ElectronCollection, REL_ISO_CUT_LEP_VETO_ELE, PT_CUT_LEP_VETO_ELE, ETA_CUT_LEP_VETO_ELE)*LepVetoOneCollection(GoodLepton, MuonCollection, REL_ISO_CUT_LEP_VETO_MU, PT_CUT_LEP_VETO_MU, ETA_CUT_LEP_VETO_MU)
+
+
+
+#semplifica la macro
+def JetSelection(jetCollection, GoodTau, GoodMu):
+    if jetCollection==None: return -999
+    #select higher pT jet
+    GoodJet=jetCollection[0]
+    #if the jet matches in dR one of the previously selected particles (e, tau), than it searches in the other jets
+    if deltaR(GoodJet.eta, GoodJet.phi, GoodTau.eta, GoodTau.phi)<DR_OVERLAP_CONE_TAU or deltaR(GoodJet.eta, GoodJet.phi, GoodMu.eta, GoodMu.phi)<DR_OVERLAP_CONE_OTHER: 
+        jetCollection.remove(GoodJet)
+        if len(jetCollection)==1:
+             return -999
+        return JetSelection(jetCollection, GoodTau, GoodMu)
+    
+    #searches for the best second jet
+    secondJetIndex=FindSecondJet(GoodJet, jetCollection, GoodTau, GoodMu)
+    if secondJetIndex>0: return GoodJet, jetCollection[secondJetIndex]
+    else:
+        jetCollection.remove(GoodJet)
+        if len(jetCollection)==1:
+            return -999
+        else: return JetSelection(jetCollection, GoodTau, GoodMu)
+
+
+def JetCut(jet1, jet2):
+    if (jet1+jet2).M()<M_JJ_CUT: return True
+    return False
+
+def metCut(met):
+    if met.pt<MET_CUT: return True
+    return False
+
+
+>>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
 def closest(obj,collection,presel=lambda x,y: True):
     ret = None; drMin = 999
     for x in collection:
@@ -454,6 +594,7 @@ def miniisoscan(isMu,threshold, lepton):
                 if (lepton.pt > 125):
                     lepnomatch_iso0p1_pt_125 += 1.
     return totalMClep,lepmatch_iso0p1_pt_50,lepmatch_iso0p1_pt_75,lepmatch_iso0p1_pt_100,lepmatch_iso0p1_pt_125,totalnoMClep,lepnomatch_iso0p1_pt_50,lepnomatch_iso0p1_pt_75,lepnomatch_iso0p1_pt_100,lepnomatch_iso0p1_pt_125
+<<<<<<< HEAD
 
 def HEMveto(jets, electrons):
   hemvetoetaup = -3.05
@@ -472,6 +613,8 @@ def HEMveto(jets, electrons):
  
   return passesMETHEMVeto
 
+=======
+>>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
 ###############################################
 ###          End of generic utils           ###   
 ###############################################
@@ -541,7 +684,11 @@ def EqSolv(a1, a2, a3, a4):
             else:
                 result.append(x3.real)            
     else:
+<<<<<<< HEAD
         #print( 'p1')
+=======
+        print( 'p1')
+>>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
         result = None
     #print result
     return result
@@ -1155,6 +1302,7 @@ class systWeights(object):
             self.weightedNames[7] = "PFSF"
             self.weightedNames[8] = "PFUp"
             self.weightedNames[9] = "PFDown"
+<<<<<<< HEAD
             self.weightedNames[10] = "btagSF"
             self.weightedNames[11] = "btagUp"
             self.weightedNames[12] = "btagDown"            
@@ -1177,6 +1325,10 @@ class systWeights(object):
             self.weightedNames[30] = "btagShapeDownHf"
             self.weightedNames[31] = "btagShapeDownHfStats1"
             self.weightedNames[32] = "btagShapeDownHfStats2"
+=======
+            #self.weightedNames[1] = "btagUp"
+            #self.weightedNames[2] = "btagDown"
+>>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
             #self.weightedNames[3] = "mistagUp"
             #self.weightedNames[4] = "mistagDown"
             #self.weightedNames[10] = "isoDown"
@@ -1242,11 +1394,16 @@ class systWeights(object):
 
     def addSystNonPDF(self, name):
         self.weightedNames[self.maxSystsNonPDF] = copy.deepcopy(name)
+<<<<<<< HEAD
         self.setMaxNonPDF(self.maxSystsNonPDF+1)
+=======
+        self.setMaxNonPDF(maxSystsNonPDF+1)
+>>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
         nPDF = self.nPDF
         for i in range(nPDF):
             ss = str(i+1)
             self.weightedNames[i+self.maxSystsNonPDF] = "pdf" + str(ss)
+<<<<<<< HEAD
         self.setMax(self.maxSystsNonPDF+nPDF)
         self.weightedNames[self.maxSysts] = ""
 
@@ -1266,6 +1423,16 @@ class systWeights(object):
             self.addSystNonPDF(ut)
             self.addSystNonPDF(dt)
             
+=======
+        self.setMax(maxSystsNonPDF+nPDF)
+        self.weightedNames[self.maxSysts] = ""
+
+    def addTopTagSF(self, name):
+        up = name + "Up"
+        down = name + "Down"
+        self.addSystNonPDF(up)
+        self.addSystNonPDF(down)
+>>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
 
     def addWTagSF(self, name):
         up = name + "Up"
@@ -1589,6 +1756,10 @@ class systWeights(object):
             if addPDF:
                 if not useOnlyNominal:
                     filesout[MAX+(MAX+1)*(c)].Close()
+<<<<<<< HEAD
+=======
+
+>>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
 ###############################################
 ###        End of tree_skimmer_utlis        ###
 ###############################################

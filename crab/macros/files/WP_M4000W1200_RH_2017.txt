@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 root://cms-xrd-global.cern.ch//store/user/adeiorio/OutDir/Wprimetotb_M4000W1200_RH_TuneCP5_13TeV-madgraph-pythia8/WP_M4000W1200_RH_2017/200904_101754/0000/tree_hadd_7.root
 root://cms-xrd-global.cern.ch//store/user/adeiorio/OutDir/Wprimetotb_M4000W1200_RH_TuneCP5_13TeV-madgraph-pythia8/WP_M4000W1200_RH_2017/200904_101754/0000/tree_hadd_5.root
 root://cms-xrd-global.cern.ch//store/user/adeiorio/OutDir/Wprimetotb_M4000W1200_RH_TuneCP5_13TeV-madgraph-pythia8/WP_M4000W1200_RH_2017/200904_101754/0000/tree_hadd_10.root
@@ -15,3 +16,6 @@ root://cms-xrd-global.cern.ch//store/user/adeiorio/OutDir/Wprimetotb_M4000W1200_
 root://cms-xrd-global.cern.ch//store/user/adeiorio/OutDir/Wprimetotb_M4000W1200_RH_TuneCP5_13TeV-madgraph-pythia8/WP_M4000W1200_RH_2017/200904_101754/0000/tree_hadd_1.root
 root://cms-xrd-global.cern.ch//store/user/adeiorio/OutDir/Wprimetotb_M4000W1200_RH_TuneCP5_13TeV-madgraph-pythia8/WP_M4000W1200_RH_2017/200904_101754/0000/tree_hadd_16.root
 root://cms-xrd-global.cern.ch//store/user/adeiorio/OutDir/Wprimetotb_M4000W1200_RH_TuneCP5_13TeV-madgraph-pythia8/WP_M4000W1200_RH_2017/200904_101754/0000/tree_hadd_9.root
+=======
+Cannot find .requestcache file in CRAB project directory /afs/cern.ch/work/a/adeiorio/CMSSW_10_5_0/src/PhysicsTools/NanoAODTools/crab/crab_WP_M2000W400_LH_2017
+>>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
