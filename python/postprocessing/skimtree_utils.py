@@ -6,10 +6,6 @@ import copy as copy
 from os import path
 import array
 import types
-<<<<<<< HEAD
-ROOT.PyConfig.IgnoreCommandLineOptions = True
-
-=======
 from CutsAndValues import *
 
 ROOT.PyConfig.IgnoreCommandLineOptions = True
@@ -33,7 +29,6 @@ WP_btagger = {
 }
 
 
->>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
 def Chi_TopMass(mT):
   sigma = 28.8273
   mST = 174.729
@@ -82,8 +77,6 @@ def deltaR(eta1,phi1,eta2=None,phi2=None):
     ## otherwise
     return math.hypot(eta1-eta2, deltaPhi(phi1,phi2))
 
-<<<<<<< HEAD
-=======
 def doesOverlap(eta1, phi1, eta2, phi2):
     if deltaR(eta1, phi1, eta2, phi2)<0.4: return False
     return True
@@ -195,7 +188,6 @@ def metCut(met):
     return False
 
 
->>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
 def closest(obj,collection,presel=lambda x,y: True):
     ret = None; drMin = 999
     for x in collection:
@@ -594,7 +586,6 @@ def miniisoscan(isMu,threshold, lepton):
                 if (lepton.pt > 125):
                     lepnomatch_iso0p1_pt_125 += 1.
     return totalMClep,lepmatch_iso0p1_pt_50,lepmatch_iso0p1_pt_75,lepmatch_iso0p1_pt_100,lepmatch_iso0p1_pt_125,totalnoMClep,lepnomatch_iso0p1_pt_50,lepnomatch_iso0p1_pt_75,lepnomatch_iso0p1_pt_100,lepnomatch_iso0p1_pt_125
-<<<<<<< HEAD
 
 def HEMveto(jets, electrons):
   hemvetoetaup = -3.05
@@ -613,8 +604,6 @@ def HEMveto(jets, electrons):
  
   return passesMETHEMVeto
 
-=======
->>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
 ###############################################
 ###          End of generic utils           ###   
 ###############################################
@@ -684,11 +673,6 @@ def EqSolv(a1, a2, a3, a4):
             else:
                 result.append(x3.real)            
     else:
-<<<<<<< HEAD
-        #print( 'p1')
-=======
-        print( 'p1')
->>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
         result = None
     #print result
     return result
@@ -1302,7 +1286,7 @@ class systWeights(object):
             self.weightedNames[7] = "PFSF"
             self.weightedNames[8] = "PFUp"
             self.weightedNames[9] = "PFDown"
-<<<<<<< HEAD
+            '''
             self.weightedNames[10] = "btagSF"
             self.weightedNames[11] = "btagUp"
             self.weightedNames[12] = "btagDown"            
@@ -1325,10 +1309,9 @@ class systWeights(object):
             self.weightedNames[30] = "btagShapeDownHf"
             self.weightedNames[31] = "btagShapeDownHfStats1"
             self.weightedNames[32] = "btagShapeDownHfStats2"
-=======
+            '''
             #self.weightedNames[1] = "btagUp"
             #self.weightedNames[2] = "btagDown"
->>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
             #self.weightedNames[3] = "mistagUp"
             #self.weightedNames[4] = "mistagDown"
             #self.weightedNames[10] = "isoDown"
@@ -1394,37 +1377,12 @@ class systWeights(object):
 
     def addSystNonPDF(self, name):
         self.weightedNames[self.maxSystsNonPDF] = copy.deepcopy(name)
-<<<<<<< HEAD
         self.setMaxNonPDF(self.maxSystsNonPDF+1)
-=======
-        self.setMaxNonPDF(maxSystsNonPDF+1)
->>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
         nPDF = self.nPDF
         for i in range(nPDF):
             ss = str(i+1)
             self.weightedNames[i+self.maxSystsNonPDF] = "pdf" + str(ss)
-<<<<<<< HEAD
         self.setMax(self.maxSystsNonPDF+nPDF)
-        self.weightedNames[self.maxSysts] = ""
-
-    def addbTagSF(self, name):
-        types = ['cferr1', 'jes', 'lf', 'lfstats1', 'lfstats2', 'cferr2', 'hfstats1', 'hfstats2', 'hf']
-        sf = name + "SF"
-        up = name + "Up"
-        down = name + "Down"
-        self.addSystNonPDF(sf)
-        self.addSystNonPDF(up)
-        self.addSystNonPDF(down)
-        up = '_shape_' + up
-        down = '_shape_' + up
-        for typ in types:
-            ut = up + "_" + typ
-            dt = down + "_" + typ
-            self.addSystNonPDF(ut)
-            self.addSystNonPDF(dt)
-            
-=======
-        self.setMax(maxSystsNonPDF+nPDF)
         self.weightedNames[self.maxSysts] = ""
 
     def addTopTagSF(self, name):
@@ -1432,7 +1390,6 @@ class systWeights(object):
         down = name + "Down"
         self.addSystNonPDF(up)
         self.addSystNonPDF(down)
->>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
 
     def addWTagSF(self, name):
         up = name + "Up"
@@ -1756,10 +1713,7 @@ class systWeights(object):
             if addPDF:
                 if not useOnlyNominal:
                     filesout[MAX+(MAX+1)*(c)].Close()
-<<<<<<< HEAD
-=======
 
->>>>>>> cffadbf756df805ebc80e94bd878ce8ffc2823a0
 ###############################################
 ###        End of tree_skimmer_utlis        ###
 ###############################################
