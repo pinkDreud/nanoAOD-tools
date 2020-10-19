@@ -172,10 +172,7 @@ for sample in samples:
 
         print "Producing crab configuration file"
 
-        if for_trigger:
-            cfg_writer(sample, isMC, "Trigger")
-        else:
-            cfg_writer(sample, isMC, "OutDir")
+        cfg_writer(sample, isMC, "VBS")
 
         if isMC:
             modules = "MCweight_writer(),  " + met_hlt_mod + ", preselection(), " + lep_mod + ", " + pu_mod + ", " + btag_mod + ", PrefCorr(), jmeCorrections()" # Put here all the modules you want to be runned by crab
