@@ -13,6 +13,8 @@ parser.add_option('-r', '--resub', dest = 'resub', default = False, action = 'st
 parser.add_option('-g', '--gout', dest = 'gout', default = False, action = 'store_true', help = 'Default do not do getoutput')
 (opt, args) = parser.parse_args()
 
+print opt.dat
+
 def cfg_writer(sample, isMC, outdir):
     f = open("crab_cfg.py", "w")
     f.write("from WMCore.Configuration import Configuration\n")
