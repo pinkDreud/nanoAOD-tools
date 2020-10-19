@@ -57,7 +57,7 @@ jmsValues = { '2016' : [1.0, 0.9906, 1.0094], #nominal, down, up
               '2018' : [0.997, 0.993, 1.001]
             }
 
-def createJMECorrector(isMC=True, dataYear=2016, runPeriod="B", jesUncert="Total", redojec=False, jetType = "AK4PFchs", noGroom=False, metBranchName="MET", applySmearing=True, isFastSim=False):
+def createJMECorrector(isMC=True, dataYear=2016, runPeriod="B", jesUncert="Total", redojec=True, jetType = "AK4PFchs", noGroom=False, metBranchName="MET", applySmearing=True, isFastSim=False):
     
     dataYear = str(dataYear)
 

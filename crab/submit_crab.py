@@ -69,22 +69,24 @@ def crab_script_writer(sample, outpath, isMC, modules, presel):
     f.write("from PhysicsTools.NanoAODTools.postprocessing.examples.MCweight_writer import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.examples.MET_HLT_Filter import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.examples.preselection import *\n")
-    f.write("from PhysicsTools.NanoAODTools.postprocessing.examples.trigger_preselection import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.PrefireCorr import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.lepSFProducer import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer import *\n")
 
+
     #f.write("infile = "+str(sample.files)+"\n")
     #f.write("outpath = '"+ outpath+"'\n")
     #Deafult PostProcessor(outputDir,inputFiles,cut=None,branchsel=None,modules=[],compression='LZMA:9',friend=False,postfix=None, jsonInput=None,noOut=False,justcount=False,provenance=False,haddFileName=None,fwkJobReport=False,histFileName=None,histDirName=None, outputbranchsel=None,maxEntries=None,firstEntry=0, prefetch=False,longTermCache=False)\n")
     if isMC:
-        f.write("metCorrector = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", jesUncert='All', redojec=True)\n")
-        f.write("fatJetCorrector = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", jesUncert='All', redojec=True, jetType = 'AK8PFchs')\n")
+        #f.write("metCorrector = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", jesUncert='All', redojec=True)\n")
+        #f.write("fatJetCorrector = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", jesUncert='All', redojec=True, jetType = 'AK8PFchs')\n")
+        f.write("jmeCorrections = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", jesUncert='All', redojec=True, jetType = 'AK8PFchs')\n")
         f.write("p=PostProcessor('.', inputFiles(), '', modules=["+modules+"], provenance=True, fwkJobReport=True, histFileName='hist.root', histDirName='plots', outputbranchsel='keep_and_drop.txt')\n")# haddFileName='"+sample.label+".root'
     else: 
-        f.write("metCorrector = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", runPeriod='"+str(sample.runP)+"', jesUncert='All', redojec=True)\n")
-        f.write("fatJetCorrector = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", runPeriod='"+str(sample.runP)+"', jesUncert='All', redojec=True, jetType = 'AK8PFchs')\n")
+        #f.write("metCorrector = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", runPeriod='"+str(sample.runP)+"', jesUncert='All', redojec=True)\n")
+        #f.write("fatJetCorrector = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", runPeriod='"+str(sample.runP)+"', jesUncert='All', redojec=True, jetType = 'AK8PFchs')\n")
+        f.write("jmeCorrections = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", runPeriod='"+str(sample.runP)+"', jesUncert='All', redojec=True, jetType = 'AK8PFchs')\n")
         f.write("p=PostProcessor('.', inputFiles(), '"+presel+"', modules=["+modules+"], provenance=True, fwkJobReport=True, jsonInput=runsAndLumis(), haddFileName='tree_hadd.root', outputbranchsel='keep_and_drop.txt')\n")#
     f.write("p.run()\n")
     f.write("print 'DONE'\n")
@@ -139,8 +141,6 @@ resubmit = opt.resub
 getout = opt.gout
 #Writing the configuration file
 for sample in samples:
-    for_trigger = False
-    print "For trigger: ", for_trigger
     print 'Launching sample ' + sample.label
     if submit:
         #Writing the script file 
@@ -176,13 +176,9 @@ for sample in samples:
             cfg_writer(sample, isMC, "OutDir")
 
         if isMC:
-            modules = "MCweight_writer(),  " + met_hlt_mod + ", preselection(), " + lep_mod + ", " + pu_mod + ", " + btag_mod + ", PrefCorr(), metCorrector(), fatJetCorrector()" # Put here all the modules you want to be runned by crab
-            if for_trigger:
-                modules = met_hlt_mod + ", trigger_preselection(), " + lep_mod + ", " + pu_mod + ", PrefCorr()" # Put here all the modules you want to be runned by crab
+            modules = "MCweight_writer(),  " + met_hlt_mod + ", preselection(), " + lep_mod + ", " + pu_mod + ", " + btag_mod + ", PrefCorr(), jmeCorrections()" # Put here all the modules you want to be runned by crab
         else:
-            modules = "preselection(), metCorrector(), fatJetCorrector()" # Put here all the modules you want to be runned by crab
-            if for_trigger:
-                modules = "trigger_preselection()"
+            modules = "preselection(), jmeCorrections()" # Put here all the modules you want to be runned by crab
             
         print "Producing crab script"
         crab_script_writer(sample,'/eos/user/'+str(os.environ.get('USER')[0]) + '/'+str(os.environ.get('USER'))+'/Wprime/nosynch/', isMC, modules, presel)
@@ -194,32 +190,19 @@ for sample in samples:
 
     elif kill:
         print "Killing crab jobs..."
-        if for_trigger:
-            os.system("crab kill -d crab_" + sample.label + '_for_trigger')
-            os.system("rm -rf crab_" + sample.label + '_for_trigger')
-        else:
-            os.system("crab kill -d crab_" + sample.label)
-            os.system("rm -rf crab_" + sample.label)
+        os.system("crab kill -d crab_" + sample.label)
+        os.system("rm -rf crab_" + sample.label)
 
     elif resubmit:
         print "Resubmitting crab jobs..."
-        if for_trigger:
-            os.system("crab resubmit -d crab_" + sample.label + '_for_trigger')
-        else:
-            os.system("crab resubmit -d crab_" + sample.label)
+        os.system("crab resubmit -d crab_" + sample.label)
 
     elif status:
         print "Checking crab jobs status..."
-        if for_trigger:
-            os.system("crab status -d crab_" + sample.label + '_for_trigger')
-        else:
-            os.system("crab status -d crab_" + sample.label)
+        os.system("crab status -d crab_" + sample.label)
 
     elif getout:
         print "crab getoutput -d crab_" + sample.label + " --xrootd > ./macros/files/" + sample.label + ".txt"
-        if for_trigger:
-            os.system("crab getoutput -d crab_" + sample.label + "_for_trigger --xrootd > ./macros/files/" + sample.label + ".txt")
-        else:
-            os.system("crab getoutput -d crab_" + sample.label + " --xrootd > ./macros/files/" + sample.label + ".txt")
+        os.system("crab getoutput -d crab_" + sample.label + " --xrootd > ./macros/files/" + sample.label + ".txt")
         #for i in xrange(1, 969):
         #os.system("crab getoutput -d crab_" + sample.label + " --outputpath=/eos/user/"+str(os.environ.get('USER')[0]) + "/"+str(os.environ.get('USER'))+"/Wprime/nosynch/" + sample.label + "/ --jobids="+str(i))
