@@ -67,6 +67,8 @@ def crab_script_writer(sample, outpath, isMC, modules, presel):
     f.write("import os\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2 import *\n")
+    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.jme.htProducerCpp import *\n")
+    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.jme.mht import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.framework.crabhelper import inputFiles,runsAndLumis\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.examples.MCweight_writer import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.examples.MET_HLT_Filter import *\n")
@@ -151,6 +153,8 @@ for sample in samples:
         btag_mod = 'btagSF'+year+'()'
         met_hlt_mod = 'MET_HLT_Filter_'+year+'()'
         pu_mod = 'puWeight_'+year+'()'
+        ht_producer = 'ht()'
+        mht_producer = 'mht()'
         if ('Data' in sample.label):
             isMC = False
             presel = "Flag_goodVertices && Flag_globalSuperTightHalo2016Filter && Flag_HBHENoiseFilter && Flag_HBHENoiseIsoFilter && Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_BadPFMuonFilter "
@@ -175,9 +179,9 @@ for sample in samples:
         cfg_writer(sample, isMC, "VBS")
 
         if isMC:
-            modules = "MCweight_writer(),  " + met_hlt_mod + ", preselection(), " + lep_mod + ", " + pu_mod + ", " + btag_mod + ", PrefCorr(), jmeCorrections()" # Put here all the modules you want to be runned by crab
+            modules = "MCweight_writer(),  " + met_hlt_mod + ", preselection(), " + lep_mod + ", " + pu_mod + ", " + btag_mod + ", PrefCorr(), jmeCorrections(), " + ht_producer + ", " + mht_producer # Put here all the modules you want to be runned by crab
         else:
-            modules = "preselection(), jmeCorrections()" # Put here all the modules you want to be runned by crab
+            modules = "preselection(), jmeCorrections(), " + ht_producer + ", " + mht_producer # Put here all the modules you want to be runned by crab
             
         print "Producing crab script"
         crab_script_writer(sample,'/eos/user/'+str(os.environ.get('USER')[0]) + '/'+str(os.environ.get('USER'))+'/Wprime/nosynch/', isMC, modules, presel)
