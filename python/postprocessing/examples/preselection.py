@@ -46,7 +46,7 @@ class preselection(Module):
         self.out.fillBranch("HT_eventHT", eventSum.Pt())
 
         #isGoodEvent = ((((len(goodMu) >= 1) and (len(goodEle) == 0)) or ((len(goodMu) == 0) and (len(goodEle) >= 1))) and len(goodJet)>=1)
-        goodEvent = True
+        isGoodEvent = True
         goodEvent = isGoodPV and isGoodEvent
         #if(goodEvent):
             #print "No. Mu = ", len(goodMu), " No. Ele = ", len(goodEle), " veto Mu is ", not isVetoMu, " veto Ele is ", not isVetoEle, " No. barrel jets = ", len(goodJet)
