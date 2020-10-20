@@ -5,8 +5,9 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collect
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
 class MCweight_writer(Module):
-    def __init__(self):
+    def __init__(self, samplename):
         self.writeHistFile=True
+        self.samplename = samplename
 
     def beginJob(self,histFile=None,histDirName=None):
         Module.beginJob(self,histFile,histDirName)
@@ -22,8 +23,9 @@ class MCweight_writer(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
         Generator = Object(event, "Generator")
-        LHEPdfWeight = Collection(event, 'LHEPdfWeight')
-        LHEScaleWeight = Collection(event, 'LHEScaleWeight')
+        if not ("WZ" in self.samplename):
+            LHEPdfWeight = Collection(event, 'LHEPdfWeight')
+            LHEScaleWeight = Collection(event, 'LHEScaleWeight')
         PSWeight = Collection(event, 'PSWeight')
         if not len(LHEPdfWeight) == 0:
             self.h_PDFweight.SetNameTitle('h_PDFweight', 'h_PDFweight')
