@@ -7,6 +7,7 @@ usage = 'python submit_crab.py'
 parser = optparse.OptionParser(usage)
 parser.add_option('-d', '--dat', dest='dat', type=str, default = '', help='Please enter a dataset name')
 parser.add_option('--status', dest = 'status', default = False, action = 'store_true', help = 'Default do not check the status')
+parser.add_option('--verb', dest = 'verb', default = False, action = 'store_true', help = 'Default do not verbosely check the status')
 parser.add_option('-s', '--sub', dest = 'sub', default = False, action = 'store_true', help = 'Default do not submit')
 parser.add_option('-k', '--kill', dest = 'kill', default = False, action = 'store_true', help = 'Default do not kill')
 parser.add_option('-r', '--resub', dest = 'resub', default = False, action = 'store_true', help = 'Default do not resubmit')
@@ -141,6 +142,7 @@ else:
 
 submit = opt.sub
 status = opt.status
+verbose = opt.verb
 kill = opt.kill
 resubmit = opt.resub
 getout = opt.gout
@@ -204,8 +206,11 @@ for sample in samples:
 
     elif status:
         print "Checking crab jobs status..."
-        os.system("crab status -d crab_" + sample.label)
-
+        if verbose:
+            os.system("crab status --verboseErrors -d crab_" + sample.label)
+        else:
+            os.system("crab status --verboseErrors -d crab_" + sample.label)
+        
     elif getout:
         print "crab getoutput -d crab_" + sample.label + " --xrootd > ./macros/files/" + sample.label + ".txt"
         os.system("crab getoutput -d crab_" + sample.label + " --xrootd > ./macros/files/" + sample.label + ".txt")
