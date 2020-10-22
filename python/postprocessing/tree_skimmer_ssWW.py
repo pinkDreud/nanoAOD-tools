@@ -143,14 +143,14 @@ MET_mass                    =   array.array('f', [0.])
 
 
 #cut variables
-pass_lepton_selection       =   array.array('f', [True])
-pass_lepton_veto            =   array.array('f', [True])
-pass_tau_selection          =   array.array('f', [True])
-pass_charge_selection       =   array.array('f', [True])
-pass_jet_selection          =   array.array('f', [True])
-pass_b_veto                 =   array.array('f', [True])
-pass_mjj_cut                =   array.array('f', [True])
-pass_MET_cut                =   array.array('f', [True])
+pass_lepton_selection       =   array.array('i', [0])
+pass_lepton_veto            =   array.array('i', [0])
+pass_tau_selection          =   array.array('i', [0])
+pass_charge_selection       =   array.array('i', [0])
+pass_jet_selection          =   array.array('i', [0])
+pass_b_veto                 =   array.array('i', [0])
+pass_mjj_cut                =   array.array('i', [0])
+pass_MET_cut                =   array.array('i', [0])
 
 
 w_PDF_all = array.array('f', [0.]*110) #capisci a cosa serve
