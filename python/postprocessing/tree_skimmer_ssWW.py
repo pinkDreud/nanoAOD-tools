@@ -29,22 +29,21 @@ else:
 sample = sample_dict[sys.argv[1]]
 part_idx = sys.argv[2]
 file_list = list(map(str, sys.argv[3].strip('[]').split(',')))
+print file_list
 
 MCReco = True
-DeltaFilter = True
-bjetSwitch = False # True #
 startTime = datetime.datetime.now()
 print("Starting running at " + str(startTime))
 
 ROOT.gROOT.SetBatch()
-
-leadingjet_ptcut = 150.
 
 chain = ROOT.TChain('Events')
 #print(chain)
 for infile in file_list: 
     print("Adding %s to the chain" %(infile))
     chain.Add(infile)
+
+print chain
 
 print("Number of events in chain " + str(chain.GetEntries()))
 print("Number of events in tree from chain " + str((chain.GetTree()).GetEntries()))
@@ -144,14 +143,14 @@ MET_mass                    =   array.array('f', [0.])
 
 
 #cut variables
-pass_lepton_selection       =   array.array('b', [False])
-pass_lepton_veto            =   array.array('b', [False])
-pass_tau_selection          =   array.array('b', [False])
-pass_charge_selection       =   array.array('b', [False])
-pass_jet_selection          =   array.array('b', [False])
-pass_b_veto                 =   array.array('b', [False])
-pass_mjj_cut                =   array.array('b', [False])
-pass_MET_cut                =   array.array('b', [False])
+pass_lepton_selection       =   array.array('f', [True])
+pass_lepton_veto            =   array.array('f', [True])
+pass_tau_selection          =   array.array('f', [True])
+pass_charge_selection       =   array.array('f', [True])
+pass_jet_selection          =   array.array('f', [True])
+pass_b_veto                 =   array.array('f', [True])
+pass_mjj_cut                =   array.array('f', [True])
+pass_MET_cut                =   array.array('f', [True])
 
 
 w_PDF_all = array.array('f', [0.]*110) #capisci a cosa serve
@@ -219,40 +218,31 @@ if('TT_' in sample.label):
 #++++++++++++++++++++++++++++++++++
 print("isMC: ", isMC)
 if(isMC):
-    h_genweight = ROOT.TH1F()
-    h_genweight.SetNameTitle('h_genweight', 'h_genweight')
-    h_PDFweight = ROOT.TH1F()
-    h_PDFweight.SetNameTitle("h_PDFweight","h_PDFweight")
-    for infile in file_list: 
-        #if Debug:
-            #print(infile)
-            #print("entered file_list loop #3")    
-            #print("Getting the histos from %s" %(infile))
-        newfile = ROOT.TFile.Open(infile)
+    newfile = ROOT.TFile.Open(file_list[0])
+    isthere_gen = bool(newfile.FindObjectAny("h_genweight"))
+    isthere_pdf = bool(newfile.FindObjectAny("h_PDFweight"))
+    if isthere_gen or isthere_pdf:
         dirc = ROOT.TDirectory()
         dirc = newfile.Get("plots")
-        #h_genw_tmp = ROOT.TH1F(dirc.Get("h_genweight"))
-        #if Debug:
-            #print("in newfile: ")
-            #dirc.Get("h_genweight").Print()
-            #print("in macro: ")
-            #h_genw_tmp.Print()
-        
-        #if(dirc.GetListOfKeys().Contains("h_PDFweight")):
-        #    h_pdfw_tmp = ROOT.TH1F(dirc.Get("h_PDFweight"))
 
-       #     if(ROOT.TH1F(h_PDFweight).Integral() < 1.):
-        #        h_PDFweight.SetBins(h_pdfw_tmp.GetXaxis().GetNbins(), h_pdfw_tmp.GetXaxis().GetXmin(), h_pdfw_tmp.GetXaxis().GetXmax())
-        #        print("h_genweight first bin content is %f and h_PDFweight has %f bins" %(ROOT.TH1F(dirc.Get("h_genweight")).GetBinContent(1), ROOT.TH1F(dirc.Get("h_PDFweight")).GetNbinsX()))
-        #    h_PDFweight.Add(h_pdfw_tmp)
-        #else:
-        #    addPDF = False
-        #if(ROOT.TH1F(h_genweight).Integral() < 1.):
-        #    h_genweight.SetBins(h_genw_tmp.GetXaxis().GetNbins(), h_genw_tmp.GetXaxis().GetXmin(), h_genw_tmp.GetXaxis().GetXmax())
-        #h_genweight.Add(h_genw_tmp)
-    #print("h_genweight first bin content is %f and h_PDFweight has %f bins" %(h_genweight.GetBinContent(1), h_PDFweight.GetNbinsX()))
-
-
+        if isthere_gen:
+            h_genweight = ROOT.TH1F()
+            h_genweight.SetNameTitle('h_genweight', 'h_genweight')
+            h_genw_tmp = ROOT.TH1F(dirc.Get("h_genweight"))
+            if(ROOT.TH1F(h_genweight).Integral() < 1.):
+                h_genweight.SetBins(h_genw_tmp.GetXaxis().GetNbins(), h_genw_tmp.GetXaxis().GetXmin(), h_genw_tmp.GetXaxis().GetXmax())
+            h_genweight.Add(h_genw_tmp)
+    
+        if isthere_pdf:
+            h_PDFweight = ROOT.TH1F()
+            h_PDFweight.SetNameTitle("h_PDFweight","h_PDFweight")
+            h_pdfw_tmp = ROOT.TH1F(dirc.Get("h_PDFweight"))
+            if(ROOT.TH1F(h_PDFweight).Integral() < 1.):
+                h_PDFweight.SetBins(h_pdfw_tmp.GetXaxis().GetNbins(), h_pdfw_tmp.GetXaxis().GetXmin(), h_pdfw_tmp.GetXaxis().GetXmax())
+            h_PDFweight.Add(h_pdfw_tmp)
+        else:
+            addPDF = False
+'''
 #++++++++++++++++++++++++++++++++++
 #++      Efficiency studies      ++
 #++++++++++++++++++++++++++++++++++
@@ -264,6 +254,8 @@ nrecobest = 0
 nbinseff = 10
 h_eff_mu = ROOT.TH1D("h_eff_mu", "h_eff_mu", nbinseff, 0, nbinseff)
 h_eff_ele = ROOT.TH1D("h_eff_ele", "h_eff_ele", nbinseff, 0, nbinseff)
+'''
+
 #++++++++++++++++++++++++++++++++++
 #++   looping over the events    ++
 #++++++++++++++++++++++++++++++++++
@@ -324,13 +316,15 @@ for i in range(tree.GetEntries()):
     goodEle = get_Ele(electrons)
     year = sample.year
     if(isMC):
-        runPeriod = None
+        runPeriod = ''
     else:
         runPeriod = sample.runP
     passMu, passEle, noTrigger = trig_map(HLT, year, runPeriod)
-    isDilepton = False
-    isMuon = (len(goodMu) == 1) and (len(goodEle) == 0) and len(VetoMu) == 0 and len(VetoEle) == 0 and (passMu)
-    isElectron = (len(goodMu) == 0) and (len(goodEle) == 1) and len(VetoMu) == 0 and len(VetoEle) == 0 and (passEle)
+
+    ###### Dobbiamo personalizzare a tempo debito goodMu/Ele e vetoEle/Mu, per ora commentiamo
+    #isMuon = (len(goodMu) == 1) and (len(goodEle) == 0) and len(VetoMu) == 0 and len(VetoEle) == 0 and (passMu)
+    #isElectron = (len(goodMu) == 0) and (len(goodEle) == 1) and len(VetoMu) == 0 and len(VetoEle) == 0 and (passEle)
+    ######
 
     doublecounting = True
     if(isMC):
@@ -351,7 +345,9 @@ for i in range(tree.GetEntries()):
     HighestLepPt=-999
     LeadLepFamily="not selected"
     
-    if passEle and not HLT.Ele32_WPTight_Gsf_L1DoubleEG: print "Errore"
+    if passEle and not HLT.Ele32_WPTight_Gsf_L1DoubleEG:
+        print "Errore" #Questo ora non dovrebbe succedere
+
     if passEle and not passMu:  
         print i
         print passEle, passMu, len(electrons)
@@ -366,7 +362,6 @@ for i in range(tree.GetEntries()):
 
     if passMu and passEle:
         ElMu=True
-
 
     if ElMu:
         for mu in muons:
@@ -383,8 +378,6 @@ for i in range(tree.GetEntries()):
     if SingleMu==True:  leptons=muons
 
 
-
-
     #######################################
     ## Removing events with HEM problem  ##
     #######################################
@@ -395,6 +388,7 @@ for i in range(tree.GetEntries()):
         elif(isMC):
             w_nominal_all[0] *= 0.354
 
+    '''
     if len(goodMu) == 1:
         h_eff_mu.Fill('Good Mu', 1)
         if len(goodEle) == 0:
@@ -411,15 +405,10 @@ for i in range(tree.GetEntries()):
             h_eff_ele.Fill('Veto Mu', 1)
         if len(VetoEle) == 0:
             h_eff_ele.Fill('Veto Ele', 1)
-
+    '''
 
     systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
     systTree.fillTreesSysts(trees, "all")
-
-#if Debug:
-    #print("Event with neutrino failed: ", neutrino_failed, " out of ", str(50000))
-#else:
-    #print("Event with neutrino failed: ", neutrino_failed, " out of ", tree.GetEntries())
 
 #trees[0].Print()
 outTreeFile.cd()
@@ -427,8 +416,9 @@ if(isMC):
     #print("h_genweight first bin content is %f and h_PDFweight has %f bins" %(h_genweight.GetBinContent(1), h_PDFweight.GetNbinsX()))
     h_genweight.Write()
     h_PDFweight.Write()
-    h_eff_mu.Write()
-    h_eff_ele.Write()
+    #h_eff_mu.Write()
+    #h_eff_ele.Write()
+
 systTree.writeTreesSysts(trees, outTreeFile)
 print("Number of events in output tree " + str(trees[0].GetEntries()))
 
