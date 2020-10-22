@@ -410,14 +410,13 @@ def trig_map(HLT, year, runPeriod):
     passHT = False
     noTrigger = False
     if(year == 2016 and runPeriod != 'H'):
-        if(HLT.Mu50 or HLT.TkMu50):
+        if(HLT.IsoMu24 or HLT.IsoTkMu24):
             passMu = True
-        if(HLT.Ele115_CaloIdVT_GsfTrkIdT):
+        if(HLT.Ele27_WPTight_Gsf or HLT.Ele32_WPTight_Gsf):
             passEle = True  
-        if(HLT.PFHT800 or HLT.PFHT900):
-            passHT = True
-        if not(passMu or passEle or passHT):
+        if not(passMu or passEle):
             noTrigger = True
+    '''
     elif(year == 2016 and runPeriod == 'H'):
         if(HLT.Mu50 or HLT.TkMu50):
             passMu = True
@@ -427,15 +426,15 @@ def trig_map(HLT, year, runPeriod):
             passHT = True
         if not(passMu or passEle or passHT):
             noTrigger = True
-    elif(year == 2017 and runPeriod != 'B' or year == 2018):
-        if(HLT.Mu50):
+    '''
+    elif(year == 2017 and runPeriod != 'B'):
+        if(HLT.IsoMu27):
             passMu = True
-        if(HLT.Ele115_CaloIdVT_GsfTrkIdT):
+        if(HLT.Ele32_WPTight_Gsf_L1DoubleEG):
             passEle = True  
-        if(HLT.PFHT780 or HLT.PFHT890):
-            passHT = True
-        if not(passMu or passEle or passHT):
+        if not(passMu or passEle):
             noTrigger = True
+    '''
     elif(year == 2017 and runPeriod == 'B'):
         if(HLT.Mu50):
             passMu = True
@@ -443,9 +442,18 @@ def trig_map(HLT, year, runPeriod):
             passHT = True
         if not(passMu or passEle or passHT):
             noTrigger = True
+    '''
+    elif(year == 2018)
+        if(HLT.IsoMu24):
+            passMu = True
+        if(HLT.Ele32_WPTight_Gsf_L1DoubleEG):
+            passEle = True  
+        if not(passMu or passEle):
+            noTrigger = True
+
     else:
         print('Wrong year! Please enter 2016, 2017, or 2018')
-    return passMu, passEle, passHT, noTrigger
+    return passMu, passEle, noTrigger
 
 def get_ptrel(lepton, jet):
     ptrel = ((jet.p4()-lepton.p4()).Vect().Cross(lepton.p4().Vect())).Mag()/(jet.p4().Vect().Mag())
