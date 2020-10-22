@@ -29,8 +29,9 @@ chain = ROOT.TChain('Events')
 print(chain)
 #chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WpWp_EWK_2017_nanoAOD_file_prova.root")
 #chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WpWp_EWK_2017_nanoAOD_file_prova.root")
-chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WpWp_EWK_2017_nanoAOD_file_prova.root")
-#chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/TTTo2L2Nu_102X_prova.root")
+#chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WpWp_EWK_2017_nanoAOD_file_prova.root")
+chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/TTTo2L2Nu_102X_prova.root")
+#chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/TTToSemileptonic_102X_prova.root")
 #chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WJets2017_102X/WJets_1.root")
 #chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WJets2017_102X/WJets_2.root")
 #chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WJets2017_102X/WJets_3.root")
@@ -69,7 +70,7 @@ for i in range(tree.GetEntries()):
     met = Object(event, "MET") 
     HLT = Object(event, "HLT")
 
-    if i%5000==0: print("Processing event n. ---- "+str(i))
+    if i%10000==0: print("Processing event n. ---- "+str(i))
 
     
     #better trigger management?
@@ -87,9 +88,12 @@ for i in range(tree.GetEntries()):
     if Trigger_SingleEle and Trigger_SingleMu: MuEle=True
     
     HighestLepPt=-999
+    LeadLepFamily="not selected"
+
     if MuEle:
         for mu in muons:
-            if mu.pt>HighestLepPt: HighestLepPt=mu.pt
+            if mu.pt>HighestLepPt:
+                HighestLepPt=mu.pt
         for ele in electrons:
             if ele.pt>HighestLepPt:
                 SingleEle=True
@@ -103,7 +107,7 @@ for i in range(tree.GetEntries()):
     if SingleEle==True: leptons=electrons
     if SingleMu==True:  leptons=muons
     
-
+    if SingleEle==True: continue #TODO: just separating electrons
     Cut_dict[1][1]+=1  
 
     #TODO cuts as lambda expression to have a much cleaner code
@@ -123,7 +127,7 @@ for i in range(tree.GetEntries()):
     #tau selection
     if len(taus)<1: continue
     UseDeepTau=True
-    indexGoodTau=SelectTau(taus, GoodLep, UseDeepTau) #it takes as arguments the collection of taus, the selected muon and a boolen to decide if the reco happens with the MVA (false) or DeepTau (true)
+    indexGoodTau=SelectTau(taus, GoodLep, UseDeepTau) #it takes as arguments the collection of taus, the selected muon and a boolean to decide if the reco happens with the MVA (false) or DeepTau (true)
     if indexGoodTau<0: continue
     GoodTau=taus[indexGoodTau]
     Cut_dict[4][1]+=1  
@@ -143,7 +147,7 @@ for i in range(tree.GetEntries()):
     #All the cuts up to here can be implemented in the online preselection, they're just cuts for the selection of final state objects, maybe we can shift the additional lepton veto here.
 
     #veto on events with b-tagged jets (mainly for ttbar discrimination)
-
+    
     if BVeto(jets): continue
     Cut_dict[7][1]+=1  
     LeadJet=ROOT.TLorentzVector()
@@ -178,7 +182,7 @@ for i in range(1,10):
             Cut_dict[i][5]=math.sqrt(Cut_dict[i][3]*(1-Cut_dict[i][2])/nEntriesTotal)
 
 for cutname, counts in Cut_dict.items():
-    print counts[0], "\tcountings: ", round(counts[1], 4), "\teff. wrt. previous: ", round(counts[2], 4),"\pm", round(counts[4], 4), "\teff wrt. total: ", round(counts[3], 4), "\pm", round(counts[5], 4)
+    print round(counts[1], 4)
 
 
 

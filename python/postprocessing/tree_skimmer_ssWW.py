@@ -20,6 +20,7 @@ import copy
 from array import array
 from skimtree_utils import *
 
+
 if sys.argv[4] == 'remote':
     from samples import *
     Debug = False
@@ -255,7 +256,7 @@ nbinseff = 10
 h_eff_mu = ROOT.TH1D("h_eff_mu", "h_eff_mu", nbinseff, 0, nbinseff)
 h_eff_ele = ROOT.TH1D("h_eff_ele", "h_eff_ele", nbinseff, 0, nbinseff)
 '''
-
+contagood=0
 #++++++++++++++++++++++++++++++++++
 #++   looping over the events    ++
 #++++++++++++++++++++++++++++++++++
@@ -264,29 +265,32 @@ for i in range(tree.GetEntries()):
     #++++++++++++++++++++++++++++++++++
     #++        taking objects        ++
     #++++++++++++++++++++++++++++++++++
+    '''
     if Debug:
-        #print("evento n. " + str(i))
+        print("evento n. " + str(i))
         if i > 2000:
             break
     
     if not Debug and i%5000 == 0:
         print("Event #", i+1, " out of ", tree.GetEntries())
-    event = Event(tree,i)
-    electrons = Collection(event, "Electron")
-    muons = Collection(event, "Muon")
-    jets = Collection(event, "Jet")
-    njets = len(jets)
-    fatjets = Collection(event, "FatJet")
-    HT = Object(event, "HT")
-    PV = Object(event, "PV")
-    HLT = Object(event, "HLT")
-    Flag = Object(event, 'Flag')
-    met = Object(event, "MET")
-    MET = {'metPx': met.pt*ROOT.TMath.Cos(met.phi), 'metPy': met.pt*ROOT.TMath.Sin(met.phi)}
+    '''
+    event       = Event(tree,i)
+    electrons   = Collection(event, "Electron")
+    muons       = Collection(event, "Muon")
+    jets        = Collection(event, "Jet")
+    njets       = len(jets)
+    fatjets     = Collection(event, "FatJet")
+    taus        = Collection(event, "Tau")
+    HT          = Object(event, "HT")
+    PV          = Object(event, "PV")
+    HLT         = Object(event, "HLT")
+    Flag        = Object(event, 'Flag')
+    met         = Object(event, "MET")
+    
     genpart = None
     
-    h_eff_mu.Fill('Total', 1)
-    h_eff_ele.Fill('Total', 1)
+    #h_eff_mu.Fill('Total', 1)
+    #h_eff_ele.Fill('Total', 1)
     if isMC:
         genpart = Collection(event, "GenPart")
         LHE = Collection(event, "LHEPart")
@@ -319,13 +323,15 @@ for i in range(tree.GetEntries()):
         runPeriod = ''
     else:
         runPeriod = sample.runP
+
     passMu, passEle, noTrigger = trig_map(HLT, year, runPeriod)
 
     ###### Dobbiamo personalizzare a tempo debito goodMu/Ele e vetoEle/Mu, per ora commentiamo
     #isMuon = (len(goodMu) == 1) and (len(goodEle) == 0) and len(VetoMu) == 0 and len(VetoEle) == 0 and (passMu)
     #isElectron = (len(goodMu) == 0) and (len(goodEle) == 1) and len(VetoMu) == 0 and len(VetoEle) == 0 and (passEle)
     ######
-
+    
+    if noTrigger: continue
     doublecounting = True
     if(isMC):
         doublecounting = False
@@ -347,10 +353,11 @@ for i in range(tree.GetEntries()):
     
     if passEle and not HLT.Ele32_WPTight_Gsf_L1DoubleEG:
         print "Errore" #Questo ora non dovrebbe succedere
+    
+    if passEle and len(electrons)<1:    continue
+    if passMu and len(muons)<1:         continue
 
     if passEle and not passMu:  
-        print i
-        print passEle, passMu, len(electrons)
         SingleEle=True
         LeadLepFamily="electrons"
         HighestLepPt=electrons[0].pt
@@ -376,6 +383,60 @@ for i in range(tree.GetEntries()):
     
     if SingleEle==True: leptons=electrons
     if SingleMu==True:  leptons=muons
+    
+    indexGoodLep=SelectLepton(leptons, SingleMu)
+
+    if indexGoodLep<0: 
+        systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
+        systTree.fillTreesSysts(trees, "all")
+        continue
+
+    pass_lepton_selection       =   1
+    lepton_pt[0]                =   leptons[indexGoodLep].pt
+    lepton_eta[0]               =   leptons[indexGoodLep].eta
+    lepton_phi[0]               =   leptons[indexGoodLep].phi
+    lepton_mass[0]              =   leptons[indexGoodLep].mass
+    lepton_pdgid[0]             =   leptons[indexGoodLep].pdgId
+    lepton_pfRelIso03[0]        =   leptons[indexGoodLep].pfRelIso03_all
+    
+    GoodLep=leptons[indexGoodLep]
+    pass_lepton_veto=LepVeto(GoodLep, electrons, muons)
+    
+    UseDeepTau=True
+    indexGoodTau=SelectTau(taus, GoodLep, UseDeepTau)
+
+    if indexGoodTau<0:
+        systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
+        systTree.fillTreesSysts(trees, "all")
+        continue    
+    
+    pass_tau_selection=1
+    GoodTau=taus[indexGoodTau]
+
+    if  GoodTau.charge==GoodLep.charge: pass_charge_selection=1
+
+    outputJetSel=JetSelection(list(jets), GoodTau, GoodLep)
+    
+    if outputJetSel==-999:
+        systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
+        systTree.fillTreesSysts(trees, "all")
+        continue  
+
+    jet1, jet2=outputJetSel
+    
+    pass_jet_selection=1
+
+    if not BVeto(jets): pass_b_veto=1
+
+    LeadJet=ROOT.TLorentzVector()
+    SubleadJet=ROOT.TLorentzVector()
+    LeadJet.SetPtEtaPhiM(jet1.pt, jet1.eta, jet1.phi, jet1.mass)
+    SubleadJet.SetPtEtaPhiM(jet2.pt, jet2.eta, jet2.phi, jet2.mass) 
+
+    if not JetCut(LeadJet, SubleadJet): pass_mjj_cut=1
+
+    if not metCut(met): pass_MET_cut=1
+
 
 
     #######################################
@@ -406,16 +467,15 @@ for i in range(tree.GetEntries()):
         if len(VetoEle) == 0:
             h_eff_ele.Fill('Veto Ele', 1)
     '''
-
     systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
     systTree.fillTreesSysts(trees, "all")
 
 #trees[0].Print()
 outTreeFile.cd()
-if(isMC):
+#if(isMC):
     #print("h_genweight first bin content is %f and h_PDFweight has %f bins" %(h_genweight.GetBinContent(1), h_PDFweight.GetNbinsX()))
-    h_genweight.Write()
-    h_PDFweight.Write()
+    #h_genweight.Write()
+    #h_PDFweight.Write()
     #h_eff_mu.Write()
     #h_eff_ele.Write()
 

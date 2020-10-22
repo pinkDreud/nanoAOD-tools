@@ -476,6 +476,26 @@ WprAK8_tau1 = array.array('f', [0.])
 WprAK8_tau2 = array.array('f', [0.])
 WprAK8_tau3 = array.array('f', [0.])
 WprAK8_tau4 = array.array('f', [0.])
+
+#ssWW variables
+#tau variables
+tau_pt_all      =   array.array('f', [0.])
+tau_eta_all     =   array.array('f', [0.])
+tau_phi_all     =   array.array('f', [0.])
+tau_mass_all    =   array.array('f', [0.])
+
+#cut variables
+pass_lepton_selection   =   array.array('b', [False])
+pass_lepton_veto        =   array.array('b', [False])
+pass_tau_selection      =   array.array('b', [False])
+pass_charge_selection   =   array.array('b', [False])
+pass_jet_selection      =   array.array('b', [False])
+pass_b_veto             =   array.array('b', [False])
+pass_mjj_cut            =   array.array('b', [False])
+pass_deltaeta_cut       =   array.array('b', [False])
+
+
+
 #FatJet_electronIdx3SJ
 #FatJet_genJetAK8Idx
 #FatJet_hadronFlavour
@@ -750,6 +770,24 @@ systTree.branchTreesSysts(trees, "all", "WprAK8_tau2", outTreeFile, WprAK8_tau2)
 systTree.branchTreesSysts(trees, "all", "WprAK8_tau3", outTreeFile, WprAK8_tau3)
 systTree.branchTreesSysts(trees, "all", "WprAK8_tau4", outTreeFile, WprAK8_tau4)
 
+#branches added for ssWW analysis
+#tau variables
+systTree.branchTreesSysts(trees, "all", "tau_pt",       outTreeFile, tau_pt_all)
+systTree.branchTreesSysts(trees, "all", "tau_eta",      outTreeFile, tau_eta_all)
+systTree.branchTreesSysts(trees, "all", "tau_phi",      outTreeFile, tau_phi_all)
+systTree.branchTreesSysts(trees, "all", "tau_mass_all", outTreeFile, tau_mass_all)
+
+#cut variables
+systTree.branchTreesSysts(trees, "all", "pass_lepton_selection",    outTreeFile, pass_lepton_selection)
+systTree.branchTreesSysts(trees, "all", "pass_lepton_veto",         outTreeFile, pass_lepton_veto)
+systTree.branchTreesSysts(trees, "all", "pass_tau_selection",       outTreeFile, pass_tau_selection)
+systTree.branchTreesSysts(trees, "all", "pass_charge_selection",    outTreeFile, pass_charge_selection)
+systTree.branchTreesSysts(trees, "all", "pass_jet_selection",       outTreeFile, pass_jet_selection)
+systTree.branchTreesSysts(trees, "all", "pass_b_veto",              outTreeFile, pass_b_veto)
+systTree.branchTreesSysts(trees, "all", "pass_mjj_cut",             outTreeFile, pass_mjj_cut)
+systTree.branchTreesSysts(trees, "all", "pass_deltaeta_cut",        outTreeFile, pass_deltaeta_cut)
+
+
 #print("Is MC: " + str(isMC) + "      option addPDF: " + str(addPDF))
 if(isMC and addPDF):
     systTree.branchTreesSysts(trees, "all", "w_PDF", outTreeFile, w_PDF_all)
@@ -774,26 +812,26 @@ if(isMC):
         newfile = ROOT.TFile.Open(infile)
         dirc = ROOT.TDirectory()
         dirc = newfile.Get("plots")
-        h_genw_tmp = ROOT.TH1F(dirc.Get("h_genweight"))
+        #h_genw_tmp = ROOT.TH1F(dirc.Get("h_genweight"))
         #if Debug:
             #print("in newfile: ")
             #dirc.Get("h_genweight").Print()
             #print("in macro: ")
             #h_genw_tmp.Print()
         
-        if(dirc.GetListOfKeys().Contains("h_PDFweight")):
-            h_pdfw_tmp = ROOT.TH1F(dirc.Get("h_PDFweight"))
+        #if(dirc.GetListOfKeys().Contains("h_PDFweight")):
+        #    h_pdfw_tmp = ROOT.TH1F(dirc.Get("h_PDFweight"))
 
-            if(ROOT.TH1F(h_PDFweight).Integral() < 1.):
-                h_PDFweight.SetBins(h_pdfw_tmp.GetXaxis().GetNbins(), h_pdfw_tmp.GetXaxis().GetXmin(), h_pdfw_tmp.GetXaxis().GetXmax())
-                print("h_genweight first bin content is %f and h_PDFweight has %f bins" %(ROOT.TH1F(dirc.Get("h_genweight")).GetBinContent(1), ROOT.TH1F(dirc.Get("h_PDFweight")).GetNbinsX()))
-            h_PDFweight.Add(h_pdfw_tmp)
-        else:
-            addPDF = False
-        if(ROOT.TH1F(h_genweight).Integral() < 1.):
-            h_genweight.SetBins(h_genw_tmp.GetXaxis().GetNbins(), h_genw_tmp.GetXaxis().GetXmin(), h_genw_tmp.GetXaxis().GetXmax())
-        h_genweight.Add(h_genw_tmp)
-    print("h_genweight first bin content is %f and h_PDFweight has %f bins" %(h_genweight.GetBinContent(1), h_PDFweight.GetNbinsX()))
+       #     if(ROOT.TH1F(h_PDFweight).Integral() < 1.):
+        #        h_PDFweight.SetBins(h_pdfw_tmp.GetXaxis().GetNbins(), h_pdfw_tmp.GetXaxis().GetXmin(), h_pdfw_tmp.GetXaxis().GetXmax())
+        #        print("h_genweight first bin content is %f and h_PDFweight has %f bins" %(ROOT.TH1F(dirc.Get("h_genweight")).GetBinContent(1), ROOT.TH1F(dirc.Get("h_PDFweight")).GetNbinsX()))
+        #    h_PDFweight.Add(h_pdfw_tmp)
+        #else:
+        #    addPDF = False
+        #if(ROOT.TH1F(h_genweight).Integral() < 1.):
+        #    h_genweight.SetBins(h_genw_tmp.GetXaxis().GetNbins(), h_genw_tmp.GetXaxis().GetXmin(), h_genw_tmp.GetXaxis().GetXmax())
+        #h_genweight.Add(h_genw_tmp)
+    #print("h_genweight first bin content is %f and h_PDFweight has %f bins" %(h_genweight.GetBinContent(1), h_PDFweight.GetNbinsX()))
 
 
 #++++++++++++++++++++++++++++++++++
@@ -870,13 +908,12 @@ for i in range(tree.GetEntries()):
         runPeriod = None
     else:
         runPeriod = sample.runP
-    passMu, passEle, passHT, noTrigger = trig_map(HLT, year, runPeriod)
+    passMu, passEle, noTrigger = trig_map(HLT, year, runPeriod)
     passed_mu_all[0] = int(passMu)
     passed_ele_all[0] = int(passEle)
-    passed_ht_all[0] = int(passHT)
     isDilepton = False
-    isMuon = (len(goodMu) == 1) and (len(goodEle) == 0) and len(VetoMu) == 0 and len(VetoEle) == 0 and (passMu or passHT)
-    isElectron = (len(goodMu) == 0) and (len(goodEle) == 1) and len(VetoMu) == 0 and len(VetoEle) == 0 and (passEle or passHT)
+    isMuon = (len(goodMu) == 1) and (len(goodEle) == 0) and len(VetoMu) == 0 and len(VetoEle) == 0 and (passMu)
+    isElectron = (len(goodMu) == 0) and (len(goodEle) == 1) and len(VetoMu) == 0 and len(VetoEle) == 0 and (passEle)
 
     if(isMC):
         doublecounting = False
@@ -885,8 +922,6 @@ for i in range(tree.GetEntries()):
     if('DataMu' in sample.label and passMu):
         doublecounting = False
     if('DataEle' in sample.label and (not passMu and passEle)):
-        doublecounting = False
-    if('DataHT' in sample.label and (passHT and not passMu and not passEle)):
         doublecounting = False
 
     if doublecounting:
