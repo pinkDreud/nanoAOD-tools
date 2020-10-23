@@ -112,6 +112,7 @@ def SelectLepton(lepCollection, isMu): #isMu==True -> muons else Ele
     return -1
 
 def SelectTau(tauCollection, GoodMuon, DeepTau):
+    if len(tauCollection)<1: return -1
     for i in range(len(tauCollection)):
         if deltaR(tauCollection[i].eta, tauCollection[i].phi, GoodMuon.eta, GoodMuon.phi)<DR_OVERLAP_CONE_TAU: continue
         if DeepTau:
@@ -126,7 +127,7 @@ def SelectTau(tauCollection, GoodMuon, DeepTau):
 def BVeto(jetCollection):
     veto = False
     for k in range(len(jetCollection)):
-        if (jetCollection[k].btagCSVV2>WP_btagger[BTAG_ALGO][BTAG_WP])*(jetCollection[k].pt>BTAG_PT_CUT)*abs(jetCollection[k].eta<BTAG_ETA_CUT):
+        if (jetCollection[k].btagDeepFlavB>=WP_btagger[BTAG_ALGO][BTAG_WP])*(jetCollection[k].pt>BTAG_PT_CUT)*abs(jetCollection[k].eta<BTAG_ETA_CUT):
             veto = True
             break
         else: continue
@@ -159,6 +160,8 @@ def LepVeto(GoodLepton, ElectronCollection, MuonCollection):
 
 #semplifica la macro
 def JetSelection(jetCollection, GoodTau, GoodMu):
+    if len(jetCollection)<2: return -999
+    if jetCollection[0].pt<PT_CUT_JET: return -999
     if jetCollection==None: return -999
     #select higher pT jet
     GoodJet=jetCollection[0]
@@ -416,6 +419,23 @@ def trig_map(HLT, year, runPeriod):
             passEle = True  
         if not(passMu or passEle):
             noTrigger = True
+    elif(year == 2017 and runPeriod != 'B'):
+        if(HLT.IsoMu27):
+            passMu = True
+        if(HLT.Ele32_WPTight_Gsf_L1DoubleEG):
+            passEle = True  
+        if not(passMu or passEle):
+            noTrigger = True
+    elif(year == 2018):
+        if(HLT.IsoMu24):
+            passMu = True
+        if(HLT.Ele32_WPTight_Gsf_L1DoubleEG):
+            passEle = True  
+        if not(passMu or passEle):
+            noTrigger = True
+
+    else:
+        print('Wrong year! Please enter 2016, 2017, or 2018')
     '''
     elif(year == 2016 and runPeriod == 'H'):
         if(HLT.Mu50 or HLT.TkMu50):
@@ -427,13 +447,6 @@ def trig_map(HLT, year, runPeriod):
         if not(passMu or passEle or passHT):
             noTrigger = True
     '''
-    elif(year == 2017 and runPeriod != 'B'):
-        if(HLT.IsoMu27):
-            passMu = True
-        if(HLT.Ele32_WPTight_Gsf_L1DoubleEG):
-            passEle = True  
-        if not(passMu or passEle):
-            noTrigger = True
     '''
     elif(year == 2017 and runPeriod == 'B'):
         if(HLT.Mu50):
@@ -443,16 +456,6 @@ def trig_map(HLT, year, runPeriod):
         if not(passMu or passEle or passHT):
             noTrigger = True
     '''
-    elif(year == 2018)
-        if(HLT.IsoMu24):
-            passMu = True
-        if(HLT.Ele32_WPTight_Gsf_L1DoubleEG):
-            passEle = True  
-        if not(passMu or passEle):
-            noTrigger = True
-
-    else:
-        print('Wrong year! Please enter 2016, 2017, or 2018')
     return passMu, passEle, noTrigger
 
 def get_ptrel(lepton, jet):

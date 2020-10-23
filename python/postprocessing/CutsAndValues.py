@@ -1,6 +1,10 @@
 # In this file values for cuts and constant will be stored and then recalled from the whole analysis function
 #Using nanoAOD version 102X
 
+ONLYELE=1
+ONLYMU=0
+
+
 PT_CUT_MU=  35
 ETA_CUT_MU= 2.4
 ISO_CUT_MU= 0.15
@@ -24,11 +28,11 @@ ETA_CUT_JET=5
 
 DELTAETA_JJ_CUT=2.5
 
-#btag info: l 13 skimtree_utils.py
-BTAG_ALGO="CSVv2"   #CSVv2, DeepCSV, DeepFLV
-BTAG_WP=        "L"         #L, M, T
-BTAG_PT_CUT=    30
+#btag info: l 13 skimtree_utils.BTAG_ALGO="CSVv2"   #CSVv2, DeepCSV, DeepFLV
+BTAG_PT_CUT =   30
 BTAG_ETA_CUT=   5
+BTAG_ALGO   =   "DeepFlv"
+BTAG_WP     =   "M"
 
 ID_TAU_RECO_DEEPTAU_VSJET=  16 #byDeepTau2017v2p1VSjet ID working points (deepTau2017v2p1): bitmask 1 = VVVLoose, 2 = VVLoose, 4 = VLoose, 8 = Loose, 16 = Medium, 32 = Tight, 64 = VTight, 128 = VVTight
 
