@@ -156,8 +156,6 @@ def LepVetoOneCollection(GoodLepton, collection, relIsoCut, ptCut, etaCut):
 def LepVeto(GoodLepton, ElectronCollection, MuonCollection):
     return LepVetoOneCollection(GoodLepton, ElectronCollection, REL_ISO_CUT_LEP_VETO_ELE, PT_CUT_LEP_VETO_ELE, ETA_CUT_LEP_VETO_ELE)*LepVetoOneCollection(GoodLepton, MuonCollection, REL_ISO_CUT_LEP_VETO_MU, PT_CUT_LEP_VETO_MU, ETA_CUT_LEP_VETO_MU)
 
-
-
 #semplifica la macro
 def JetSelection(jetCollection, GoodTau, GoodMu):
     if len(jetCollection)<2: return -999

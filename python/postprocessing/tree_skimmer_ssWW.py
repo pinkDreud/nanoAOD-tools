@@ -20,7 +20,6 @@ import copy
 from array import array
 from skimtree_utils import *
 
-
 if sys.argv[4] == 'remote':
     from samples import *
     Debug = False
@@ -91,7 +90,6 @@ systTree.setWeightName("PFSF",1.)
 systTree.setWeightName("PFUp",1.)
 systTree.setWeightName("PFDown",1.)
 
-
 #++++++++++++++++++++++++++++++++++
 #++     variables to branch      ++
 #++++++++++++++++++++++++++++++++++
@@ -101,7 +99,7 @@ systTree.setWeightName("PFDown",1.)
 #++++++++++++++++++++++++++++++++++
 
 #ssWW variables
-
+var_list = []
 #lepton variables
 lepton_pt               =   array.array('f', [0.])
 lepton_eta              =   array.array('f', [0.])
@@ -109,6 +107,12 @@ lepton_phi              =   array.array('f', [0.])
 lepton_mass             =   array.array('f', [0.])
 lepton_pdgid            =   array.array('i', [0])
 lepton_pfRelIso03       =   array.array('f', [0.])
+var_list.append(lepton_pt)
+var_list.append(lepton_eta)
+var_list.append(lepton_phi)
+var_list.append(lepton_mass)
+var_list.append(lepton_pdgid)
+var_list.append(lepton_pfRelIso03)
 
 #tau variables
 tau_pt                  =   array.array('f', [0.])
@@ -118,6 +122,13 @@ tau_charge              =   array.array('i', [0])
 tau_mass                =   array.array('f', [0.])
 tau_DeepTau_discr       =   array.array('f', [0.])
 tau_HPS_discr           =   array.array('i', [0])
+var_list.append(tau_pt)
+var_list.append(tau_eta)
+var_list.append(tau_phi)
+var_list.append(tau_charge)
+var_list.append(tau_mass)
+var_list.append(tau_DeepTau_discr)
+var_list.append(tau_HPS_discr)
 
 #jet variables
 Leadjet_pt                  =   array.array('f', [0.])
@@ -127,6 +138,13 @@ Leadjet_mass                =   array.array('f', [0.])
 Leadjet_CSVv2_b             =   array.array('f', [0.])
 Leadjet_DeepFlv_b           =   array.array('f', [0.])
 Leadjet_DeepCSVv2_b         =   array.array('f', [0.])
+var_list.append(Leadjet_pt)
+var_list.append(Leadjet_eta)
+var_list.append(Leadjet_phi)
+var_list.append(Leadjet_mass)
+var_list.append(Leadjet_CSVv2_b)
+var_list.append(Leadjet_DeepFlv_b)
+var_list.append(Leadjet_DeepCSVv2_b)
 
 Subleadjet_pt               =   array.array('f', [0.])
 Subleadjet_eta              =   array.array('f', [0.])
@@ -135,13 +153,23 @@ Subleadjet_mass             =   array.array('f', [0.])
 Subleadjet_CSVv2_b          =   array.array('f', [0.])
 Subleadjet_DeepFlv_b        =   array.array('f', [0.])
 Subleadjet_DeepCSVv2_b      =   array.array('f', [0.])
+var_list.append(Subleadjet_pt)
+var_list.append(Subleadjet_eta)
+var_list.append(Subleadjet_phi)
+var_list.append(Subleadjet_mass)
+var_list.append(Subleadjet_CSVv2_b)
+var_list.append(Subleadjet_DeepFlv_b)
+var_list.append(Subleadjet_DeepCSVv2_b)
 
 #MET
 MET_pt                      =   array.array('f', [0.])
 MET_eta                     =   array.array('f', [0.])
 MET_phi                     =   array.array('f', [0.])
 MET_mass                    =   array.array('f', [0.])
-
+var_list.append(MET_pt)
+var_list.append(MET_eta)
+var_list.append(MET_phi)
+var_list.append(MET_mass)
 
 #cut variables
 pass_lepton_selection       =   array.array('i', [0])
@@ -152,12 +180,17 @@ pass_jet_selection          =   array.array('i', [0])
 pass_b_veto                 =   array.array('i', [0])
 pass_mjj_cut                =   array.array('i', [0])
 pass_MET_cut                =   array.array('i', [0])
-
+var_list.append(pass_lepton_selection)
+var_list.append(pass_lepton_veto)
+var_list.append(pass_tau_selection)
+var_list.append(pass_charge_selection)
+var_list.append(pass_jet_selection)
+var_list.append(pass_b_veto)
+var_list.append(pass_mjj_cut)
+var_list.append(pass_MET_cut)
 
 w_PDF_all = array.array('f', [0.]*110) #capisci a cosa serve
 w_nominal_all = array.array('f', [0.])
-
-
 
 #branches added for ssWW analysis
 #lepton
@@ -261,6 +294,10 @@ contagood=0
 #++   looping over the events    ++
 #++++++++++++++++++++++++++++++++++
 for i in range(tree.GetEntries()):
+    #reinizializza tutte le variabili a 0, per sicurezza
+    for i, var in enumerate(var_list):
+        var_list[i][0] = 0
+    
     w_nominal_all[0] = 1.
     #++++++++++++++++++++++++++++++++++
     #++        taking objects        ++
@@ -274,6 +311,7 @@ for i in range(tree.GetEntries()):
     if not Debug and i%5000 == 0:
         print("Event #", i+1, " out of ", tree.GetEntries())
     '''
+
     event       = Event(tree,i)
     electrons   = Collection(event, "Electron")
     muons       = Collection(event, "Muon")
@@ -291,6 +329,7 @@ for i in range(tree.GetEntries()):
     
     #h_eff_mu.Fill('Total', 1)
     #h_eff_ele.Fill('Total', 1)
+
     if isMC:
         genpart = Collection(event, "GenPart")
         LHE = Collection(event, "LHEPart")
@@ -314,10 +353,10 @@ for i in range(tree.GetEntries()):
     #++++++++++++++++++++++++++++++++++
     #++    starting the analysis     ++
     #++++++++++++++++++++++++++++++++++
-    VetoMu = get_LooseMu(muons)
-    goodMu = get_Mu(muons)
-    VetoEle = get_LooseEle(electrons)
-    goodEle = get_Ele(electrons)
+    #VetoMu = get_LooseMu(muons)
+    #goodMu = get_Mu(muons)
+    #VetoEle = get_LooseEle(electrons)
+    #goodEle = get_Ele(electrons)
     year = sample.year
     if(isMC):
         runPeriod = ''
@@ -348,20 +387,21 @@ for i in range(tree.GetEntries()):
     SingleMu=False
     ElMu=False
 
-    HighestLepPt=-999
+    HighestLepPt=-999.
     LeadLepFamily="not selected"
     
     if passEle and not HLT.Ele32_WPTight_Gsf_L1DoubleEG:
         print "Errore" #Questo ora non dovrebbe succedere
     
-    if passEle and len(electrons)<1:    continue
-    if passMu and len(muons)<1:         continue
+    if passEle or passMu:
+        if len(electrons)<1 and len(muons)<1:         continue
+    else: continue
 
     if passEle and not passMu:  
         SingleEle=True
         LeadLepFamily="electrons"
         HighestLepPt=electrons[0].pt
-
+    
     if passMu and not passEle:
         SingleMu=True
         LeadLepFamilu="muons"
@@ -378,8 +418,8 @@ for i in range(tree.GetEntries()):
             if ele.pt>HighestLepPt:
                 SingleEle=True
                 break
-        if SingleEle==False and HighestLepPt>0: SingleMu=True
-
+    
+    if SingleEle==False and HighestLepPt>0: SingleMu=True
     
     if SingleEle==True: leptons=electrons
     if SingleMu==True:  leptons=muons
@@ -391,7 +431,7 @@ for i in range(tree.GetEntries()):
         systTree.fillTreesSysts(trees, "all")
         continue
 
-    pass_lepton_selection       =   1
+    pass_lepton_selection[0]       =   1
     lepton_pt[0]                =   leptons[indexGoodLep].pt
     lepton_eta[0]               =   leptons[indexGoodLep].eta
     lepton_phi[0]               =   leptons[indexGoodLep].phi
@@ -400,7 +440,7 @@ for i in range(tree.GetEntries()):
     lepton_pfRelIso03[0]        =   leptons[indexGoodLep].pfRelIso03_all
     
     GoodLep=leptons[indexGoodLep]
-    pass_lepton_veto=LepVeto(GoodLep, electrons, muons)
+    pass_lepton_veto[0]=LepVeto(GoodLep, electrons, muons)
     
     UseDeepTau=True
     indexGoodTau=SelectTau(taus, GoodLep, UseDeepTau)
@@ -410,10 +450,11 @@ for i in range(tree.GetEntries()):
         systTree.fillTreesSysts(trees, "all")
         continue    
     
-    pass_tau_selection=1
+    pass_tau_selection[0]=1
     GoodTau=taus[indexGoodTau]
 
-    if  GoodTau.charge==GoodLep.charge: pass_charge_selection=1
+    if GoodTau.charge==GoodLep.charge:
+        pass_charge_selection[0]=1
 
     outputJetSel=JetSelection(list(jets), GoodTau, GoodLep)
     
@@ -424,20 +465,18 @@ for i in range(tree.GetEntries()):
 
     jet1, jet2=outputJetSel
     
-    pass_jet_selection=1
+    pass_jet_selection[0]=1
 
-    if not BVeto(jets): pass_b_veto=1
+    if not BVeto(jets): pass_b_veto[0]=1
 
     LeadJet=ROOT.TLorentzVector()
     SubleadJet=ROOT.TLorentzVector()
     LeadJet.SetPtEtaPhiM(jet1.pt, jet1.eta, jet1.phi, jet1.mass)
     SubleadJet.SetPtEtaPhiM(jet2.pt, jet2.eta, jet2.phi, jet2.mass) 
 
-    if not JetCut(LeadJet, SubleadJet): pass_mjj_cut=1
+    if not JetCut(LeadJet, SubleadJet): pass_mjj_cut[0]=1
 
-    if not metCut(met): pass_MET_cut=1
-
-
+    if not metCut(met): pass_MET_cut[0]=1
 
     #######################################
     ## Removing events with HEM problem  ##
