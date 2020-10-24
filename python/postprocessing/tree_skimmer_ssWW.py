@@ -54,6 +54,17 @@ if ('Data' in sample.label):
 
 MCReco = MCReco * isMC
 
+Cut_dict = {1: ['Trigger             ', 0, 0.0, 0.0, 0.0, 0.0],
+            2: ['Lepton selection    ', 0, 0.0, 0.0, 0.0, 0.0],
+            3: ['Lepton Veto         ', 0, 0.0, 0.0, 0.0, 0.0],
+            4: ['Tau selection       ', 0, 0.0, 0.0, 0.0, 0.0],
+            5: ['Same charge tau lep ', 0, 0.0, 0.0, 0.0, 0.0],
+            6: ['Jet Selection       ', 0, 0.0, 0.0, 0.0, 0.0],
+            7: ['BVeto               ', 0, 0.0, 0.0, 0.0, 0.0],
+            8: ['M_jj>500 GeV        ', 0, 0.0, 0.0, 0.0, 0.0],
+            9: ['MET>40 GeV          ', 0, 0.0, 0.0, 0.0, 0.0],
+        }
+
 #++++++++++++++++++++++++++++++++++
 #++   branching the new trees    ++
 #++++++++++++++++++++++++++++++++++
@@ -517,6 +528,29 @@ outTreeFile.cd()
     #h_PDFweight.Write()
     #h_eff_mu.Write()
     #h_eff_ele.Write()
+
+if Debug:
+    for i in range(1,10):
+    if i==1:
+        Cut_dict[i][2]=Cut_dict[i][1]*1.0/nEntriesTotal
+        Cut_dict[i][3]=Cut_dict[i][1]*1.0/nEntriesTotal
+        Cut_dict[i][4]=math.sqrt(Cut_dict[i][2]*(1-Cut_dict[i][2])/nEntriesTotal)
+        Cut_dict[i][5]=math.sqrt(Cut_dict[i][3]*(1-Cut_dict[i][2])/nEntriesTotal)
+    else:
+        if Cut_dict[i-1][1]<=0 or Cut_dict[i][1]==0:
+            Cut_dict[i][2]=-999
+            Cut_dict[i][3]=Cut_dict[i][1]*1.0/nEntriesTotal
+            Cut_dict[i][4]=-999
+            Cut_dict[i][5]=-999
+        else:
+            Cut_dict[i][2]=Cut_dict[i][1]*1.0/Cut_dict[i-1][1]
+            Cut_dict[i][3]=Cut_dict[i][1]*1.0/nEntriesTotal
+            Cut_dict[i][4]=math.sqrt(Cut_dict[i][2]*(1-Cut_dict[i][2])/Cut_dict[i][1]*1.0)
+            Cut_dict[i][5]=math.sqrt(Cut_dict[i][3]*(1-Cut_dict[i][2])/nEntriesTotal)
+
+    for cutname, counts in Cut_dict.items():
+        print(cutname, round(counts[1], 4))
+
 
 systTree.writeTreesSysts(trees, outTreeFile)
 print("Number of events in output tree " + str(trees[0].GetEntries()))
