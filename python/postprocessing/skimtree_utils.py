@@ -410,6 +410,7 @@ def trig_map(HLT, year, runPeriod):
     passEle = False
     passHT = False
     noTrigger = False
+    
     if(year == 2016 and runPeriod != 'H'):
         if(HLT.IsoMu24 or HLT.IsoTkMu24):
             passMu = True

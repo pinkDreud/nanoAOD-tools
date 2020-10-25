@@ -27,10 +27,8 @@ ROOT.gROOT.SetBatch()
 
 chain = ROOT.TChain('Events')
 print(chain)
-#chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WpWp_EWK_2017_nanoAOD_file_prova.root")
-#chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WpWp_EWK_2017_nanoAOD_file_prova.root")
-#chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WpWp_EWK_2017_nanoAOD_file_prova.root")
-chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/TTTo2L2Nu_102X_prova.root")
+chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WpWp_EWK_2017_nanoAOD_file_prova.root")
+#chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/TTTo2L2Nu_102X_prova.root")
 #chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/TTToSemileptonic_102X_prova.root")
 #chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WJets2017_102X/WJets_1.root")
 #chain.Add("/eos/user/m/mmagheri/SampleVBS_nanoAOD/WJets2017_102X/WJets_2.root")
@@ -107,7 +105,6 @@ for i in range(tree.GetEntries()):
     if SingleEle==True: leptons=electrons
     if SingleMu==True:  leptons=muons
     
-    if SingleEle==True: continue #TODO: just separating electrons
     Cut_dict[1][1]+=1  
 
     #TODO cuts as lambda expression to have a much cleaner code

@@ -306,8 +306,8 @@ contagood=0
 #++++++++++++++++++++++++++++++++++
 for i in range(tree.GetEntries()):
     #reinizializza tutte le variabili a 0, per sicurezza
-    for i, var in enumerate(var_list):
-        var_list[i][0] = 0
+    for j, var in enumerate(var_list):
+        var_list[j][0] = 0
     
     w_nominal_all[0] = 1.
     #++++++++++++++++++++++++++++++++++
@@ -373,14 +373,15 @@ for i in range(tree.GetEntries()):
         runPeriod = ''
     else:
         runPeriod = sample.runP
-
+    print "------ ", i
     passMu, passEle, noTrigger = trig_map(HLT, year, runPeriod)
 
     ###### Dobbiamo personalizzare a tempo debito goodMu/Ele e vetoEle/Mu, per ora commentiamo
     #isMuon = (len(goodMu) == 1) and (len(goodEle) == 0) and len(VetoMu) == 0 and len(VetoEle) == 0 and (passMu)
     #isElectron = (len(goodMu) == 0) and (len(goodEle) == 1) and len(VetoMu) == 0 and len(VetoEle) == 0 and (passEle)
     ######
-    
+
+
     if noTrigger: continue
     doublecounting = True
     if(isMC):
@@ -407,13 +408,14 @@ for i in range(tree.GetEntries()):
     if passEle or passMu:
         if len(electrons)<1 and len(muons)<1:         continue
     else: continue
+    
 
-    if passEle and not passMu:  
+    if passEle and not passMu and len(electrons)>0:  
         SingleEle=True
         LeadLepFamily="electrons"
         HighestLepPt=electrons[0].pt
     
-    if passMu and not passEle:
+    if passMu and not passEle and len(muons)>0:
         SingleMu=True
         LeadLepFamilu="muons"
         HighestLepPt=muons[0].pt
@@ -434,15 +436,23 @@ for i in range(tree.GetEntries()):
     
     if SingleEle==True: leptons=electrons
     if SingleMu==True:  leptons=muons
-    
+
+
+    if (SingleEle or SingleMu): Cut_dict[1][1]+=1
+
     indexGoodLep=SelectLepton(leptons, SingleMu)
 
-    if indexGoodLep<0: 
+    if indexGoodLep<0 or indexGoodLep>=len(leptons): 
         systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
         systTree.fillTreesSysts(trees, "all")
         continue
+    
 
     pass_lepton_selection[0]       =   1
+    
+
+    if (SingleEle==1 or SingleMu==1) and pass_lepton_selection[0]==1: Cut_dict[2][1]+=1
+
     lepton_pt[0]                =   leptons[indexGoodLep].pt
     lepton_eta[0]               =   leptons[indexGoodLep].eta
     lepton_phi[0]               =   leptons[indexGoodLep].phi
@@ -453,19 +463,28 @@ for i in range(tree.GetEntries()):
     GoodLep=leptons[indexGoodLep]
     pass_lepton_veto[0]=LepVeto(GoodLep, electrons, muons)
     
+    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1: Cut_dict[3][1]+=1    
+    
     UseDeepTau=True
     indexGoodTau=SelectTau(taus, GoodLep, UseDeepTau)
 
     if indexGoodTau<0:
         systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
         systTree.fillTreesSysts(trees, "all")
-        continue    
-    
+        continue      
+
     pass_tau_selection[0]=1
+    
+    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1: Cut_dict[4][1]+=1
+
     GoodTau=taus[indexGoodTau]
 
     if GoodTau.charge==GoodLep.charge:
         pass_charge_selection[0]=1
+
+    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1: Cut_dict[5][1]+=1
+
+
 
     outputJetSel=JetSelection(list(jets), GoodTau, GoodLep)
     
@@ -478,7 +497,12 @@ for i in range(tree.GetEntries()):
     
     pass_jet_selection[0]=1
 
+    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1: Cut_dict[6][1]+=1
+
     if not BVeto(jets): pass_b_veto[0]=1
+
+    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1: Cut_dict[7][1]+=1
+
 
     LeadJet=ROOT.TLorentzVector()
     SubleadJet=ROOT.TLorentzVector()
@@ -487,7 +511,11 @@ for i in range(tree.GetEntries()):
 
     if not JetCut(LeadJet, SubleadJet): pass_mjj_cut[0]=1
 
+    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1 and pass_mjj_cut[0]==1: Cut_dict[8][1]+=1
+
     if not metCut(met): pass_MET_cut[0]=1
+
+    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1 and pass_mjj_cut[0]==1 and pass_MET_cut[0]==1: Cut_dict[9][1]+=1
 
     #######################################
     ## Removing events with HEM problem  ##
@@ -528,26 +556,27 @@ outTreeFile.cd()
     #h_PDFweight.Write()
     #h_eff_mu.Write()
     #h_eff_ele.Write()
-
+'''
 if Debug:
     for i in range(1,10):
-    if i==1:
-        Cut_dict[i][2]=Cut_dict[i][1]*1.0/nEntriesTotal
-        Cut_dict[i][3]=Cut_dict[i][1]*1.0/nEntriesTotal
-        Cut_dict[i][4]=math.sqrt(Cut_dict[i][2]*(1-Cut_dict[i][2])/nEntriesTotal)
-        Cut_dict[i][5]=math.sqrt(Cut_dict[i][3]*(1-Cut_dict[i][2])/nEntriesTotal)
-    else:
-        if Cut_dict[i-1][1]<=0 or Cut_dict[i][1]==0:
-            Cut_dict[i][2]=-999
+        if i==1:
+            Cut_dict[i][2]=Cut_dict[i][1]*1.0/nEntriesTotal
             Cut_dict[i][3]=Cut_dict[i][1]*1.0/nEntriesTotal
-            Cut_dict[i][4]=-999
-            Cut_dict[i][5]=-999
-        else:
-            Cut_dict[i][2]=Cut_dict[i][1]*1.0/Cut_dict[i-1][1]
-            Cut_dict[i][3]=Cut_dict[i][1]*1.0/nEntriesTotal
-            Cut_dict[i][4]=math.sqrt(Cut_dict[i][2]*(1-Cut_dict[i][2])/Cut_dict[i][1]*1.0)
+            Cut_dict[i][4]=math.sqrt(Cut_dict[i][2]*(1-Cut_dict[i][2])/nEntriesTotal)
             Cut_dict[i][5]=math.sqrt(Cut_dict[i][3]*(1-Cut_dict[i][2])/nEntriesTotal)
-
+        else:
+            if Cut_dict[i-1][1]<=0 or Cut_dict[i][1]==0:
+                Cut_dict[i][2]=-999
+                Cut_dict[i][3]=Cut_dict[i][1]*1.0/nEntriesTotal
+                Cut_dict[i][4]=-999
+                Cut_dict[i][5]=-999
+            else:
+                Cut_dict[i][2]=Cut_dict[i][1]*1.0/Cut_dict[i-1][1]
+                Cut_dict[i][3]=Cut_dict[i][1]*1.0/nEntriesTotal
+                Cut_dict[i][4]=math.sqrt(Cut_dict[i][2]*(1-Cut_dict[i][2])/Cut_dict[i][1]*1.0)
+                Cut_dict[i][5]=math.sqrt(Cut_dict[i][3]*(1-Cut_dict[i][2])/nEntriesTotal)
+'''
+if Debug:
     for cutname, counts in Cut_dict.items():
         print(cutname, round(counts[1], 4))
 
