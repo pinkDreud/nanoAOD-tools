@@ -28,9 +28,9 @@ def sub_writer(sample, n, files, folder):
     f.write("should_transfer_files   = YES\n")
     f.write("when_to_transfer_output = ON_EXIT\n")
     f.write("transfer_input_files    = $(Proxy_path), samples/samples.py, skimtree_utils.py, __init__.py\n")
-    f.write("transfer_output_remaps  = \""+ sample.label + "_part" + str(n) + ".root=/eos/user/"+inituser + "/" + username+"/Wprime/nosynch/" + folder + "/" + sample.label +"/"+ sample.label + "_part" + str(n) + ".root\"\n")
+    f.write("transfer_output_remaps  = \""+ sample.label + "_part" + str(n) + ".root=/eos/user/"+inituser + "/" + username+"/VBS/nosynch/" + folder + "/" + sample.label +"/"+ sample.label + "_part" + str(n) + ".root\"\n")
     f.write("+JobFlavour             = \"workday\"\n") # options are espresso = 20 minutes, microcentury = 1 hour, longlunch = 2 hours, workday = 8 hours, tomorrow = 1 day, testmatch = 3 days, nextweek     = 1 week
-    f.write("executable              = tree_skimmer.py\n")
+    f.write("executable              = tree_skimmer_ssWW.py\n")
     f.write("arguments               = " + sample.label + " " + str(n) + " " + str(files) + " remote" + "\n")
     #f.write("input                   = input.txt\n")
     f.write("output                  = condor/output/"+ sample.label + "_part" + str(n) + ".out\n")
@@ -71,8 +71,8 @@ for sample in samples:
     isMC = True
     if('Data' in sample.label):
         isMC = False
-    if not os.path.exists("/eos/user/" + inituser + "/" + username + "/Wprime/nosynch/" + folder + "/" + sample.label):
-        os.makedirs("/eos/user/" + inituser + "/" + username +"/Wprime/nosynch/" + folder + "/" + sample.label)
+    if not os.path.exists("/eos/user/" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/" + sample.label):
+        os.makedirs("/eos/user/" + inituser + "/" + username +"/VBS/nosynch/" + folder + "/" + sample.label)
     f = open("../../crab/macros/files/" + sample.label + ".txt", "r")
     files_list = f.read().splitlines()
     print(str(len(files_list)))
@@ -81,12 +81,12 @@ for sample in samples:
             sub_writer(sample, i, files, folder)
             os.popen('condor_submit condor.sub')
             print('condor_submit condor.sub')
-            #os.popen("python tree_skimmer.py " " + sample.label + " " + str(i) + " " + str(files))
-            print("python tree_skimmer.py " + sample.label + " " + str(i) + " " + str(files))
+            #os.popen("python tree_skimmer_ssWW.py " " + sample.label + " " + str(i) + " " + str(files))
+            print("python tree_skimmer_ssWW.py " + sample.label + " " + str(i) + " " + str(files) + " remote")
     else:
         for i in range(len(files_list)/split+1):
             sub_writer(sample, i,  ",".join( e for e in files_list[split*i:split*(i+1)]), folder)
             print('condor_submit condor.sub')
             os.popen('condor_submit condor.sub')
-            #os.popen("python tree_skimmer.py " + sample.label + " " + str(i) + " " + ",".join( e for e in files_list[split*i:split*(i+1)]))
-            print("python tree_skimmer.py " + sample.label + " " + str(i) + " " + ",".join( e for e in files_list[split*i:split*(i+1)]))
+            #os.popen("python tree_skimmer_ssWW.py " + sample.label + " " + str(i) + " " + ",".join( e for e in files_list[split*i:split*(i+1)]))
+            print("python tree_skimmer_ssWW.py " + sample.label + " " + str(i) + " " + ",".join( e for e in files_list[split*i:split*(i+1)]) + " remote")

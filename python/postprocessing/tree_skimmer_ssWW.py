@@ -54,6 +54,9 @@ if ('Data' in sample.label):
 
 MCReco = MCReco * isMC
 
+Cut_dict = {}
+
+#if Debug:
 Cut_dict = {1: ['Trigger             ', 0, 0.0, 0.0, 0.0, 0.0],
             2: ['Lepton selection    ', 0, 0.0, 0.0, 0.0, 0.0],
             3: ['Lepton Veto         ', 0, 0.0, 0.0, 0.0, 0.0],
@@ -63,7 +66,7 @@ Cut_dict = {1: ['Trigger             ', 0, 0.0, 0.0, 0.0, 0.0],
             7: ['BVeto               ', 0, 0.0, 0.0, 0.0, 0.0],
             8: ['M_jj>500 GeV        ', 0, 0.0, 0.0, 0.0, 0.0],
             9: ['MET>40 GeV          ', 0, 0.0, 0.0, 0.0, 0.0],
-        }
+}
 
 #++++++++++++++++++++++++++++++++++
 #++   branching the new trees    ++
@@ -320,8 +323,8 @@ for i in range(tree.GetEntries()):
             break
     
     if not Debug and i%5000 == 0:
-        print("Event #", i+1, " out of ", tree.GetEntries())
     '''
+    print("Event #", i+1, " out of ", tree.GetEntries())
 
     event       = Event(tree,i)
     electrons   = Collection(event, "Electron")
@@ -373,7 +376,8 @@ for i in range(tree.GetEntries()):
         runPeriod = ''
     else:
         runPeriod = sample.runP
-    print "------ ", i
+    
+    #print "------ ", i
     passMu, passEle, noTrigger = trig_map(HLT, year, runPeriod)
 
     ###### Dobbiamo personalizzare a tempo debito goodMu/Ele e vetoEle/Mu, per ora commentiamo
@@ -484,8 +488,6 @@ for i in range(tree.GetEntries()):
 
     if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1: Cut_dict[5][1]+=1
 
-
-
     outputJetSel=JetSelection(list(jets), GoodTau, GoodLep)
     
     if outputJetSel==-999:
@@ -578,7 +580,7 @@ if Debug:
 '''
 if Debug:
     for cutname, counts in Cut_dict.items():
-        print(cutname, round(counts[1], 4))
+        print(counts[0], round(counts[1], 4))
 
 
 systTree.writeTreesSysts(trees, outTreeFile)
