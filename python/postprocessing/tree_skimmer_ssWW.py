@@ -29,7 +29,7 @@ else:
 sample = sample_dict[sys.argv[1]]
 part_idx = sys.argv[2]
 file_list = list(map(str, sys.argv[3].strip('[]').split(',')))
-print file_list
+print(file_list)
 
 MCReco = True
 startTime = datetime.datetime.now()
@@ -43,7 +43,7 @@ for infile in file_list:
     print("Adding %s to the chain" %(infile))
     chain.Add(infile)
 
-print chain
+print(chain)
 
 print("Number of events in chain " + str(chain.GetEntries()))
 print("Number of events in tree from chain " + str((chain.GetTree()).GetEntries()))
@@ -407,7 +407,7 @@ for i in range(tree.GetEntries()):
     LeadLepFamily="not selected"
     
     if passEle and not HLT.Ele32_WPTight_Gsf_L1DoubleEG:
-        print "Errore" #Questo ora non dovrebbe succedere
+        print("Errore")#Questo ora non dovrebbe succedere
     
     if passEle or passMu:
         if len(electrons)<1 and len(muons)<1:         continue
