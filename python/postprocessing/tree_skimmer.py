@@ -1080,6 +1080,7 @@ for i in range(tree.GetEntries()):
         MET_phi_all[0] = -100.
         Event_HT_all[0] = -100.
 
+    '''
     # requiring mtt < 700 to merge inclusive tt with the mtt > 700
     if('TT_incl' in sample.label):
         top_q4 = ROOT.TLorentzVector()  
@@ -1113,6 +1114,7 @@ for i in range(tree.GetEntries()):
                        abs(genpart[genp.genPartIdxMother].pdgId) == 15
                        lhe_tau += 1 #inventare un modo per contare eventi leptonici da tau
         nlep_all[0] = lhe_ele + lhe_mu + lhe_tau
+    '''
 
     # checking the top 4-vector at LHE level 
     if Debug and isMC:

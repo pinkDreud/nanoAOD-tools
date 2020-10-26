@@ -267,12 +267,13 @@ if('TT_' in sample.label):
 print("isMC: ", isMC)
 if(isMC):
     newfile = ROOT.TFile.Open(file_list[0])
-    isthere_gen = bool(newfile.FindObjectAny("h_genweight"))
-    isthere_pdf = bool(newfile.FindObjectAny("h_PDFweight"))
-    if isthere_gen or isthere_pdf:
-        dirc = ROOT.TDirectory()
-        dirc = newfile.Get("plots")
+    dirc = ROOT.TDirectory()
+    dirc = newfile.Get("plots")
+    isthere_gen = bool(dirc.GetListOfKeys().Contains("h_genweight"))
+    isthere_pdf = bool(dirc.GetListOfKeys().Contains("h_PDFweight"))
+    print("gen?: ", isthere_gen, " pdf?: ", isthere_pdf)
 
+    if isthere_gen or isthere_pdf:
         if isthere_gen:
             h_genweight = ROOT.TH1F()
             h_genweight.SetNameTitle('h_genweight', 'h_genweight')
@@ -290,6 +291,7 @@ if(isMC):
             h_PDFweight.Add(h_pdfw_tmp)
         else:
             addPDF = False
+    newfile.Close()
 '''
 #++++++++++++++++++++++++++++++++++
 #++      Efficiency studies      ++
@@ -552,10 +554,10 @@ for i in range(tree.GetEntries()):
 
 #trees[0].Print()
 outTreeFile.cd()
-#if(isMC):
-    #print("h_genweight first bin content is %f and h_PDFweight has %f bins" %(h_genweight.GetBinContent(1), h_PDFweight.GetNbinsX()))
-    #h_genweight.Write()
-    #h_PDFweight.Write()
+if(isMC):
+    print("h_genweight first bin content is %f and h_PDFweight has %f bins" %(h_genweight.GetBinContent(1), h_PDFweight.GetNbinsX()))
+    h_genweight.Write()
+    h_PDFweight.Write()
     #h_eff_mu.Write()
     #h_eff_ele.Write()
 '''
