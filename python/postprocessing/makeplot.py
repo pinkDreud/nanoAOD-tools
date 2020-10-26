@@ -498,10 +498,12 @@ for year in years:
 for year in years:
      for lep in leptons:
           dataset_new = dataset_dict[year]
+          '''
           if lep == 'muon' and sample_dict['DataEle_'+str(year)] in dataset_new:
                dataset_new.remove(sample_dict['DataEle_'+str(year)])
           elif lep == 'electron' and sample_dict['DataMu_'+str(year)] in dataset_new:
                dataset_new.remove(sample_dict['DataMu_'+str(year)])
+          '''
 
           variables = []
           wzero = 'w_nominal'#*PFSF*lepSF'
@@ -685,8 +687,9 @@ for year in years:
                     os.system('set LD_PRELOAD=libtcmalloc.so')
                     makestack(lep, 'jets', var, dataset_new, cut_tag, "", lumi[str(year)])
                     os.system('set LD_PRELOAD=libtcmalloc.so')
+          '''
           if lep == 'muon':
                dataset_new.append(sample_dict['DataEle_'+str(year)])
           elif lep == 'electron':
                dataset_new.append(sample_dict['DataMu_'+str(year)])
-          
+          '''
