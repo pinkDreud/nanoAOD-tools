@@ -554,8 +554,9 @@ for i in range(tree.GetEntries()):
 #trees[0].Print()
 outTreeFile.cd()
 if(isMC):
-    print("h_genweight first bin content is %f and h_PDFweight has %f bins" %(h_genweight.GetBinContent(1), h_PDFweight.GetNbinsX()))
+    #print("h_genweight first bin content is %f and h_PDFweight has %f bins" %(h_genweight.GetBinContent(1), h_PDFweight.GetNbinsX()))
     h_genweight.Write()
+    if not ("WZ" in sample.label):
     h_PDFweight.Write()
     #h_eff_mu.Write()
     #h_eff_ele.Write()

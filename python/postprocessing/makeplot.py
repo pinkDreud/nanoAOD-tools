@@ -8,6 +8,8 @@ from CMS_lumi import CMS_lumi
 from PhysicsTools.NanoAODTools.postprocessing.samples.samples import *
 from array import array
 
+print TT_2017
+
 usage = 'python makeplot.py'
 parser = optparse.OptionParser(usage)
 parser.add_option('--merpart', dest='merpart', default = False, action='store_true', help='Default parts are not merged')
@@ -438,6 +440,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      os.system('set LD_PRELOAD=libtcmalloc.so')
 
 dataset_dict = {'2016':[],'2017':[],'2018':[]}
+
 if(opt.dat!= 'all'):
      if not(opt.dat in sample_dict.keys()):
           print sample_dict.keys()
@@ -448,10 +451,9 @@ if(opt.dat!= 'all'):
      [dataset_dict[str(sample.year)].append(sample) for sample in samples]
 else:
      dataset_dict = {
-          '2016':[DataMu_2016, DataEle_2016, DataHT_2016, ST_2016, QCD_2016, TT_Mtt_2016, WJets_2016, WP_M2000W20_RH_2016, WP_M3000W30_RH_2016, WP_M4000W40_RH_2016, WP_M4000W400_RH_2016],
-          #'2016':[DataHTG_2016, DataMuG_2016, ST_2016, QCD_2016, TT_Mtt_2016, WJets_2016, WP_M2000W20_RH_2016, WP_M3000W30_RH_2016, WP_M4000W40_RH_2016, WP_M4000W400_RH_2016],
-          '2017':[DataMu_2017, DataEle_2017, DataHT_2017, ST_2017, QCD_2017, TT_Mtt_2017, WJets_2017, WP_M2000W20_RH_2017, WP_M3000W30_RH_2017, WP_M4000W40_RH_2017, WP_M4000W400_RH_2017],
-          '2018':[DataMu_2018, DataEle_2018, DataHT_2018, ST_2018, QCD_2018, TT_Mtt_2018, WJets_2018, WP_M2000W20_RH_2018, WP_M3000W30_RH_2018, WP_M4000W40_RH_2018, WP_M4000W400_RH_2018]
+          #'2016':[TT_2016, WJets_2016, WZ_2016, DYJetsToLL_2016, WpWpJJ_EWK_2016, WpWpJJ_QCD_2016],#[DataMu_2016, DataEle_2016, DataHT_2016],
+          '2017':[DYJetsToLL_2017, WpWpJJ_EWK_2017, WpWpJJ_QCD_2017],#[TT_2017, WJets_2017, WZ_2017, DYJetsToLL_2017, WpWpJJ_EWK_2017, WpWpJJ_QCD_2017],#[DataMu_2017, DataEle_2017, DataHT_2017],
+          '2018':[TT_2018, WJets_2018, WZ_2018, DYJetsToLL_2018, WpWpJJ_EWK_2018, WpWpJJ_QCD_2018],#[DataMu_2018, DataEle_2018, DataHT_2018],
      }
 #print(dataset_dict.keys())
 
@@ -538,144 +540,7 @@ for year in years:
           variables.append(variabile('deltaR_bestWAK4_closestAK8', '#DeltaR (best)W\' AK4 closest AK8',  wzero+'*('+cut+')', 50, 0, 5))
           variables.append(variabile('leadingjet_pt', 'leading jet p_{T} [GeV]',  wzero+'*('+cut+')', 150, 0, 3000))
           variables.append(variabile('subleadingjet_pt', 'subleading jet p_{T} [GeV]',  wzero+'*('+cut+')', 150, 0, 3000))          
-          '''
-          variables.append(variabile('best_topjet_isbtag', 'top jet b tagged (best)',  wzero+'*('+cut+')', 2, -0.5, 1.5))
-          variables.append(variabile('best_Wpjet_isbtag', "W' jet b tagged (best)",  wzero+'*('+cut+')', 2, -0.5, 1.5))
-          variables.append(variabile('MC_Wpjet_pt', "MCtruth W' jet p_{T} [GeV]",  wzero+'*('+cut+')', 150, 0, 3000))
-          variables.append(variabile('MC_topjet_pt', "MCtruth top jet p_{T} [GeV]",  wzero+'*('+cut+')', 150, 0, 3000))
-          variables.append(variabile('MC_top_pt', "MCtruth top p_{T} [GeV]",  wzero+'*('+cut+')', 150, 0, 3000))
-          variables.append(variabile('MC_top_m', "MCtruth top m [GeV]",  wzero+'*('+cut+')', 46, 80, 1000))
-          variables.append(variabile('MC_Wprime_pt', 'Wprime p_{T} [GeV] (MC)',  wzero+'*(MC_Wprime_pt>0&&'+cut+')', 150, 0, 3000))
-          variables.append(variabile('MC_Wprime_eta', 'Wprime #eta (MC)', wzero+'*(MC_Wprime_eta>-10.&&'+cut+')', 48, -4., 4.))
-          variables.append(variabile('MC_Wprime_phi', 'Wprime #phi (MC)',  wzero+'*(MC_Wprime_phi>-4.&&'+cut+')', 20, -3.14, 3.14))
-          variables.append(variabile('MC_Wprime_m', 'Wprime mass [GeV] (MC)',  wzero+'*(MC_Wprime_m>0&&'+cut+')',  61, 80, 5000))
-          
-          variables.append(variabile('bjets_pt', 'leading bjets system p_{T} [GeV]',  wzero+'*('+cut+')', 150, 0, 3000))
-          variables.append(variabile('lepMET_deltaphi', '#Delta#phi(l, MET)',  wzero+'*('+cut+')', 20, -3.14, 3.14))
-          variables.append(variabile('topAK8_area', 'topAK8 area', wzero+'*('+cut+')', 30, 1.5, 3.0))
-          variables.append(variabile('topAK8_btag', 'topAK8 b tag ', wzero+'*(topAK8_btag>-1&&'+cut+')', 20, 0, 1.0))
-          variables.append(variabile('topAK8_ttagMD', 'topAK8 t tag MD', wzero+'*(topAK8_ttagMD>-1&&'+cut+')', 20, 0, 1.0))
-          variables.append(variabile('topAK8_ttag', 'topAK8 t tag', wzero+'*(topAK8_ttag>-1&&'+cut+')', 20, 0, 1.0))
-          variables.append(variabile('topAK8_eta', 'topAK8 #eta', wzero+'*('+cut+')', 48, -4.8, 4.8)) 
-          variables.append(variabile('topAK8_m', 'topAK8 mass [GeV]', wzero+'*('+cut+')', 40, 0, 400))
-          variables.append(variabile('topAK8_mSD', 'topAK8 soft drop mass [GeV]', wzero+'*('+cut+')', 40, 0, 400))
-          variables.append(variabile('topAK8_phi', 'topAK8 #phi', wzero+'*('+cut+')', 20, -3.14, 3.14))
-          variables.append(variabile('topAK8_pt', 'topAK8 p_{T} [GeV]', wzero+'*('+cut+')', 200, 0, 2000))
-          variables.append(variabile('topAK8_tau1', 'topAK8 tau 1', wzero+'*('+cut+')', 80, 0, .8))
-          variables.append(variabile('topAK8_tau2', 'topAK8 tau 2', wzero+'*('+cut+')', 60, 0, .6))
-          variables.append(variabile('topAK8_tau3', 'topAK8 tau 3', wzero+'*('+cut+')', 40, 0, .4))
-          variables.append(variabile('topAK8_tau4', 'topAK8 tau 4', wzero+'*('+cut+')', 20, 0, .2))
-          
-          variables.append(variabile('leadingbjet_pt', 'leading bjet p_{T} [GeV]',  wzero+'*('+cut+')', 150, 0, 3000))
-          variables.append(variabile('subleadingbjet_pt', 'subleading bjet p_{T} [GeV]',  wzero+'*('+cut+')', 150, 0, 3000))          
-          variables.append(variabile('deltaR_lep_closestjet', '#DeltaR lep closest jet',  wzero+'*('+cut+')', 50, 0, 5))
-          variables.append(variabile('deltaR_lep_leadingjet', '#DeltaR lep lead jet',  wzero+'*('+cut+')', 50, 0, 5))
-          variables.append(variabile('deltaR_lep_subleadingjet', '#DeltaR lep sub-lead jet',  wzero+'*('+cut+')', 50, 0, 5))
-          variables.append(variabile('best_top_pt', 'top p_{T} [GeV] (best)',  wzero+'*(best_top_pt>0&&'+cut+')', 150, 0, 3000))
-          variables.append(variabile('best_top_eta', 'top #eta (best)', wzero+'*(best_top_eta>-10.&&'+cut+')', 48, -4., 4.))
-          variables.append(variabile('best_top_phi', 'top #phi (best)',  wzero+'*(best_top_phi>-4.&&'+cut+')', 20, -3.14, 3.14))
-          variables.append(variabile('chi_top_pt', 'top p_{T} [GeV] (chimass)',  wzero+'*(chi_top_pt>0&&'+cut+')', 150, 0, 3000))
-          variables.append(variabile('chi_top_eta', 'top #eta (chimass)', wzero+'*(chi_top_eta>-10.&&'+cut+')', 48, -4., 4.))
-          variables.append(variabile('chi_top_phi', 'top #phi (chimass)',  wzero+'*(chi_top_phi>-4.&&'+cut+')', 20, -3.14, 3.14))
-          variables.append(variabile('chi_top_m', 'top mass [GeV] (chimass)',  wzero+'*(chi_top_m>0&&'+cut+')',  46, 80, 1000))
-          variables.append(variabile('closest_top_pt', 'top p_{T} [GeV] (closest)',  wzero+'*(closest_top_pt>0&&'+cut+')', 150, 0, 3000))
-          variables.append(variabile('closest_top_eta', 'top #eta (closest)', wzero+'*(closest_top_eta>-10.&&'+cut+')', 48, -4., 4.))
-          variables.append(variabile('closest_top_phi', 'top #phi (closest)',  wzero+'*(closest_top_phi>-4.&&'+cut+')', 20, -3.14, 3.14))
-          variables.append(variabile('closest_top_m', 'top mass [GeV] (closest)',  wzero+'*(closest_top_m>0&&'+cut+')', 46, 80, 1000))
-          variables.append(variabile('sublead_top_pt', 'top p_{T} [GeV] (sublead)',  wzero+'*(sublead_top_pt>0&&'+cut+')', 150, 0, 3000))
-          variables.append(variabile('sublead_top_eta', 'top #eta (sublead)', wzero+'*(sublead_top_eta>-10.&&'+cut+')', 48, -4., 4.))
-          variables.append(variabile('sublead_top_phi', 'top #phi (sublead)',  wzero+'*(sublead_top_phi>-4.&&'+cut+')', 20, -3.14, 3.14))
-          variables.append(variabile('sublead_top_m', 'top mass [GeV] (sublead)',  wzero+'*(sublead_top_m>0&&'+cut+')', 46, 80, 1000))
-          variables.append(variabile('GenPart_top_pt', 'top p_{T} [GeV] (GenPart)',  wzero+'*(GenPart_top_pt>0&&'+cut+')', 150, 0, 3000))
-          variables.append(variabile('GenPart_top_eta', 'top #eta (GenPart)', wzero+'*(GenPart_top_eta>-10.&&'+cut+')', 48, -4., 4.))
-          variables.append(variabile('GenPart_top_phi', 'top #phi (GenPart)',  wzero+'*(GenPart_top_phi>-4.&&'+cut+')', 20, -3.14, 3.14))
-          variables.append(variabile('GenPart_top_m', 'top mass [GeV] (GenPart)',  wzero+'*(GenPart_top_m>0&&'+cut+')', 46, 80, 1000))
-          variables.append(variabile('GenPart_bottom_pt', 'bottom p_{T} [GeV] (GenPart)',  wzero+'*(GenPart_bottom_pt>0&&'+cut+')', 150, 0, 3000))
-          variables.append(variabile('GenPart_bottom_eta', 'bottom #eta (GenPart)', wzero+'*(GenPart_bottom_eta>-10.&&'+cut+')', 48, -4., 4.))
-          variables.append(variabile('GenPart_bottom_phi', 'bottom #phi (GenPart)',  wzero+'*(GenPart_bottom_phi>-4.&&'+cut+')', 20, -3.14, 3.14))
-          variables.append(variabile('GenPart_bottom_m', 'bottom mass [GeV] (GenPart)',  wzero+'*(GenPart_bottom_m>0&&'+cut+')',  92, 80, 1000))
-          variables.append(variabile('chi_Wprime_pt', 'Wprime p_{T} [GeV] (chimass)',  wzero+'*(chi_Wprime_pt>0&&'+cut+')', 150, 0, 3000))
-          variables.append(variabile('chi_Wprime_eta', 'Wprime #eta (chimass)', wzero+'*(chi_Wprime_eta>-10.&&'+cut+')', 48, -4., 4.))
-          variables.append(variabile('chi_Wprime_phi', 'Wprime #phi (chimass)',  wzero+'*(chi_Wprime_phi>-4.&&'+cut+')', 20, -3.14, 3.14))
-          variables.append(variabile('chi_Wprime_m', 'Wprime mass [GeV] (chimass)',  wzero+'*(chi_Wprime_m>0&&'+cut+')',  61, 80, 5000))
-          variables.append(variabile('best_Wprime_pt', 'Wprime p_{T} [GeV] (best)',  wzero+'*(best_Wprime_pt>0&&'+cut+')', 150, 0, 3000))
-          variables.append(variabile('best_Wprime_eta', 'Wprime #eta (best)', wzero+'*(best_Wprime_eta>-10.&&'+cut+')', 48, -4., 4.))
-          variables.append(variabile('best_Wprime_phi', 'Wprime #phi (best)',  wzero+'*(best_Wprime_phi>-4.&&'+cut+')', 20, -3.14, 3.14))
-          variables.append(variabile('closest_Wprime_pt', 'Wprime p_{T} [GeV] (closest)',  wzero+'*(closest_Wprime_pt>0&&'+cut+')', 150, 0, 3000))
-          variables.append(variabile('closest_Wprime_eta', 'Wprime #eta (closest)', wzero+'*(closest_Wprime_eta>-10.&&'+cut+')', 48, -4., 4.))
-          variables.append(variabile('closest_Wprime_phi', 'Wprime #phi (closest)',  wzero+'*(closest_Wprime_phi>-4.&&'+cut+')', 20, -3.14, 3.14))
-          variables.append(variabile('closest_Wprime_m', 'Wprime mass [GeV] (closest)',  wzero+'*(closest_Wprime_m>0&&'+cut+')',  61, 80, 5000))
-          variables.append(variabile('sublead_Wprime_pt', 'Wprime p_{T} [GeV] (sublead)',  wzero+'*(sublead_Wprime_pt>0&&'+cut+')', 150, 0, 3000))
-          variables.append(variabile('sublead_Wprime_eta', 'Wprime #eta (sublead)', wzero+'*(sublead_Wprime_eta>-10.&&'+cut+')', 48, -4., 4.))
-          variables.append(variabile('sublead_Wprime_phi', 'Wprime #phi (sublead)',  wzero+'*(sublead_Wprime_phi>-4.&&'+cut+')', 20, -3.14, 3.14))
-          variables.append(variabile('sublead_Wprime_m', 'Wprime mass [GeV] (sublead)',  wzero+'*(sublead_Wprime_m>0&&'+cut+')',  61, 80, 5000))
-          variables.append(variabile('GenPart_Wprime_pt', 'Wprime p_{T} [GeV] (GenPart)',  wzero+'*(GenPart_Wprime_pt>0&&'+cut+')', 150, 0, 3000))
-          variables.append(variabile('GenPart_Wprime_eta', 'Wprime #eta (GenPart)', wzero+'*(GenPart_Wprime_eta>-10.&&'+cut+')', 48, -4., 4.))
-          variables.append(variabile('GenPart_Wprime_phi', 'Wprime #phi (GenPart)',  wzero+'*(GenPart_Wprime_phi>-4.&&'+cut+')', 20, -3.14, 3.14))
-          variables.append(variabile('GenPart_Wprime_m', 'Wprime mass [GeV] (GenPart)',  wzero+'*(GenPart_Wprime_m>0&&'+cut+')',  61, 80, 5000))
-          variables.append(variabile('sublead_topjet_pt', 'sub leading jet p_{T} [GeV]',  wzero+'*('+cut+')', 150, 0, 3000))
-          variables.append(variabile('sublead_topjet_eta', 'sub leading jet #eta',  wzero+'*('+cut+')', 48, -2.4, 2.4))
-          variables.append(variabile('closest_topjet_eta', 'closest top jet #eta',  wzero+'*('+cut+')', 48, -2.4, 2.4))
-          variables.append(variabile('closest_topjet_pt', 'closest top jet p_{T} [GeV]',  wzero+'*('+cut+')', 150, 0, 3000))
-          variables.append(variabile('chi_topjet_eta', 'chi top jet #eta',  wzero+'*('+cut+')', 48, -2.4, 2.4))
-          variables.append(variabile('chi_topjet_pt', 'chi top jet p_{T} [GeV]',  wzero+'*('+cut+')', 150, 0, 3000))
-          variables.append(variabile('best_topjet_eta', 'best top jet #eta',  wzero+'*('+cut+')', 48, -2.4, 2.4))
-          variables.append(variabile('best_topjet_pt', 'best top jet p_{T} [GeV]',  wzero+'*('+cut+')', 150, 0, 3000))
-          variables.append(variabile('sublead_Wpjet_pt', '(sublead) leading jet p_{T} [GeV] ',  wzero+'*('+cut+')', 150, 0, 3000))
-          variables.append(variabile('closest_Wpjet_pt', '(closest) leading jet p_{T} [GeV] ',  wzero+'*('+cut+')', 150, 0, 3000))
-          variables.append(variabile('best_Wpjet_pt', '(best) leading jet p_{T} [GeV] ',  wzero+'*('+cut+')', 150, 0, 3000))
-          variables.append(variabile('chi_Wpjet_pt', '(chimass) leading jet p_{T} [GeV] ',  wzero+'*('+cut+')', 150, 0, 3000))
-          
-          variables.append(variabile('sublead_Wpjet_eta', 'leading jet #eta',  wzero+'*('+cut+')', 48, -2.4, 2.4))
-          variables.append(variabile('sublead_Wpjet_isbtag', 'leading jet b tagged',  wzero+'*('+cut+')', 2, -0.5, 1.5))
 
-          variables.append(variabile('leadingjets_deltaR', 'leadings jets #DeltaR',  wzero+'*('+cut+')', 10, 0, 5))
-          variables.append(variabile('leadingjets_deltaPhi', 'leadings jets #Delta#phi',  wzero+'*('+cut+')', 20, -3.14, 3.14))
-          variables.append(variabile('leadingjets_deltaEta', 'leadings jets #Delta#eta',  wzero+'*('+cut+')', 48, -4.8, 4.8))
-          variables.append(variabile('leadingjets_pt', 'leadings jets system p_{T} [GeV]',  wzero+'*('+cut+')', 150, 0, 3000))
-          variables.append(variabile('bjets_deltaR', 'b jets #DeltaR',  wzero+'*(bjets_deltaR>-50.&&'+cut+')', 10, 0, 5))
-          variables.append(variabile('bjets_deltaPhi', 'b jets #Delta#phi',  wzero+'*(bjets_deltaPhi>-50.&&'+cut+')', 20, -3.14, 3.14))
-          variables.append(variabile('bjets_deltaEta', 'b jets #Delta#eta',  wzero+'*(bjets_deltaEta>-50.&&'+cut+')', 48, -4.8, 4.8))
-          variables.append(variabile('bjets_pt', 'b jets system p_{T} [GeV]',  wzero+'*(bjets_pt>-10.&&'+cut+')', 150, 0, 3000))
-          variables.append(variabile('had_global_thrust', 'hadronic global thrust',  wzero+'*('+cut+')', 20, 0.5, 1))
-          variables.append(variabile('had_central_thrust', 'hadronic transverse thrust',  wzero+'*('+cut+')', 20, 0, 0.5))
-          variables.append(variabile('ovr_global_thrust', 'event global thrust',  wzero+'*('+cut+')', 20, 0.5, 1))
-          variables.append(variabile('ovr_central_thrust', 'event transverse thrust',  wzero+'*('+cut+')', 20, 0, 0.5))
-          variables.append(variabile('best_topjet_dRLepJet', '#DeltaR lep jet (best crit)',  wzero+'*('+cut+')', 50, 0, 5))
-          variables.append(variabile('closest_topjet_dRLepJet', '#DeltaR lep jet (closest crit)',  wzero+'*('+cut+')', 50, 0, 5))
-          variables.append(variabile('sublead_topjet_dRLepJet', '#DeltaR lep jet (sublead crit)',  wzero+'*('+cut+')', 50, 0, 5))
-          variables.append(variabile('chi_topjet_dRLepJet', '#DeltaR lep jet (chi crit)',  wzero+'*('+cut+')', 50, 0, 5))
-          variables.append(variabile('ptrel_leadAK4_closestAK8', 'pt rel leading AK4 closest AK8',  wzero+'*('+cut+')', 50, 0, 5))
-          variables.append(variabile('deltaR_leadAK4_closestAK8', '#DeltaR leading AK4 closest AK8',  wzero+'*('+cut+')',  20, 0, 2))
-          variables.append(variabile('ptrel_subleadAK4_closestAK8', 'pt rel sub-leading AK4 closest AK8',  wzero+'*('+cut+')', 50, 0, 5))
-          variables.append(variabile('deltaR_subleadAK4_closestAK8', '#DeltaR sub-leading AK4 closest AK8',  wzero+'*('+cut+')', 50, 0, 5))
-          variables.append(variabile('ptrel_besttopAK4_closestAK8', 'pt rel (best)top AK4 closest AK8',  wzero+'*('+cut+')', 50, 0, 5))
-          variables.append(variabile('deltaR_besttopAK4_closestAK8', '#DeltaR (best)top AK4 closest AK8',  wzero+'*('+cut+')', 50, 0, 5))
-          variables.append(variabile('ptrel_bestWAK4_closestAK8', 'pt rel (best)W\' AK4 closest AK8',  wzero+'*('+cut+')', 50, 0, 5))
-          variables.append(variabile('best_topW_jets_pt', 'jets (t+W\') p_{T} [GeV] (best)',  wzero+'*('+cut+')', 150, 0, 1500))
-          variables.append(variabile('best_topW_jets_deltaR', '#DeltaR jets (t+W\') (best)',  wzero+'*('+cut+')', 50, 0, 5))
-          variables.append(variabile('best_topW_jets_deltaPhi', '#Delta #phi jets (t+W\') (best)',  wzero+'*('+cut+')', 20, -3.14, 3.14))
-          variables.append(variabile('ptrel_chitopAK4_closestAK8', 'pt rel (chi)top AK4 closest AK8',  wzero+'*('+cut+')', 50, 0, 5))
-          variables.append(variabile('deltaR_chitopAK4_closestAK8', '#DeltaR (chi)top AK4 closest AK8',  wzero+'*('+cut+')', 50, 0, 5))
-          variables.append(variabile('ptrel_chiWAK4_closestAK8', 'pt rel (chi)W\' AK4 closest AK8',  wzero+'*('+cut+')', 50, 0, 5))
-          variables.append(variabile('deltaR_chiWAK4_closestAK8', '#DeltaR (chi)W\' AK4 closest AK8',  wzero+'*('+cut+')', 50, 0, 5))
-          variables.append(variabile('chi_topW_jets_pt', 'jets (t+W\') p_{T} [GeV] (chi)',  wzero+'*('+cut+')', 150, 0, 1500))
-          variables.append(variabile('chi_topW_jets_deltaR', '#DeltaR jets (t+W\') (chi)',  wzero+'*('+cut+')', 50, 0, 5))
-          variables.append(variabile('chi_topW_jets_deltaPhi', '#Delta #phi jets (t+W\') (chi)',  wzero+'*('+cut+')', 20, -3.14, 3.14))
-          variables.append(variabile('nPV_good', 'n good PV', wzero+'*('+cut+')', 120, 0, 120))
-          variables.append(variabile('nPV_tot', 'total n PV', wzero+'*('+cut+')', 120, 0, 120))
-          
-          variables.append(variabile('best_top_costhetalep', 'cos #theta (lepton)', wzero+'*('+cut+')', 50, 0, 1))
-          variables.append(variabile('best_top_costheta', 'cos #theta', wzero+'*('+cut+')', 50, 0, 1))
-
-          variables.append(variabile('WprAK8_area',  "W' AK8 area", wzero+'*('+cut+')', 30, 1.5, 3.0))
-          variables.append(variabile('WprAK8_btag', 'WprAK8 b tag ', wzero+'*(WprAK8_btag>-1&&'+cut+')', 20, 0, 1.0))
-          variables.append(variabile('WprAK8_ttagMD', 'WprAK8 t tag MD', wzero+'*(WprAK8_ttagMD>-1&&'+cut+')', 20, 0, 1.0))
-          variables.append(variabile('WprAK8_ttag', 'WprAK8 t tag', wzero+'*(WprAK8_ttag>-1&&'+cut+')', 20, 0, 1.0))
-          variables.append(variabile('WprAK8_eta', 'WprAK8 #eta', wzero+'*('+cut+')', 48, -4.8, 4.8)) 
-          variables.append(variabile('WprAK8_phi', 'WprAK8 #phi', wzero+'*('+cut+')', 20, -3.14, 3.14))
-          variables.append(variabile('WprAK8_pt', 'WprAK8 p_{T} [GeV]', wzero+'*('+cut+')', 200, 0, 2000))
-          '''
           for sample in dataset_new:
                if(opt.plot):
                     for var in variables:
