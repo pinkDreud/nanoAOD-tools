@@ -257,8 +257,6 @@ systTree.branchTreesSysts(trees, "all", "pass_MET_cut",             outTreeFile,
 #print("Is MC: " + str(isMC) + "      option addPDF: " + str(addPDF))
 if(isMC and addPDF):
     systTree.branchTreesSysts(trees, "all", "w_PDF", outTreeFile, w_PDF_all)
-if('TT_' in sample.label): 
-    systTree.branchTreesSysts(trees, "all", "nlep", outTreeFile, nlep_all)
 ####################################################################################################################################################################################################################################
 
 #++++++++++++++++++++++++++++++++++
@@ -348,7 +346,8 @@ for i in range(tree.GetEntries()):
 
     if isMC:
         genpart = Collection(event, "GenPart")
-        LHE = Collection(event, "LHEPart")
+        if not ("WZ" in sample.label):
+            LHE = Collection(event, "LHEPart")
     chain.GetEntry(i)
     #++++++++++++++++++++++++++++++++++
     #++      defining variables      ++
