@@ -247,7 +247,7 @@ DY1JetsToLL_2017.dataset = "/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/
 DY2JetsToLL_2017 = sample(ROOT.kAzure+6, 1, 1001, "DY + 2 Jets", "DY2JetsToLL_2017")
 DY2JetsToLL_2017.sigma = 330.4
 DY2JetsToLL_2017.year = 2017
-DY2JetsToLL_2017.dataset = "/DY2JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+DY2JetsToLL_2017.dataset = "/DY2JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/" + tag2_2017 + "_ext1-v1/NANOAODSIM"
 
 DY3JetsToLL_2017 = sample(ROOT.kAzure+6, 1, 1001, "DY + 3 Jets", "DY3JetsToLL_2017")
 DY3JetsToLL_2017.sigma = 101.8

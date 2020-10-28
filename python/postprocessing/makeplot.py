@@ -82,8 +82,9 @@ def lumi_writer(dataset, lumi):
                tree_new = tree.CloneTree(0)
                print("Getting the histos from %s" %(infile))
                h_genw_tmp = ROOT.TH1F(infile.Get("h_genweight"))
-               h_pdfw_tmp = ROOT.TH1F(infile.Get("h_PDFweight"))
-               nbins = h_pdfw_tmp.GetXaxis().GetNbins()
+               if not ("WZ" in sample.label):
+                    h_pdfw_tmp = ROOT.TH1F(infile.Get("h_PDFweight"))
+                    nbins = h_pdfw_tmp.GetXaxis().GetNbins()
                print("h_genweight first bin content is %f and h_PDFweight has %f bins" %(h_genw_tmp.GetBinContent(1), nbins))
                w_nom = array('f', [0.]) 
                w_PDF = array('f', [0.]*nbins)
@@ -98,8 +99,9 @@ def lumi_writer(dataset, lumi):
                          #print("Processing event %s     complete %s percent" %(event, 100*event/tree.GetEntries()))
                          sys.stdout.write("\rProcessing event {}     complete {} percent".format(event, 100*event/tree.GetEntries()))
                     w_nom[0] = tree.w_nominal * sample.sigma * lumi * 1000./float(h_genw_tmp.GetBinContent(1))
-                    for i in xrange(1, nbins):
-                         w_PDF[i] = h_pdfw_tmp.GetBinContent(i+1)/h_genw_tmp.GetBinContent(2) 
+                    if not ("WZ" in sample.label):
+                         for i in xrange(1, nbins):
+                              w_PDF[i] = h_pdfw_tmp.GetBinContent(i+1)/h_genw_tmp.GetBinContent(2) 
                     tree_new.Fill()
                tree_new.Write()
                outfile.Close()
@@ -452,7 +454,7 @@ if(opt.dat!= 'all'):
 else:
      dataset_dict = {
           #'2016':[TT_2016, WJets_2016, WZ_2016, DYJetsToLL_2016, WpWpJJ_EWK_2016, WpWpJJ_QCD_2016],#[DataMu_2016, DataEle_2016, DataHT_2016],
-          '2017':[DYJetsToLL_2017, WpWpJJ_EWK_2017, WpWpJJ_QCD_2017],#[TT_2017, WJets_2017, WZ_2017, DYJetsToLL_2017, WpWpJJ_EWK_2017, WpWpJJ_QCD_2017],#[DataMu_2017, DataEle_2017, DataHT_2017],
+          '2017':[TT_2017, WJets_2017, WZ_2017, DYJetsToLL_2017, WpWpJJ_EWK_2017, WpWpJJ_QCD_2017],#[DataMu_2017, DataEle_2017, DataHT_2017],
           '2018':[TT_2018, WJets_2018, WZ_2018, DYJetsToLL_2018, WpWpJJ_EWK_2018, WpWpJJ_QCD_2018],#[DataMu_2018, DataEle_2018, DataHT_2018],
      }
 #print(dataset_dict.keys())

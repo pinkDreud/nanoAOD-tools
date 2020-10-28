@@ -1,7 +1,7 @@
 set LD_PRELOAD=libtcmalloc.so
 set year = 2017
 set folder = tageff
-python makeplot.py -y $year --merpart --lumi --mertree --folder $folder #-d WpWpJJ_EWK_$year
+python makeplot.py -y $year --merpart --lumi --mertree --folder $folder -d WZ_$year
 #python makeplot.py -y $year --merpart --lumi --mertree --folder $folder
 set LD_PRELOAD=libtcmalloc.so
 #python makeplot.py -y $year -p -L electron --folder $folder --sel #-N
