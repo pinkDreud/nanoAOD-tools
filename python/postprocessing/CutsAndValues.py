@@ -1,6 +1,8 @@
 # In this file values for cuts and constant will be stored and then recalled from the whole analysis function
 #Using nanoAOD version 102X
 
+ONLYELE=1
+ONLYMU=0
 
 PT_CUT_MU=  35
 ETA_CUT_MU= 2.4
