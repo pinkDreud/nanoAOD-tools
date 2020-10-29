@@ -109,6 +109,7 @@ void EfficiencyPrinter(TString filename="/eos/home-a/apiccine/VBS/nosynch/tageff
         cout << cutNames[i] << "\t" <<passCuts[i]<< endl;
     
     }
+
     cout << endl<< endl<< endl;
 
 }
