@@ -51,14 +51,15 @@ if not os.path.exists(path):
 '''
 
 f = open(cshname, "w")
-f.write("set folder = " + folder + "\n")
-f.write("set year = " + opt.year + "\n")
-f.write("python submit_condor.py -d TT_$year -f $folder\n")
-f.write("python submit_condor.py -d WJets_$year -f $folder\n")
-f.write("python submit_condor.py -d WZ_$year -f $folder\n")
-f.write("python submit_condor.py -d DYJetsToLL_$year -f $folder\n")
-f.write("python submit_condor.py -d WpWpJJ_EWK_$year -f $folder\n")
-f.write("python submit_condor.py -d WpWpJJ_QCD_$year -f $folder\n")
+print f
+#f.write("set folder='" + folder + "'\n")
+#f.write("set year='"+ opt.year + "'\n")
+f.write("python submit_condor.py -d TT_" + opt.year + " -f " + folder + "\n")
+f.write("python submit_condor.py -d WJets_" + opt.year + " -f " + folder + "\n")
+f.write("python submit_condor.py -d WZ_" + opt.year + " -f " + folder + "\n")
+f.write("python submit_condor.py -d DYJetsToLL_" + opt.year + " -f " + folder + "\n")
+f.write("python submit_condor.py -d WpWpJJ_EWK_" + opt.year + " -f " + folder + "\n")
+f.write("python submit_condor.py -d WpWpJJ_QCD_" + opt.year + " -f " + folder + "\n")
 f.close()
 
 t = open("CutsAndValues_bu.py", "w")
@@ -107,4 +108,5 @@ t.write("M_JJ_CUT=   500\n")
 t.write("MET_CUT=    40\n")
 t.close()
 
-os.system("source " + cshname)
+os.system("source ./" + cshname)
+
