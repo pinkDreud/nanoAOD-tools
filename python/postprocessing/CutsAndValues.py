@@ -34,7 +34,7 @@ BTAG_ETA_CUT=   5
 BTAG_ALGO   =   "DeepFlv"
 BTAG_WP     =   "M"
 
-ID_TAU_RECO_DEEPTAU_VSJET=  16 #byDeepTau2017v2p1VSjet ID working points (deepTau2017v2p1): bitmask 1 = VVVLoose, 2 = VVLoose, 4 = VLoose, 8 = Loose, 16 = Medium, 32 = Tight, 64 = VTight, 128 = VVTight
+ID_TAU_RECO_DEEPTAU_VSJET=  32#byDeepTau2017v2p1VSjet ID working points (deepTau2017v2p1): bitmask 1 = VVVLoose, 2 = VVLoose, 4 = VLoose, 8 = Loose, 16 = Medium, 32 = Tight, 64 = VTight, 128 = VVTight
 
 ID_TAU_RECO_DEEPTAU_VSELE=  2 #byDeepTau2017v2p1VSe ID working points (deepTau2017v2p1): bitmask 1 = VVVLoose, 2 = VVLoose, 4 = VLoose, 8 = Loose, 16 = Medium, 32 = Tight, 64 = VTight, 128 = VVTight
 
