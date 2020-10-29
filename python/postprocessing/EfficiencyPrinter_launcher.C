@@ -50,7 +50,7 @@ void EfficiencyPrinter_launcher(){
         "WZ_2017_merged.root"
     };
 
-    for(int i=0; i<sampleNames.size()-1; i++){
+    for(int i=sampleNames.size()-1; i<sampleNames.size(); i++){
         string totPath=dirTot+dirSamples[i]+sampleNames[i];
         //cout << totPath << endl;
         EfficiencyPrinter(totPath);

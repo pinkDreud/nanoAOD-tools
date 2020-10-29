@@ -13,8 +13,8 @@ parser.add_option('-f', '--folder', dest='folder', type=str, default = '', help=
 
 username = str(os.environ.get('USER'))
 inituser = str(os.environ.get('USER')[0])
-if username == 'adeiorio':
-    uid = 103214
+if username == 'mmagheri':
+    uid = 102889
 elif username == 'apiccine':
     uid = 124949
 
