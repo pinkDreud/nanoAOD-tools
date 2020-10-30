@@ -141,7 +141,7 @@ var_list.append(tau_eta)
 var_list.append(tau_phi)
 var_list.append(tau_charge)
 var_list.append(tau_mass)
-var_list.append(tau_DeepTau_discr)
+var_list.append(tau_DeepTau_WP)
 var_list.append(tau_HPS_discr)
 
 #jet variables
@@ -484,6 +484,8 @@ for i in range(tree.GetEntries()):
     if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1: Cut_dict[4][1]+=1
 
     GoodTau=taus[indexGoodTau]
+
+    tau_DeepTau_WP[0] = GoodTau.idDeepTau2017v2p1VSjet*1000.**2. + GoodTau.idDeepTau2017v2p1VSmu*1000. + GoodTau.idDeepTau2017v2p1VSe
 
     if GoodTau.charge==GoodLep.charge:
         pass_charge_selection[0]=1
