@@ -73,7 +73,7 @@ def lumi_writer(dataset, lumi):
      else:
           samples.append(dataset)
      for sample in samples:
-          if not ('Data' in sample.label or 'TT_dilep' in sample.label):
+          if not ('Data' in sample.label):# or 'TT_dilep' in sample.label):
                infile =  ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + "_merged.root")
                tree = infile.Get('events_all')
                tree.SetBranchStatus('w_nominal', 0)
