@@ -2,7 +2,7 @@ import os
 import optparse
 import sys
 
-cshname = "condorrun.csh"
+cshname = "condorrun_tauwp.csh"
 
 usage = 'python SetAndLaunchCondorRun.py -y year -j wp_jet -m wp_mu -e wp_ele'
 parser = optparse.OptionParser(usage)
@@ -45,6 +45,7 @@ inituser = str(os.environ.get('USER')[0])
 folder = "Eff_Jet" + opt.jetwp + "_Mu" + opt.muwp + "_Ele" + opt.elewp
 path = "/eos/user/" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/"
 print folder, path
+
 '''
 if not os.path.exists(path):
     os.makedirs(path)
