@@ -50,12 +50,22 @@ for aut, wpconfs in wpset_dict.items():
         if not os.path.exists(path):
             continue
 
+        #s = 0
+        #b = 0
+
         #carica le cartelle dei sample
         dirlist = [dirs for dirs in os.listdir(path)]
 
+        sample_dict
+        
         for dirn in dirlist:
             #carica il _merged.root
+            
             mergedfile = path + dirn + "/" + dirn + "_merged.root"
+
+            count = 0
+
+            #if "WpWpJJ_EWK" in mergedfile
 
             #carica il tree events_all
             chain = ROOT.TChain('events_all')
@@ -67,7 +77,11 @@ for aut, wpconfs in wpset_dict.items():
             print tree.GetEntries()
             
             for i in range(tree.GetEntries()):
-                event       = Event(tree,i)
+                event = Event(tree,i)
                 passed = Object(event, "pass")#cosi carico tutti i pass_* in unico object
                 #print passed.lepton_selection# cosi ottengo pass_lepton_selection
 
+        #signif = s / (s+b)**0.5
+        #ratio = s / b
+
+        
