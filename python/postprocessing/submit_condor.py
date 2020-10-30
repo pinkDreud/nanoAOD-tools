@@ -3,6 +3,7 @@ import os
 import optparse
 import sys
 
+
 usage = 'python submit_condor.py -d dataset_name -f destination_folder --wp working_point'
 parser = optparse.OptionParser(usage)
 parser.add_option('-d', '--dat', dest='dat', type=str, default = '', help='Please enter a dataset name')
@@ -34,9 +35,9 @@ def sub_writer(sample, n, files, folder):
     f.write("executable              = tree_skimmer_ssWW.py\n")
     f.write("arguments               = " + sample.label + " " + str(n) + " " + str(files) + " remote" + "\n")
     #f.write("input                   = input.txt\n")
-    f.write("output                  = condor_" + opt.wp + "/output/"+ sample.label + "_part" + str(n) + ".out\n")
-    f.write("error                   = condor_" + opt.wp + "/error/"+ sample.label + "_part" + str(n) + ".err\n")
-    f.write("log                     = condor_" + opt.wp + "/log/"+ sample.label + "_part" + str(n) + ".log\n")
+    f.write("output                  = condor/output/"+ sample.label + "_" + opt.wp + "_part" + str(n) + ".out\n")
+    f.write("error                   = condor/error/"+ sample.label + "_" + opt.wp +  "_part" + str(n) + ".err\n")
+    f.write("log                     = condor/log/"+ sample.label + "_" + opt.wp +  "_part" + str(n) + ".log\n")
 
     f.write("queue\n")
 
