@@ -2,7 +2,7 @@ import os
 import optparse
 import sys
 
-usage = 'python SetAndLaunchCondorRun.py -y year'
+usage = 'python SetAndLaunchMakePlot.py -y year'
 parser = optparse.OptionParser(usage)
 parser.add_option('-y', dest='year', type=str, default = '2017', help='Please enter a year, default is 2017')
 
