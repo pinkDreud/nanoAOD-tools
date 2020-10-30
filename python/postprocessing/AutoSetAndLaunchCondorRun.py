@@ -151,10 +151,10 @@ for wp_jet in vsJet_dict.keys():
             
             CanLaunch = False
 
-            njobs = int(os.popen('condor_q | grep "for apiccine"').read().split(':')[1].split(';')[0].split(' ')[1])
-                      
             print "Veryfing I can launch condor jobs..."
+
             while not CanLaunch:
+                njobs = int(os.popen('condor_q | grep "for ' + username + '"').read().split(':')[1].split(';')[0].split(' ')[1])
                 if njobs < treshold:
                     CanLaunch = True
             
