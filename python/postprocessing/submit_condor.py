@@ -34,9 +34,9 @@ def sub_writer(sample, n, files, folder):
     f.write("executable              = tree_skimmer_ssWW.py\n")
     f.write("arguments               = " + sample.label + " " + str(n) + " " + str(files) + " remote" + "\n")
     #f.write("input                   = input.txt\n")
-    f.write("output                  = condor/" + opt.wp + "/output/"+ sample.label + "_part" + str(n) + ".out\n")
-    f.write("error                   = condor/" + opt.wp + "/error/"+ sample.label + "_part" + str(n) + ".err\n")
-    f.write("log                     = condor/" + opt.wp + "/log/"+ sample.label + "_part" + str(n) + ".log\n")
+    f.write("output                  = condor_" + opt.wp + "/output/"+ sample.label + "_part" + str(n) + ".out\n")
+    f.write("error                   = condor_" + opt.wp + "/error/"+ sample.label + "_part" + str(n) + ".err\n")
+    f.write("log                     = condor_" + opt.wp + "/log/"+ sample.label + "_part" + str(n) + ".log\n")
 
     f.write("queue\n")
 
