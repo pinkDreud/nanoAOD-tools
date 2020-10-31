@@ -5,6 +5,52 @@ import optparse
 import sys
 from samples.samples import *
 
+def outSandB(directory="/eos/user/m/mmagheri/VBS/nosynch/Eff_JetM_MuL_EleL/DY1JetsToLL_2017/DY1JetsToLL_2017_part0.root"):
+    chain = ROOT.TChain('events_all')
+    chain.Add(directory)
+    print chain
+    tree = InputTree(chain)
+    print tree.GetEntries()
+
+    infile = ROOT.TFile(directory, "READ")
+    nev = infile.Get("h_genweight").GetBinContent(1)
+
+    isSignal=False
+    if "WpWpJJ_EWK" in directory: isSignal=True
+    else: isSignal=False
+    
+    passEvents = [nev,0,0,0,0,0,0,0,0,0]
+    
+    
+    passEvents[1]=tree.GetEntries()
+    
+    for i in range(tree.GetEntries()):
+        event = Event(tree,i)
+        passed = Object(event, "pass")
+        if passed.lepton_selection: passEvents[2]+=1
+        if passed.lepton_selection and passed.lepton_veto: passEvents[3]+=1
+        if passed.lepton_selection and passed.lepton_veto and passed.tau_selection: passEvents[4]+=1
+        if passed.lepton_selection and passed.lepton_veto and passed.tau_selection and passed.charge_selection: passEvents[5]+=1
+        if passed.lepton_selection and passed.lepton_veto and passed.tau_selection and passed.charge_selection and passed.jet_selection: passEvents[6]+=1
+        if passed.lepton_selection and passed.lepton_veto and passed.tau_selection and passed.charge_selection and passed.jet_selection and passed.b_veto: passEvents[7]+=1
+        if passed.lepton_selection and passed.lepton_veto and passed.tau_selection and passed.charge_selection and passed.jet_selection and passed.b_veto and passed.mjj_cut: passEvents[8]+=1
+        if passed.lepton_selection and passed.lepton_veto and passed.tau_selection and passed.charge_selection and passed.jet_selection and passed.b_veto and passed.mjj_cut and passed.MET_cut: passEvents[9]+=1
+    
+    return passEvents, isSignal
+
+
+
+def NormalizeToxSecTimesLumi(entries, xSec, lumi):
+    outevents=[0,0,0,0,0,0,0,0,0,0]
+    totalEvents=entries[0]
+    k=xSec*lumi*1000/totalEvents
+    for i in range(len(entries)):
+        outevents[i]=entries[i]*k
+    
+    return outevents
+
+
+
 usage = 'python SetAndLaunchCondorRun.py -y year'
 parser = optparse.OptionParser(usage)
 parser.add_option('-y', dest='year', type=str, default = '2017', help='Please enter a year, default is 2017')
@@ -40,6 +86,8 @@ wpset_dict = {'a': [('M', 'VL', 'VVL'),
 #username = str(os.environ.get('USER'))
 #inituser = str(os.environ.get('USER')[0])
 
+OutFile = open("OutCuts.txt","w") 
+
 for aut, wpconfs in wpset_dict.items():
     #carica autore e wp config
     for wpconf in wpconfs:
@@ -50,38 +98,40 @@ for aut, wpconfs in wpset_dict.items():
         if not os.path.exists(path):
             continue
 
-        #s = 0
-        #b = 0
-
         #carica le cartelle dei sample
         dirlist = [dirs for dirs in os.listdir(path)]
 
-        sample_dict
+        #sample_dict
+        s=[0,0,0,0,0,0,0,0,0,0]
+        b=[0,0,0,0,0,0,0,0,0,0]
         
         for dirn in dirlist:
             #carica il _merged.root
-            
+            xSec=sample_dict[dirn].sigma
             mergedfile = path + dirn + "/" + dirn + "_merged.root"
-
-            count = 0
-
-            #if "WpWpJJ_EWK" in mergedfile
-
-            #carica il tree events_all
-            chain = ROOT.TChain('events_all')
-            chain.Add(mergedfile)
-
-            print chain
+            OutFile.writelines(["Working on sample ", dirn, " WP tauvsJet: ", wpconf[0], " WP tauvsMu: ", wpconf[1], " WP tauvsEle: ", wpconf[2], "\n"])
+            print "Working on sample ", dirn, " WP tauvsJet: ", wpconf[0], " WP tauvsMu: ", wpconf[1], " WP tauvsEle: ", wpconf[2]
             
-            tree = InputTree(chain)
-            print tree.GetEntries()
+            CutFlow, isSignal=outSandB(mergedfile)
+
+            outNormalized=NormalizeToxSecTimesLumi(CutFlow, xSec, 41.3)
             
-            for i in range(tree.GetEntries()):
-                event = Event(tree,i)
-                passed = Object(event, "pass")#cosi carico tutti i pass_* in unico object
-                #print passed.lepton_selection# cosi ottengo pass_lepton_selection
+            for nNorm in outNormalized:
+                print nNorm
+                OutFile.writelines([str(nNorm), "\n"])
+            
+            for j in range(len(outNormalized)):
+                if isSignal:    s[j]+=outNormalized[j]
+                else:           b[j]+=outNormalized[j]
 
-        #signif = s / (s+b)**0.5
-        #ratio = s / b
-
+        signif = s[len(s)-1] / (s[len(s)-1]+b[len(s)-1])**0.5
+        ratio = s[len(s)-1] / b[len(s)-1]
+        OutFile.writelines(["significance: ", str(signif), "\n"])
         
+        print "significance: ", signif
+        OutFile.writelines(["ratio:        ", str(ratio), "\n"])
+        print "ratio:        ", ratio
+        OutFile.write("\n \n")
+        print "\n \n"
+
+OutFile.close()

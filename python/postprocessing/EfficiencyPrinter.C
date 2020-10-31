@@ -7,7 +7,7 @@
 using namespace std;
 
 
-void EfficiencyPrinter(TString filename="/eos/home-a/apiccine/VBS/nosynch/tageff/WpWpJJ_EWK_2017/WpWpJJ_EWK_2017_merged.root")
+void EfficiencyPrinter(TString filename="/eos/home-a/apiccine/VBS/nosynch/tageff/WpWpJJ_EWK_2017/WpWpJJ_EWK_2017_merged.root", double xSec=-999, double lumi=41.3)
 {
     
     int passCuts[10]    =   {0,0,0,0,0,0,0,0,0,0};    
@@ -105,8 +105,9 @@ void EfficiencyPrinter(TString filename="/eos/home-a/apiccine/VBS/nosynch/tageff
     passCuts[0]=nev;
 
     cout << filename << endl;
+    cout << "Taglio       " << "\t"<< " nEv sample " << "\t"<< " nEv norm " << endl;
     for(int i=0; i<10; i++){
-        cout << cutNames[i] << "\t" <<passCuts[i]<< endl;
+        cout << cutNames[i] << "\t" <<passCuts[i]<< "\t" << passCuts[i]*xSec*1000*lumi/nev << endl;
     
     }
 
