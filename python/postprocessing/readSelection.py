@@ -162,7 +162,7 @@ for aut, wpconfs in wpset_dict.items():
         OutFile.writelines(["ratio:        ", str(ratio), "\n"])
         print "ratio:        ", ratio
         OutFile.write("\n \n")
-        OutSignif.writelines([["significance: ", str(signif), "\n","ratio:        ", str(ratio), "\n"])
+        OutSignif.writelines(["significance: ", str(signif), "\n","ratio:        ", str(ratio), "\n"])
         print "\n \n"
 
 OutFile.close()
