@@ -95,11 +95,12 @@ for aut, wpconfs in wpset_dict.items():
     seppiawp=0
     for wpconf in wpconfs:
         #scrive la path a seconda di chi ha prodotto una certa wp config
-        if wpconf==wpconfs[0] or wpconf==wpconfs[1] or wpconf==wpconfs[2]: continue
+
         print "Starting to work --- \n \n"
         
         path = "/eos/user/" + aut + "/" + authors_dict[aut] + "/VBS/nosynch/Eff_Jet" + wpconf[0] + "_Mu" + wpconf[1] + "_Ele" + wpconf[2] + "/"
         print path
+
         print "WP done till now ", seppiawp*1.0/len(wpconfs)*100, "%"
         print "WP tauvsJet: ", wpconf[0], " WP tauvsMu: ", wpconf[1], " WP tauvsEle: ", wpconf[2]
         OutFile.writelines(["WP tauvsJet: ", wpconf[0], " WP tauvsMu: ", wpconf[1], " WP tauvsEle: ", wpconf[2], "/n"])
@@ -116,6 +117,8 @@ for aut, wpconfs in wpset_dict.items():
         b=[0,0,0,0,0,0,0,0,0,0]
         
         lentot=len(dirlist)
+        print lentot
+
         seppiasample=0
         for dirn in dirlist:
             print "directories done: ", seppiasample*1.0/lentot*100, "%"
