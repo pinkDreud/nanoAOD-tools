@@ -9,6 +9,7 @@ parser = optparse.OptionParser(usage)
 parser.add_option('-d', '--dat', dest='dat', type=str, default = '', help='Please enter a dataset name')
 parser.add_option('-f', '--folder', dest='folder', type=str, default = '', help='Please enter a destination folder')
 parser.add_option('--wp', dest='wp', type=str, default = '', help='Please enter working point!')
+parser.add_option('--max', dest='maxj', type=int, default = 0, help='Please enter working point!')
 #parser.add_option('-u', '--user', dest='us', type='string', default = 'ade', help="")
 (opt, args) = parser.parse_args()
 #Insert here your uid... you can see it typing echo $uid
@@ -80,7 +81,8 @@ for sample in samples:
     print(str(len(files_list)))
     if(isMC):
         for i, files in enumerate(files_list):
-            if i > 9: break
+            if opt.maxj > 0:
+                if i > 9: break
             sub_writer(sample, i, files, folder)
             os.popen('condor_submit condor.sub')
             print('condor_submit condor.sub')

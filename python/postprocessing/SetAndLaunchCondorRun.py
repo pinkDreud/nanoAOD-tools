@@ -4,12 +4,14 @@ import sys
 
 cshname = "condorrun_tauwp.csh"
 
-usage = 'python SetAndLaunchCondorRun.py -y year -j wp_jet -m wp_mu -e wp_ele'
+usage = 'python SetAndLaunchCondorRun.py -y year -j wp_jet -m wp_mu -e wp_ele -f folder --max max_jobs'
 parser = optparse.OptionParser(usage)
 parser.add_option('-y', dest='year', type=str, default = '2017', help='Please enter a year, default is 2017')
 parser.add_option('-j', dest='jetwp', type=str, default = '', help='Please enter a TauID WP for vsJet')
 parser.add_option('-m', dest='muwp', type=str, default = '', help='Please enter a TauID WP for vsMu')
 parser.add_option('-e', dest='elewp', type=str, default = '', help='Please enter a TauID WP for vsEle')
+parser.add_option('-f', dest='fold', type=str, default = '', help='Please enter a folder')
+parser.add_option('--max', dest='maxj', type=int, default = 0, help='Please enter a maximum for number of condor jobs')
 
 (opt, args) = parser.parse_args()
 
@@ -42,7 +44,11 @@ vsEle_dict = {"VVVL": '1',
 username = str(os.environ.get('USER'))
 inituser = str(os.environ.get('USER')[0])
 
-folder = "Eff_Jet" + opt.jetwp + "_Mu" + opt.muwp + "_Ele" + opt.elewp
+if opt.fold == '':
+    folder = "Eff_Jet" + opt.jetwp + "_Mu" + opt.muwp + "_Ele" + opt.elewp
+else:
+    folder = opt.fold
+
 path = "/eos/user/" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/"
 print folder, path
 
@@ -51,16 +57,21 @@ if not os.path.exists(path):
     os.makedirs(path)
 '''
 
+optstring = opt.year + " -f " + folder + " --wp " + str(opt.jetwp + opt.muwp + opt.elewp)
+if opt.maxj > 0:
+    optstring = optstring + " --max " + str(opt.maxj)
+optstring = optstring + "\n"
+
 f = open(cshname, "w")
 print f
 #f.write("set folder='" + folder + "'\n")
 #f.write("set year='"+ opt.year + "'\n")
-f.write("python submit_condor.py -d TT_" + opt.year + " -f " + folder + " --wp " + str(opt.jetwp + opt.muwp + opt.elewp) + "\n")
-f.write("python submit_condor.py -d WJets_" + opt.year + " -f " + folder + " --wp " + str(opt.jetwp + opt.muwp + opt.elewp) + "\n")
-f.write("python submit_condor.py -d WZ_" + opt.year + " -f " + folder + " --wp " + str(opt.jetwp + opt.muwp + opt.elewp) + "\n")
-f.write("python submit_condor.py -d DYJetsToLL_" + opt.year + " -f " + folder + " --wp " + str(opt.jetwp + opt.muwp + opt.elewp) + "\n")
-f.write("python submit_condor.py -d WpWpJJ_EWK_" + opt.year + " -f " + folder + " --wp " + str(opt.jetwp + opt.muwp + opt.elewp) + "\n")
-f.write("python submit_condor.py -d WpWpJJ_QCD_" + opt.year + " -f " + folder + " --wp " + str(opt.jetwp + opt.muwp + opt.elewp) + "\n")
+f.write("python submit_condor.py -d TT_" + optstring)
+f.write("python submit_condor.py -d WJets_" + optstring)
+f.write("python submit_condor.py -d WZ_" + optstring)
+f.write("python submit_condor.py -d DYJetsToLL_" + optstring)
+f.write("python submit_condor.py -d WpWpJJ_EWK_" + optstring)
+f.write("python submit_condor.py -d WpWpJJ_QCD_" + optstring)
 f.close()
 
 t = open("CutsAndValues_bu.py", "w")

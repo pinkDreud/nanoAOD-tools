@@ -16,5 +16,16 @@ path = "/eos/user/" + inituser + "/" + username + "/VBS/nosynch/"
 dirlist = [dirs for dirs in os.listdir(path) if os.path.isdir(path+dirs) and "Eff_" in dirs]
 
 for dirn in dirlist:
+    ismerged = False
+
+    for nfile in os.listdir(path+dirn+"/"+os.listdir(path+dirn)[0]):
+        if "_merged" in nfile:
+            ismerged = True
+            break
+    
+    if ismerged:
+        continue
+
     print "python makeplot.py -y ", opt.year, " --merpart --folder ", dirn
     os.system("python makeplot.py -y " + opt.year + " --merpart --folder " + dirn)
+
