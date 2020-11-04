@@ -26,12 +26,14 @@ parser.add_option('-y', '--year', dest='year', type='string', default = 'all', h
 parser.add_option('-f', '--folder', dest='folder', type='string', default = 'v6', help='Default folder is v0')
 #parser.add_option('-T', '--topol', dest='topol', type='string', default = 'all', help='Default all njmt')
 parser.add_option('-d', '--dat', dest='dat', type='string', default = 'all', help="")
+parser.add_option('--user', dest='user', type='string', default=str(os.environ.get('USER')), help='User')
+
 (opt, args) = parser.parse_args()
 
 folder = opt.folder
 
-filerepo = '/eos/user/'+str(os.environ.get('USER')[0])+'/'+str(os.environ.get('USER'))+'/VBS/nosynch/' + folder + '/'
-plotrepo = '/eos/user/'+str(os.environ.get('USER')[0])+'/'+str(os.environ.get('USER'))+'/VBS/nosynch/' + folder + '/'
+filerepo = '/eos/user/'+opt.user[0]+'/'+opt.user+'/VBS/nosynch/' + folder + '/'
+plotrepo = '/eos/user/'+opt.user[0]+'/'+opt.user+'/VBS/nosynch/' + folder + '/'
 
 ROOT.gROOT.SetBatch() # don't pop up canvases
 if opt.plot:
@@ -119,6 +121,8 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
      f1 = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + ".root")
 
      nbins = variable._nbins
+
+     histoname="prova"
      h1 = ROOT.TH1F(histoname, variable._name + "_" + reg, variable._nbins, variable._xmin, variable._xmax)
      h1.Sumw2()
      if 'muon' in lep: 
@@ -144,7 +148,8 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
                 taglio = variable._taglio+"*w_nominal*(abs(w)<10)"
      '''
      #print treename
-     f1.Get(treename).Project(histoname,variable._name,cut)
+     #TODO: remove events_all which is hardcoded
+     f1.Get("events_all").Project(histoname,variable._name,cut)
      #if not 'Data' in sample.label:
      #     h1.Scale((7.5)/35.89)
      h1.SetBinContent(1, h1.GetBinContent(0) + h1.GetBinContent(1))
@@ -490,7 +495,7 @@ else:
 lumi = {'2016': 35.9, "2017": 41.53, "2018": 59.7}
 
 for year in years:
-     for sample in dataset_dict[year]:
+    for sample in dataset_dict[year]:
           if(opt.merpart):
                mergepart(sample)
           if(opt.lumi):

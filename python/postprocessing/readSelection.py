@@ -87,14 +87,26 @@ wpset_dict = {'a': [('M', 'VL', 'VVL'),
 #username = str(os.environ.get('USER'))
 #inituser = str(os.environ.get('USER')[0])
 
-OutFile = open("OutCuts_AllWP.txt","w") 
-OutSignif = open("OutSignificance.txt", "w")
+OutFile = open("OutCuts_AllWP_2112020.txt","w") 
+OutSignif = open("OutSignificance_2112020.txt", "w")
 
 for aut, wpconfs in wpset_dict.items():
     #carica autore e wp config
     seppiawp=0
     for wpconf in wpconfs:
         #scrive la path a seconda di chi ha prodotto una certa wp config
+        if aut=="a" and wpconf==wpset_dict["a"][3]: continue
+        if aut=="a" and wpconf==wpset_dict["a"][8]: continue
+        if aut=="a" and wpconf==wpset_dict["a"][7]: continue
+        if aut=="m" and wpconf==wpset_dict["m"][3]: continue
+        if aut=="m" and wpconf==wpset_dict["m"][4]: continue
+        if aut=="m" and wpconf==wpset_dict["m"][5]: continue
+        if aut=="m" and wpconf==wpset_dict["m"][6]: continue
+        if aut=="m" and wpconf==wpset_dict["m"][7]: continue
+        if aut=="m" and wpconf==wpset_dict["m"][8]: continue
+
+
+
 
         print "Starting to work --- \n \n"
         
