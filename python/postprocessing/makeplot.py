@@ -121,15 +121,16 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
      f1 = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + ".root")
 
      nbins = variable._nbins
-
-     histoname="prova"
+     histoname = "h_" + reg + "_" + variable._name + "_" + cut_tag
      h1 = ROOT.TH1F(histoname, variable._name + "_" + reg, variable._nbins, variable._xmin, variable._xmax)
      h1.Sumw2()
-     if 'muon' in lep: 
+
+     cut = variable._taglio
+     '''if 'muon' in lep: 
           cut = variable._taglio + '*isMu'
 
      elif 'electron' in lep:
-          cut  = variable._taglio + '*isEle'
+          cut  = variable._taglio + '*isEle'''
      if 'MC' in variable._name:
           cut = cut + "*(" + str(variable._name) + "!=-100.)"
      
@@ -521,8 +522,9 @@ for year in years:
           variables.append(variabile('lepton_pt', 'lepton p_{T} [GeV]', wzero+'*('+cut+')', 100, 0, 1200))
           variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cut+')', 48, -2.4, 2.4))
           variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cut+')', 20, -3.14, 3.14))
-          variables.append(variabile('lepton_miniIso', 'lepton miniIso',  wzero+'*('+cut+')', 100, 0, 0.1))
+          #variables.append(variabile('lepton_miniIso', 'lepton miniIso',  wzero+'*('+cut+')', 100, 0, 0.1))
           #variables.append(variabile('lepton_stdIso', 'lepton std Iso',  wzero+'*('+cut+')', 5, -0.5, 4.5))
+          '''     
           variables.append(variabile('best_top_m', 'top mass [GeV] (best)',  wzero+'*(best_top_m>0&&'+cut+')', 46, 80, 1000))
           variables.append(variabile('MET_pt', "Missing transverse momentum [GeV]",wzero+'*('+cut+')', 100, 0, 1000))
           variables.append(variabile('Event_HT', 'event HT [GeV]', wzero+'*('+cut+')', 70, 0, 1400))
@@ -547,6 +549,7 @@ for year in years:
           variables.append(variabile('deltaR_bestWAK4_closestAK8', '#DeltaR (best)W\' AK4 closest AK8',  wzero+'*('+cut+')', 50, 0, 5))
           variables.append(variabile('leadingjet_pt', 'leading jet p_{T} [GeV]',  wzero+'*('+cut+')', 150, 0, 3000))
           variables.append(variabile('subleadingjet_pt', 'subleading jet p_{T} [GeV]',  wzero+'*('+cut+')', 150, 0, 3000))          
+          '''
 
           for sample in dataset_new:
                if(opt.plot):
