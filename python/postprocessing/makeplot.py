@@ -19,7 +19,7 @@ parser.add_option('--sel', dest='sel', default = False, action='store_true', hel
 parser.add_option('-p', '--plot', dest='plot', default = False, action='store_true', help='Default make no plots')
 parser.add_option('-s', '--stack', dest='stack', default = False, action='store_true', help='Default make no stacks')
 parser.add_option('-N', '--notstacked', dest='tostack', default = True, action='store_false', help='Default make plots stacked')
-parser.add_option('-L', '--lep', dest='lep', type='string', default = 'muon', help='Default make muon analysis')
+parser.add_option('-L', '--lep', dest='lep', type='string', default = 'incl', help='Default make incl analysis')
 parser.add_option('-S', '--syst', dest='syst', type='string', default = 'all', help='Default all systematics added')
 parser.add_option('-C', '--cut', dest='cut', type='string', default = 'lepton_eta>-10.', help='Default no cut')
 parser.add_option('-y', '--year', dest='year', type='string', default = 'all', help='Default 2016, 2017 and 2018 are included')
@@ -36,11 +36,15 @@ filerepo = '/eos/user/'+opt.user[0]+'/'+opt.user+'/VBS/nosynch/' + folder + '/'
 plotrepo = '/eos/user/'+opt.user[0]+'/'+opt.user+'/VBS/nosynch/' + folder + '/'
 
 ROOT.gROOT.SetBatch() # don't pop up canvases
+if opt.lep != 'incl':
+     lepstr = 'plot/' + opt.lep
+else:
+     lepstr = 'plot'
 if opt.plot:
-     if not os.path.exists(plotrepo + 'plot/muon'):
-          os.makedirs(plotrepo + 'plot/muon')
-     if not os.path.exists(plotrepo + 'plot/electron'):
-          os.makedirs(plotrepo + 'plot/electron')
+     if not os.path.exists(plotrepo + lepstr):
+          os.makedirs(plotrepo + lepstr)
+     if not os.path.exists(plotrepo + lepstr):
+          os.makedirs(plotrepo + lepstr)
 if opt.stack:
      if not os.path.exists(plotrepo + 'stack'):
           os.makedirs(plotrepo + 'stack')
@@ -126,16 +130,16 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
      h1.Sumw2()
 
      cut = variable._taglio
-     '''if 'muon' in lep: 
+     if 'muon' in lep: 
           cut = variable._taglio + '*isMu'
-
      elif 'electron' in lep:
           cut  = variable._taglio + '*isEle'''
+
      if 'MC' in variable._name:
           cut = cut + "*(" + str(variable._name) + "!=-100.)"
      
      print str(cut)
-     foutput = plotrepo + "plot/" + lep + "/" + sample.label + "_" + lep+".root"
+     foutput = plotrepo + lepstr + "/" + sample.label + "_" + lep+".root"
      '''
      else:
           if(syst==""):
@@ -169,10 +173,7 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
 
 def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      os.system('set LD_PRELOAD=libtcmalloc.so')
-     if variabile_._name=='WprAK8_tau2/WprAK8_tau1':
-          variabile_._name = 'WprAK8_tau21' 
-     elif variabile_._name== 'WprAK8_tau3/WprAK8_tau2':
-          variabile_._name = 'WprAK8_tau32'
+
      blind = False
      infile = {}
      histo = []
@@ -207,10 +208,10 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
                signal = True
           if(syst_ == ""):
                outfile = plotrepo + "stack_" + str(lep_).strip('[]') + ".root"
-               infile[s.label] = ROOT.TFile.Open(plotrepo + "plot/" + lep + "/" + s.label + "_" + lep + ".root")
+               infile[s.label] = ROOT.TFile.Open(plotrepo + lepstr + "/" + s.label + "_" + lep + ".root")
           else:
                outfile = plotrepo + "stack_"+syst_+"_"+str(lep_).strip('[]')+".root"
-               infile[s.label] = ROOT.TFile.Open(plotrepo + "plot/" + lep + "/" + s.label + "_" + lep + "_" + syst_ + ".root")
+               infile[s.label] = ROOT.TFile.Open(plotrepo + lepstr + "/" + s.label + "_" + lep + "_" + syst_ + ".root")
      i = 0
 
      for s in samples_:
@@ -345,6 +346,8 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           lep_tag = "#mu+"
      elif str(lep_).strip('[]') == "electron":
           lep_tag = "e+"
+     elif:
+          lep_tag = "incl."
           
      lumi_sqrtS = "%s fb^{-1}  (13 TeV)"%(lumi)
      
@@ -478,6 +481,7 @@ cut = opt.cut #default cut must be obvious, for example lepton_eta>-10.
 if opt.cut == "lepton_eta>-10." and not opt.sel:
      cut_dict = {'muon':"lepton_eta>-10",#&&best_topjet_isbtag==0&&best_Wpjet_isbtag==1&&nbjet_pt100==1", 
                  'electron':"lepton_eta>-10"#&&best_topjet_isbtag==0&&best_Wpjet_isbtag==1&&nbjet_pt100==1",
+                 'incl':"lepton_eta>-10"#&&best_topjet_isbtag==0&&best_Wpjet_isbtag==1&&nbjet_pt100==1",
      }
      cut_tag = ""
 else:

@@ -13,7 +13,8 @@ inituser = str(os.environ.get('USER')[0])
 
 #folder = "Eff_Jet" + opt.jetwp + "_Mu" + opt.muwp + "_Ele" + opt.elewp
 path = "/eos/user/" + inituser + "/" + username + "/VBS/nosynch/"
-dirlist = [dirs for dirs in os.listdir(path) if os.path.isdir(path+dirs) and "Eff_" in dirs]
+dirlist = [dirs for dirs in os.listdir(path) if os.path.isdir(path+dirs) and "v" in dirs]
+print dirlist
 
 for dirn in dirlist:
     ismerged = False
@@ -26,6 +27,6 @@ for dirn in dirlist:
     if ismerged:
         continue
 
-    print "python makeplot.py -y ", opt.year, " --merpart --folder ", dirn
-    os.system("python makeplot.py -y " + opt.year + " --merpart --folder " + dirn)
+    print "python makeplot.py -y ", opt.year, " --merpart --lumi --mertree --folder ", dirn
+    os.system("python makeplot.py -y " + opt.year + " --merpart --lumi --mertree --folder " + dirn)
 
