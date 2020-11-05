@@ -43,6 +43,7 @@ for infile in file_list:
     print("Adding %s to the chain" %(infile))
     chain.Add(infile)
 
+
 print(chain)
 
 print("Number of events in chain " + str(chain.GetEntries()))
@@ -72,6 +73,8 @@ Cut_dict = {1: ['Trigger             ', 0, 0.0, 0.0, 0.0, 0.0],
 #++   branching the new trees    ++
 #++++++++++++++++++++++++++++++++++
 outTreeFile = ROOT.TFile(sample.label+"_part"+str(part_idx)+".root", "RECREATE") # output file
+
+
 trees = []
 for i in range(10):
     trees.append(None)
@@ -115,12 +118,12 @@ systTree.setWeightName("PFDown",1.)
 #ssWW variables
 var_list = []
 #lepton variables
-lepton_pt               =   array.array('f', [0.])
-lepton_eta              =   array.array('f', [0.])
-lepton_phi              =   array.array('f', [0.])
-lepton_mass             =   array.array('f', [0.])
-lepton_pdgid            =   array.array('i', [0])
-lepton_pfRelIso03       =   array.array('f', [0.])
+lepton_pt               =   array.array('f', [-999.])
+lepton_eta              =   array.array('f', [-999.])
+lepton_phi              =   array.array('f', [-999.])
+lepton_mass             =   array.array('f', [-999.])
+lepton_pdgid            =   array.array('i', [-999])
+lepton_pfRelIso03       =   array.array('f', [-999.])
 var_list.append(lepton_pt)
 var_list.append(lepton_eta)
 var_list.append(lepton_phi)
@@ -129,29 +132,27 @@ var_list.append(lepton_pdgid)
 var_list.append(lepton_pfRelIso03)
 
 #tau variables
-tau_pt                  =   array.array('f', [0.])
-tau_eta                 =   array.array('f', [0.])
-tau_phi                 =   array.array('f', [0.])
-tau_charge              =   array.array('i', [0])
-tau_mass                =   array.array('f', [0.])
-tau_DeepTau_WP       =   array.array('f', [0.])
-tau_HPS_discr           =   array.array('i', [0])
+tau_pt                  =   array.array('f', [-999.])
+tau_eta                 =   array.array('f', [-999.])
+tau_phi                 =   array.array('f', [-999.])
+tau_charge              =   array.array('i', [-999])
+tau_mass                =   array.array('f', [-999.])
+tau_DeepTau_WP       =   array.array('f', [-999.])
 var_list.append(tau_pt)
 var_list.append(tau_eta)
 var_list.append(tau_phi)
 var_list.append(tau_charge)
 var_list.append(tau_mass)
 var_list.append(tau_DeepTau_WP)
-var_list.append(tau_HPS_discr)
 
 #jet variables
-Leadjet_pt                  =   array.array('f', [0.])
-Leadjet_eta                 =   array.array('f', [0.])
-Leadjet_phi                 =   array.array('f', [0.])
-Leadjet_mass                =   array.array('f', [0.])
-Leadjet_CSVv2_b             =   array.array('f', [0.])
-Leadjet_DeepFlv_b           =   array.array('f', [0.])
-Leadjet_DeepCSVv2_b         =   array.array('f', [0.])
+Leadjet_pt                  =   array.array('f', [-999.])
+Leadjet_eta                 =   array.array('f', [-999.])
+Leadjet_phi                 =   array.array('f', [-999.])
+Leadjet_mass                =   array.array('f', [-999.])
+Leadjet_CSVv2_b             =   array.array('f', [-999.])
+Leadjet_DeepFlv_b           =   array.array('f', [-999.])
+Leadjet_DeepCSVv2_b         =   array.array('f', [-999.])
 var_list.append(Leadjet_pt)
 var_list.append(Leadjet_eta)
 var_list.append(Leadjet_phi)
@@ -160,13 +161,13 @@ var_list.append(Leadjet_CSVv2_b)
 var_list.append(Leadjet_DeepFlv_b)
 var_list.append(Leadjet_DeepCSVv2_b)
 
-Subleadjet_pt               =   array.array('f', [0.])
-Subleadjet_eta              =   array.array('f', [0.])
-Subleadjet_phi              =   array.array('f', [0.])
-Subleadjet_mass             =   array.array('f', [0.])
-Subleadjet_CSVv2_b          =   array.array('f', [0.])
-Subleadjet_DeepFlv_b        =   array.array('f', [0.])
-Subleadjet_DeepCSVv2_b      =   array.array('f', [0.])
+Subleadjet_pt               =   array.array('f', [-999.])
+Subleadjet_eta              =   array.array('f', [-999.])
+Subleadjet_phi              =   array.array('f', [-999.])
+Subleadjet_mass             =   array.array('f', [-999.])
+Subleadjet_CSVv2_b          =   array.array('f', [-999.])
+Subleadjet_DeepFlv_b        =   array.array('f', [-999.])
+Subleadjet_DeepCSVv2_b      =   array.array('f', [-999.])
 var_list.append(Subleadjet_pt)
 var_list.append(Subleadjet_eta)
 var_list.append(Subleadjet_phi)
@@ -176,10 +177,10 @@ var_list.append(Subleadjet_DeepFlv_b)
 var_list.append(Subleadjet_DeepCSVv2_b)
 
 #MET
-MET_pt                      =   array.array('f', [0.])
-MET_eta                     =   array.array('f', [0.])
-MET_phi                     =   array.array('f', [0.])
-MET_mass                    =   array.array('f', [0.])
+MET_pt                      =   array.array('f', [-999.])
+MET_eta                     =   array.array('f', [-999.])
+MET_phi                     =   array.array('f', [-999.])
+MET_mass                    =   array.array('f', [-999.])
 var_list.append(MET_pt)
 var_list.append(MET_eta)
 var_list.append(MET_phi)
@@ -311,7 +312,10 @@ contagood=0
 for i in range(tree.GetEntries()):
     #reinizializza tutte le variabili a 0, per sicurezza
     for j, var in enumerate(var_list):
-        var_list[j][0] = 0
+        if j<len(var_list)-8:
+            var_list[j][0] = -999
+        else:
+            var_list[j][0] = 0
     
     w_nominal_all[0] = 1.
     #++++++++++++++++++++++++++++++++++
@@ -443,8 +447,12 @@ for i in range(tree.GetEntries()):
     if SingleEle==True: leptons=electrons
     if SingleMu==True:  leptons=muons
 
-
     if (SingleEle or SingleMu): Cut_dict[1][1]+=1
+    
+    MET_pt[0]   =   met.pt  
+    MET_eta[0]  =   met.eta
+    MET_phi[0]  =   met.phi
+    MET_mass[0] =   met.mass
 
     indexGoodLep=SelectLepton(leptons, SingleMu)
 
@@ -484,6 +492,12 @@ for i in range(tree.GetEntries()):
     if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1: Cut_dict[4][1]+=1
 
     GoodTau=taus[indexGoodTau]
+    tau_pt[0]               =   GoodTau.pt
+    tau_eta[0]              =   GoodTau.eta
+    tau_phi[0]              =   GoodTau.phi
+    tau_mass[0]             =   GoodTau.mass
+    if(GoodTau.pdgid>0):    tau_charge[0]=1
+    else:                   tau_charge[0]=-1
 
     tau_DeepTau_WP[0] = GoodTau.idDeepTau2017v2p1VSjet*1000.**2. + GoodTau.idDeepTau2017v2p1VSmu*1000. + GoodTau.idDeepTau2017v2p1VSe
 
@@ -501,6 +515,25 @@ for i in range(tree.GetEntries()):
 
     jet1, jet2=outputJetSel
     
+    LeadJet_pt[0]               =   jet1.pt
+    LeadJet_eta[0]              =   jet1.eta
+    LeadJet_phi[0]              =   jet1.phi
+    LeadJet_mass[0]             =   jet1.mass
+    LeadJet_DeepFlv_b[0]        =   jet1.btagDeepFlavB
+    LeadJet_DeepCSVv2_b[0]      =   jet1.btagDeepB
+    LeadJet_CSVv2_b[0]          =   jet1.btagCSVV2
+    
+    SubleadJet_pt[0]            =   jet2.pt
+    SubleadJet_eta[0]           =   jet2.eta
+    SubleadJet_phi[0]           =   jet2.phi
+    SubleadJet_mass[0]          =   jet2.mass
+    SubleadJet_DeepFlv_b[0]     =   jet2.btagDeepFlavB
+    SubleadJet_DeepCSVv2_b[0]   =   jet2.btagDeepB
+    SubleadJet_CSVv2_b[0]       =   jet2.btagCSVV2
+    
+    
+
+
     pass_jet_selection[0]=1
 
     if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1: Cut_dict[6][1]+=1
