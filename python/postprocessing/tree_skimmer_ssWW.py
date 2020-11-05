@@ -178,13 +178,9 @@ var_list.append(Subleadjet_DeepCSVv2_b)
 
 #MET
 MET_pt                      =   array.array('f', [-999.])
-MET_eta                     =   array.array('f', [-999.])
 MET_phi                     =   array.array('f', [-999.])
-MET_mass                    =   array.array('f', [-999.])
 var_list.append(MET_pt)
-var_list.append(MET_eta)
 var_list.append(MET_phi)
-var_list.append(MET_mass)
 
 #cut variables
 pass_lepton_selection       =   array.array('i', [0])
@@ -241,9 +237,7 @@ systTree.branchTreesSysts(trees, "all", "Subleadjet_DeepCSVv2_b",  outTreeFile, 
 #MET
 
 systTree.branchTreesSysts(trees, "all", "MET_pt",               outTreeFile, MET_pt)
-systTree.branchTreesSysts(trees, "all", "MET_eta",              outTreeFile, MET_eta)
 systTree.branchTreesSysts(trees, "all", "MET_phi",              outTreeFile, MET_phi)
-systTree.branchTreesSysts(trees, "all", "MET_mass",             outTreeFile, MET_mass)
 
 #cut variables
 systTree.branchTreesSysts(trees, "all", "pass_lepton_selection",    outTreeFile, pass_lepton_selection)
@@ -450,9 +444,7 @@ for i in range(tree.GetEntries()):
     if (SingleEle or SingleMu): Cut_dict[1][1]+=1
     
     MET_pt[0]   =   met.pt  
-    MET_eta[0]  =   met.eta
     MET_phi[0]  =   met.phi
-    MET_mass[0] =   met.mass
 
     indexGoodLep=SelectLepton(leptons, SingleMu)
 
@@ -496,8 +488,7 @@ for i in range(tree.GetEntries()):
     tau_eta[0]              =   GoodTau.eta
     tau_phi[0]              =   GoodTau.phi
     tau_mass[0]             =   GoodTau.mass
-    if(GoodTau.pdgid>0):    tau_charge[0]=1
-    else:                   tau_charge[0]=-1
+    tau_charge[0]           =   GoodTau.charge
 
     tau_DeepTau_WP[0] = GoodTau.idDeepTau2017v2p1VSjet*1000.**2. + GoodTau.idDeepTau2017v2p1VSmu*1000. + GoodTau.idDeepTau2017v2p1VSe
 
@@ -515,21 +506,21 @@ for i in range(tree.GetEntries()):
 
     jet1, jet2=outputJetSel
     
-    LeadJet_pt[0]               =   jet1.pt
-    LeadJet_eta[0]              =   jet1.eta
-    LeadJet_phi[0]              =   jet1.phi
-    LeadJet_mass[0]             =   jet1.mass
-    LeadJet_DeepFlv_b[0]        =   jet1.btagDeepFlavB
-    LeadJet_DeepCSVv2_b[0]      =   jet1.btagDeepB
-    LeadJet_CSVv2_b[0]          =   jet1.btagCSVV2
+    Leadjet_pt[0]               =   jet1.pt
+    Leadjet_eta[0]              =   jet1.eta
+    Leadjet_phi[0]              =   jet1.phi
+    Leadjet_mass[0]             =   jet1.mass
+    Leadjet_DeepFlv_b[0]        =   jet1.btagDeepFlavB
+    Leadjet_DeepCSVv2_b[0]      =   jet1.btagDeepB
+    Leadjet_CSVv2_b[0]          =   jet1.btagCSVV2
     
-    SubleadJet_pt[0]            =   jet2.pt
-    SubleadJet_eta[0]           =   jet2.eta
-    SubleadJet_phi[0]           =   jet2.phi
-    SubleadJet_mass[0]          =   jet2.mass
-    SubleadJet_DeepFlv_b[0]     =   jet2.btagDeepFlavB
-    SubleadJet_DeepCSVv2_b[0]   =   jet2.btagDeepB
-    SubleadJet_CSVv2_b[0]       =   jet2.btagCSVV2
+    Subleadjet_pt[0]            =   jet2.pt
+    Subleadjet_eta[0]           =   jet2.eta
+    Subleadjet_phi[0]           =   jet2.phi
+    Subleadjet_mass[0]          =   jet2.mass
+    Subleadjet_DeepFlv_b[0]     =   jet2.btagDeepFlavB
+    Subleadjet_DeepCSVv2_b[0]   =   jet2.btagDeepB
+    Subleadjet_CSVv2_b[0]       =   jet2.btagCSVV2
     
     
 
