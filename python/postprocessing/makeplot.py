@@ -26,12 +26,14 @@ parser.add_option('-y', '--year', dest='year', type='string', default = 'all', h
 parser.add_option('-f', '--folder', dest='folder', type='string', default = 'v6', help='Default folder is v0')
 #parser.add_option('-T', '--topol', dest='topol', type='string', default = 'all', help='Default all njmt')
 parser.add_option('-d', '--dat', dest='dat', type='string', default = 'all', help="")
+parser.add_option('--user', dest='user', type='string', default=str(os.environ.get('USER')), help='User')
+
 (opt, args) = parser.parse_args()
 
 folder = opt.folder
 
-filerepo = '/eos/user/'+str(os.environ.get('USER')[0])+'/'+str(os.environ.get('USER'))+'/VBS/nosynch/' + folder + '/'
-plotrepo = '/eos/user/'+str(os.environ.get('USER')[0])+'/'+str(os.environ.get('USER'))+'/VBS/nosynch/' + folder + '/'
+filerepo = '/eos/user/'+opt.user[0]+'/'+opt.user+'/VBS/nosynch/' + folder + '/'
+plotrepo = '/eos/user/'+opt.user[0]+'/'+opt.user+'/VBS/nosynch/' + folder + '/'
 
 ROOT.gROOT.SetBatch() # don't pop up canvases
 if opt.plot:
@@ -119,13 +121,16 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
      f1 = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + ".root")
 
      nbins = variable._nbins
+     histoname = "h_" + reg + "_" + variable._name + "_" + cut_tag
      h1 = ROOT.TH1F(histoname, variable._name + "_" + reg, variable._nbins, variable._xmin, variable._xmax)
      h1.Sumw2()
-     if 'muon' in lep: 
+
+     cut = variable._taglio
+     '''if 'muon' in lep: 
           cut = variable._taglio + '*isMu'
 
      elif 'electron' in lep:
-          cut  = variable._taglio + '*isEle'
+          cut  = variable._taglio + '*isEle'''
      if 'MC' in variable._name:
           cut = cut + "*(" + str(variable._name) + "!=-100.)"
      
@@ -144,7 +149,8 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
                 taglio = variable._taglio+"*w_nominal*(abs(w)<10)"
      '''
      #print treename
-     f1.Get(treename).Project(histoname,variable._name,cut)
+     #TODO: remove events_all which is hardcoded
+     f1.Get("events_all").Project(histoname,variable._name,cut)
      #if not 'Data' in sample.label:
      #     h1.Scale((7.5)/35.89)
      h1.SetBinContent(1, h1.GetBinContent(0) + h1.GetBinContent(1))
@@ -490,7 +496,7 @@ else:
 lumi = {'2016': 35.9, "2017": 41.53, "2018": 59.7}
 
 for year in years:
-     for sample in dataset_dict[year]:
+    for sample in dataset_dict[year]:
           if(opt.merpart):
                mergepart(sample)
           if(opt.lumi):
@@ -516,8 +522,9 @@ for year in years:
           variables.append(variabile('lepton_pt', 'lepton p_{T} [GeV]', wzero+'*('+cut+')', 100, 0, 1200))
           variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cut+')', 48, -2.4, 2.4))
           variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cut+')', 20, -3.14, 3.14))
-          variables.append(variabile('lepton_miniIso', 'lepton miniIso',  wzero+'*('+cut+')', 100, 0, 0.1))
+          #variables.append(variabile('lepton_miniIso', 'lepton miniIso',  wzero+'*('+cut+')', 100, 0, 0.1))
           #variables.append(variabile('lepton_stdIso', 'lepton std Iso',  wzero+'*('+cut+')', 5, -0.5, 4.5))
+          '''     
           variables.append(variabile('best_top_m', 'top mass [GeV] (best)',  wzero+'*(best_top_m>0&&'+cut+')', 46, 80, 1000))
           variables.append(variabile('MET_pt', "Missing transverse momentum [GeV]",wzero+'*('+cut+')', 100, 0, 1000))
           variables.append(variabile('Event_HT', 'event HT [GeV]', wzero+'*('+cut+')', 70, 0, 1400))
@@ -542,6 +549,7 @@ for year in years:
           variables.append(variabile('deltaR_bestWAK4_closestAK8', '#DeltaR (best)W\' AK4 closest AK8',  wzero+'*('+cut+')', 50, 0, 5))
           variables.append(variabile('leadingjet_pt', 'leading jet p_{T} [GeV]',  wzero+'*('+cut+')', 150, 0, 3000))
           variables.append(variabile('subleadingjet_pt', 'subleading jet p_{T} [GeV]',  wzero+'*('+cut+')', 150, 0, 3000))          
+          '''
 
           for sample in dataset_new:
                if(opt.plot):
