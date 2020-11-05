@@ -519,9 +519,16 @@ for year in years:
           wzero = 'w_nominal'#*PFSF*lepSF'
           cut = cut_dict[lep]
                     
-          variables.append(variabile('lepton_pt', 'lepton p_{T} [GeV]', wzero+'*('+cut+')', 100, 0, 1200))
+          variables.append(variabile('lepton_pt', 'lepton p_{T} [GeV]', wzero+'*('+cut+')', 100, 0, 1000))
           variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cut+')', 48, -2.4, 2.4))
           variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cut+')', 20, -3.14, 3.14))
+          variables.append(variabile('lepton_pdgid', 'lepton pdgid',  wzero+'*('+cut+')', 31, -15.5, 15.5))
+          variables.append(variabile('lepton_pfRelIso03', 'lepton rel iso',  wzero+'*('+cut+')', 50, 0, 0.15))
+          #variables.append(variabile('tau_pt', '#tau_{p_{T}}',  wzero+'*('+cut+')', 50, 0, 0.15))
+          
+          
+          
+          
           #variables.append(variabile('lepton_miniIso', 'lepton miniIso',  wzero+'*('+cut+')', 100, 0, 0.1))
           #variables.append(variabile('lepton_stdIso', 'lepton std Iso',  wzero+'*('+cut+')', 5, -0.5, 4.5))
           '''     
