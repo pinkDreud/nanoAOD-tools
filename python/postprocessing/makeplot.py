@@ -204,7 +204,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
 
      print samples_
      for s in samples_:
-          if('WP' in s.label):
+          if('WpWpJJ_EWK' in s.label):
                signal = True
           if(syst_ == ""):
                outfile = plotrepo + "stack_" + str(lep_).strip('[]') + ".root"
@@ -464,8 +464,8 @@ if(opt.dat!= 'all'):
 else:
      dataset_dict = {
           #'2016':[TT_2016, WJets_2016, WZ_2016, DYJetsToLL_2016, WpWpJJ_EWK_2016, WpWpJJ_QCD_2016],#[DataMu_2016, DataEle_2016, DataHT_2016],
-          '2017':[TT_2017, WJets_2017, WZ_2017, DYJetsToLL_2017, WpWpJJ_EWK_2017, WpWpJJ_QCD_2017],#[DataMu_2017, DataEle_2017, DataHT_2017],
-          '2018':[TT_2018, WJets_2018, WZ_2018, DYJetsToLL_2018, WpWpJJ_EWK_2018, WpWpJJ_QCD_2018],#[DataMu_2018, DataEle_2018, DataHT_2018],
+          '2017':[TT_2017, WpWpJJ_QCD_2017, WZ_2017, DYJetsToLL_2017, WJets_2017, WpWpJJ_EWK_2017],#[DataMu_2017, DataEle_2017, DataHT_2017],
+          '2018':[TT_2018, WpWpJJ_QCD_2018, WZ_2018, DYJetsToLL_2018, WJets_2018, WpWpJJ_EWK_2018],#[DataMu_2017, DataEle_2017, DataHT_2017],
      }
 #print(dataset_dict.keys())
 
@@ -507,8 +507,7 @@ for year in years:
           if(opt.lumi):
                lumi_writer(sample, lumi[year])
           if(opt.mertree):
-               if not('WP' in sample.label):
-                    mergetree(sample)
+               mergetree(sample)
 
 for year in years:
      for lep in leptons:
