@@ -346,9 +346,10 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           lep_tag = "#mu+"
      elif str(lep_).strip('[]') == "electron":
           lep_tag = "e+"
-     elif:
+     else:
           lep_tag = "incl."
-          
+         
+     print "lep_tag: ", lep_tag
      lumi_sqrtS = "%s fb^{-1}  (13 TeV)"%(lumi)
      
      iPeriod = 0
@@ -480,7 +481,7 @@ leptons = map(str,opt.lep.split(','))
 cut = opt.cut #default cut must be obvious, for example lepton_eta>-10.
 if opt.cut == "lepton_eta>-10." and not opt.sel:
      cut_dict = {'muon':"lepton_eta>-10",#&&best_topjet_isbtag==0&&best_Wpjet_isbtag==1&&nbjet_pt100==1", 
-                 'electron':"lepton_eta>-10"#&&best_topjet_isbtag==0&&best_Wpjet_isbtag==1&&nbjet_pt100==1",
+                 'electron':"lepton_eta>-10",#&&best_topjet_isbtag==0&&best_Wpjet_isbtag==1&&nbjet_pt100==1",
                  'incl':"lepton_eta>-10"#&&best_topjet_isbtag==0&&best_Wpjet_isbtag==1&&nbjet_pt100==1",
      }
      cut_tag = ""

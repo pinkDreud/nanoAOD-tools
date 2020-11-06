@@ -38,15 +38,15 @@ vsEle_dict = {"VVVL": '1',
               "VVT": '128',
 }
 
-a_list = [#'MVLVVL',
-          #'TVLVVL',
-          #'VTVLVVL',
-          #'MLVVL',
+a_list = ['MVLVVL',
+          'TVLVVL',
+          'VTVLVVL',
+          'MLVVL',
           'TLVVL',
           'VTLVVL',
           'MVLVL',
-          #'TVLVL',
-          #'VTVLVL',
+          'TVLVL',
+          'VTVLVL',
 ]
 
 m_list = ['MLVL',
