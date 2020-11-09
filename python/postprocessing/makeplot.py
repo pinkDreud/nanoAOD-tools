@@ -487,8 +487,9 @@ if opt.cut == "lepton_eta>-10." and not opt.sel:
      cut_tag = ""
 else:
      if opt.sel:
-          cut_dict = {'muon':"MET_pt>120&&lepton_pt>50&&leadingjet_pt>300&&subleadingjet_pt>150&&" + cut, 
-                      'electron':"MET_pt>120&&lepton_pt>50&&leadingjet_pt>300&&subleadingjet_pt>150&&" + cut
+          cut_dict = {'muon':"lepton_eta>-5&&" + cut, 
+                      'electron':"lepton_eta>-5&&" + cut,
+                      'incl':"lepton_eta>-5&&" + cut,
           }
           if opt.cut != "lepton_eta>-10.":
                cut_tag = 'selection_AND_' + cutToTag(opt.cut) 
