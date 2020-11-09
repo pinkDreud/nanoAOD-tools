@@ -138,6 +138,9 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
      if 'MC' in variable._name:
           cut = cut + "*(" + str(variable._name) + "!=-100.)"
      
+     if "WpWpJJ_EWK" in sample.label:
+          cut = cut + "*100."
+
      print str(cut)
      foutput = plotrepo + lepstr + "/" + sample.label + "_" + lep+".root"
      '''
@@ -232,7 +235,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
                if(i == 0 and not blind): # trick to add Data flag to legend only once
                     leg_stack.AddEntry(hdata, "Data", "ep")
                i += 1
-          elif('WP' in s.label):
+          elif('WpWpJJ_EWK' in s.label):
                #tmp.SetLineStyle(9)
                if opt.tostack:
                     tmp.SetLineColor(s.color)
@@ -518,7 +521,7 @@ for year in years:
           '''
 
           variables = []
-          wzero = 'w_nominal'#*PFSF*lepSF'
+          wzero = 'w_nominal*PFSF*lepSF*puSF'
           cut = cut_dict[lep]
                     
           variables.append(variabile('lepton_pt', 'lepton p_{T} [GeV]', wzero+'*('+cut+')', 100, 0, 1000))
