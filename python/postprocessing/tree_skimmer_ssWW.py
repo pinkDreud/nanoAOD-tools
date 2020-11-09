@@ -185,6 +185,8 @@ var_list.append(MET_phi)
 Mjj                         =   array.array('f', [-999.])
 var_list.append(Mjj)
 
+DeltaEta_jj                 =   array.array('f', [-999.])
+var_list.append(DeltaEta_jj)
 #cut variables
 pass_lepton_selection       =   array.array('i', [0])
 pass_lepton_veto            =   array.array('i', [0])
@@ -546,7 +548,9 @@ for i in range(tree.GetEntries()):
     
     if not JetCut(LeadJet, SubleadJet): pass_mjj_cut[0]=1
 
-    if pass_mjj_cut[0]==1: Mjj[0]=(LeadJet+SubleadJet).M()
+    Mjj[0]=(LeadJet+SubleadJet).M()
+    DeltaEta_jj[0]=abs(LeadJet.Eta()-SubleadJet.Eta())
+
 
     if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1 and pass_mjj_cut[0]==1: Cut_dict[8][1]+=1
 
