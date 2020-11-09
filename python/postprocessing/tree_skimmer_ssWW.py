@@ -182,6 +182,9 @@ MET_phi                     =   array.array('f', [-999.])
 var_list.append(MET_pt)
 var_list.append(MET_phi)
 
+Mjj                         =   array.array('f', [-999.])
+var_list.append(Mjj)
+
 #cut variables
 pass_lepton_selection       =   array.array('i', [0])
 pass_lepton_veto            =   array.array('i', [0])
@@ -238,6 +241,8 @@ systTree.branchTreesSysts(trees, "all", "Subleadjet_DeepCSVv2_b",  outTreeFile, 
 
 systTree.branchTreesSysts(trees, "all", "MET_pt",               outTreeFile, MET_pt)
 systTree.branchTreesSysts(trees, "all", "MET_phi",              outTreeFile, MET_phi)
+
+systTree.branchTreesSysts(trees, "all", "Mjj",                  outTreeFile, Mjj)
 
 #cut variables
 systTree.branchTreesSysts(trees, "all", "pass_lepton_selection",    outTreeFile, pass_lepton_selection)
@@ -538,8 +543,10 @@ for i in range(tree.GetEntries()):
     SubleadJet=ROOT.TLorentzVector()
     LeadJet.SetPtEtaPhiM(jet1.pt, jet1.eta, jet1.phi, jet1.mass)
     SubleadJet.SetPtEtaPhiM(jet2.pt, jet2.eta, jet2.phi, jet2.mass) 
-
+    
     if not JetCut(LeadJet, SubleadJet): pass_mjj_cut[0]=1
+
+    if pass_mjj_cut[0]==1: Mjj[0]=(LeadJet+SubleadJet).M()
 
     if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1 and pass_mjj_cut[0]==1: Cut_dict[8][1]+=1
 
