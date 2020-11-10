@@ -130,16 +130,12 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
      h1.Sumw2()
 
      cut = variable._taglio
-     if 'muon' in lep: 
-          cut = variable._taglio + '*isMu'
-     elif 'electron' in lep:
-          cut  = variable._taglio + '*isEle'''
 
      if 'MC' in variable._name:
           cut = cut + "*(" + str(variable._name) + "!=-100.)"
      
      if "WpWpJJ_EWK" in sample.label:
-          cut = cut + "*100."
+         cut = cut + "*10."
 
      print str(cut)
      foutput = plotrepo + lepstr + "/" + sample.label + "_" + lep+".root"
@@ -484,8 +480,8 @@ leptons = map(str,opt.lep.split(','))
 cut = opt.cut #default cut must be obvious, for example lepton_eta>-10.
 
 if opt.sel:
-     cut_dict = {'muon':"pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&" + cut, 
-                 'electron':"pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&" + cut, 
+     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&" + cut, 
+                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&" + cut, 
                  'incl':"pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&" + cut, 
           }
      if opt.cut != "lepton_eta>-10.":
@@ -529,17 +525,20 @@ for year in years:
           variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cut+')', 20, -3.14, 3.14))
           variables.append(variabile('lepton_pdgid', 'lepton pdgid',  wzero+'*('+cut+')', 31, -15.5, 15.5))
           variables.append(variabile('lepton_pfRelIso03', 'lepton rel iso',  wzero+'*('+cut+')', 50, 0, 0.15))
-          variables.append(variabile('tau_pt',  '#tau_{p_{T}}',  wzero+'*('+cut+')', 50, 0, 1000))
+          variables.append(variabile('tau_pt',  '#tau_{p_{T}} [GeV]',  wzero+'*('+cut+')', 50, 0, 1000))
           variables.append(variabile('tau_eta', '#tau #eta',  wzero+'*('+cut+')', 48, -2.4, 2.4))
           variables.append(variabile('tau_phi', '#tau #Phi',  wzero+'*('+cut+')',  20, -3.14, 3.14))
-          variables.append(variabile('Leadjet_pt',  'Lead jet_{p_{T}}',  wzero+'*('+cut+')', 50, 0, 1500))
+          variables.append(variabile('Leadjet_pt',  'Lead jet_{p_{T}} [GeV]',  wzero+'*('+cut+')', 50, 0, 1500))
           variables.append(variabile('Leadjet_eta', 'Lead jet #eta',  wzero+'*('+cut+')', 48, -5, 5))
           variables.append(variabile('Leadjet_phi', 'Lead jet #Phi',  wzero+'*('+cut+')',  20, -3.14, 3.14))
 
-          variables.append(variabile('Subleadjet_pt',  'Sublead jet_{p_{T}}',  wzero+'*('+cut+')', 50, 0, 1000))
+          variables.append(variabile('Subleadjet_pt',  'Sublead jet_{p_{T}} [GeV]',  wzero+'*('+cut+')', 50, 0, 1000))
           variables.append(variabile('Subleadjet_eta', 'Sublead jet #eta',  wzero+'*('+cut+')', 48, -5, 5))
           variables.append(variabile('Subleadjet_phi', 'Sublead jet #Phi',  wzero+'*('+cut+')',  20, -3.14, 3.14))
-
+          
+          variables.append(variabile('MET_pt', 'p_{T}^{miss} [GeV]',  wzero+'*('+cut+')',  50, 0, 500))
+          variables.append(variabile('Mjj', 'M_{jj} [GeV]',  wzero+'*('+cut+')',  50, 0, 1500))
+          variables.append(variabile('abs(Leadjet_eta-Subleadjet_eta)', '#Delta #eta_{jj}',  wzero+'*('+cut+')',  40, 0, 20))
           
           
           
