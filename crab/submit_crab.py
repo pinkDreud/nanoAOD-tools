@@ -159,19 +159,31 @@ for sample in samples:
         pu_mod = 'puWeight_'+year+'()'
         ht_producer = 'ht()'
         mht_producer = 'mht()'
+        '''
+        elif(self.year == 2017):
+            good_HLT = 
+        elif(self.year == 2018):
+            good_HLT = 
+        else:
+        '''
         if ('Data' in sample.label):
             isMC = False
             presel = "Flag_goodVertices && Flag_globalSuperTightHalo2016Filter && Flag_HBHENoiseFilter && Flag_HBHENoiseIsoFilter && Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_BadPFMuonFilter "
-            if year == '2016' and sample.runP != 'H':
-                presel += " && (HLT_PFHT800 || HLT_PFHT900 || HLT_Mu50 || HLT_TkMu50 || HLT_Ele115_CaloIdVT_GsfTrkIdT || HLT_Ele32_WPTight_Gsf_v)"
-            elif year == '2016' and sample.runP == 'H':
-                presel += " && (HLT_PFHT900 || HLT_Mu50 || HLT_TkMu50 || HLT_Ele115_CaloIdVT_GsfTrkIdT || HLT_Ele32_WPTight_Gsf_v)"
-            elif year == '2017' and sample.runP != 'B':
-                presel += " && (HLT_PFHT780 || HLT_PFHT890 || HLT_Mu50 || HLT_Ele115_CaloIdVT_GsfTrkIdT || HLT_Ele35_WPTight_Gsf_v)"
-            elif year == '2017' and sample.runP == 'B':
-                presel += " && (HLT_PFHT780 || HLT_PFHT890 || HLT_Mu50 || HLT_Ele35_WPTight_Gsf_v)"
+            if year == '2016':# and sample.runP != 'H':
+                if 'DataHT' not in sample.label:
+                    presel += " && ((HLT_Ele27_WPTight_Gsf || HLT_Ele32_WPTight_Gsf || HLT_IsoMu24 || HLT_IsoTkMu24) && Flag_globalSuperTightHalo2016Filter)"
+                else:
+                    presel += " && (HLT_PFHT250 || HLT_PFHT300)"
+            elif year == '2017':# and sample.runP != 'B':
+                if 'DataHT' not in sample.label:
+                    presel += " && ((HLT_IsoMu27 || (HLT_Ele32_WPTight_Gsf_L1DoubleEG && L1_SingleEG32))"
+                else:
+                    presel += " && (HLT_PFHT250 || HLT_PFHT300)"
             elif year == '2018':
-                presel += " && (HLT_PFHT780 || HLT_PFHT890 || HLT_Mu50 || HLT_Ele115_CaloIdVT_GsfTrkIdT || HLT_Ele35_WPTight_Gsf_v)"
+                if 'DataHT' not in sample.label:
+                    presel += " && (HLT_IsoMu24 || HLT_Ele32_WPTight_Gsf_L1DoubleEG)"
+                else:
+                    presel += " && (HLT_PFHT250 || HLT_PFHT350)"
         else:
             isMC = True
             presel = ""
