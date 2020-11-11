@@ -520,24 +520,25 @@ for year in years:
           wzero = 'w_nominal*PFSF*lepSF*puSF'
           cut = cut_dict[lep]
                     
-          variables.append(variabile('lepton_pt', 'lepton p_{T} [GeV]', wzero+'*('+cut+')', 100, 0, 1000))
-          variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cut+')', 48, -2.4, 2.4))
+          variables.append(variabile('lepton_pt', 'lepton p_{T} [GeV]', wzero+'*('+cut+')', 40, 35, 1000))
+          variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cut+')', 24, -2.4, 2.4))
           variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cut+')', 20, -3.14, 3.14))
           variables.append(variabile('lepton_pdgid', 'lepton pdgid',  wzero+'*('+cut+')', 31, -15.5, 15.5))
-          variables.append(variabile('lepton_pfRelIso03', 'lepton rel iso',  wzero+'*('+cut+')', 50, 0, 0.15))
-          variables.append(variabile('tau_pt',  '#tau_{p_{T}} [GeV]',  wzero+'*('+cut+')', 50, 0, 1000))
-          variables.append(variabile('tau_eta', '#tau #eta',  wzero+'*('+cut+')', 48, -2.4, 2.4))
+          variables.append(variabile('lepton_pfRelIso03', 'lepton rel iso',  wzero+'*('+cut+')', 25, 0, 0.15))
+          variables.append(variabile('tau_pt',  '#tau_{p_{T}} [GeV]',  wzero+'*('+cut+')', 40, 30, 1000))
+          variables.append(variabile('tau_eta', '#tau #eta',  wzero+'*('+cut+')', 24, -2.4, 2.4))
           variables.append(variabile('tau_phi', '#tau #Phi',  wzero+'*('+cut+')',  20, -3.14, 3.14))
-          variables.append(variabile('Leadjet_pt',  'Lead jet_{p_{T}} [GeV]',  wzero+'*('+cut+')', 50, 0, 1500))
-          variables.append(variabile('Leadjet_eta', 'Lead jet #eta',  wzero+'*('+cut+')', 48, -5, 5))
+          variables.append(variabile('Leadjet_pt',  'Lead jet_{p_{T}} [GeV]',  wzero+'*('+cut+')', 40, 30, 1500))
+          variables.append(variabile('Leadjet_eta', 'Lead jet #eta',  wzero+'*('+cut+')', 24, -5, 5))
           variables.append(variabile('Leadjet_phi', 'Lead jet #Phi',  wzero+'*('+cut+')',  20, -3.14, 3.14))
 
-          variables.append(variabile('Subleadjet_pt',  'Sublead jet_{p_{T}} [GeV]',  wzero+'*('+cut+')', 50, 0, 1000))
-          variables.append(variabile('Subleadjet_eta', 'Sublead jet #eta',  wzero+'*('+cut+')', 48, -5, 5))
+          variables.append(variabile('Subleadjet_pt',  'Sublead jet_{p_{T}} [GeV]',  wzero+'*('+cut+')', 40, 30, 1000))
+          variables.append(variabile('Subleadjet_eta', 'Sublead jet #eta',  wzero+'*('+cut+')', 24, -5, 5))
           variables.append(variabile('Subleadjet_phi', 'Sublead jet #Phi',  wzero+'*('+cut+')',  20, -3.14, 3.14))
           
-          variables.append(variabile('MET_pt', 'p_{T}^{miss} [GeV]',  wzero+'*('+cut+')',  50, 0, 500))
-          variables.append(variabile('Mjj', 'M_{jj} [GeV]',  wzero+'*('+cut+')',  50, 0, 1500))
+          variables.append(variabile('MET_pt', 'p_{T}^{miss} [GeV]',  wzero+'*('+cut+')',  30, 40, 500))
+          variables.append(variabile('Mjj', 'M_{jj} [GeV]',  wzero+'*('+cut+')',  40, 500, 2000))
+          variables.append(variabile('abs(Leadjet_eta-Subleadjet_eta)', '#Delta #eta_{jj}',  wzero+'*('+cut+')',  20, 0, 10))
 
           for sample in dataset_new:
                if(opt.plot):

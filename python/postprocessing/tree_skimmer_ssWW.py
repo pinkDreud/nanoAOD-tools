@@ -245,6 +245,7 @@ systTree.branchTreesSysts(trees, "all", "MET_pt",               outTreeFile, MET
 systTree.branchTreesSysts(trees, "all", "MET_phi",              outTreeFile, MET_phi)
 
 systTree.branchTreesSysts(trees, "all", "Mjj",                  outTreeFile, Mjj)
+systTree.branchTreesSysts(trees, "all", "DeltaEta_jj",                  outTreeFile, DeltaEta_jj)
 
 #cut variables
 systTree.branchTreesSysts(trees, "all", "pass_lepton_selection",    outTreeFile, pass_lepton_selection)
