@@ -5,7 +5,7 @@ import sys
 usage = 'python SetAndLaunchMakePlot.py -y year -f folder'
 parser = optparse.OptionParser(usage)
 parser.add_option('-y', dest='year', type=str, default = '2017', help='Please enter a year, default is 2017')
-parser.add_option('-f', dest='folder', type=str, default = 'v2', help='Please enter a folder, default is v2')
+parser.add_option('-f', dest='folder', type=str, default = 'v3', help='Please enter a folder, default is v2')
 
 (opt, args) = parser.parse_args()
 
