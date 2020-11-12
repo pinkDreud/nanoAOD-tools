@@ -386,7 +386,7 @@ for i in range(tree.GetEntries()):
         runPeriod = sample.runP
     
     #print "------ ", i
-    passMu, passEle, noTrigger = trig_map(HLT, year, runPeriod)
+    passMu, passEle, passHT, noTrigger = trig_map(HLT, year, runPeriod)
 
     ###### Dobbiamo personalizzare a tempo debito goodMu/Ele e vetoEle/Mu, per ora commentiamo
     #isMuon = (len(goodMu) == 1) and (len(goodEle) == 0) and len(VetoMu) == 0 and len(VetoEle) == 0 and (passMu)
