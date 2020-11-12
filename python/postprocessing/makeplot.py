@@ -538,7 +538,7 @@ for year in years:
           
           variables.append(variabile('MET_pt', 'p_{T}^{miss} [GeV]',  wzero+'*('+cut+')',  30, 40, 500))
           variables.append(variabile('Mjj', 'M_{jj} [GeV]',  wzero+'*('+cut+')',  40, 500, 2000))
-          variables.append(variabile('abs(Leadjet_eta-Subleadjet_eta)', '#Delta #eta_{jj}',  wzero+'*('+cut+')',  20, 0, 10))
+          variables.append(variabile('DeltaEta_jj', '#Delta #eta_{jj}',  wzero+'*('+cut+')',  20, 0, 10))
 
           for sample in dataset_new:
                if(opt.plot):
