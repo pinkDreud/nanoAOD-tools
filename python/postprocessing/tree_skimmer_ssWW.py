@@ -429,7 +429,7 @@ for i in range(tree.GetEntries()):
     
     if passMu and not passEle and len(muons)>0:
         SingleMu=True
-        LeadLepFamilu="muons"
+        LeadLepFamily="muons"
         HighestLepPt=muons[0].pt
 
     if passMu and passEle:
