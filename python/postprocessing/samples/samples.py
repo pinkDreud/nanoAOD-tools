@@ -415,7 +415,8 @@ WpWpJJ_QCD_2018.dataset = "/WpWpJJ_QCD_TuneCP5_13TeV-madgraph-pythia8/" + tag_20
 
 
 ####################################################### Data #####################################################################################
-tag_data = 'Nano25Oct2019'
+#tag_data = 'Nano25Oct2019'
+tag_data = '02Apr2020'
 
 DataMuB_2016 = sample(ROOT.kBlack, 1, 1001, "Data", "DataMuB_2016")
 DataMuB_2016.runP = 'B'
