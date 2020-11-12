@@ -411,18 +411,22 @@ def trig_map(HLT, year, runPeriod):
     passHT = False
     noTrigger = False
     
-    if(year == 2016 and runPeriod != 'H'):
+    if(year == 2016):# and runPeriod != 'H'):
         if(HLT.IsoMu24 or HLT.IsoTkMu24):
             passMu = True
         if(HLT.Ele27_WPTight_Gsf or HLT.Ele32_WPTight_Gsf):
-            passEle = True  
+            passEle = True
+        if(HLT.PFHT250 or HLT.PFHT300):
+            passHT = True
         if not(passMu or passEle):
             noTrigger = True
-    elif(year == 2017 and runPeriod != 'B'):
+    elif(year == 2017):#and runPeriod != 'B'):
         if(HLT.IsoMu27):
             passMu = True
         if(HLT.Ele32_WPTight_Gsf_L1DoubleEG):
             passEle = True  
+        if(HLT.PFHT250 or HLT.PFHT350):
+            passHT = True
         if not(passMu or passEle):
             noTrigger = True
     elif(year == 2018):
@@ -432,7 +436,9 @@ def trig_map(HLT, year, runPeriod):
             passEle = True  
         if not(passMu or passEle):
             noTrigger = True
-
+        if(HLT.PFHT250 or HLT.PFHT350):
+            passHT = True
+            
     else:
         print('Wrong year! Please enter 2016, 2017, or 2018')
     '''
@@ -455,7 +461,7 @@ def trig_map(HLT, year, runPeriod):
         if not(passMu or passEle or passHT):
             noTrigger = True
     '''
-    return passMu, passEle, noTrigger
+    return passMu, passEle, passHT, noTrigger
 
 def get_ptrel(lepton, jet):
     ptrel = ((jet.p4()-lepton.p4()).Vect().Cross(lepton.p4().Vect())).Mag()/(jet.p4().Vect().Mag())

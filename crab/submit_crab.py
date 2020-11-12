@@ -168,7 +168,7 @@ for sample in samples:
         '''
         if ('Data' in sample.label):
             isMC = False
-            presel = "Flag_goodVertices && Flag_globalSuperTightHalo2016Filter && Flag_HBHENoiseFilter && Flag_HBHENoiseIsoFilter && Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_BadPFMuonFilter "
+            presel = "(Flag_goodVertices && Flag_globalSuperTightHalo2016Filter && Flag_HBHENoiseFilter && Flag_HBHENoiseIsoFilter && Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_BadPFMuonFilter) "
             if year == '2016':# and sample.runP != 'H':
                 if 'DataHT' not in sample.label:
                     presel += " && ((HLT_Ele27_WPTight_Gsf || HLT_Ele32_WPTight_Gsf || HLT_IsoMu24 || HLT_IsoTkMu24) && Flag_globalSuperTightHalo2016Filter)"
@@ -176,9 +176,9 @@ for sample in samples:
                     presel += " && (HLT_PFHT250 || HLT_PFHT300)"
             elif year == '2017':# and sample.runP != 'B':
                 if 'DataHT' not in sample.label:
-                    presel += " && ((HLT_IsoMu27 || (HLT_Ele32_WPTight_Gsf_L1DoubleEG && L1_SingleEG32))"
+                    presel += " && (HLT_IsoMu27 || (HLT_Ele32_WPTight_Gsf_L1DoubleEG && L1_SingleEG32))"
                 else:
-                    presel += " && (HLT_PFHT250 || HLT_PFHT300)"
+                    presel += " && (HLT_PFHT250 || HLT_PFHT350)"
             elif year == '2018':
                 if 'DataHT' not in sample.label:
                     presel += " && (HLT_IsoMu24 || HLT_Ele32_WPTight_Gsf_L1DoubleEG)"
