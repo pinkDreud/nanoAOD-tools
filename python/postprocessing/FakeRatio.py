@@ -18,7 +18,7 @@ import math
 import datetime
 import copy
 from array import array
-from FakeRatio_utils.py import *
+from FakeRatio_utils import *
 
 usage = "python FakeRatio.py [nome_dataset_come_salvato_in_samples.py] [indice, di default 0] [path_file_da_processare] local"
 
@@ -328,7 +328,7 @@ for i in range(tree.GetEntries()):
 
     if passHT:
         QCDRegion_tau=QCDEnrichedRegionTaus(taus, met)
-        QCDReegion_lep, isEle=QCDEnrichedRegionLeptons(electrons, muons, met)
+        QCDRegion_lep, isEle=QCDEnrichedRegionLeptons(electrons, muons, met)
         
         if QCDRegion_tau:
             isFakeTau[0]=1
@@ -356,7 +356,7 @@ for i in range(tree.GetEntries()):
             fake_lepton_pdgid[0]             =   leptons[0].pdgId
             fake_lepton_pfRelIso03[0]        =   leptons[0].pfRelIso03_all
         
-        print QCDRegion_tau, QCDReegion_lep, isEle
+        print QCDRegion_tau, QCDRegion_lep, isEle
 
 
 

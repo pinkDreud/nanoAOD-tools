@@ -142,17 +142,17 @@ def mTlepMet(MET, lepton):
 
 
 def QCDEnrichedRegionLeptons(ele, mu, MET):
-    if MET.pt>30: return False
+    isEle=0
+    if MET.pt>30: return False, isEle
     nEle=0
     nMu=0
     for electron in ele:
-        if electron.pfRelIso03<1: nEle+=1
+        if electron.pfRelIso03_all<1: nEle+=1
     for muon in mu:
-        if muon.pfRelIso03<1: nMu=+1
+        if muon.pfRelIso03_all<1: nMu=+1
     nLeps=nEle+nMu
     if nLeps>=2: return False
-    GoodLep
-    isEle=0
+    GoodLep=ele[0]
     if nEle==1:
         GoodLep=ele[0]
         isEle=1
@@ -160,7 +160,7 @@ def QCDEnrichedRegionLeptons(ele, mu, MET):
         GoodLep=mu[0]
     if mTlepMet(MET, GoodLep)>20: return False, isEle
 
-    return True
+    return True, isEle
 
 def QCDEnrichedRegionTaus(taus, MET):
     if MET.pt>30: return False
@@ -439,69 +439,52 @@ def mcbjet_filter(jets): #returns a collection of only b-gen jets (to use only f
 def sameflav_filter(jets, flav): #returns a collection of only b-gen jets (to use only forMC samples)                       
     return list(filter(lambda x : x.partonFlavour == flav, jets))
 
-def get_HT(jets):
-    HT = 0.
-    for jet in jets:
-        HT += jet.pt
-    return HT
-
+    
 def trig_map(HLT, year, runPeriod):
     passMu = False
     passEle = False
     passHT = False
     noTrigger = False
     
-    if(year == 2016 and runPeriod != 'H'):
+    if(year == 2016):# and runPeriod != 'H'):
         if(HLT.IsoMu24 or HLT.IsoTkMu24):
             passMu = True
         if(HLT.Ele27_WPTight_Gsf or HLT.Ele32_WPTight_Gsf):
-            passEle = True  
-        if(HLT.PFHT680):
-            passHT==True
-        if not(passMu or passEle or passHT):
+            passEle = True
+        if(HLT.PFHT250 or HLT.PFHT300):
+            passHT = True
+        if not(passMu or passEle):
             noTrigger = True
-    elif(year == 2017 and runPeriod != 'B'):
+    elif(year == 2017):#and runPeriod != 'B'):
         if(HLT.IsoMu27):
             passMu = True
         if(HLT.Ele32_WPTight_Gsf_L1DoubleEG):
             passEle = True  
-        if(HLT.PFHT680):
-            passHT==True
-        if not(passMu or passEle or passHT):
+        if(HLT.PFHT250 or HLT.PFHT350):
+            passHT = True
+        if not(passMu or passEle):
             noTrigger = True
-  
     elif(year == 2018):
         if(HLT.IsoMu24):
             passMu = True
         if(HLT.Ele32_WPTight_Gsf_L1DoubleEG):
             passEle = True  
-        if(HLT.PFHT680):
-            passHT==True
-        if not(passMu or passEle or passHT):
+        if not(passMu or passEle):
             noTrigger = True
-        
+        if(HLT.PFHT250 or HLT.PFHT350):
+            passHT = True
+            
     else:
         print('Wrong year! Please enter 2016, 2017, or 2018')
     '''
-    elif(year == 2016 and runPeriod == 'H'):
-        if(HLT.Mu50 or HLT.TkMu50):
-            passMu = True
-        if(HLT.Ele115_CaloIdVT_GsfTrkIdT):
-            passEle = True  
-        if(HLT.PFHT900):
-            passHT = True
-        if not(passMu or passEle or passHT):
-            noTrigger = True
+
+    
+    
+    
     '''
-    '''
-    elif(year == 2017 and runPeriod == 'B'):
-        if(HLT.Mu50):
-            passMu = True
-        if(HLT.PFHT780 or HLT.PFHT890):
-            passHT = True
-        if not(passMu or passEle or passHT):
-            noTrigger = True
-    '''
+
+
+
     return passMu, passEle, passHT, noTrigger
 
 def get_ptrel(lepton, jet):
