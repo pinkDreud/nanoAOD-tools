@@ -238,6 +238,9 @@ if(isMC):
         else:
             addPDF = False
     newfile.Close()
+
+contagood=0
+
 '''
 #++++++++++++++++++++++++++++++++++
 #++      Efficiency studies      ++
@@ -324,13 +327,15 @@ for i in range(tree.GetEntries()):
     
     passMu, passEle, passHT, noTrigger = trig_map(HLT, year, runPeriod)
 
-    if noTrigger: continue
+    if not passHT: continue
 
     if passHT:
+
+        contagood+=1
         QCDRegion_tau=QCDEnrichedRegionTaus(taus, met)
         QCDRegion_lep, isEle=QCDEnrichedRegionLeptons(electrons, muons, met)
         
-        if QCDRegion_tau:
+        if QCDRegion_tau and len(taus)>0:
             isFakeTau[0]=1
             if taus[0].idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET: isFakeTau_andPassCuts=1
     
@@ -341,10 +346,10 @@ for i in range(tree.GetEntries()):
             fake_tau_charge[0]           =   taus[0].charge
     
     
-        if QCDRegion_lep:
+        if QCDRegion_lep and (len(electrons)>0 or len(muons)>0):
             isFakeLepton=1
-            if isEle and electrons[0].pfRelIso03<0.08:          isFakeLepton_andPassCuts=1
-            if not(isEle) and electrons[0].pfRelIso03<0.15:     isFakeLepton_andPassCuts=1
+            if isEle and electrons[0].pfRelIso03_all<0.08:        isFakeLepton_andPassCuts=1
+            if isEle==0 and muons[0].pfRelIso03_all<0.15:         isFakeLepton_andPassCuts=1
             
             if isEle:   leptons=electrons
             else:       leptons= muons
@@ -386,6 +391,7 @@ if(isMC):
 
 systTree.writeTreesSysts(trees, outTreeFile)
 print("Number of events in output tree " + str(trees[0].GetEntries()))
+print "Number of good events ", contagood
 
 endTime = datetime.datetime.now()
 print("Ending running at " + str(endTime))

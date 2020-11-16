@@ -143,6 +143,7 @@ def mTlepMet(MET, lepton):
 
 def QCDEnrichedRegionLeptons(ele, mu, MET):
     isEle=0
+    isMu=0
     if MET.pt>30: return False, isEle
     nEle=0
     nMu=0
@@ -151,15 +152,16 @@ def QCDEnrichedRegionLeptons(ele, mu, MET):
     for muon in mu:
         if muon.pfRelIso03_all<1: nMu=+1
     nLeps=nEle+nMu
-    if nLeps>=2: return False
-    GoodLep=ele[0]
+    if nLeps!=1: return False, 0
     if nEle==1:
-        GoodLep=ele[0]
         isEle=1
-    if nMu==1:  
-        GoodLep=mu[0]
-    if mTlepMet(MET, GoodLep)>20: return False, isEle
-
+    if nMu==1:
+        isMu=1
+    if isEle:    
+        if mTlepMet(MET, ele[0])>20: return False, isEle
+    if isMu==1:
+        if mTlepMet(MET, mu[0])>20: return False, isEle
+    
     return True, isEle
 
 def QCDEnrichedRegionTaus(taus, MET):
@@ -167,7 +169,7 @@ def QCDEnrichedRegionTaus(taus, MET):
     nTau=0
     for tau in taus:
         if tau.idDeepTau2017v2p1VSjet>+8: nTau+=1
-    if nTau>=2: return False
+    if nTau!=1: return False
     
     if mTlepMet(MET, taus[0])>20: return False
 
@@ -476,14 +478,6 @@ def trig_map(HLT, year, runPeriod):
             
     else:
         print('Wrong year! Please enter 2016, 2017, or 2018')
-    '''
-
-    
-    
-    
-    '''
-
-
 
     return passMu, passEle, passHT, noTrigger
 
