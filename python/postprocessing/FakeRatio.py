@@ -361,7 +361,6 @@ for i in range(tree.GetEntries()):
             fake_lepton_pdgid[0]             =   leptons[0].pdgId
             fake_lepton_pfRelIso03[0]        =   leptons[0].pfRelIso03_all
         
-        print QCDRegion_tau, QCDRegion_lep, isEle
 
 
 
@@ -391,7 +390,6 @@ if(isMC):
 
 systTree.writeTreesSysts(trees, outTreeFile)
 print("Number of events in output tree " + str(trees[0].GetEntries()))
-print "Number of good events ", contagood
 
 endTime = datetime.datetime.now()
 print("Ending running at " + str(endTime))
