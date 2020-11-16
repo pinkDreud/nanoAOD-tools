@@ -7,5 +7,5 @@ set year = '2017'
 #python submit_crab.py -d WpWpJJ_QCD_$year --status
 python submit_crab.py -d DataEle_$year --status
 python submit_crab.py -d DataMu_$year --status
-python submit_crab.py -d DataHT_$year --status
+pthon submit_crab.py -d DataHT_$year --status
 
