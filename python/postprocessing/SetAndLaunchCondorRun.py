@@ -4,7 +4,7 @@ import sys
 
 cshname = "condorrun_tauwp.csh"
 
-usage = 'python SetAndLaunchCondorRun.py -y year -j wp_jet -m wp_mu -e wp_ele -f folder --max max_jobs'
+usage = 'python SetAndLaunchCondorRun.py -y year -j wp_jet -m wp_mu -e wp_ele -f folder --max max_jobs -d'
 parser = optparse.OptionParser(usage)
 parser.add_option('-y', dest='year', type=str, default = '2017', help='Please enter a year, default is 2017')
 parser.add_option('-j', dest='jetwp', type=str, default = '', help='Please enter a TauID WP for vsJet')
@@ -12,6 +12,7 @@ parser.add_option('-m', dest='muwp', type=str, default = '', help='Please enter 
 parser.add_option('-e', dest='elewp', type=str, default = '', help='Please enter a TauID WP for vsEle')
 parser.add_option('-f', dest='fold', type=str, default = '', help='Please enter a folder')
 parser.add_option('--max', dest='maxj', type=int, default = 0, help='Please enter a maximum for number of condor jobs')
+parser.add_option('-d', dest='isdata', default = False, action='store_true', help='Please enter if are real data')
 
 (opt, args) = parser.parse_args()
 
@@ -66,12 +67,17 @@ f = open(cshname, "w")
 print f
 #f.write("set folder='" + folder + "'\n")
 #f.write("set year='"+ opt.year + "'\n")
-f.write("python submit_condor.py -d TT_" + optstring)
-f.write("python submit_condor.py -d WJets_" + optstring)
-f.write("python submit_condor.py -d WZ_" + optstring)
-f.write("python submit_condor.py -d DYJetsToLL_" + optstring)
-f.write("python submit_condor.py -d WpWpJJ_EWK_" + optstring)
-f.write("python submit_condor.py -d WpWpJJ_QCD_" + optstring)
+if opt.isdata:
+    f.write("python submit_condor.py -d DataEle_" + optstring)
+    #f.write("python submit_condor.py -d DataMu_" + optstring)
+    #f.write("python submit_condor.py -d DataHT_" + optstring)
+else:
+    f.write("python submit_condor.py -d TT_" + optstring)
+    f.write("python submit_condor.py -d WJets_" + optstring)
+    f.write("python submit_condor.py -d WZ_" + optstring)
+    f.write("python submit_condor.py -d DYJetsToLL_" + optstring)
+    f.write("python submit_condor.py -d WpWpJJ_EWK_" + optstring)
+    f.write("python submit_condor.py -d WpWpJJ_QCD_" + optstring)
 f.close()
 
 t = open("CutsAndValues_bu.py", "w")
