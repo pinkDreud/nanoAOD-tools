@@ -151,15 +151,20 @@ def QCDEnrichedRegionLeptons(ele, mu, MET):
         if electron.pfRelIso03_all<1: nEle+=1
     for muon in mu:
         if muon.pfRelIso03_all<1: nMu=+1
+    
     nLeps=nEle+nMu
+    #if(nLeps==1): print("This evento is good")
     if nLeps!=1: return False, 0
     if nEle==1:
         isEle=1
     if nMu==1:
         isMu=1
+    
     if isEle:    
+        #print("mT ele-MET: ", mTlepMet(MET, ele[0]))
         if mTlepMet(MET, ele[0])>20: return False, isEle
     if isMu==1:
+        #print("mT mu-MET: ", mTlepMet(MET, mu[0]))
         if mTlepMet(MET, mu[0])>20: return False, isEle
     
     return True, isEle
@@ -175,7 +180,20 @@ def QCDEnrichedRegionTaus(taus, MET):
 
     return True
 
-   
+def pTCalculator(pT):
+    if pT<20:       return 1
+    elif pT<30:     return 2
+    elif pT<40:     return 3
+    elif pT<50:     return 4
+    else:           return 5
+
+
+def etaCalculator(eta):
+    if abs(eta)<1:      return "A"
+    elif abs(eta)<1.4:  return "B"
+    elif abs(eta)<2:    return "C"
+    elif abs(eta)<2.4:  return "D"
+
 
 
 
