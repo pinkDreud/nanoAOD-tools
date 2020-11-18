@@ -22,6 +22,10 @@ from FakeRatio_utils import *
 
 usage = "python FakeRatio.py [nome_dataset_come_salvato_in_samples.py] [indice, di default 0] [path_file_da_processare] local"
 
+eventobuono=-1
+
+
+
 if sys.argv[4] == 'remote':
     from samples import *
     Debug = False
@@ -133,31 +137,31 @@ systTree.setWeightName("PFDown",1.)
 var_list = []
 
 #all leptons for fake
-fake_lepton_pt               =   array.array('f', [-999.])
-fake_lepton_eta              =   array.array('f', [-999.])
-fake_lepton_phi              =   array.array('f', [-999.])
-fake_lepton_mass             =   array.array('f', [-999.])
-fake_lepton_pdgid            =   array.array('i', [-999])
-fake_lepton_pfRelIso03       =   array.array('f', [-999.])
-var_list.append(fake_lepton_pt)
-var_list.append(fake_lepton_eta)
-var_list.append(fake_lepton_phi)
-var_list.append(fake_lepton_mass)
-var_list.append(fake_lepton_pdgid)
-var_list.append(fake_lepton_pfRelIso03)
+FakeLepton_pt               =   array.array('f', [-999.])
+FakeLepton_eta              =   array.array('f', [-999.])
+FakeLepton_phi              =   array.array('f', [-999.])
+FakeLepton_mass             =   array.array('f', [-999.])
+FakeLepton_pdgid            =   array.array('i', [-999])
+FakeLepton_pfRelIso03       =   array.array('f', [-999.])
+var_list.append(FakeLepton_pt)
+var_list.append(FakeLepton_eta)
+var_list.append(FakeLepton_phi)
+var_list.append(FakeLepton_mass)
+var_list.append(FakeLepton_pdgid)
+var_list.append(FakeLepton_pfRelIso03)
 
-fake_tau_pt                  =   array.array('f', [-999.])
-fake_tau_eta                 =   array.array('f', [-999.])
-fake_tau_phi                 =   array.array('f', [-999.])
-fake_tau_charge              =   array.array('i', [-999])
-fake_tau_mass                =   array.array('f', [-999.])
-fake_tau_DeepTau_WP       =   array.array('f', [-999.])
-var_list.append(fake_tau_pt)
-var_list.append(fake_tau_eta)
-var_list.append(fake_tau_phi)
-var_list.append(fake_tau_charge)
-var_list.append(fake_tau_mass)
-var_list.append(fake_tau_DeepTau_WP)
+FakeTau_pt                  =   array.array('f', [-999.])
+FakeTau_eta                 =   array.array('f', [-999.])
+FakeTau_phi                 =   array.array('f', [-999.])
+FakeTau_charge              =   array.array('i', [-999])
+FakeTau_mass                =   array.array('f', [-999.])
+FakeTau_DeepTauWP       =   array.array('f', [-999.])
+var_list.append(FakeTau_pt)
+var_list.append(FakeTau_eta)
+var_list.append(FakeTau_phi)
+var_list.append(FakeTau_charge)
+var_list.append(FakeTau_mass)
+var_list.append(FakeTau_DeepTauWP)
 
 #MET
 MET_pt                      =   array.array('f', [-999.])
@@ -165,41 +169,41 @@ MET_phi                     =   array.array('f', [-999.])
 var_list.append(MET_pt)
 var_list.append(MET_phi)
 
-isFakeTau                   =   array.array('i', [0])
-isFakeTau_andPassCuts       =   array.array('i', [0])
-isFakeLepton                =   array.array('i', [0])
-isFakeLepton_andPassCuts    =   array.array('i', [0])
+isFake_tau                   =   array.array('i', [-999])
+isFake_tauAndPassCuts       =   array.array('i', [-999])
+isFake_lepton                =   array.array('i', [-999])
+isFake_leptonAndPassCuts    =   array.array('i', [-999])
 
 
-var_list.append(isFakeTau)
-var_list.append(isFakeTau_andPassCuts)
-var_list.append(isFakeLepton)
-var_list.append(isFakeLepton_andPassCuts)
+var_list.append(isFake_tau)
+var_list.append(isFake_tauAndPassCuts)
+var_list.append(isFake_lepton)
+var_list.append(isFake_leptonAndPassCuts)
 
 w_PDF_all = array.array('f', [0.]*110) #capisci a cosa serve
 w_nominal_all = array.array('f', [0.])
 
 #branches added for ssWW analysis
 #all leptons for fake calculation
-systTree.branchTreesSysts(trees, "all", "fake_lepton_pt",            outTreeFile, fake_lepton_pt)
-systTree.branchTreesSysts(trees, "all", "fake_lepton_eta",           outTreeFile, fake_lepton_eta)
-systTree.branchTreesSysts(trees, "all", "fake_lepton_phi",           outTreeFile, fake_lepton_phi)
-systTree.branchTreesSysts(trees, "all", "fake_lepton_mass",          outTreeFile, fake_lepton_mass)
-systTree.branchTreesSysts(trees, "all", "fake_lepton_pdgid",         outTreeFile, fake_lepton_pdgid)
-systTree.branchTreesSysts(trees, "all", "fake_lepton_pfRelIso03",    outTreeFile, fake_lepton_pfRelIso03)
+systTree.branchTreesSysts(trees, "all", "FakeLepton_pt",            outTreeFile, FakeLepton_pt)
+systTree.branchTreesSysts(trees, "all", "FakeLepton_eta",           outTreeFile, FakeLepton_eta)
+systTree.branchTreesSysts(trees, "all", "FakeLepton_phi",           outTreeFile, FakeLepton_phi)
+systTree.branchTreesSysts(trees, "all", "FakeLepton_mass",          outTreeFile, FakeLepton_mass)
+systTree.branchTreesSysts(trees, "all", "FakeLepton_pdgid",         outTreeFile, FakeLepton_pdgid)
+systTree.branchTreesSysts(trees, "all", "FakeLepton_pfRelIso03",    outTreeFile, FakeLepton_pfRelIso03)
 
 #all taus for fake calculation
-systTree.branchTreesSysts(trees, "all", "fake_tau_pt",               outTreeFile, fake_tau_pt)
-systTree.branchTreesSysts(trees, "all", "fake_tau_eta",              outTreeFile, fake_tau_eta)
-systTree.branchTreesSysts(trees, "all", "fake_tau_phi",              outTreeFile, fake_tau_phi)
-systTree.branchTreesSysts(trees, "all", "fake_tau_mass",             outTreeFile, fake_tau_mass)
-systTree.branchTreesSysts(trees, "all", "fake_tau_DeepTau_WP",       outTreeFile, fake_tau_DeepTau_WP)
+systTree.branchTreesSysts(trees, "all", "FakeTau_pt",               outTreeFile, FakeTau_pt)
+systTree.branchTreesSysts(trees, "all", "FakeTau_eta",              outTreeFile, FakeTau_eta)
+systTree.branchTreesSysts(trees, "all", "FakeTau_phi",              outTreeFile, FakeTau_phi)
+systTree.branchTreesSysts(trees, "all", "FakeTau_mass",             outTreeFile, FakeTau_mass)
+systTree.branchTreesSysts(trees, "all", "FakeTau_DeepTauWP",        outTreeFile, FakeTau_DeepTauWP)
 
 #fake variables
-systTree.branchTreesSysts(trees, "all", "isFakeLepton",                   outTreeFile, isFakeLepton)
-systTree.branchTreesSysts(trees, "all", "isFakeTau",                   outTreeFile, isFakeTau)
-systTree.branchTreesSysts(trees, "all", "isFakeLepton_andPassCuts",       outTreeFile, isFakeLepton_andPassCuts)
-systTree.branchTreesSysts(trees, "all", "isFakeTau_andPassCuts",       outTreeFile, isFakeTau_andPassCuts)
+systTree.branchTreesSysts(trees, "all", "isFake_lepton",                   outTreeFile, isFake_lepton)
+systTree.branchTreesSysts(trees, "all", "isFake_tau",                   outTreeFile, isFake_tau)
+systTree.branchTreesSysts(trees, "all", "isFake_leptonAndPassCuts",       outTreeFile, isFake_leptonAndPassCuts)
+systTree.branchTreesSysts(trees, "all", "isFake_tauAndPassCuts",       outTreeFile, isFake_tauAndPassCuts)
 
 
 #print("Is MC: " + str(isMC) + "      option addPDF: " + str(addPDF))
@@ -238,6 +242,9 @@ if(isMC):
         else:
             addPDF = False
     newfile.Close()
+
+contagood=0
+
 '''
 #++++++++++++++++++++++++++++++++++
 #++      Efficiency studies      ++
@@ -258,10 +265,8 @@ contagood=0
 for i in range(tree.GetEntries()):
     #reinizializza tutte le variabili a 0, per sicurezza
     for j, var in enumerate(var_list):
-        if j<len(var_list)-4:
+        if j<len(var_list):
             var_list[j][0] = -999
-        else:
-            var_list[j][0] = 0
     
     w_nominal_all[0] = 1.
     #++++++++++++++++++++++++++++++++++
@@ -275,7 +280,7 @@ for i in range(tree.GetEntries()):
     
     if not Debug and i%5000 == 0:
     '''
-    print("Event #", i+1, " out of ", tree.GetEntries())
+    #print("Event #", i+1, " out of ", tree.GetEntries())
 
     event       = Event(tree,i)
     electrons   = Collection(event, "Electron")
@@ -324,61 +329,62 @@ for i in range(tree.GetEntries()):
     
     passMu, passEle, passHT, noTrigger = trig_map(HLT, year, runPeriod)
 
-    if noTrigger: continue
+    if not passHT: continue
 
     if passHT:
+
+        contagood+=1
         QCDRegion_tau=QCDEnrichedRegionTaus(taus, met)
         QCDRegion_lep, isEle=QCDEnrichedRegionLeptons(electrons, muons, met)
+        if QCDRegion_lep: print("QCD enriched w lepton")
+
+        if QCDRegion_tau and len(taus)>0:
+            isFake_tau[0]=1
+            if taus[0].idDeepTau2017v2p1VSjet>=64: isFake_tauAndPassCuts[0]=1 #errore, prima >=16. Deve esser >=64 (VT taglio usato in analisi)
+    
+            FakeTau_pt[0]               =   taus[0].pt
+            FakeTau_eta[0]              =   taus[0].eta
+            FakeTau_phi[0]              =   taus[0].phi
+            FakeTau_mass[0]             =   taus[0].mass
+            FakeTau_charge[0]           =   taus[0].charge
+    
+        if QCDRegion_lep:print(QCDRegion_lep, (len(electrons)>0 or len(muons)>0))
         
-        if QCDRegion_tau:
-            isFakeTau[0]=1
-            if taus[0].idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET: isFakeTau_andPassCuts=1
-    
-            fake_tau_pt[0]               =   taus[0].pt
-            fake_tau_eta[0]              =   taus[0].eta
-            fake_tau_phi[0]              =   taus[0].phi
-            fake_tau_mass[0]             =   taus[0].mass
-            fake_tau_charge[0]           =   taus[0].charge
-    
-    
-        if QCDRegion_lep:
-            isFakeLepton=1
-            if isEle and electrons[0].pfRelIso03<0.08:          isFakeLepton_andPassCuts=1
-            if not(isEle) and electrons[0].pfRelIso03<0.15:     isFakeLepton_andPassCuts=1
+        if QCDRegion_lep and not (len(electrons)==0 and len(muons)==0):
+            isFake_lepton[0]=1
+            print("Event ",i+1, " ", isFake_lepton[0])
+            if isEle and electrons[0].pfRelIso03_all<0.08:        isFake_leptonAndPassCuts[0]=1
+            if isEle==0 and muons[0].pfRelIso03_all<0.15:         isFake_leptonAndPassCuts[0]=1
             
             if isEle:   leptons=electrons
             else:       leptons= muons
 
-            fake_lepton_pt[0]                =   leptons[0].pt
-            fake_lepton_eta[0]               =   leptons[0].eta
-            fake_lepton_phi[0]               =   leptons[0].phi
-            fake_lepton_mass[0]              =   leptons[0].mass
-            fake_lepton_pdgid[0]             =   leptons[0].pdgId
-            fake_lepton_pfRelIso03[0]        =   leptons[0].pfRelIso03_all
-        
-        print QCDRegion_tau, QCDRegion_lep, isEle
+            FakeLepton_pt[0]                =   leptons[0].pt
+            FakeLepton_eta[0]               =   leptons[0].eta
+            FakeLepton_phi[0]               =   leptons[0].phi
+            FakeLepton_mass[0]              =   leptons[0].mass
+            FakeLepton_pdgid[0]             =   leptons[0].pdgId
+            FakeLepton_pfRelIso03[0]        =   leptons[0].pfRelIso03_all
+            
+            eventobuono=i
+            print("Event ",i+1, " ", isFake_lepton[0]) 
 
 
 
-    #######################################
-    ## Removing events with HEM problem  ##
-    #######################################
-    passesMETHEMVeto = HEMveto(jets, electrons)
-    if(sample.year == 2018 and not passesMETHEMVeto):
-        if(not isMC and chain.run > 319077.):
-            continue
-        elif(isMC):
-            w_nominal_all[0] *= 0.354
+    if(i==eventobuono): print("Event ",i+1, " ", isFake_lepton[0])
+
 
     systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
     systTree.fillTreesSysts(trees, "all")
+
+    if(i==eventobuono): print("Event ",i+1, " ", isFake_lepton[0])
+
 
 outTreeFile.cd()
 if(isMC):
     h_genweight.Write()
     if not ("WZ" in sample.label):
         h_PDFweight.Write()
-
 
 
 

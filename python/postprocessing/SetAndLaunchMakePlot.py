@@ -12,14 +12,16 @@ parser.add_option('-f', dest='folder', type=str, default = 'v3', help='Please en
 username = str(os.environ.get('USER'))
 inituser = str(os.environ.get('USER')[0])
 
-#folder = "Eff_Jet" + opt.jetwp + "_Mu" + opt.muwp + "_Ele" + opt.elewp
 path = "/eos/user/" + inituser + "/" + username + "/VBS/nosynch/"
+
 dirlist = [dirs for dirs in os.listdir(path) if os.path.isdir(path+dirs) and opt.folder in dirs]
 print dirlist
 
+
+
 for dirn in dirlist:
     ismerged = False
-
+    
     for nfile in os.listdir(path+dirn+"/"+os.listdir(path+dirn)[0]):
         if "_merged" in nfile:
             ismerged = True
@@ -28,6 +30,5 @@ for dirn in dirlist:
     if ismerged:
         continue
 
-    print "python makeplot.py -y ", opt.year, " --merpart --lumi --mertree --folder ", dirn
-    os.system("python makeplot.py -y " + opt.year + " --merpart --lumi --mertree --folder " + dirn)
-
+    print "python makeplot.py -y ", opt.year, " --merpart --folder ", dirn
+    os.system("python makeplot.py -y " + opt.year + " --merpart --lumi --mertree -d DataHT_" + opt.year + " --folder " + dirn)
