@@ -480,9 +480,9 @@ leptons = map(str,opt.lep.split(','))
 cut = opt.cut #default cut must be obvious, for example lepton_eta>-10.
 
 if opt.sel:
-     cut_dict = {'muon':"abs(lepton_pdgid)==13&&",#&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1&&" + cut, 
-                 'electron':"abs(lepton_pdgid)==11&&",#&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1&&" + cut, 
-                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&",#pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1&&" + cut, 
+     cut_dict = {'muon':"abs(lepton_pdgid)==13&&(" + cut + ")",#&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1&&", 
+                 'electron':"abs(lepton_pdgid)==11&&(" + cut + ")",#&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1&&", 
+                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&(" + cut + ")",#pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1&&" + cut, 
           }
      if opt.cut != "lepton_eta>-10.":
           cut_tag = 'selection_AND_' + cutToTag(opt.cut) 
@@ -509,12 +509,11 @@ for year in years:
 for year in years:
      for lep in leptons:
           dataset_new = dataset_dict[year]
-          '''
+
           if lep == 'muon' and sample_dict['DataEle_'+str(year)] in dataset_new:
                dataset_new.remove(sample_dict['DataEle_'+str(year)])
           elif lep == 'electron' and sample_dict['DataMu_'+str(year)] in dataset_new:
                dataset_new.remove(sample_dict['DataMu_'+str(year)])
-          '''
 
           variables = []
           wzero = 'w_nominal*PFSF*lepSF*puSF'
