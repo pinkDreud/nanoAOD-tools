@@ -480,9 +480,9 @@ leptons = map(str,opt.lep.split(','))
 cut = opt.cut #default cut must be obvious, for example lepton_eta>-10.
 
 if opt.sel:
-     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1&&" + cut, 
-                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1&&" + cut, 
-                 'incl':"pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1&&" + cut, 
+     cut_dict = {'muon':"abs(lepton_pdgid)==13",#&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1&&" + cut, 
+                 'electron':"abs(lepton_pdgid)==11",#&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1&&" + cut, 
+                 'incl':"",#pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1&&" + cut, 
           }
      if opt.cut != "lepton_eta>-10.":
           cut_tag = 'selection_AND_' + cutToTag(opt.cut) 
