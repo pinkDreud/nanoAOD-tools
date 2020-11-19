@@ -463,8 +463,8 @@ if(opt.dat!= 'all'):
 else:
      dataset_dict = {
           #'2016':[TT_2016, WJets_2016, WZ_2016, DYJetsToLL_2016, WpWpJJ_EWK_2016, WpWpJJ_QCD_2016],#[DataMu_2016, DataEle_2016, DataHT_2016],
-          '2017':[WpWpJJ_QCD_2017, WZ_2017, TT_2017, DYJetsToLL_2017, WJets_2017, WpWpJJ_EWK_2017],#[DataMu_2017, DataEle_2017, DataHT_2017],
-          '2018':[TT_2018, WpWpJJ_QCD_2018, WZ_2018, DYJetsToLL_2018, WJets_2018, WpWpJJ_EWK_2018],#[DataMu_2017, DataEle_2017, DataHT_2017],
+          '2017':[WpWpJJ_QCD_2017, WZ_2017, TT_2017, DYJetsToLL_2017, WJets_2017, WpWpJJ_EWK_2017, DataMu_2017, DataEle_2017, DataHT_2017],
+          '2018':[TT_2018, WpWpJJ_QCD_2018, WZ_2018, DYJetsToLL_2018, WJets_2018, WpWpJJ_EWK_2018, #[DataMu_2017, DataEle_2017, DataHT_2017],
      }
 #print(dataset_dict.keys())
 
