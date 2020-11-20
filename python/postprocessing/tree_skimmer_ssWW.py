@@ -137,7 +137,9 @@ tau_eta                 =   array.array('f', [-999.])
 tau_phi                 =   array.array('f', [-999.])
 tau_charge              =   array.array('i', [-999])
 tau_mass                =   array.array('f', [-999.])
-tau_DeepTau_WP       =   array.array('f', [-999.])
+tau_DeepTau_WP          =   array.array('f', [-999.])
+tau_isolation           = array.array('f', [-999])
+var_list.append(tau_isolation)
 var_list.append(tau_pt)
 var_list.append(tau_eta)
 var_list.append(tau_phi)
@@ -222,6 +224,7 @@ systTree.branchTreesSysts(trees, "all", "tau_eta",              outTreeFile, tau
 systTree.branchTreesSysts(trees, "all", "tau_phi",              outTreeFile, tau_phi)
 systTree.branchTreesSysts(trees, "all", "tau_mass",             outTreeFile, tau_mass)
 systTree.branchTreesSysts(trees, "all", "tau_DeepTau_WP",             outTreeFile, tau_DeepTau_WP)
+systTree.branchTreesSysts(trees, "all", "tau_isolation",             outTreeFile, tau_isolation)
 #jet variables
 systTree.branchTreesSysts(trees, "all", "Leadjet_pt",           outTreeFile, Leadjet_pt)
 systTree.branchTreesSysts(trees, "all", "Leadjet_eta",          outTreeFile, Leadjet_eta)
@@ -507,7 +510,7 @@ for i in range(tree.GetEntries()):
     tau_charge[0]           =   GoodTau.charge
 
     tau_DeepTau_WP[0] = GoodTau.idDeepTau2017v2p1VSjet*1000.**2. + GoodTau.idDeepTau2017v2p1VSmu*1000. + GoodTau.idDeepTau2017v2p1VSe
-
+    tau_isolation[0]=   GoodTau.neutralIso
     if GoodTau.charge==GoodLep.charge:
         pass_charge_selection[0]=1
 
