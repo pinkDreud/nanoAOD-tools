@@ -80,6 +80,7 @@ def lumi_writer(dataset, lumi):
           samples = [sample for sample in dataset.components]# Method exists and was used.
      else:
           samples.append(dataset)
+     print samples
      for sample in samples:
           if not ('Data' in sample.label):# or 'TT_dilep' in sample.label):
                infile =  ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + "_merged.root")
