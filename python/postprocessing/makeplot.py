@@ -568,9 +568,9 @@ for year in years:
                     os.system('set LD_PRELOAD=libtcmalloc.so')
                     makestack(lep, 'jets', var, dataset_new, cut_tag, "", lumi[str(year)])
                     os.system('set LD_PRELOAD=libtcmalloc.so')
-          '''
+
           if lep == 'muon':
                dataset_new.append(sample_dict['DataEle_'+str(year)])
           elif lep == 'electron':
                dataset_new.append(sample_dict['DataMu_'+str(year)])
-          '''
+
