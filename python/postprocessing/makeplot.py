@@ -10,7 +10,7 @@ from array import array
 
 print TT_2017
 
-usage = 'python makeplot.py'
+usage = 'python makeplot.py'# -y year --lep lepton -d dataset --merpart --lumi --mertree --sel --cut cut_string -p -s'
 parser = optparse.OptionParser(usage)
 parser.add_option('--merpart', dest='merpart', default = False, action='store_true', help='Default parts are not merged')
 parser.add_option('--mertree', dest='mertree', default = False, action='store_true', help='Default make no file is merged')
@@ -23,12 +23,14 @@ parser.add_option('-L', '--lep', dest='lep', type='string', default = 'incl', he
 parser.add_option('-S', '--syst', dest='syst', type='string', default = 'all', help='Default all systematics added')
 parser.add_option('-C', '--cut', dest='cut', type='string', default = 'lepton_eta>-10.', help='Default no cut')
 parser.add_option('-y', '--year', dest='year', type='string', default = 'all', help='Default 2016, 2017 and 2018 are included')
-parser.add_option('-f', '--folder', dest='folder', type='string', default = 'v6', help='Default folder is v0')
+parser.add_option('-f', '--folder', dest='folder', type='string', default = 'v3', help='Default folder is v0')
 #parser.add_option('-T', '--topol', dest='topol', type='string', default = 'all', help='Default all njmt')
 parser.add_option('-d', '--dat', dest='dat', type='string', default = 'all', help="")
 parser.add_option('--user', dest='user', type='string', default=str(os.environ.get('USER')), help='User')
 
 (opt, args) = parser.parse_args()
+
+print (opt, args)
 
 folder = opt.folder
 
@@ -452,20 +454,26 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
 
 dataset_dict = {'2016':[],'2017':[],'2018':[]}
 
-if(opt.dat!= 'all'):
+if(opt.dat != 'all'):
      if not(opt.dat in sample_dict.keys()):
+          print "dataset not found!"
           print sample_dict.keys()
      dataset_names = map(str, opt.dat.strip('[]').split(','))
      #print dataset_names.keys()
      samples = []
      [samples.append(sample_dict[dataset_name]) for dataset_name in dataset_names]
      [dataset_dict[str(sample.year)].append(sample) for sample in samples]
+     print dataset_dict
 else:
      dataset_dict = {
-          #'2016':[TT_2016, WJets_2016, WZ_2016, DYJetsToLL_2016, WpWpJJ_EWK_2016, WpWpJJ_QCD_2016],#[DataMu_2016, DataEle_2016, DataHT_2016],
           '2017':[WpWpJJ_QCD_2017, WZ_2017, TT_2017, DYJetsToLL_2017, WJets_2017, WpWpJJ_EWK_2017, DataMu_2017, DataEle_2017, DataHT_2017],
-          '2018':[TT_2018, WpWpJJ_QCD_2018, WZ_2018, DYJetsToLL_2018, WJets_2018, WpWpJJ_EWK_2018, #[DataMu_2017, DataEle_2017, DataHT_2017],
      }
+
+'''
+          '2016':[TT_2016, WJets_2016, WZ_2016, DYJetsToLL_2016, WpWpJJ_EWK_2016, WpWpJJ_QCD_2016],#[DataMu_2016, DataEle_2016, DataHT_2016],
+          '2018':[TT_2018, WpWpJJ_QCD_2018, WZ_2018, DYJetsToLL_2018, WJets_2018, WpWpJJ_EWK_2018, #[DataMu_2017, DataEle_2017, DataHT_2017],
+'''
+
 #print(dataset_dict.keys())
 
 years = []
@@ -506,10 +514,13 @@ for year in years:
           if(opt.mertree):
                mergetree(sample)
 
+print "\nStarting"
 for year in years:
+     print year
      for lep in leptons:
+          print lep
           dataset_new = dataset_dict[year]
-
+          print [h.label for h in dataset_new]
           if lep == 'muon' and sample_dict['DataEle_'+str(year)] in dataset_new:
                dataset_new.remove(sample_dict['DataEle_'+str(year)])
           elif lep == 'electron' and sample_dict['DataMu_'+str(year)] in dataset_new:
