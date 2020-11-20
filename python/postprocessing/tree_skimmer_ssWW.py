@@ -388,13 +388,9 @@ for i in range(tree.GetEntries()):
     #print "------ ", i
     passMu, passEle, passHT, noTrigger = trig_map(HLT, year, runPeriod)
 
-    ###### Dobbiamo personalizzare a tempo debito goodMu/Ele e vetoEle/Mu, per ora commentiamo
-    #isMuon = (len(goodMu) == 1) and (len(goodEle) == 0) and len(VetoMu) == 0 and len(VetoEle) == 0 and (passMu)
-    #isElectron = (len(goodMu) == 0) and (len(goodEle) == 1) and len(VetoMu) == 0 and len(VetoEle) == 0 and (passEle)
-    ######
-
-
     if noTrigger: continue
+
+    '''
     doublecounting = True
     if(isMC):
         doublecounting = False
@@ -406,6 +402,13 @@ for i in range(tree.GetEntries()):
 
     if doublecounting:
         continue
+    '''
+    dataEle = False
+    dataMu = False
+    if 'DataMu' in sample.label:
+        dataMu = True
+    if 'DataEle' in sample.label:
+        dataEle = True
 
     SingleEle=False
     SingleMu=False
@@ -448,6 +451,11 @@ for i in range(tree.GetEntries()):
     
     if SingleEle==True: leptons=electrons
     if SingleMu==True:  leptons=muons
+
+    if SingleEle and dataMu:
+        continue
+    if SingleMu and dataEle:
+        continue
 
     if (SingleEle or SingleMu): Cut_dict[1][1]+=1
     
