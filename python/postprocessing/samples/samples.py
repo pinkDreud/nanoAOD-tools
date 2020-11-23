@@ -214,7 +214,7 @@ tZq_ll_4f_2017.dataset = "/tZq_ll_4f_ckm_NLO_TuneCP5_PSweights_13TeV-amcatnlo-py
 
 TVX_2017 = sample(ROOT.kRed, 1, 1001, "tVX", "TVX_2017")
 TVX_2017.year = 2017
-TVX_2017.components = [TTGJets_2017, TTZtoQQ_2017, TTZToLLNuNu_2017, TTWJetsToQQ_2017, TTWJetsToLNu_2017, tZq_ll_4f_201]
+TVX_2017.components = [TTGJets_2017, TTZtoQQ_2017, TTZToLLNuNu_2017, TTWJetsToQQ_2017, TTWJetsToLNu_2017, tZq_ll_4f_2017]
 
 ###############################  NEW     ################################
 ###############################  VGamma  ################################
@@ -864,10 +864,15 @@ DataHT_2018.components = [DataHTA_2018, DataHTB_2018, DataHTC_2018, DataHTD_2018
 sample_dict={
     'WpWpJJ_EWK_2017':WpWpJJ_EWK_2017,
     'WpWpJJ_QCD_2017':WpWpJJ_QCD_2017,
-    'VG_2017': VG_2017,
-    'TVX_2017': TVX_2017,
-    'WrongSign_2017': WrongSign_2017,
-    'Other_2017': Other_2017,
+    ### fake contributions form here...
+    'TT_2017':TT_2017, 'TT_DiLep_2017':TT_DiLep_2017, 'TT_SemiLep2017':TT_SemiLep_2017, 'TT_Had_2017':TT_Had_2017,
+    'WJets_2017':WJets_2017, 'WJetsHT70to100_2017':WJetsHT70to100_2017, 'WJetsHT100to200_2017':WJetsHT100to200_2017, 'WJetsHT200to400_2017':WJetsHT200to400_2017, 'WJetsHT400to600_2017':WJetsHT400to600_2017, 'WJetsHT600to800_2017':WJetsHT600to800_2017, 'WJetsHT800to1200_2017':WJetsHT800to1200_2017, 'WJetsHT1200to2500_2017':WJetsHT1200to2500_2017, 'WJetsHT2500toInf_2017':WJetsHT2500toInf_2017,
+    'DYJetsToLL_2017':DYJetsToLL_2017, 'DY1JetsToLL_2017':DY1JetsToLL_2017, 'DY2JetsToLL_2017':DY2JetsToLL_2017, 'DY3JetsToLL_2017':DY3JetsToLL_2017, 'DY4JetsToLL_2017':DY4JetsToLL_2017,
+    # to here
+    'VG_2017':VG_2017, 'ZG_2017':ZG_2017, 'WG_2017':WG_2017,
+    'TVX_2017':TVX_2017, 'TTGJets_2017':TTGJets_2017, 'TTZtoQQ_2017':TTZtoQQ_2017, 'TTZToLLNuNu_2017':TTZToLLNuNu_2017, 'TTWJetsToQQ_2017':TTWJetsToQQ_2017, 'TTWJetsToLNu_2017':TTWJetsToLNu_2017, 'tZq_ll_4f_2017':tZq_ll_4f_2017,
+    'WrongSign_2017': WrongSign_2017, 'WWto2L2Nu_2017':WWto2L2Nu_2017, 'GluGluToWWToENuENu_2017':GluGluToWWToENuENu_2017, 'GluGluToWWToENuMNu2017':GluGluToWWToENuMNu2017, 'GluGluToWWToENuTNu2017':GluGluToWWToENuTNu2017, 'GluGluToWWToMNuENu_2017':GluGluToWWToMNuENu_2017, 'GluGluToWWToMNuMNu2017':GluGluToWWToMNuMNu2017, 'GluGluToWWToMNuTNu2017':GluGluToWWToMNuTNu2017, 'GluGluToWWToTNuENu_2017':GluGluToWWToTNuENu_2017, 'GluGluToWWToTNuMNu2017':GluGluToWWToTNuMNu2017, 'GluGluToWWToTNuTNu2017':GluGluToWWToTNuTNu2017, 'TTTo2L2Nu_2017':TTTo2L2Nu_2017, 'STtW_top_2017':STtW_top_2017, 'GluGluHToWWTo2L2Nu_2017':GluGluHToWWTo2L2Nu_2017, 'GluGluHToZZTo2L2Q_2017':GluGluHToZZTo2L2Q_2017, 'GluGluHToZZTo4L_2017':GluGluHToZZTo4L_2017, 'GluGluHToTauTau_2017':GluGluHToTauTau_2017, 'VBFHToWWTo2L2Nu_2017':VBFHToWWTo2L2Nu_2017, 'VBFHToTauTau_2017':VBFHToTauTau_2017, 'ttHToNonbb_2017':ttHToNonbb_2017, 'VHToNonbb_2017':VHToNonbb_2017,
+    'Other_2017':Other_2017, 'WWTo2L2Nu_DoubleScattering_2017':WWTo2L2Nu_DoubleScattering_2017, 'WWW_4F_2017':WWW_4F_2017, 'WWZTo3L1Nu2Q_2017':WWZTo3L1Nu2Q_2017, 'WZZ_2017':WZZ_2017, 'ZZZ_2017':ZZZ_2017, 'WWG_2017':WWG_2017,
     'WZ_2017':WZ_2017,
     'DataMu_2017':DataMu_2017, 'DataMuB_2017':DataMuB_2017, 'DataMuC_2017':DataMuC_2017, 'DataMuD_2017':DataMuD_2017, 'DataMuE_2017':DataMuE_2017, 'DataMuF_2017':DataMuF_2017,
     'DataEle_2017':DataEle_2017, 'DataEleB_2017':DataEleB_2017, 'DataEleC_2017':DataEleC_2017, 'DataEleD_2017':DataEleD_2017, 'DataEleE_2017':DataEleE_2017, 'DataEleF_2017':DataEleF_2017,
