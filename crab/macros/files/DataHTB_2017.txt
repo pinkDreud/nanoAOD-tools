@@ -1,4 +1,4 @@
-ooot://cms-xrd-global.cern.ch//store/user/apiccine/VBS/JetHT/DataHTB_2017/201113_101453/0000/tree_hadd_378.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/JetHT/DataHTB_2017/201113_101453/0000/tree_hadd_378.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/JetHT/DataHTB_2017/201113_101453/0000/tree_hadd_23.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/JetHT/DataHTB_2017/201113_101453/0000/tree_hadd_317.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/JetHT/DataHTB_2017/201113_101453/0000/tree_hadd_435.root
