@@ -50,7 +50,7 @@ if opt.fold == '':
 else:
     folder = opt.fold
 
-path = "/eos/user/" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/"
+path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/"
 print folder, path
 
 '''
@@ -69,7 +69,7 @@ print f
 #f.write("set year='"+ opt.year + "'\n")
 if opt.isdata:
     f.write("python submit_condor.py -d DataEle_" + optstring)
-    #f.write("python submit_condor.py -d DataMu_" + optstring)
+    f.write("python submit_condor.py -d DataMu_" + optstring)
     #f.write("python submit_condor.py -d DataHT_" + optstring)
 else:
     f.write("python submit_condor.py -d TT_" + optstring)
