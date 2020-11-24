@@ -3,11 +3,11 @@ import optparse
 import sys
 from samples.samples import *
 
-usage = 'python SetAndLaunchMakePlot.py -y year -f folder -d sample'
+usage = 'python SetAndLaunchMakePlot_ALL.py -y year -f folder'
 parser = optparse.OptionParser(usage)
 parser.add_option('-y', dest='year', type=str, default = '2017', help='Please enter a year, default is 2017')
 parser.add_option('-f', dest='folder', type=str, default = '', help='Please enter a folder, default is v3')
-parser.add_option('-d', dest='dataset', type=str, default = 'WpWpJJ_EWK', help='Please enter a dataset, default is signal')
+#parser.add_option('-d', dest='dataset', type=str, default = 'WpWpJJ_EWK', help='Please enter a dataset, default is signal')
 
 (opt, args) = parser.parse_args()
 
@@ -17,7 +17,7 @@ inituser = str(os.environ.get('USER')[0])
 #folder = "Eff_Jet" + opt.jetwp + "_Mu" + opt.muwp + "_Ele" + opt.elewp
 path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/"
 dirlist = [dirs for dirs in os.listdir(path) if os.path.isdir(path+dirs) and opt.folder in dirs]
-datas = opt.dataset + "_" + opt.year
+#datas = opt.dataset + "_" + opt.year
 
 print dirlist
 
