@@ -72,12 +72,12 @@ if opt.isdata:
     f.write("python submit_condor.py -d DataMu_" + optstring)
     #f.write("python submit_condor.py -d DataHT_" + optstring)
 else:
-    f.write("python submit_condor.py -d TT_" + optstring)
+    #f.write("python submit_condor.py -d TT_" + optstring)
     f.write("python submit_condor.py -d WJets_" + optstring)
-    f.write("python submit_condor.py -d WZ_" + optstring)
-    f.write("python submit_condor.py -d DYJetsToLL_" + optstring)
-    f.write("python submit_condor.py -d WpWpJJ_EWK_" + optstring)
-    f.write("python submit_condor.py -d WpWpJJ_QCD_" + optstring)
+    #f.write("python submit_condor.py -d WZ_" + optstring)
+    #f.write("python submit_condor.py -d DYJetsToLL_" + optstring)
+    #f.write("python submit_condor.py -d WpWpJJ_EWK_" + optstring)
+    #f.write("python submit_condor.py -d WpWpJJ_QCD_" + optstring)
 f.close()
 
 t = open("CutsAndValues_bu.py", "w")
