@@ -34,8 +34,8 @@ print (opt, args)
 
 folder = opt.folder
 
-filerepo = '/eos/user/'+opt.user[0]+'/'+opt.user+'/VBS/nosynch/' + folder + '/'
-plotrepo = '/eos/user/'+opt.user[0]+'/'+opt.user+'/VBS/nosynch/' + folder + '/'
+filerepo = '/eos/home-'+opt.user[0]+'/'+opt.user+'/VBS/nosynch/' + folder + '/'
+plotrepo = '/eos/home-'+opt.user[0]+'/'+opt.user+'/VBS/nosynch/' + folder + '/'
 
 ROOT.gROOT.SetBatch() # don't pop up canvases
 if opt.lep != 'incl':

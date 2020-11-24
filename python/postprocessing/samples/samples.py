@@ -881,6 +881,25 @@ sample_dict={
 
 }
 
+class_dict={
+    'WpWpJJ_EWK_2017':WpWpJJ_EWK_2017,
+    'WpWpJJ_QCD_2017':WpWpJJ_QCD_2017,
+    ### fake contributions form here...
+    'TT_2017':TT_2017,
+    'WJets_2017':WJets_2017,
+    'DYJetsToLL_2017':DYJetsToLL_2017,
+    # to here
+    'VG_2017':VG_2017,
+    'TVX_2017':TVX_2017,
+    'WrongSign_2017': WrongSign_2017,
+    'Other_2017':Other_2017,
+    'WZ_2017':WZ_2017,
+    'DataMu_2017':DataMu_2017,
+    'DataEle_2017':DataEle_2017,
+    'DataHT_2017':DataHT_2017,
+}
+
+
 '''
 sample_dict = {
     #2016
