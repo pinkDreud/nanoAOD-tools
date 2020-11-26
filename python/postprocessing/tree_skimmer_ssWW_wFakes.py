@@ -19,6 +19,8 @@ import datetime
 import copy
 from array import array
 from skimtree_utils import *
+from Utils_FR_SF import *
+
 
 usage = "python tree_skimmer_ssWW_wFake.py [nome_del_sample_in_samples.py] 0 [file_in_input] local"
 
@@ -190,6 +192,9 @@ var_list.append(MET_phi)
 Mjj                         =   array.array('f', [-999.])
 var_list.append(Mjj)
 
+SF_Fake                     =   array.array('f', [1.])
+var_list.append(SF_Fake)
+
 DeltaEta_jj                 =   array.array('f', [-999.])
 var_list.append(DeltaEta_jj)
 #cut variables
@@ -263,6 +268,7 @@ systTree.branchTreesSysts(trees, "all", "MET_phi",              outTreeFile, MET
 
 systTree.branchTreesSysts(trees, "all", "Mjj",                  outTreeFile, Mjj)
 systTree.branchTreesSysts(trees, "all", "DeltaEta_jj",                  outTreeFile, DeltaEta_jj)
+systTree.branchTreesSysts(trees, "all", "SF_Fake",                  outTreeFile, SF_Fake)
 
 #cut variables
 systTree.branchTreesSysts(trees, "all", "pass_lepton_selection",    outTreeFile, pass_lepton_selection)
@@ -340,7 +346,8 @@ for i in range(tree.GetEntries()):
             var_list[j][0] = -999
         else:
             var_list[j][0] = 0
-    
+    SF_Fake[0]=1
+
     w_nominal_all[0] = 1.
     #++++++++++++++++++++++++++++++++++
     #++        taking objects        ++
@@ -509,10 +516,14 @@ for i in range(tree.GetEntries()):
     if abs(lepton_pdgid[0])==11 and lepton_pfRelIso03[0]<ISO_CUT_ELE:   pass_lepton_iso[0]=1
     elif abs(lepton_pdgid[0])==13 and lepton_pfRelIso03[0]<ISO_CUT_MU:  pass_lepton_iso[0]=1
     else: pass_lepton_iso[0]=0
+    
+    if pass_lepton_iso[0]==0:
+        if abs(lepton_pdgid[0])==11: SF_Fake=SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0])
+        if abs(lepton_pdgid[0])==13: SF_Fake=SFFakeRatio_mu_calc(lepton_pt[0], lepton_eta[0])
 
     pass_lepton_veto[0]=LepVeto(GoodLep, electrons, muons)
     
-    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1: Cut_dict[3][1]+=1    
+    if (SingleEle or SingleMu) and pass_lepton_iso[0]==1 and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1: Cut_dict[3][1]+=1    
     
     UseDeepTau=True
     indexGoodTau=SelectTau(taus, GoodLep, UseDeepTau)
@@ -524,7 +535,7 @@ for i in range(tree.GetEntries()):
 
     pass_tau_selection[0]=1
     
-    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1: Cut_dict[4][1]+=1
+    if (SingleEle or SingleMu) and pass_lepton_iso[0]==1 and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1: Cut_dict[4][1]+=1
 
     GoodTau=taus[indexGoodTau]
     tau_pt[0]               =   GoodTau.pt
@@ -545,7 +556,7 @@ for i in range(tree.GetEntries()):
     if GoodTau.charge==GoodLep.charge:
         pass_charge_selection[0]=1
 
-    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1: Cut_dict[5][1]+=1
+    if (SingleEle or SingleMu) and pass_lepton_iso[0]==1 and pass_tau_vsJetWP[0]==1 and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1: Cut_dict[5][1]+=1
 
     outputJetSel=JetSelection(list(jets), GoodTau, GoodLep)
     
@@ -577,14 +588,14 @@ for i in range(tree.GetEntries()):
 
     pass_jet_selection[0]=1
 
-    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1: Cut_dict[6][1]+=1
 
     if not BVeto(jets): pass_b_veto[0]=1
 
-    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1:
+    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_iso[0]==1 and pass_tau_vsJetWP[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1:
         Cut_dict[7][1]+=1
-        pass_upToBVeto[0]=1
 
+    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1:
+        pass_upToBVeto[0]=1
 
     LeadJet=ROOT.TLorentzVector()
     SubleadJet=ROOT.TLorentzVector()
@@ -597,13 +608,19 @@ for i in range(tree.GetEntries()):
     DeltaEta_jj[0]=abs(LeadJet.Eta()-SubleadJet.Eta())
 
 
-    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1 and pass_mjj_cut[0]==1: Cut_dict[8][1]+=1
+    if (SingleEle or SingleMu) and pass_lepton_iso[0]==1 and pass_tau_vsJetWP[0]==1 and  pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1 and pass_mjj_cut[0]==1: Cut_dict[8][1]+=1
 
     if not metCut(met): pass_MET_cut[0]=1
 
-    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1 and pass_mjj_cut[0]==1 and pass_MET_cut[0]==1:
+    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_iso[0]==1 and pass_tau_vsJetWP[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1 and pass_mjj_cut[0]==1 and pass_MET_cut[0]==1:
         Cut_dict[9][1]+=1
+
+    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1 and pass_mjj_cut[0]==1 and pass_MET_cut[0]==1:
         pass_everyCut[0]=1
+
+
+
+
 
     #######################################
     ## Removing events with HEM problem  ##
