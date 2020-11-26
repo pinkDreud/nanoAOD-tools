@@ -188,10 +188,10 @@ TTGJets_2017.sigma = 4.078
 TTGJets_2017.year = 2017
 TTGJets_2017.dataset = "/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/"+tag3_2017+"_ext1-v1/NANOAODSIM"
 
-TTZtoQQ_2017 = sample(ROOT.kRed+2, 1, 1001, "t#bar{t}Z->q#bar{q}", "TTZtoQQ_2017")
-TTZtoQQ_2017.sigma = 0.5104
-TTZtoQQ_2017.year = 2017
-TTZtoQQ_2017.dataset = "/TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8/"+tag_2017+"_ext13-v1/NANOAODSIM"
+TTZToQQ_2017 = sample(ROOT.kRed+2, 1, 1001, "t#bar{t}Z->q#bar{q}", "TTZToQQ_2017")
+TTZToQQ_2017.sigma = 0.5104
+TTZToQQ_2017.year = 2017
+TTZToQQ_2017.dataset = "/TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8/"+tag_2017+"_ext1-v1/NANOAODSIM"
 
 TTZToLLNuNu_2017 = sample(ROOT.kRed+2, 1, 1001, "t#bar{t}Z to #ell#ell#nu#nu ", "TTZToLLNuNu_2017")
 TTZToLLNuNu_2017.sigma = 0.2432
@@ -215,7 +215,7 @@ tZq_ll_4f_2017.dataset = "/tZq_ll_4f_ckm_NLO_TuneCP5_PSweights_13TeV-amcatnlo-py
 
 TVX_2017 = sample(ROOT.kRed, 1, 1001, "tVX", "TVX_2017")
 TVX_2017.year = 2017
-TVX_2017.components = [TTGJets_2017, TTZtoQQ_2017, TTZToLLNuNu_2017, TTWJetsToQQ_2017, TTWJetsToLNu_2017, tZq_ll_4f_2017]
+TVX_2017.components = [TTGJets_2017, TTZToQQ_2017, TTZToLLNuNu_2017, TTWJetsToQQ_2017, TTWJetsToLNu_2017, tZq_ll_4f_2017]
 
 ###############################  NEW     ################################
 ###############################  VGamma  ################################
@@ -871,7 +871,7 @@ sample_dict={
     'DYJetsToLL_2017':DYJetsToLL_2017, 'DY1JetsToLL_2017':DY1JetsToLL_2017, 'DY2JetsToLL_2017':DY2JetsToLL_2017, 'DY3JetsToLL_2017':DY3JetsToLL_2017, 'DY4JetsToLL_2017':DY4JetsToLL_2017,
     # to here
     'VG_2017':VG_2017, 'ZG_2017':ZG_2017, 'WG_2017':WG_2017,
-    'TVX_2017':TVX_2017, 'TTGJets_2017':TTGJets_2017, 'TTZtoQQ_2017':TTZtoQQ_2017, 'TTZToLLNuNu_2017':TTZToLLNuNu_2017, 'TTWJetsToQQ_2017':TTWJetsToQQ_2017, 'TTWJetsToLNu_2017':TTWJetsToLNu_2017, 'tZq_ll_4f_2017':tZq_ll_4f_2017,
+    'TVX_2017':TVX_2017, 'TTGJets_2017':TTGJets_2017, 'TTZToQQ_2017':TTZToQQ_2017, 'TTZToLLNuNu_2017':TTZToLLNuNu_2017, 'TTWJetsToQQ_2017':TTWJetsToQQ_2017, 'TTWJetsToLNu_2017':TTWJetsToLNu_2017, 'tZq_ll_4f_2017':tZq_ll_4f_2017,
     'WrongSign_2017': WrongSign_2017, 'WWto2L2Nu_2017':WWto2L2Nu_2017, 'GluGluToWWToENuENu_2017':GluGluToWWToENuENu_2017, 'GluGluToWWToENuMNu2017':GluGluToWWToENuMNu2017, 'GluGluToWWToENuTNu2017':GluGluToWWToENuTNu2017, 'GluGluToWWToMNuENu_2017':GluGluToWWToMNuENu_2017, 'GluGluToWWToMNuMNu2017':GluGluToWWToMNuMNu2017, 'GluGluToWWToMNuTNu2017':GluGluToWWToMNuTNu2017, 'GluGluToWWToTNuENu_2017':GluGluToWWToTNuENu_2017, 'GluGluToWWToTNuMNu2017':GluGluToWWToTNuMNu2017, 'GluGluToWWToTNuTNu2017':GluGluToWWToTNuTNu2017, 'TTTo2L2Nu_2017':TTTo2L2Nu_2017, 'STtW_top_2017':STtW_top_2017, 'GluGluHToWWTo2L2Nu_2017':GluGluHToWWTo2L2Nu_2017, 'GluGluHToZZTo2L2Q_2017':GluGluHToZZTo2L2Q_2017, 'GluGluHToZZTo4L_2017':GluGluHToZZTo4L_2017, 'GluGluHToTauTau_2017':GluGluHToTauTau_2017, 'VBFHToWWTo2L2Nu_2017':VBFHToWWTo2L2Nu_2017, 'VBFHToTauTau_2017':VBFHToTauTau_2017, 'ttHToNonbb_2017':ttHToNonbb_2017, 'VHToNonbb_2017':VHToNonbb_2017,
     'Other_2017':Other_2017, 'WWTo2L2Nu_DoubleScattering_2017':WWTo2L2Nu_DoubleScattering_2017, 'WWW_4F_2017':WWW_4F_2017, 'WWZTo3L1Nu2Q_2017':WWZTo3L1Nu2Q_2017, 'WZZ_2017':WZZ_2017, 'ZZZ_2017':ZZZ_2017, 'WWG_2017':WWG_2017,
     'WZ_2017':WZ_2017,

@@ -23,7 +23,7 @@ class MCweight_writer(Module):
     def analyze(self, event):
         print self.samplename
         lheweight = True
-        if "WZ" in self.samplename:
+        if "WZ" OR "WWTo2L2Nu_DoubleScattering" in self.samplename:
             lheweight = False
         print lheweight
         """process event, return True (go to next module) or False (fail, go to next event)"""
