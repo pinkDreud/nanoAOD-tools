@@ -46,11 +46,13 @@ TT_Mtt_2016 = sample(ROOT.kRed, 1, 1001, "t#bar{t}", "TT_Mtt_2016")
 TT_Mtt_2016.year = 2016
 TT_Mtt_2016.components = [TT_incl_2016, TT_Mtt700to1000_2016, TT_Mtt1000toInf_2016]
 
+'''
 TT_DiLep_2016 = sample(ROOT.kRed, 1, 1001, "t#bar{t}", "TT_DiLep_2016")
 TT_DiLep_2016.sigma = 831.76 #pb
 TT_DiLep_2016.year = 2016
 TT_DiLep_2016.dataset = "/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/"+tag_2016+"-v1/NANOAODSIM"
 # /TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16NanoAODv6-PUMoriond17_Nano25Oct2019_102X_mcRun2_asymptotic_v7-v1/NANOAODSIM
+'''
 
 ################################ WJets ################################
 WJetsHT70to100_2016 = sample(ROOT.kGreen+2, 1, 1001, "W + Jets", "WJetsHT70to100_2016")
@@ -162,10 +164,12 @@ TT_Mtt_2017 = sample(ROOT.kRed, 1, 1001, "t#bar{t}", "TT_Mtt_2017")
 TT_Mtt_2017.year = 2017
 TT_Mtt_2017.components = [TT_Mtt700to1000_2017, TT_Mtt1000toInf_2017]
 
+'''
 TT_DiLep_2017 = sample(ROOT.kRed+2, 1, 1001, "t#bar{t} DiLep", "TT_DiLep_2017")
 TT_DiLep_2017.sigma =  88.287 #pb
 TT_DiLep_2017.year = 2017
 TT_DiLep_2017.dataset = "/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/"+tag2_2017+"-v1/NANOAODSIM"
+'''
 
 TT_SemiLep_2017 = sample(ROOT.kRed+2, 1, 1001, "t#bar{t} SemiLep", "TT_SemiLep2017")
 TT_SemiLep_2017.sigma = 365.3
@@ -177,9 +181,9 @@ TT_Had_2017.sigma =  377.96 #pb
 TT_Had_2017.year = 2017
 TT_Had_2017.dataset = "/TTToHadronic_TuneCP5_13TeV-powheg-pythia8/"+tag2_2017+"-v2/NANOAODSIM"
 
-TT_2017 = sample(ROOT.kRed, 1, 1001, "t#bar{t}", "TT_2017")
+TT_2017 = sample(ROOT.kRed, 1, 1001, "t#bar{t} FH+SL", "TT_2017")
 TT_2017.year = 2017
-TT_2017.components = [TT_DiLep_2017, TT_SemiLep_2017, TT_Had_2017]
+TT_2017.components = [TT_SemiLep_2017, TT_Had_2017]#TT_DiLep_2017,
 
 ###############################  NEW  ################################
 ###############################  TVX  ################################
@@ -866,7 +870,7 @@ sample_dict={
     'WpWpJJ_EWK_2017':WpWpJJ_EWK_2017,
     'WpWpJJ_QCD_2017':WpWpJJ_QCD_2017,
     ### fake contributions form here...
-    'TT_2017':TT_2017, 'TT_DiLep_2017':TT_DiLep_2017, 'TT_SemiLep2017':TT_SemiLep_2017, 'TT_Had_2017':TT_Had_2017,
+    'TT_2017':TT_2017, 'TT_SemiLep2017':TT_SemiLep_2017, 'TT_Had_2017':TT_Had_2017,#'TT_DiLep_2017':TT_DiLep_2017, 
     'WJets_2017':WJets_2017, 'WJetsHT70to100_2017':WJetsHT70to100_2017, 'WJetsHT100to200_2017':WJetsHT100to200_2017, 'WJetsHT200to400_2017':WJetsHT200to400_2017, 'WJetsHT400to600_2017':WJetsHT400to600_2017, 'WJetsHT600to800_2017':WJetsHT600to800_2017, 'WJetsHT800to1200_2017':WJetsHT800to1200_2017, 'WJetsHT1200to2500_2017':WJetsHT1200to2500_2017, 'WJetsHT2500toInf_2017':WJetsHT2500toInf_2017,
     'DYJetsToLL_2017':DYJetsToLL_2017, 'DY1JetsToLL_2017':DY1JetsToLL_2017, 'DY2JetsToLL_2017':DY2JetsToLL_2017, 'DY3JetsToLL_2017':DY3JetsToLL_2017, 'DY4JetsToLL_2017':DY4JetsToLL_2017,
     # to here
