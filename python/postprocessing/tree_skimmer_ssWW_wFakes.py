@@ -380,7 +380,7 @@ for i in range(tree.GetEntries()):
 
     if isMC:
         genpart = Collection(event, "GenPart")
-        if not ("WZ" in sample.label):
+        if not ("WZ" in sample.label or "WWTo2L2Nu_DoubleScattering"):
             LHE = Collection(event, "LHEPart")
     chain.GetEntry(i)
     #++++++++++++++++++++++++++++++++++
