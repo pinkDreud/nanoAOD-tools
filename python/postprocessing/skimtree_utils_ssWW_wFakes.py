@@ -8,6 +8,7 @@ import array
 import types
 from CutsAndValues_bu import *
 
+
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 WP_btagger = {
@@ -1726,3 +1727,75 @@ class systWeights(object):
 ###############################################
 ###        End of tree_skimmer_utlis        ###
 ###############################################
+
+
+
+
+
+def SFFakeRatio_ele_calc(pT, eta):
+    inFile = ROOT.TFile.Open("TH2F_FakeRatio_ele.root" ,"READ")
+    histo=inFile.Get("h2FRele")
+    FR=0
+    if(pT<=20):
+        if(abs(eta)<1):         FR=histo.GetBinContent(1,1)
+        elif(abs(eta)<1.5):     FR=histo.GetBinContent(1,2)
+        elif(abs(eta)<2):       FR=histo.GetBinContent(1,3)
+        elif(abs(eta)<2.4):     FR=histo.GetBinContent(1,4)
+    elif(pT<=30):
+        if(abs(eta)<1):         FR=histo.GetBinContent(2,1)
+        elif(abs(eta)<1.5):     FR=histo.GetBinContent(2,2)
+        elif(abs(eta)<2):       FR=histo.GetBinContent(2,3)
+        elif(abs(eta)<2.4):     FR=histo.GetBinContent(2,4)
+    elif(pT<=40):
+        if(abs(eta)<1):         FR=histo.GetBinContent(3,1)
+        elif(abs(eta)<1.5):     FR=histo.GetBinContent(3,2)
+        elif(abs(eta)<2):       FR=histo.GetBinContent(3,3)
+        elif(abs(eta)<2.4):     FR=histo.GetBinContent(3,4)
+    elif(pT<=50):
+        if(abs(eta)<1):         FR=histo.GetBinContent(4,1)
+        elif(abs(eta)<1.5):     FR=histo.GetBinContent(4,2)
+        elif(abs(eta)<2):       FR=histo.GetBinContent(4,3)
+        elif(abs(eta)<2.4):     FR=histo.GetBinContent(4,4)
+    elif(pT>50):
+        if(abs(eta)<1):         FR=histo.GetBinContent(5,1)
+        elif(abs(eta)<1.5):     FR=histo.GetBinContent(5,2)
+        elif(abs(eta)<2):       FR=histo.GetBinContent(5,3)
+        elif(abs(eta)<2.4):     FR=histo.GetBinContent(5,4)
+    else: FR=0    
+    return FR/(1-FR)
+
+def SFFakeRatio_mu_calc(pT, eta):
+    inFile = ROOT.TFile.Open("TH2F_FakeRatio_mu.root" ,"READ")
+    histo=inFile.Get("h2FRmu")
+    FR=0
+    if(pT<=20):
+        if(abs(eta)<1):         FR=histo.GetBinContent(1,1)
+        elif(abs(eta)<1.5):     FR=histo.GetBinContent(1,2)
+        elif(abs(eta)<2):       FR=histo.GetBinContent(1,3)
+        elif(abs(eta)<2.4):     FR=histo.GetBinContent(1,4)
+    elif(pT<=30):
+        if(abs(eta)<1):         FR=histo.GetBinContent(2,1)
+        elif(abs(eta)<1.5):     FR=histo.GetBinContent(2,2)
+        elif(abs(eta)<2):       FR=histo.GetBinContent(2,3)
+        elif(abs(eta)<2.4):     FR=histo.GetBinContent(2,4)
+    elif(pT<=40):
+        if(abs(eta)<1):         FR=histo.GetBinContent(3,1)
+        elif(abs(eta)<1.5):     FR=histo.GetBinContent(3,2)
+        elif(abs(eta)<2):       FR=histo.GetBinContent(3,3)
+        elif(abs(eta)<2.4):     FR=histo.GetBinContent(3,4)
+    elif(pT<=50):
+        if(abs(eta)<1):         FR=histo.GetBinContent(4,1)
+        elif(abs(eta)<1.5):     FR=histo.GetBinContent(4,2)
+        elif(abs(eta)<2):       FR=histo.GetBinContent(4,3)
+        elif(abs(eta)<2.4):     FR=histo.GetBinContent(4,4)
+    elif(pT>50):
+        if(abs(eta)<1):         FR=histo.GetBinContent(5,1)
+        elif(abs(eta)<1.5):     FR=histo.GetBinContent(5,2)
+        elif(abs(eta)<2):       FR=histo.GetBinContent(5,3)
+        elif(abs(eta)<2.4):     FR=histo.GetBinContent(5,4)
+    else: FR=0    
+    return FR/(1-FR)
+
+
+
+
