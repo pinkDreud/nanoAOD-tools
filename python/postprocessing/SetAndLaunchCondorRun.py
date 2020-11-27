@@ -1,15 +1,16 @@
 import os
 import optparse
 import sys
+from samples.samples import *
 
 cshname = "condorrun_tauwp.csh"
 
 usage = 'python SetAndLaunchCondorRun.py -y year -j wp_jet -m wp_mu -e wp_ele -f folder --max max_jobs -d'
 parser = optparse.OptionParser(usage)
 parser.add_option('-y', dest='year', type=str, default = '2017', help='Please enter a year, default is 2017')
-parser.add_option('-j', dest='jetwp', type=str, default = '', help='Please enter a TauID WP for vsJet')
-parser.add_option('-m', dest='muwp', type=str, default = '', help='Please enter a TauID WP for vsMu')
-parser.add_option('-e', dest='elewp', type=str, default = '', help='Please enter a TauID WP for vsEle')
+parser.add_option('-j', dest='jetwp', type=str, default = 'VT', help='Please enter a TauID WP for vsJet')
+parser.add_option('-m', dest='muwp', type=str, default = 'L', help='Please enter a TauID WP for vsMu')
+parser.add_option('-e', dest='elewp', type=str, default = 'VL', help='Please enter a TauID WP for vsEle')
 parser.add_option('-f', dest='fold', type=str, default = '', help='Please enter a folder')
 parser.add_option('--max', dest='maxj', type=int, default = 0, help='Please enter a maximum for number of condor jobs')
 parser.add_option('-d', dest='isdata', default = False, action='store_true', help='Please enter if are real data')
@@ -58,26 +59,33 @@ if not os.path.exists(path):
     os.makedirs(path)
 '''
 
-optstring = opt.year + " -f " + folder + " --wp " + str(opt.jetwp + opt.muwp + opt.elewp)
+optstring = " -f " + folder + " --wp " + str(opt.jetwp + opt.muwp + opt.elewp)
 if opt.maxj > 0:
     optstring = optstring + " --max " + str(opt.maxj)
 optstring = optstring + "\n"
 
 f = open(cshname, "w")
 print f
-#f.write("set folder='" + folder + "'\n")
-#f.write("set year='"+ opt.year + "'\n")
-if opt.isdata:
-    f.write("python submit_condor.py -d DataEle_" + optstring)
-    f.write("python submit_condor.py -d DataMu_" + optstring)
-    #f.write("python submit_condor.py -d DataHT_" + optstring)
-else:
-    #f.write("python submit_condor.py -d TT_" + optstring)
-    f.write("python submit_condor.py -d WJets_" + optstring)
-    #f.write("python submit_condor.py -d WZ_" + optstring)
-    #f.write("python submit_condor.py -d DYJetsToLL_" + optstring)
-    #f.write("python submit_condor.py -d WpWpJJ_EWK_" + optstring)
-    #f.write("python submit_condor.py -d WpWpJJ_QCD_" + optstring)
+
+dirlist = [dirs for dirs in os.listdir(path) if os.path.isdir(path+dirs)]
+
+for prname, proc in class_dict.items():
+    if "DataHT" in prname:
+        continue
+    if opt.year not in prname:
+        continue
+    toLaunch = True
+    if hasattr(proc, 'components'):
+        for sample in proc.components:
+            if sample.label in dirlist:
+                toLaunch = False
+                break
+        if not toLaunch:
+            continue
+    print "Writing " + proc.label + " in csh..."
+    
+    f.write("python submit_condor.py -d " + proc.label+ " " + optstring)
+
 f.close()
 
 t = open("CutsAndValues_bu.py", "w")
@@ -126,5 +134,7 @@ t.write("M_JJ_CUT=   500\n")
 t.write("MET_CUT=    40\n")
 t.close()
 
+print "Launching jobs on condor..."
 os.system("source ./" + cshname)
+print "Done! Goodbye my friend :D"
 
