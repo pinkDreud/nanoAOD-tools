@@ -8,7 +8,7 @@ from CMS_lumi import CMS_lumi
 from PhysicsTools.NanoAODTools.postprocessing.samples.samples import *
 from array import array
 
-print TT_2017
+#print TT_2017
 
 usage = 'python makeplot.py'# -y year --lep lepton -d dataset --merpart --lumi --mertree --sel --cut cut_string -p -s'
 parser = optparse.OptionParser(usage)
@@ -30,7 +30,7 @@ parser.add_option('--user', dest='user', type='string', default=str(os.environ.g
 
 (opt, args) = parser.parse_args()
 
-print (opt, args)
+#print (opt, args)
 
 folder = opt.folder
 

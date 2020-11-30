@@ -38,6 +38,8 @@ for dirn in dirlist:
                     continue
 
                 if not str(c.label+"_merged.root") in os.listdir(path+dirn+"/"+c.label):
+                    if "Data" in c.label and str(c.label+".root") in os.listdir(path+dirn+"/"+c.label):
+                        continue
                     print c.label + " not merged so far"
                     print "Merging and luming " + c.label + "..."
                     #print "python makeplot.py -y " + opt.year + " --merpart --lumi -d " + c.label + " --folder " + dirn
