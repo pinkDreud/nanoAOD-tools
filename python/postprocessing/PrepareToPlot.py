@@ -27,27 +27,28 @@ for dirn in dirlist:
 
     for k, v in class_dict.items():
         ismerged = False
+        doesexist = True
 
         if hasattr(v, 'components'):
             for c in v.components:
 
                 if not os.path.exists(path+dirn+"/"+c.label):
                     print c.label + " not condorly produced yet"
-                    ismerged = False
+                    doesexist = False
                     continue
 
                 if not str(c.label+"_merged.root") in os.listdir(path+dirn+"/"+c.label):
                     print c.label + " not merged so far"
                     print "Merging and luming " + c.label + "..."
-                    print "python makeplot.py -y " + opt.year + " --merpart --lumi -d " + c.label + " --folder " + dirn
-                    #os.system("python makeplot.py -y " + opt.year + " --merpart --lumi -d " + c.label + " --folder " + dirn)
+                    #print "python makeplot.py -y " + opt.year + " --merpart --lumi -d " + c.label + " --folder " + dirn
+                    os.system("python makeplot.py -y " + opt.year + " --merpart --lumi -d " + c.label + " --folder " + dirn)
                     print "Merged and lumied!"
 
                 if not str(c.label+".root") in os.listdir(path+dirn+"/"+c.label):
                     print c.label + " not lumied so far"
                     print "Luming " + c.label + "..."
-                    print "python makeplot.py -y " + opt.year + " --lumi -d " + c.label + " --folder " + dirn
-                    #os.system("python makeplot.py -y " + opt.year + " --lumi -d " + c.label + " --folder " + dirn)
+                    #print "python makeplot.py -y " + opt.year + " --lumi -d " + c.label + " --folder " + dirn
+                    os.system("python makeplot.py -y " + opt.year + " --lumi -d " + c.label + " --folder " + dirn)
 
 
             
@@ -55,19 +56,20 @@ for dirn in dirlist:
             if str(k+".root") in os.listdir(path+dirn+"/"+k):
                 ismerged = True
         
-        print k + " is merged? " + str(ismerged)
+        if doesexist:
+            print k + " is merged? " + str(ismerged)
 
-        if ismerged:
+        if ismerged or not doesexist:
             continue
 
         if not hasattr(v, 'components'):
             print k + " neither merged nor lumied so far"
             print "Merging and luming " + k + "..."
-            print "python makeplot.py -y ", opt.year, " --merpart --lumi --mertree -d " + k + " --folder ", dirn
-            #os.system("python makeplot.py -y " + opt.year + " --merpart --lumi --mertree -d " + k + " --folder " + dirn)
+            #print "python makeplot.py -y ", opt.year, " --merpart --lumi --mertree -d " + k + " --folder ", dirn
+            os.system("python makeplot.py -y " + opt.year + " --merpart --lumi --mertree -d " + k + " --folder " + dirn)
             print "Merged and lumied!"
         else:
             print k + " not merged so far"
-            print "Merging and luming " + k + "..."
-            print "python makeplot.py -y ", opt.year, " --mertree -d " + k + " --folder ", dirn
-            #os.system("python makeplot.py -y " + opt.year + " --mertree -d " + k + " --folder " + dirn)
+            print "Merging lumied trees for " + k + " components..."
+            #print "python makeplot.py -y ", opt.year, " --mertree -d " + k + " --folder ", dirn
+            os.system("python makeplot.py -y " + opt.year + " --mertree -d " + k + " --folder " + dirn)
