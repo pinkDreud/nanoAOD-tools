@@ -224,7 +224,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           if('Data' in s.label):
                if ("GenPart" in variabile_._name) or ("MC_" in variabile_._name):
                     continue
-               if 'DataHT' in s.label:
+               if 'DataHT' in s.label or 'DataMET' in s.label:
                     continue
           tmp = (ROOT.TH1F)(infile[s.label].Get(histoname))
           tmp.SetLineColor(ROOT.kBlack)
@@ -560,7 +560,7 @@ for year in years:
           variables.append(variabile('DeltaEta_jj', '#Delta #eta_{jj}',  wzero+'*('+cut+')',  20, 0, 10))
 
           for sample in dataset_new:
-               if 'DataHT' in sample.label:
+               if 'DataHT' in sample.label or 'DataMET' in sample.label:
                     continue
                if(opt.plot):
                     for var in variables:

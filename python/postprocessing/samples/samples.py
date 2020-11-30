@@ -805,6 +805,30 @@ DataHT_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataHT_2017")
 DataHT_2017.year = 2017
 DataHT_2017.components = [DataHTB_2017, DataHTC_2017, DataHTD_2017, DataHTE_2017, DataHTF_2017]
 
+DataMETB_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataMETB_2017")
+DataMETB_2017.runP = 'B'
+DataMETB_2017.year = 2017
+DataMETB_2017.dataset = '/MET/Run2017B-'+tag_data + '-v1/NANOAOD'
+DataMETC_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataMETC_2017")
+DataMETC_2017.runP = 'C'
+DataMETC_2017.year = 2017
+DataMETC_2017.dataset = '/MET/Run2017C-'+tag_data + '-v1/NANOAOD'
+DataMETD_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataMETD_2017")
+DataMETD_2017.runP = 'D'
+DataMETD_2017.year = 2017
+DataMETD_2017.dataset = '/MET/Run2017D-'+tag_data + '-v1/NANOAOD'
+DataMETE_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataMETE_2017")
+DataMETE_2017.runP = 'E'
+DataMETE_2017.year = 2017
+DataMETE_2017.dataset = '/MET/Run2017E-'+tag_data + '-v1/NANOAOD'
+DataMETF_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataMETF_2017")
+DataMETF_2017.runP = 'F'
+DataMETF_2017.year = 2017
+DataMETF_2017.dataset = '/MET/Run2017F-'+tag_data + '-v1/NANOAOD'
+DataMET_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataMET_2017")
+DataMET_2017.year = 2017
+DataMET_2017.components = [DataMETB_2017, DataMETC_2017, DataMETD_2017, DataMETE_2017, DataMETF_2017]
+
 DataMuA_2018 = sample(ROOT.kBlack, 1, 1001, "Data", "DataMuA_2018")
 DataMuA_2018.runP = 'A'
 DataMuA_2018.year = 2018
@@ -882,6 +906,7 @@ sample_dict={
     'DataMu_2017':DataMu_2017, 'DataMuB_2017':DataMuB_2017, 'DataMuC_2017':DataMuC_2017, 'DataMuD_2017':DataMuD_2017, 'DataMuE_2017':DataMuE_2017, 'DataMuF_2017':DataMuF_2017,
     'DataEle_2017':DataEle_2017, 'DataEleB_2017':DataEleB_2017, 'DataEleC_2017':DataEleC_2017, 'DataEleD_2017':DataEleD_2017, 'DataEleE_2017':DataEleE_2017, 'DataEleF_2017':DataEleF_2017,
     'DataHT_2017':DataHT_2017, 'DataHTB_2017':DataHTB_2017, 'DataHTC_2017':DataHTC_2017, 'DataHTD_2017':DataHTD_2017, 'DataHTE_2017':DataHTE_2017, 'DataHTF_2017':DataHTF_2017,
+    'DataMET_2017':DataMET_2017, 'DataMETB_2017':DataMETB_2017, 'DataMETC_2017':DataMETC_2017, 'DataMETD_2017':DataMETD_2017, 'DataMETE_2017':DataMETE_2017, 'DataMETF_2017':DataMETF_2017,
 
 }
 
@@ -901,6 +926,7 @@ class_dict={
     'DataMu_2017':DataMu_2017,
     'DataEle_2017':DataEle_2017,
     'DataHT_2017':DataHT_2017,
+    'DataMET_2017':DataMET_2017,
 }
 
 
