@@ -294,7 +294,7 @@ GluGluToWWToTNuTNu2017.sigma = 45.62
 GluGluToWWToTNuTNu2017.year = 2017
 GluGluToWWToTNuTNu2017.dataset = "/GluGluToWWToTNTN_13TeV_MCFM701_pythia8/"+tag_2017+"-v1/NANOAODSIM"
 
-TTTo2L2Nu_2017 = sample(ROOT.kBlue+2, 1, 1001, "t#bar{t} DiLep", "TT_DiLep_2017")
+TTTo2L2Nu_2017 = sample(ROOT.kBlue+2, 1, 1001, "t#bar{t} DiLep", "TTTo2L2Nu_2017")
 TTTo2L2Nu_2017.sigma =  88.287 #pb
 TTTo2L2Nu_2017.year = 2017
 TTTo2L2Nu_2017.dataset = "/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/"+tag2_2017+"-v1/NANOAODSIM"
