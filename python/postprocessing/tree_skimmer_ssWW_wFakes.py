@@ -18,7 +18,7 @@ import math
 import datetime
 import copy
 from array import array
-from skimtree_utils import *
+from skimtree_utils_ssWW_wFakes import *
 
 usage = "python tree_skimmer_ssWW_wFake.py [nome_del_sample_in_samples.py] 0 [file_in_input] local"
 
@@ -350,15 +350,14 @@ for i in range(tree.GetEntries()):
     #++++++++++++++++++++++++++++++++++
     #++        taking objects        ++
     #++++++++++++++++++++++++++++++++++
-    '''
+    
     if Debug:
         print("evento n. " + str(i))
         if i > 2000:
             break
     
     if not Debug and i%5000 == 0:
-    '''
-    print("Event #", i+1, " out of ", tree.GetEntries())
+        print("Event #", i+1, " out of ", tree.GetEntries())
 
     event       = Event(tree,i)
     electrons   = Collection(event, "Electron")
@@ -516,15 +515,15 @@ for i in range(tree.GetEntries()):
     else: pass_lepton_iso[0]=0
     
     if pass_lepton_iso[0]==0:
-        if abs(lepton_pdgid[0])==11: SF_Fake=SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0])
-        if abs(lepton_pdgid[0])==13: SF_Fake=SFFakeRatio_mu_calc(lepton_pt[0], lepton_eta[0])
+        if abs(lepton_pdgid[0])==11: SF_Fake[0]=SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0])
+        if abs(lepton_pdgid[0])==13: SF_Fake[0]=SFFakeRatio_mu_calc(lepton_pt[0], lepton_eta[0])
 
     pass_lepton_veto[0]=LepVeto(GoodLep, electrons, muons)
     
     if (SingleEle or SingleMu) and pass_lepton_iso[0]==1 and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1: Cut_dict[3][1]+=1    
     
     UseDeepTau=True
-    indexGoodTau=SelectTau(taus, GoodLep, UseDeepTau)
+    indexGoodTau=SelectTau(taus, GoodLep)#, UseDeepTau)
 
     if indexGoodTau<0:
         systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
@@ -656,7 +655,7 @@ outTreeFile.cd()
 if(isMC):
     #print("h_genweight first bin content is %f and h_PDFweight has %f bins" %(h_genweight.GetBinContent(1), h_PDFweight.GetNbinsX()))
     h_genweight.Write()
-    if not ("WZ" in sample.label):
+    if isthere_pdf:
         h_PDFweight.Write()
     #h_eff_mu.Write()
     #h_eff_ele.Write()

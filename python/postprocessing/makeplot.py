@@ -83,6 +83,8 @@ def lumi_writer(dataset, lumi):
      print samples
      for sample in samples:
           if not ('Data' in sample.label):# or 'TT_dilep' in sample.label):
+               isthere_gen = bool(infile.GetListOfKeys().Contains("h_genweight"))
+               isthere_pdf = bool(infile.GetListOfKeys().Contains("h_PDFweight"))
                infile =  ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + "_merged.root")
                tree = infile.Get('events_all')
                tree.SetBranchStatus('w_nominal', 0)
@@ -94,7 +96,7 @@ def lumi_writer(dataset, lumi):
                #print("h_genweight first bin content is %f and h_PDFweight has %f bins" %(h_genw_tmp.GetBinContent(1), nbins))
                w_nom = array('f', [0.]) 
                tree_new.Branch('w_nominal', w_nom, 'w_nominal/F')
-               if not ("WZ" in sample.label):
+               if isthere_pdf:# ("WZ" in sample.label):
                     h_pdfw_tmp = ROOT.TH1F(infile.Get("h_PDFweight"))
                     nbins = h_pdfw_tmp.GetXaxis().GetNbins()
                     w_PDF = array('f', [0.]*nbins)
@@ -108,7 +110,7 @@ def lumi_writer(dataset, lumi):
                          #print("Processing event %s     complete %s percent" %(event, 100*event/tree.GetEntries()))
                          sys.stdout.write("\rProcessing event {}     complete {} percent".format(event, 100*event/tree.GetEntries()))
                     w_nom[0] = tree.w_nominal * sample.sigma * lumi * 1000./float(h_genw_tmp.GetBinContent(1))
-                    if not ("WZ" in sample.label):
+                    if isthere_pdf: #not ("WZ" in sample.label):
                          for i in xrange(1, nbins):
                               w_PDF[i] = h_pdfw_tmp.GetBinContent(i+1)/h_genw_tmp.GetBinContent(2) 
                     tree_new.Fill()
@@ -221,6 +223,8 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           print "opening file: ", infile[s.label].GetName()
           if('Data' in s.label):
                if ("GenPart" in variabile_._name) or ("MC_" in variabile_._name):
+                    continue
+               if 'DataHT' in s.label:
                     continue
           tmp = (ROOT.TH1F)(infile[s.label].Get(histoname))
           tmp.SetLineColor(ROOT.kBlack)
@@ -465,19 +469,20 @@ if(opt.dat != 'all'):
      samples = []
      [samples.append(sample_dict[dataset_name]) for dataset_name in dataset_names]
      [dataset_dict[str(sample.year)].append(sample) for sample in samples]
-     print dataset_dict
 else:
-     dataset_dict = {
+     for v in class_dict.values():
+          dataset_dict[str(v.year)].append(v)
+     '''
           '2017':[WpWpJJ_QCD_2017, WZ_2017, TT_2017, DYJetsToLL_2017, WJets_2017, WpWpJJ_EWK_2017, DataMu_2017, DataEle_2017],#, DataHT_2017],
           #'2016':[TT_2016, WJets_2016, WZ_2016, DYJetsToLL_2016, WpWpJJ_EWK_2016, WpWpJJ_QCD_2016],#[DataMu_2016, DataEle_2016, DataHT_2016],
           '2018':[TT_2018, WpWpJJ_QCD_2018, WZ_2018, DYJetsToLL_2018, WJets_2018, WpWpJJ_EWK_2018], #[DataMu_2017, DataEle_2017, DataHT_2017],
      }
 
-'''
+
           '2016':[TT_2016, WJets_2016, WZ_2016, DYJetsToLL_2016, WpWpJJ_EWK_2016, WpWpJJ_QCD_2016],#[DataMu_2016, DataEle_2016, DataHT_2016],
           '2018':[TT_2018, WpWpJJ_QCD_2018, WZ_2018, DYJetsToLL_2018, WJets_2018, WpWpJJ_EWK_2018, #[DataMu_2017, DataEle_2017, DataHT_2017],
-'''
-
+     '''
+print dataset_dict
 #print(dataset_dict.keys())
 
 years = []
@@ -555,11 +560,14 @@ for year in years:
           variables.append(variabile('DeltaEta_jj', '#Delta #eta_{jj}',  wzero+'*('+cut+')',  20, 0, 10))
 
           for sample in dataset_new:
+               if 'DataHT' in sample.label:
+                    continue
                if(opt.plot):
                     for var in variables:
                          if (("GenPart" in var._name) or ("MC_" in var._name)) and "Data" in sample.label:
                               continue
                          plot(lep, 'jets', var, sample, cut_tag, "")
+
           if(opt.stack):
                for var in variables:
                     os.system('set LD_PRELOAD=libtcmalloc.so')

@@ -29,6 +29,13 @@ for dirn in dirlist:
         ismerged = False
         doesexist = True
 
+        if os.path.exists(path+dirn+"/"+k):
+            if str(k+".root") in os.listdir(path+dirn+"/"+k):
+                ismerged = True
+    
+        if ismerged:
+            continue
+
         if hasattr(v, 'components'):
             for c in v.components:
 
@@ -37,31 +44,24 @@ for dirn in dirlist:
                     doesexist = False
                     continue
 
-                if not str(c.label+"_merged.root") in os.listdir(path+dirn+"/"+c.label):
-                    if "Data" in c.label and str(c.label+".root") in os.listdir(path+dirn+"/"+c.label):
-                        continue
+                if not str(c.label+".root") in os.listdir(path+dirn+"/"+c.label):
+                    if os.path.exists(path+dirn+"/"+c.label+"_merged.root"):
+                        os.system("rm -f " + path + dirn + "/" + c.label + "_merged.root")
                     print c.label + " not merged so far"
                     print "Merging and luming " + c.label + "..."
                     #print "python makeplot.py -y " + opt.year + " --merpart --lumi -d " + c.label + " --folder " + dirn
                     os.system("python makeplot.py -y " + opt.year + " --merpart --lumi -d " + c.label + " --folder " + dirn)
                     print "Merged and lumied!"
-
-                if not str(c.label+".root") in os.listdir(path+dirn+"/"+c.label):
-                    print c.label + " not lumied so far"
-                    print "Luming " + c.label + "..."
-                    #print "python makeplot.py -y " + opt.year + " --lumi -d " + c.label + " --folder " + dirn
-                    os.system("python makeplot.py -y " + opt.year + " --lumi -d " + c.label + " --folder " + dirn)
-
-
-            
-        if k in exsamples:
-            if str(k+".root") in os.listdir(path+dirn+"/"+k):
-                ismerged = True
+    
+        else:
+            if not os.path.exists(path+dirn+"/"+k):
+                print c.label + " not condorly produced yet"
+                doesexist = False
         
         if doesexist:
             print k + " is merged? " + str(ismerged)
 
-        if ismerged or not doesexist:
+        else:
             continue
 
         if not hasattr(v, 'components'):
