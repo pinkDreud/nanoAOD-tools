@@ -334,7 +334,7 @@ for i in range(tree.GetEntries()):
     if passHT:
 
         contagood+=1
-        QCDRegion_tau=QCDEnrichedRegionTaus(taus, met)
+        QCDRegion_tau=QCDEnrichedRegionTaus(taus, electrons, muons, met)
         QCDRegion_lep, isEle=QCDEnrichedRegionLeptons(electrons, muons, met)
         if QCDRegion_lep: print("QCD enriched w lepton")
 

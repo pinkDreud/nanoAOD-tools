@@ -140,11 +140,13 @@ def BVeto(jetCollection):
 def mTlepMet(MET, lepton):
     return math.sqrt(2*lepton.pt*MET.sumEt*(1-math.cos(lepton.phi-MET.phi)))
 
+METQCDENRICHEDCUT=30
+MTLEPMETQCDCUT=20
 
 def QCDEnrichedRegionLeptons(ele, mu, MET):
     isEle=0
     isMu=0
-    if MET.pt>30: return False, isEle
+    if MET.pt>METQCDENRICHEDCUT: return False, isEle
     nEle=0
     nMu=0
     for electron in ele:
@@ -162,21 +164,34 @@ def QCDEnrichedRegionLeptons(ele, mu, MET):
     
     if isEle:    
         #print("mT ele-MET: ", mTlepMet(MET, ele[0]))
-        if mTlepMet(MET, ele[0])>20: return False, isEle
+        if mTlepMet(MET, ele[0])>MTLEPMETQCDCUT: return False, isEle
     if isMu==1:
         #print("mT mu-MET: ", mTlepMet(MET, mu[0]))
-        if mTlepMet(MET, mu[0])>20: return False, isEle
+        if mTlepMet(MET, mu[0])>MTLEPMETQCDCUT: return False, isEle
     
     return True, isEle
 
-def QCDEnrichedRegionTaus(taus, MET):
-    if MET.pt>30: return False
-    nTau=0
+def QCDEnrichedRegionTaus(taus,ele, mu, MET):
+    if MET.pt>METQCDENRICHEDCUT: return False
+    nTauL=0
+    nTauM=0
     for tau in taus:
-        if tau.idDeepTau2017v2p1VSjet>+8: nTau+=1
-    if nTau!=1: return False
+        if tau.idDeepTau2017v2p1VSjet>=+8: nTauL+=1
+        if tau.idDeepTau2017v2p1VSjet>=+16: nTauM+=1
+   #if nTau!=1: return False
+    '''
+    for electron in ele:
+        if electron.pfRelIso03_all<1: nEle+=1
+    for muon in mu:
+        if muon.pfRelIso03_all<1: nMu=+1
     
-    if mTlepMet(MET, taus[0])>20: return False
+    nLeps=nEle+nMu
+    #if(nLeps==1): print("This evento is good")
+    if nLeps>0: return False
+    '''
+    if nTauM>1: return False
+
+    if mTlepMet(MET, taus[0])>MTLEPMETQCDCUT: return False
 
     return True
 
