@@ -83,9 +83,9 @@ def lumi_writer(dataset, lumi):
      print samples
      for sample in samples:
           if not ('Data' in sample.label):# or 'TT_dilep' in sample.label):
+               infile =  ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + "_merged.root")
                isthere_gen = bool(infile.GetListOfKeys().Contains("h_genweight"))
                isthere_pdf = bool(infile.GetListOfKeys().Contains("h_PDFweight"))
-               infile =  ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + "_merged.root")
                tree = infile.Get('events_all')
                tree.SetBranchStatus('w_nominal', 0)
                tree.SetBranchStatus('w_PDF', 0)
