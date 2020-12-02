@@ -466,12 +466,16 @@ if(opt.dat != 'all'):
           print "dataset not found!"
           print sample_dict.keys()
      print opt.dat
+     if 'DataHT' or 'DataMET' in str(opt.dat):
+          raise Exception("Not interesting dataset")
      dataset_names = map(str, opt.dat.strip('[]').split(','))
      samples = []
      [samples.append(sample_dict[dataset_name]) for dataset_name in dataset_names]
      [dataset_dict[str(sample.year)].append(sample) for sample in samples]
 else:
-     for v in class_dict.values():
+     for k, v in class_dict.items():
+          if 'DataHT' in k or 'DataMET' in k:
+               continue
           dataset_dict[str(v.year)].append(v)
      '''
           '2017':[WpWpJJ_QCD_2017, WZ_2017, TT_2017, DYJetsToLL_2017, WJets_2017, WpWpJJ_EWK_2017, DataMu_2017, DataEle_2017],#, DataHT_2017],
@@ -483,7 +487,10 @@ else:
           '2016':[TT_2016, WJets_2016, WZ_2016, DYJetsToLL_2016, WpWpJJ_EWK_2016, WpWpJJ_QCD_2016],#[DataMu_2016, DataEle_2016, DataHT_2016],
           '2018':[TT_2018, WpWpJJ_QCD_2018, WZ_2018, DYJetsToLL_2018, WJets_2018, WpWpJJ_EWK_2018, #[DataMu_2017, DataEle_2017, DataHT_2017],
      '''
-print dataset_dict
+
+for v in dataset_dict.values():
+     print [o.label for o in v]
+
 #print(dataset_dict.keys())
 
 years = []
@@ -498,25 +505,27 @@ leptons = map(str,opt.lep.split(','))
 cut = opt.cut #default cut must be obvious, for example lepton_eta>-10.
 
 if opt.bveto:
-    cut_dict = {'muon':"abs(lepton_pdgid)==13&&(" + cut + ")",#&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&", 
-                 'electron':"abs(lepton_pdgid)==11&&(" + cut + ")",#&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&", 
-                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&(" + cut + ")",#pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&" + cut, 
+     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&(" + cut + ")", 
+                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&(" + cut + ")", 
+                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&(" + cut + ")", 
           }
-     
-
-if opt.sel:
-     cut_dict = {'muon':"abs(lepton_pdgid)==13&&(" + cut + ")",#&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1&&", 
-                 'electron':"abs(lepton_pdgid)==11&&(" + cut + ")",#&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1&&", 
-                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&(" + cut + ")",#pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1&&" + cut, 
-          }
+     cut_tag = 'selection_upto_bveto'
      if opt.cut != "lepton_eta>-10.":
-          cut_tag = 'selection_AND_' + cutToTag(opt.cut) 
-     else:
-          cut_tag = 'selection'
+          cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut) 
+          
+elif opt.sel:
+     cut_dict = {'muon':"abs(lepton_pdgid)==13&&(" + cut + ")&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1", 
+                 'electron':"abs(lepton_pdgid)==11&&(" + cut + ")&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1", 
+                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&(" + cut + ")pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1", 
+          }
+     cut_tag = "selection"
+     if opt.cut != "lepton_eta>-10.":
+          cut_tag = cut_tag + '_AND_' + cutToTag(opt.cut) 
+
 else:
-     cut_dict = {'muon':cut,
-                 'electron':cut,
-                 'incl':cut,
+     cut_dict = {'muon':"abs(lepton_pdgid)==13&&(" + cut + ")",
+                 'electron':"abs(lepton_pdgid)==11&&(" + cut + ")",
+                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&(" + cut + ")",
      }
      cut_tag = cutToTag(opt.cut)
 
@@ -538,7 +547,7 @@ for year in years:
           print lep
           dataset_new = dataset_dict[year]
           print [h.label for h in dataset_new]
-          dataset_new.remove(sample_dict['DataMET_'+str(year)])
+          #dataset_new.remove(sample_dict['DataMET_'+str(year)])
           if lep == 'muon' and sample_dict['DataEle_'+str(year)] in dataset_new:
                dataset_new.remove(sample_dict['DataEle_'+str(year)])
           elif lep == 'electron' and sample_dict['DataMu_'+str(year)] in dataset_new:
@@ -588,3 +597,4 @@ for year in years:
           elif lep == 'electron':
                dataset_new.append(sample_dict['DataMu_'+str(year)])
 
+'''
