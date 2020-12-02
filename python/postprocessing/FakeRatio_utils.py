@@ -140,13 +140,47 @@ def BVeto(jetCollection):
 def mTlepMet(MET, lepton):
     return math.sqrt(2*lepton.pt*MET.sumEt*(1-math.cos(lepton.phi-MET.phi)))
 
-METQCDENRICHEDCUT=30
-MTLEPMETQCDCUT=30
+
+def LeptonVetoTau(taus, ele, mu):
+    #veto the event if:
+    #   we have two taus with mass within 15 GeV from the Z
+    #   we have one tau and one lepton within 15 GeV from the Z
+    
+    for i in range(len(taus)):
+        tauSum=ROOT.TLorentzVector(0,0,0,0)
+        tau1=ROOT.TLorentzVector(0,0,0,0)
+        tau2=ROOT.TLorentzVector(0,0,0,0)
+        tau1.SetPtEtaPhiM(taus[i].pt, taus[i].eta, taus[i].phi, taus[i].mass)
+        j=i
+        while j<len(taus):
+            print('Combination: ', i, j)
+            if taus[j].idDeepTau2017v2p1VSjet>=+16:
+                tau2.SetPtEtaPhiM(taus[j].pt, taus[j].eta, taus[j].phi, taus[j].mass)
+                tauSum=tau1+tau2
+                if(abs(tauSum.M()-90)<15): return False
+            j=j+1
+        for electron in ele:
+            print('Electron')
+            eleV=ROOT.TLorentzVector(0,0,0,0)
+            eleV.SetPtEtaPhiM(electron.pt, electron.eta, electron.phi, electron.mass)
+            tauSum=tau1+eleV
+            if(abs(tauSum.M()-90)<15): return False
+        for muon in mu:
+            print('Muon')
+            muV=ROOT.TLorentzVector(0,0,0,0)
+            muV.SetPtEtaPhiM(muon.pt, muon.eta, muon.phi, muon.mass)
+            tauSum=tau1+muV
+            if(abs(tauSum.M()-90)<15): return False
+        
+        
+        return True
+        
+
 
 def QCDEnrichedRegionLeptons(ele, mu, MET):
     isEle=0
     isMu=0
-    if MET.pt>METQCDENRICHEDCUT: return False, isEle
+    #if MET.pt>METQCDENRICHEDCUT: return False, isEle
     nEle=0
     nMu=0
     for electron in ele:
@@ -162,23 +196,27 @@ def QCDEnrichedRegionLeptons(ele, mu, MET):
     if nMu==1:
         isMu=1
     
-    if isEle:    
+    #if isEle:    
         #print("mT ele-MET: ", mTlepMet(MET, ele[0]))
-        if mTlepMet(MET, ele[0])>MTLEPMETQCDCUT: return False, isEle
-    if isMu==1:
+    #    if mTlepMet(MET, ele[0])>MTLEPMETQCDCUT: return False, isEle
+    #if isMu==1:
         #print("mT mu-MET: ", mTlepMet(MET, mu[0]))
-        if mTlepMet(MET, mu[0])>MTLEPMETQCDCUT: return False, isEle
+    #    if mTlepMet(MET, mu[0])>MTLEPMETQCDCUT: return False, isEle
     
     return True, isEle
 
 def QCDEnrichedRegionTaus(taus,ele, mu, MET):
-    if MET.pt>METQCDENRICHEDCUT: return False
-    nTauL=0
-    nTauM=0
+    nTau=0
     for tau in taus:
-        if tau.idDeepTau2017v2p1VSjet>=+8: nTauL+=1
-        if tau.idDeepTau2017v2p1VSjet>=+16: nTauM+=1
-   #if nTau!=1: return False
+        if tau.idDeepTau2017v2p1VSjet>=+8: nTau+=1
+    if nTau==0: return False
+    #   if MET.pt>METQCDENRICHEDCUT: return False
+    #nTauL=0
+    #nTauM=0
+    #for tau in taus:
+    #    if tau.idDeepTau2017v2p1VSjet>=+8: nTauL+=1
+    #    if tau.idDeepTau2017v2p1VSjet>=+16: nTauM+=1
+    #if nTau!=1: return False
     '''
     for electron in ele:
         if electron.pfRelIso03_all<1: nEle+=1
@@ -189,11 +227,12 @@ def QCDEnrichedRegionTaus(taus,ele, mu, MET):
     #if(nLeps==1): print("This evento is good")
     if nLeps>0: return False
     '''
-    if nTauM>1: return False
-    if nTauL==0: return False
-    if mTlepMet(MET, taus[0])>MTLEPMETQCDCUT: return False
+    #if nTauM>1: return False
+    #if nTauL==0: return False
+    #if mTlepMet(MET, taus[0])>MTLEPMETQCDCUT: return False
+    if LeptonVetoTau(taus, ele, mu): return True
+    else: return False
 
-    return True
 
 def pTCalculator(pT):
     if pT<20:       return 1
