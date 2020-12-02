@@ -19,6 +19,8 @@ path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/"
 dirlist = [dirs for dirs in os.listdir(path) if os.path.isdir(path+dirs) and opt.folder in dirs]
 #datas = opt.dataset + "_" + opt.year
 
+Debug = False # True # 
+
 print dirlist
 
 for dirn in dirlist:
@@ -29,52 +31,63 @@ for dirn in dirlist:
         ismerged = False
         doesexist = True
 
-        if os.path.exists(path+dirn+"/"+k):
-            if str(k+".root") in os.listdir(path+dirn+"/"+k):
-                if os.path.exists(path+dirn+"/"+k+".root"):
-                    os.system("rm -f " + path + dirn + "/" + k + ".root")
-                    ismerged = True
-    
-        if ismerged:
-            continue
+        kpath = path+dirn+"/"+k+"/"
 
         if hasattr(v, 'components'):
             for c in v.components:
-
-                if not os.path.exists(path+dirn+"/"+c.label):
+                cpath = path + dirn + "/" + c.label + "/"
+                
+                if not os.path.exists(cpath):
                     print c.label + " not condorly produced yet"
                     doesexist = False
                     continue
-
-                if not str(c.label+".root") in os.listdir(path+dirn+"/"+c.label):
-                    if os.path.exists(path+dirn+"/"+c.label+".root"):
-                        os.system("rm -f " + path + dirn + "/" + c.label + ".root")
-                    if os.path.exists(path+dirn+"/"+c.label+"_merged.root"):
-                        os.system("rm -f " + path + dirn + "/" + c.label + "_merged.root")
+   
+                if not os.path.exists(cpath+c.label+".root"):
+                    if os.path.exists(cpath+c.label+"_merged.root"):
+                        if Debug:
+                            print "rm -f " + cpath + c.label + "_merged.root"
+                        else:
+                            os.system("rm -f " + cpath + c.label + "_merged.root")
                     print c.label + " not merged so far"
                     print "Merging and luming " + c.label + "..."
-                    #print "python makeplot.py -y " + opt.year + " --merpart --lumi -d " + c.label + " --folder " + dirn
-                    os.system("python makeplot.py -y " + opt.year + " --merpart --lumi -d " + c.label + " --folder " + dirn)
+                    if Debug:
+                        print "python makeplot.py -y " + opt.year + " --merpart --lumi -d " + c.label + " --folder " + dirn
+                    else:
+                        os.system("python makeplot.py -y " + opt.year + " --merpart --lumi -d " + c.label + " --folder " + dirn)
                     print "Merged and lumied!"
-    
-        else:
-            if not os.path.exists(path+dirn+"/"+k):
-                print c.label + " not condorly produced yet"
-                doesexist = False
-        
-        if not doesexist:
-            continue
+                else:
+                    print c.label + " is already merged and lumied"
+                    ismerged = True
 
-        if not hasattr(v, 'components'):
-            if not str(k+".root") in os.listdir(path+dirn+"/"+k):
-                print k + " neither merged nor lumied so far"
-                print "Merging and luming " + k + "..."
-                #print "python makeplot.py -y ", opt.year, " --merpart --lumi --mertree -d " + k + " --folder ", dirn
-                os.system("python makeplot.py -y " + opt.year + " --merpart --lumi --mertree -d " + k + " --folder " + dirn)
-                print "Merged and lumied!"
-        else:
-            if not str(k+".root") in os.listdir(path+dirn+"/"+k):
+            if not ismerged and doesexist:
+                if os.path.exists(kpath+k+".root"):
+                    if Debug:
+                        print "rm -f " + kpath + k + ".root"
+                    else:
+                        os.system("rm -f " + kpath + k + ".root")
                 print k + " not merged so far"
                 print "Merging lumied trees for " + k + " components..."
-                #print "python makeplot.py -y ", opt.year, " --mertree -d " + k + " --folder ", dirn
-                os.system("python makeplot.py -y " + opt.year + " --mertree -d " + k + " --folder " + dirn)
+                if Debug:
+                    print "python makeplot.py -y ", opt.year, " --mertree -d " + k + " --folder ", dirn
+                else:
+                    os.system("python makeplot.py -y " + opt.year + " --mertree -d " + k + " --folder " + dirn)
+   
+        else:
+            if not os.path.exists(kpath+k):
+                print c.label + " not condorly produced yet"
+            else:
+                if not os.path.exists(kpath+k+".root"):
+                    if os.path.exists(kpath+k+"_merged.root"):
+                        if Debug:
+                            print "rm -f " + kpath + k + "_merged.root"
+                        else:
+                            os.system("rm -f " + kpath + k + "_merged.root")
+                    print k + " neither merged nor lumied so far"
+                    print "Merging and luming " + k + "..."
+                    if Debug:
+                        print "python makeplot.py -y ", opt.year, " --merpart --lumi --mertree -d " + k + " --folder ", dirn
+                    else:
+                        os.system("python makeplot.py -y " + opt.year + " --merpart --lumi --mertree -d " + k + " --folder " + dirn)
+                    print "Merged and lumied!"
+                else:
+                    print k + "is already merged and lumied"
