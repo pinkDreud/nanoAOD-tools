@@ -70,7 +70,7 @@ dirlist = [dirs for dirs in os.listdir(path) if os.path.isdir(path+dirs)]
 print dirlist
 
 for prname, proc in class_dict.items():
-    if "DataHT" in prname:
+    if "DataHT" in prname or 'DataMET' in prname:
         continue
     if opt.year not in prname:
         continue

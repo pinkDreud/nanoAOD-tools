@@ -31,7 +31,9 @@ for dirn in dirlist:
 
         if os.path.exists(path+dirn+"/"+k):
             if str(k+".root") in os.listdir(path+dirn+"/"+k):
-                ismerged = True
+                if os.path.exists(path+dirn+"/"+k+".root"):
+                    os.system("rm -f " + path + dirn + "/" + k + ".root")
+                    ismerged = True
     
         if ismerged:
             continue
@@ -45,6 +47,8 @@ for dirn in dirlist:
                     continue
 
                 if not str(c.label+".root") in os.listdir(path+dirn+"/"+c.label):
+                    if os.path.exists(path+dirn+"/"+c.label+".root"):
+                        os.system("rm -f " + path + dirn + "/" + c.label + ".root")
                     if os.path.exists(path+dirn+"/"+c.label+"_merged.root"):
                         os.system("rm -f " + path + dirn + "/" + c.label + "_merged.root")
                     print c.label + " not merged so far"
@@ -58,20 +62,19 @@ for dirn in dirlist:
                 print c.label + " not condorly produced yet"
                 doesexist = False
         
-        if doesexist:
-            print k + " is merged? " + str(ismerged)
-
-        else:
+        if not doesexist:
             continue
 
         if not hasattr(v, 'components'):
-            print k + " neither merged nor lumied so far"
-            print "Merging and luming " + k + "..."
-            #print "python makeplot.py -y ", opt.year, " --merpart --lumi --mertree -d " + k + " --folder ", dirn
-            os.system("python makeplot.py -y " + opt.year + " --merpart --lumi --mertree -d " + k + " --folder " + dirn)
-            print "Merged and lumied!"
+            if not str(k+".root") in os.listdir(path+dirn+"/"+k):
+                print k + " neither merged nor lumied so far"
+                print "Merging and luming " + k + "..."
+                #print "python makeplot.py -y ", opt.year, " --merpart --lumi --mertree -d " + k + " --folder ", dirn
+                os.system("python makeplot.py -y " + opt.year + " --merpart --lumi --mertree -d " + k + " --folder " + dirn)
+                print "Merged and lumied!"
         else:
-            print k + " not merged so far"
-            print "Merging lumied trees for " + k + " components..."
-            #print "python makeplot.py -y ", opt.year, " --mertree -d " + k + " --folder ", dirn
-            os.system("python makeplot.py -y " + opt.year + " --mertree -d " + k + " --folder " + dirn)
+            if not str(k+".root") in os.listdir(path+dirn+"/"+k):
+                print k + " not merged so far"
+                print "Merging lumied trees for " + k + " components..."
+                #print "python makeplot.py -y ", opt.year, " --mertree -d " + k + " --folder ", dirn
+                os.system("python makeplot.py -y " + opt.year + " --mertree -d " + k + " --folder " + dirn)
