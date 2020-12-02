@@ -16,6 +16,7 @@ parser.add_option('--merpart', dest='merpart', default = False, action='store_tr
 parser.add_option('--mertree', dest='mertree', default = False, action='store_true', help='Default make no file is merged')
 parser.add_option('--lumi', dest='lumi', default = False, action='store_true', help='Default do not write the normalization weights')
 parser.add_option('--sel', dest='sel', default = False, action='store_true', help='Default do not apply any selection')
+parser.add_option('--bveto', dest='bveto', default = False, action='store_true', help='Default do not apply any selection')
 parser.add_option('-p', '--plot', dest='plot', default = False, action='store_true', help='Default make no plots')
 parser.add_option('-s', '--stack', dest='stack', default = False, action='store_true', help='Default make no stacks')
 parser.add_option('-N', '--notstacked', dest='tostack', default = True, action='store_false', help='Default make plots stacked')
@@ -496,6 +497,13 @@ leptons = map(str,opt.lep.split(','))
 
 cut = opt.cut #default cut must be obvious, for example lepton_eta>-10.
 
+if opt.bveto:
+    cut_dict = {'muon':"abs(lepton_pdgid)==13&&(" + cut + ")",#&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&", 
+                 'electron':"abs(lepton_pdgid)==11&&(" + cut + ")",#&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&", 
+                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&(" + cut + ")",#pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&" + cut, 
+          }
+     
+
 if opt.sel:
      cut_dict = {'muon':"abs(lepton_pdgid)==13&&(" + cut + ")",#&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1&&", 
                  'electron':"abs(lepton_pdgid)==11&&(" + cut + ")",#&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1&&", 
@@ -530,6 +538,7 @@ for year in years:
           print lep
           dataset_new = dataset_dict[year]
           print [h.label for h in dataset_new]
+          dataset_new.remove(sample_dict['DataMET_'+str(year)])
           if lep == 'muon' and sample_dict['DataEle_'+str(year)] in dataset_new:
                dataset_new.remove(sample_dict['DataEle_'+str(year)])
           elif lep == 'electron' and sample_dict['DataMu_'+str(year)] in dataset_new:
