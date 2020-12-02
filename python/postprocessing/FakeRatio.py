@@ -22,6 +22,7 @@ from FakeRatio_utils import *
 
 usage = "python FakeRatio.py [nome_dataset_come_salvato_in_samples.py] [indice, di default 0] [path_file_da_processare] local"
 
+usageCopyPaste="python FakeRatio.py DataHTC_2017 7 DataHTC_2017_ntuple.root local"
 eventobuono=-1
 
 
@@ -166,8 +167,10 @@ var_list.append(FakeTau_DeepTauWP)
 #MET
 MET_pt                      =   array.array('f', [-999.])
 MET_phi                     =   array.array('f', [-999.])
+mT_lepMET                     =   array.array('f', [-999.])
 var_list.append(MET_pt)
 var_list.append(MET_phi)
+var_list.append(mT_lepMET)
 
 isFake_tau                   =   array.array('i', [-999])
 isFake_tauAndPassCuts       =   array.array('i', [-999])
@@ -198,6 +201,11 @@ systTree.branchTreesSysts(trees, "all", "FakeTau_eta",              outTreeFile,
 systTree.branchTreesSysts(trees, "all", "FakeTau_phi",              outTreeFile, FakeTau_phi)
 systTree.branchTreesSysts(trees, "all", "FakeTau_mass",             outTreeFile, FakeTau_mass)
 systTree.branchTreesSysts(trees, "all", "FakeTau_DeepTauWP",        outTreeFile, FakeTau_DeepTauWP)
+
+systTree.branchTreesSysts(trees, "all", "MET_pt",                   outTreeFile, MET_pt)
+systTree.branchTreesSysts(trees, "all", "mT_lepMET",                outTreeFile, mT_lepMET)
+
+
 
 #fake variables
 systTree.branchTreesSysts(trees, "all", "isFake_lepton",                   outTreeFile, isFake_lepton)
@@ -332,13 +340,17 @@ for i in range(tree.GetEntries()):
     if not passHT: continue
 
     if passHT:
+        
+        MET_pt[0]=met.pt
+        MET_phi[0]=met.phi
 
         contagood+=1
         QCDRegion_tau=QCDEnrichedRegionTaus(taus, electrons, muons, met)
         QCDRegion_lep, isEle=QCDEnrichedRegionLeptons(electrons, muons, met)
-        if QCDRegion_lep: print("QCD enriched w lepton")
-
+        
         if QCDRegion_tau and len(taus)>0:
+            print('Event: ', i+1)
+            mT_tauMET=mTlepMet(met, taus[0])
             isFake_tau[0]=1
             if taus[0].idDeepTau2017v2p1VSjet>=64: isFake_tauAndPassCuts[0]=1 #errore, prima >=16. Deve esser >=64 (VT taglio usato in analisi)
     
@@ -348,11 +360,11 @@ for i in range(tree.GetEntries()):
             FakeTau_mass[0]             =   taus[0].mass
             FakeTau_charge[0]           =   taus[0].charge
     
-        if QCDRegion_lep:print(QCDRegion_lep, (len(electrons)>0 or len(muons)>0))
         
         if QCDRegion_lep and not (len(electrons)==0 and len(muons)==0):
+            if isEle:   mT_lepMET=mTlepMet(met, electrons[0])
+            else:       mT_lepMET=mTlepMet(met, muons[0])
             isFake_lepton[0]=1
-            print("Event ",i+1, " ", isFake_lepton[0])
             if isEle and electrons[0].pfRelIso03_all<0.08:        isFake_leptonAndPassCuts[0]=1
             if isEle==0 and muons[0].pfRelIso03_all<0.15:         isFake_leptonAndPassCuts[0]=1
             
@@ -367,17 +379,11 @@ for i in range(tree.GetEntries()):
             FakeLepton_pfRelIso03[0]        =   leptons[0].pfRelIso03_all
             
             eventobuono=i
-            print("Event ",i+1, " ", isFake_lepton[0]) 
-
-
-
-    if(i==eventobuono): print("Event ",i+1, " ", isFake_lepton[0])
 
 
     systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
     systTree.fillTreesSysts(trees, "all")
 
-    if(i==eventobuono): print("Event ",i+1, " ", isFake_lepton[0])
 
 
 outTreeFile.cd()
