@@ -12,6 +12,7 @@ from array import array
 
 usage = 'python makeplot.py'# -y year --lep lepton -d dataset --merpart --lumi --mertree --sel --cut cut_string -p -s'
 usageToCopyPaste= "python makeplot.py -y 2017 --lep muon --bveto --user apiccine -f v4 -p"
+
 parser = optparse.OptionParser(usage)
 parser.add_option('--merpart', dest='merpart', default = False, action='store_true', help='Default parts are not merged')
 parser.add_option('--mertree', dest='mertree', default = False, action='store_true', help='Default make no file is merged')
@@ -226,7 +227,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           if('Data' in s.label):
                if ("GenPart" in variabile_._name) or ("MC_" in variabile_._name):
                     continue
-               if 'DataHT' in s.label or 'DataMET' in s.label:
+               if 'DataHT' in s.label or 'DataMET' in s.label or 'QCD' in s.label:
                     continue
           tmp = (ROOT.TH1F)(infile[s.label].Get(histoname))
           tmp.SetLineColor(ROOT.kBlack)
@@ -467,7 +468,7 @@ if(opt.dat != 'all'):
           print "dataset not found!"
           print sample_dict.keys()
      print opt.dat
-     if 'DataHT' or 'DataMET' in str(opt.dat):
+     if 'DataHT' in str(opt.dat) or 'DataMET' in str(opt.dat) or 'QCD' in str(opt.dat):
           raise Exception("Not interesting dataset")
      dataset_names = map(str, opt.dat.strip('[]').split(','))
      samples = []
@@ -475,7 +476,7 @@ if(opt.dat != 'all'):
      [dataset_dict[str(sample.year)].append(sample) for sample in samples]
 else:
      for k, v in class_dict.items():
-          if 'DataHT' in k or 'DataMET' in k:
+          if 'DataHT' in k or 'DataMET' in k or 'QCD' in k:
                continue
           dataset_dict[str(v.year)].append(v)
      '''
@@ -531,6 +532,8 @@ else:
      cut_tag = cutToTag(opt.cut)
 
 lumi = {'2016': 35.9, "2017": 41.53, "2018": 59.7}
+
+print cut_dict, cut_tag
 
 for year in years:
     for sample in dataset_dict[year]:
@@ -597,4 +600,3 @@ for year in years:
                dataset_new.append(sample_dict['DataEle_'+str(year)])
           elif lep == 'electron':
                dataset_new.append(sample_dict['DataMu_'+str(year)])
-

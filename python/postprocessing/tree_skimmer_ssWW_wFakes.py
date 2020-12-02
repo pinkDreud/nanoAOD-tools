@@ -501,15 +501,39 @@ for i in range(tree.GetEntries()):
 
     if (SingleEle==1 or SingleMu==1) and pass_lepton_selection[0]==1: Cut_dict[2][1]+=1
 
-    lepton_pt[0]                =   leptons[indexGoodLep].pt
-    lepton_eta[0]               =   leptons[indexGoodLep].eta
-    lepton_phi[0]               =   leptons[indexGoodLep].phi
-    lepton_mass[0]              =   leptons[indexGoodLep].mass
-    lepton_pdgid[0]             =   leptons[indexGoodLep].pdgId
-    lepton_pfRelIso03[0]        =   leptons[indexGoodLep].pfRelIso03_all
+    tightlep = leptons[indexGoodLep]
+
+    lepton_pt[0]                =   tightlep.pt
+    lepton_eta[0]               =   tightlep.eta
+    lepton_phi[0]               =   tightlep.phi
+    lepton_mass[0]              =   tightlep.mass
+    lepton_pdgid[0]             =   tightlep.pdgId
+    lepton_pfRelIso03[0]        =   tightlep.pfRelIso03_all
     
-    GoodLep=leptons[indexGoodLep]
-    
+    GoodLep=tightlep
+
+    if isMC:
+        tightlep_SF = tightlep.effSF
+        tightlep_SFUp = tightlep.effSF_errUp
+        tightlep_SFDown = tightlep.effSF_errDown
+        systTree.setWeightName("lepSF", copy.deepcopy(tightlep_SF))
+        systTree.setWeightName("lepUp", copy.deepcopy(tightlep_SFUp))
+        systTree.setWeightName("lepDown", copy.deepcopy(tightlep_SFDown))
+
+        PF_SF = chain.PrefireWeight
+        PF_SFUp = chain.PrefireWeight_Up
+        PF_SFDown = chain.PrefireWeight_Down
+        systTree.setWeightName("PFSF", copy.deepcopy(PF_SF))
+        systTree.setWeightName("PFUp", copy.deepcopy(PF_SFUp))
+        systTree.setWeightName("PFDown", copy.deepcopy(PF_SFDown))
+
+        PU_SF = chain.puWeight
+        PU_SFUp = chain.puWeightUp
+        PU_SFDown = chain.puWeightDown
+        systTree.setWeightName("puSF", copy.deepcopy(PU_SF))
+        systTree.setWeightName("puUp", copy.deepcopy(PU_SFUp))
+        systTree.setWeightName("puDown", copy.deepcopy(PU_SFDown))
+
     if abs(lepton_pdgid[0])==11 and lepton_pfRelIso03[0]<ISO_CUT_ELE:   pass_lepton_iso[0]=1
     elif abs(lepton_pdgid[0])==13 and lepton_pfRelIso03[0]<ISO_CUT_MU:  pass_lepton_iso[0]=1
     else: pass_lepton_iso[0]=0

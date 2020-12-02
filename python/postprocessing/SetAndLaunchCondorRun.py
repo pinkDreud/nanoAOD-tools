@@ -72,6 +72,10 @@ for prname, proc in class_dict.items():
         continue
     if opt.year not in prname:
         continue
+    if os.path.exists(path+prname):
+        continue
+    if prname in os.listdir("../../crab/macros/files/"):
+        continue
     toLaunch = True
     if hasattr(proc, 'components'):
         for sample in proc.components:
