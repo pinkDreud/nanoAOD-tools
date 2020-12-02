@@ -974,6 +974,22 @@ class_dict={
     'DataMET_2017':DataMET_2017,
 }
 
+class_list=[
+    WpWpJJ_EWK_2017,
+    WpWpJJ_QCD_2017,
+    Other_2017,    
+    VG_2017,
+    TVX_2017,
+    WZ_2017,
+    TT_2017,
+    WrongSign_2017,    
+    DYJetsToLL_2017,
+    #QCD_2017,
+    WJets_2017,
+    DataMu_2017,
+    DataEle_2017,
+]
+
 
 '''
 sample_dict = {
