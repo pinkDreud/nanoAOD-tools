@@ -141,7 +141,7 @@ def mTlepMet(MET, lepton):
     return math.sqrt(2*lepton.pt*MET.sumEt*(1-math.cos(lepton.phi-MET.phi)))
 
 METQCDENRICHEDCUT=30
-MTLEPMETQCDCUT=20
+MTLEPMETQCDCUT=30
 
 def QCDEnrichedRegionLeptons(ele, mu, MET):
     isEle=0
@@ -190,7 +190,7 @@ def QCDEnrichedRegionTaus(taus,ele, mu, MET):
     if nLeps>0: return False
     '''
     if nTauM>1: return False
-
+    if nTauL==0: return False
     if mTlepMet(MET, taus[0])>MTLEPMETQCDCUT: return False
 
     return True

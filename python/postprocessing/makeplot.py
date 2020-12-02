@@ -538,6 +538,7 @@ for year in years:
           print lep
           dataset_new = dataset_dict[year]
           print [h.label for h in dataset_new]
+          dataset_new.remove(sample_dict['DataMET_'+str(year)])
           if lep == 'muon' and sample_dict['DataEle_'+str(year)] in dataset_new:
                dataset_new.remove(sample_dict['DataEle_'+str(year)])
           elif lep == 'electron' and sample_dict['DataMu_'+str(year)] in dataset_new:
