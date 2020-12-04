@@ -147,6 +147,7 @@ WpWpJJ_QCD_2016.dataset = "/WpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8/" + t
 ############################################################                                           ############################################################
 ###################################################################################################################################################################
 
+################################ QCD ################################
 QCDHT_100to200_2017 = sample(ROOT.kGray, 1, 1001, "QCD", "QCDHT_100to200_2017")
 QCDHT_100to200_2017.year = 2017
 QCDHT_100to200_2017.dataset = "/QCD_HT100to200_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
@@ -190,6 +191,61 @@ QCDHT_2000toInf_2017.sigma = 20.23 #pb
 QCD_2017 = sample(ROOT.kGray, 1, 1001, "QCD", "QCD_2017")
 QCD_2017.year = 2017
 QCD_2017.components = [QCDHT_100to200_2017, QCDHT_200to300_2017, QCDHT_300to500_2017, QCDHT_500to700_2017, QCDHT_700to1000_2017, QCDHT_1000to1500_2017, QCDHT_1500to2000_2017, QCDHT_2000toInf_2017]
+
+################################ ZZ ################################
+ZZTo2L2Nu_2017 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "ZZTo2L2Nu_2017")
+ZZTo2L2Nu_2017.year = 2017
+ZZTo2L2Nu_2017.dataset = "/ZZTo2L2Nu_13TeV_powheg_pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+ZZTo2L2Nu_2017.sigma = 0.5644 #pb                                                     
+
+ZZJJTo4L_EWK_2017 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "ZZJJTo4L_EWK_2017")
+ZZJJTo4L_EWK_2017.year = 2017
+ZZJJTo4L_EWK_2017.dataset = "/ZZJJTo4L_EWK_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+ZZJJTo4L_EWK_2017.sigma = 0.0004536 #pb
+
+ZZJJTo4L_QCD_2017 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "ZZJJTo4L_QCD_2017")
+ZZJJTo4L_QCD_2017.year = 2017
+ZZJJTo4L_QCD_2017.dataset = "/ZZJJTo4L_QCD_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+ZZJJTo4L_QCD_2017.sigma = 0.008348 #pb
+
+GluGluToContinToZZTo2e2nu_2017 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "GluGluToContinToZZTo2e2nu")
+GluGluToContinToZZTo2e2nu_QCD_2017.year = 2017
+GluGluToContinToZZTo2e2nu_QCD_2017.dataset = "/GluGluToContinToZZTo2e2nu_13TeV_MCFM701_pythia8/" + tag3_2017 + "-v1/NANOAODSIM"
+GluGluToContinToZZTo2e2nu_QCD_2017.sigma = 17.72 #pb
+
+GluGluToContinToZZTo2e2mu_2017 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "GluGluToContinToZZTo2e2mu")
+GluGluToContinToZZTo2e2mu_QCD_2017.year = 2017
+GluGluToContinToZZTo2e2mu_QCD_2017.dataset = "/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/" + tag3_2017 + "-v1/NANOAODSIM"
+GluGluToContinToZZTo2e2mu_QCD_2017.sigma = 3.291 #pb
+
+GluGluToContinToZZTo2e2tau_2017 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "GluGluToContinToZZTo2e2tau")
+GluGluToContinToZZTo2e2tau_QCD_2017.year = 2017
+GluGluToContinToZZTo2e2tau_QCD_2017.dataset = "/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8/" + tag3_2017 + "-v1/NANOAODSIM"
+GluGluToContinToZZTo2e2tau_QCD_2017.sigma = 3.29 #pb
+
+GluGluToContinToZZTo2mu2nu_2017 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "GluGluToContinToZZTo2mu2nu")
+GluGluToContinToZZTo2mu2nu_QCD_2017.year = 2017
+GluGluToContinToZZTo2mu2nu_QCD_2017.dataset = "/GluGluToContinToZZTo2mu2nu_13TeV_MCFM701_pythia8/" + tag3_2017 + "-v1/NANOAODSIM"
+GluGluToContinToZZTo2mu2nu_QCD_2017.sigma = 17.72 #pb
+
+GluGluToContinToZZTo2mu2tau_2017 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "GluGluToContinToZZTo2mu2tau")
+GluGluToContinToZZTo2mu2tau_QCD_2017.year = 2017
+GluGluToContinToZZTo2mu2tau_QCD_2017.dataset = "/GluGluToContinToZZTo2mu2tau_13TeV_MCFM701_pythia8/" + tag3_2017 + "-v1/NANOAODSIM"
+GluGluToContinToZZTo2mu2tau_QCD_2017.sigma = 3.289 #pb
+
+GluGluToContinToZZTo4e_2017 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "GluGluToContinToZZTo4e")
+GluGluToContinToZZTo4e_QCD_2017.year = 2017
+GluGluToContinToZZTo4e_QCD_2017.dataset = "/GluGluToContinToZZTo4e_13TeV_MCFM701_pythia8/" + tag3_2017 + "-v1/NANOAODSIM"
+GluGluToContinToZZTo4e_QCD_2017.sigma = 1.405 #pb
+
+GluGluToContinToZZTo4mu_2017 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "GluGluToContinToZZTo4mu")
+GluGluToContinToZZTo4mu_QCD_2017.year = 2017
+GluGluToContinToZZTo4mu_QCD_2017.dataset = "/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/" + tag3_2017 + "-v1/NANOAODSIM"
+GluGluToContinToZZTo4mu_QCD_2017.sigma = 1.402 #pb
+
+ZZ_2017 = sample(ROOT.kGray, 1, 1001, "ZZ", "ZZ_2017")
+ZZ_2017.year = 2017
+ZZ_2017.components = [ZZTo2L2Nu_2017, ZZJJTo4L_EWK_2017, ZZJJTo4L_QCD_2017, GluGluToContiToZZTo2e2nu_2017, GluGluToContiToZZTo2e2mu_2017, GluGluToContiToZZTo2e2tau_2017, GluGluToContiToZZTo2mu2nu_2017, GluGluToContiToZZTo2mu2tau_2017, GluGluToContiToZZTo4e_2017, GluGluToContiToZZTo4mu_2017]
 
 ################################ TTbar ################################
 TT_Mtt700to1000_2017 = sample(ROOT.kRed, 1, 1001, "t#bar{t}", "TT_Mtt700to1000_2017")
@@ -938,6 +994,7 @@ sample_dict={
     'WpWpJJ_QCD_2017':WpWpJJ_QCD_2017,
     ### fake contributions form here...
     'QCD_2017':QCD_2017, 'QCDHT_300to500_2017':QCDHT_300to500_2017, 'QCDHT_500to700_2017':QCDHT_500to700_2017, 'QCDHT_700to1000_2017':QCDHT_700to1000_2017, 'QCDHT_1000to1500_2017':QCDHT_1000to1500_2017, 'QCDHT_1500to2000_2017':QCDHT_1500to2000_2017, 'QCDHT_2000toInf_2017':QCDHT_2000toInf_2017,
+    'ZZ_2017':ZZ_2017, 'ZZTo2L2Nu_2017':ZZTo2L2Nu_2017, 'ZZJJTo4L_EWK_2017':ZZJJTo4L_EWK_2017, 'ZZJJTo4L_QCD_2017':ZZJJTo4L_QCD_2017, 'GluGluToContiToZZTo2e2nu_2017':GluGluToContiToZZTo2e2nu_2017, 'GluGluToContiToZZTo2e2mu_2017':GluGluToContiToZZTo2e2mu_2017, 'GluGluToContiToZZTo2e2tau_2017':GluGluToContiToZZTo2e2tau_2017, 'GluGluToContiToZZTo2mu2nu_2017':GluGluToContiToZZTo2mu2nu_2017, 'GluGluToContiToZZTo2mu2tau_2017':GluGluToContiToZZTo2mu2tau_2017, 'GluGluToContiToZZTo4e_2017':GluGluToContiToZZTo4e_2017, 'GluGluToContiToZZTo4mu_2017':GluGluToContiToZZTo4mu_2017,
     'TT_2017':TT_2017, 'TT_SemiLep2017':TT_SemiLep_2017, 'TT_Had_2017':TT_Had_2017,#'TT_DiLep_2017':TT_DiLep_2017, 
     'WJets_2017':WJets_2017, 'WJetsHT70to100_2017':WJetsHT70to100_2017, 'WJetsHT100to200_2017':WJetsHT100to200_2017, 'WJetsHT200to400_2017':WJetsHT200to400_2017, 'WJetsHT400to600_2017':WJetsHT400to600_2017, 'WJetsHT600to800_2017':WJetsHT600to800_2017, 'WJetsHT800to1200_2017':WJetsHT800to1200_2017, 'WJetsHT1200to2500_2017':WJetsHT1200to2500_2017, 'WJetsHT2500toInf_2017':WJetsHT2500toInf_2017,
     'DYJetsToLL_2017':DYJetsToLL_2017, 'DY1JetsToLL_2017':DY1JetsToLL_2017, 'DY2JetsToLL_2017':DY2JetsToLL_2017, 'DY3JetsToLL_2017':DY3JetsToLL_2017, 'DY4JetsToLL_2017':DY4JetsToLL_2017,
@@ -959,6 +1016,7 @@ class_dict={
     'WpWpJJ_QCD_2017':WpWpJJ_QCD_2017,
     ### fake contributions form here...
     'QCD_2017':QCD_2017,
+    'ZZ_2017':ZZ_2017,
     'TT_2017':TT_2017,
     'WJets_2017':WJets_2017,
     'DYJetsToLL_2017':DYJetsToLL_2017,
@@ -982,7 +1040,8 @@ class_list=[
     TVX_2017,
     WZ_2017,
     TT_2017,
-    WrongSign_2017,    
+    #ZZ_2017,
+    WrongSign_2017, 
     DYJetsToLL_2017,
     #QCD_2017,
     WJets_2017,

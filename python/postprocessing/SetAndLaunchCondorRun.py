@@ -72,21 +72,29 @@ for prname, proc in class_dict.items():
         continue
     if opt.year not in prname:
         continue
-    if os.path.exists(path+prname):
-        continue
+    #if os.path.exists(path+prname):
+        #continue
     if prname in os.listdir("../../crab/macros/files/"):
         continue
     toLaunch = True
     if hasattr(proc, 'components'):
         for sample in proc.components:
             if sample.label in dirlist:
+                if len(os.listdir(path+sample.label))<2:
+                    toLaunch = True
+                else:
+                    toLaunch = False
+    else:
+        if proc.label in dirlist:
+            if len(os.listdir(path+sample.label))<2:
+                toLaunch = True
+            else:
                 toLaunch = False
-                break
-        if not toLaunch:
-            continue
-    print "Writing " + proc.label + " in csh..."
+    print proc.label, toLaunch
     
-    f.write("python submit_condor.py -d " + proc.label+ " " + optstring)
+    if toLaunch:
+        print "Writng " + proc.label + " in csh..."  
+        f.write("python submit_condor.py -d " + proc.label+ " " + optstring)
 
 f.close()
 
