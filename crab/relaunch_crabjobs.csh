@@ -9,7 +9,8 @@ set year = '2017'
 #python submit_crab.py -d Other_$year -r
 #python submit_crab.py -d WpWpJJ_EWK_$year -r
 #python submit_crab.py -d WpWpJJ_QCD_$year -r
-python submit_crab.py -d QCDHT_1500to2000_$year -r
+python submit_crab.py -d QCD_$year -r
+python submit_crab.py -d ZZ_$year -r
 #python submit_crab.py -d DataHT_$year -r
 #python submit_crab.py -d DataMET_$year -r
 #python submit_crab.py -d DataEle_$year -r
