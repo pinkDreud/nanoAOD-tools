@@ -90,8 +90,9 @@ for sample in samples:
             print("python tree_skimmer_ssWW_wFake.py " + sample.label + " " + str(i) + " " + str(files) + " remote")
     else:
         for i in range(len(files_list)/split+1):
-            sub_writer(sample, i,  ",".join( e for e in files_list[split*i:split*(i+1)]), folder)
+            extmax = int(min([split*(i+1), len(files_list)/split+1]))
+            sub_writer(sample, i,  ",".join( e for e in files_list[split*i:extmax]), folder)
             print('condor_submit condor.sub')
             os.popen('condor_submit condor.sub')
             #os.popen("python tree_skimmer_ssWW.py " + sample.label + " " + str(i) + " " + ",".join( e for e in files_list[split*i:split*(i+1)]))
-            print("python tree_skimmer_ssWW_wFake.py " + sample.label + " " + str(i) + " " + ",".join( e for e in files_list[split*i:split*(i+1)]) + " remote")
+            print("python tree_skimmer_ssWW_wFake.py " + sample.label + " " + str(i) + " " + ",".join( e for e in files_list[split*i:extmax]) + " remote")

@@ -5,6 +5,36 @@ from samples.samples import *
 
 cshname = "condorrun_tauwp.csh"
 
+def DoesSampleExist(samplename):
+    if samplename+".txt" not in os.listdir("../../crab/macros/files/"):
+        return False
+    else:
+        return True
+                
+def AreAllCondored(samplename):
+    storelist = [line for line in open("../../crab/macros/files/"+samplename+".txt")]
+    try:
+        condoredlist = os.listdir(path+samplename)
+    except:
+        condoredlist = []
+
+    if samplename+"_merged.root" in condoredlist:
+        condoredlist.remove(samplename+"_merged.root")
+    if samplename+".root" in condoredlist:
+        condoredlist.remove(samplename+".root")
+
+    lenstore = len(storelist)
+
+    if 'Data' in samplename:
+        lenstore = lenstore/50 + 1
+
+    if len(condoredlist) < lenstore:
+        print "condored: ", len(condoredlist), "\tlenstore: ", lenstore
+        return False
+    else:
+        return True
+        
+
 usage = 'python SetAndLaunchCondorRun.py -y year -j wp_jet -m wp_mu -e wp_ele -f folder --max max_jobs'
 parser = optparse.OptionParser(usage)
 parser.add_option('-y', dest='year', type=str, default = '2017', help='Please enter a year, default is 2017')
@@ -13,6 +43,7 @@ parser.add_option('-m', dest='muwp', type=str, default = 'L', help='Please enter
 parser.add_option('-e', dest='elewp', type=str, default = 'VL', help='Please enter a TauID WP for vsEle')
 parser.add_option('-f', dest='fold', type=str, default = 'v5', help='Please enter a folder')
 parser.add_option('--max', dest='maxj', type=int, default = 0, help='Please enter a maximum for number of condor jobs')
+parser.add_option('-c', dest='check', default = False, action='store_true', help='Default executes condorrun')
 
 (opt, args) = parser.parse_args()
 
@@ -62,88 +93,97 @@ if opt.maxj > 0:
 optstring = optstring + "\n"
 
 f = open(cshname, "w")
-print f
 
 dirlist = [dirs for dirs in os.listdir(path) if os.path.isdir(path+dirs)]
-print dirlist
 
 for prname, proc in class_dict.items():
     if "DataHT" in prname or 'DataMET' in prname:
         continue
     if opt.year not in prname:
         continue
-    #if os.path.exists(path+prname):
-        #continue
-    if prname in os.listdir("../../crab/macros/files/"):
-        continue
+
     toLaunch = True
+
     if hasattr(proc, 'components'):
         for sample in proc.components:
-            if sample.label in dirlist:
-                if len(os.listdir(path+sample.label))<2:
-                    toLaunch = True
+            if not DoesSampleExist(sample.label):
+                continue
+                #if sample.label in dirlist:
+            if not AreAllCondored(sample.label):
+                if opt.check:
+                    print sample.label, "not completely condored"
                 else:
-                    toLaunch = False
-    else:
-        if proc.label in dirlist:
-            if len(os.listdir(path+sample.label))<2:
-                toLaunch = True
+                    if os.path.exists(path+sample.label):
+                        print "Removing existing condored files..."
+                        os.system("rm "+ path + proc.label + "/*")
+                    print "Writing " + sample.label + " in csh..."  
+                    f.write("python submit_condor.py -d " + sample.label+ " " + optstring)
             else:
-                toLaunch = False
-    print proc.label, toLaunch
-    
-    if toLaunch:
-        print "Writng " + proc.label + " in csh..."  
-        f.write("python submit_condor.py -d " + proc.label+ " " + optstring)
+                print sample.label, " completely condored"
 
+    else:
+        if not DoesSampleExist(prname):
+            continue
+        if not AreAllCondored(proc.label):
+            if opt.check:
+                print proc.label, "not completely condored"
+            else:
+                if os.path.exists(path+proc.label):
+                    print "Removing existing condored files..."
+                    os.system("rm "+ path + proc.label + "/*")
+                print "Writing " + proc.label + " in csh..."  
+                f.write("python submit_condor.py -d " + proc.label+ " " + optstring)
+        else:
+            print proc.label, " completely condored"
 f.close()
 
-t = open("CutsAndValues_bu.py", "w")
-t.write("# In this file values for cuts and constant will be stored and then recalled from the whole analysis function\n")
-t.write("#Using nanoAOD version 102X\n")
-t.write("ONLYELE=1\n")
-t.write("ONLYMU=0\n\n")
+if not opt.check:
+    t = open("CutsAndValues_bu.py", "w")
+    t.write("# In this file values for cuts and constant will be stored and then recalled from the whole analysis function\n")
+    t.write("#Using nanoAOD version 102X\n")
+    t.write("ONLYELE=1\n")
+    t.write("ONLYMU=0\n\n")
 
-t.write("PT_CUT_MU=  35\n")
-t.write("ETA_CUT_MU= 2.4\n")
-t.write("ISO_CUT_MU= 0.15\n\n")
-
-t.write("PT_CUT_ELE=  35\n")
-t.write("ETA_CUT_ELE= 2.4\n")
-t.write("ISO_CUT_ELE= 0.08\n\n")
-
-t.write("REL_ISO_CUT_LEP_VETO_ELE=   0.0994\n")
-t.write("PT_CUT_LEP_VETO_ELE=        15\n")
-t.write("ETA_CUT_LEP_VETO_ELE=       2.4\n")
-t.write("REL_ISO_CUT_LEP_VETO_MU=    0.25\n")
-t.write("PT_CUT_LEP_VETO_MU=         10\n")
-t.write("ETA_CUT_LEP_VETO_MU=        2.4\n\n")
-
-t.write("DR_OVERLAP_CONE_TAU=        0.5\n")
-t.write("DR_OVERLAP_CONE_OTHER=      0.4\n\n")
-
-t.write("PT_CUT_JET= 30\n")
-t.write("ETA_CUT_JET=5\n\n")
-
-t.write("DELTAETA_JJ_CUT=2.5\n\n")
-
-#t.write("#btag info: l 13 skimtree_utils.BTAG_ALGO='CSVv2'   #CSVv2, DeepCSV, DeepFLV\n")
-t.write("BTAG_PT_CUT =   30\n")
-t.write("BTAG_ETA_CUT=   5\n")
-t.write("BTAG_ALGO   =   'DeepFlv'\n")
-t.write("BTAG_WP     =   'M'\n")
-t.write("ID_TAU_RECO_DEEPTAU_VSJET=  " + vsJet_dict[opt.jetwp] + " #byDeepTau2017v2p1VSjet ID working points (deepTau2017v2p1): bitmask 1 = VVVLoose, 2 = VVLoose, 4 = VLoose, 8 = Loose, 16 = Medium, 32 = Tight, 64 = VTight, 128 = VVTight\n")
-t.write("ID_TAU_RECO_DEEPTAU_VSELE=  " + vsEle_dict[opt.elewp] + "  #byDeepTau2017v2p1VSe ID working points (deepTau2017v2p1): bitmask 1 = VVVLoose, 2 = VVLoose, 4 = VLoose, 8 = Loose, 16 = Medium, 32 = Tight, 64 = VTight, 128 = VVTight\n")
-t.write("ID_TAU_RECO_DEEPTAU_VSMU=   " + vsMu_dict[opt.muwp] + "  #byDeepTau2017v2p1VSmu ID working points (deepTau2017v2p1): bitmask 1 = VLoose, 2 = Loose, 4 = Medium, 8 = Tight\n")
-t.write("ID_TAU_RECO_MVA=            8 #IsolationMVArun2v1DBoldDMwLT ID working point (2017v1): bitmask 1 = VVLoose, 2 = VLoose, 4 = Loose, 8 = Medium, 16 = Tight, 32 = VTight, 64 = VVTight\n")
-t.write("ID_TAU_ANTIMU=              1 #Anti-muon discriminator V3: : bitmask 1 = Loose, 2 = Tight\n")
-t.write("ID_TAU_ANTIELE=             2 #Anti-electron MVA discriminator V6 (2015): bitmask 1 = VLoose, 2 = Loose, 4 = Medium, 8 = Tight, 16 = VTight\n")
-t.write("PT_CUT_TAU=30\n")
-t.write("ETA_CUT_TAU=2.4\n")
-t.write("M_JJ_CUT=   500\n")
-t.write("MET_CUT=    40\n")
-t.close()
-
-print "Launching jobs on condor..."
-os.system("source ./" + cshname)
-print "Done! Goodbye my friend :D"
+    t.write("PT_CUT_MU=  35\n")
+    t.write("ETA_CUT_MU= 2.4\n")
+    t.write("ISO_CUT_MU= 0.15\n\n")
+    
+    t.write("PT_CUT_ELE=  35\n")
+    t.write("ETA_CUT_ELE= 2.4\n")
+    t.write("ISO_CUT_ELE= 0.08\n\n")
+    
+    t.write("REL_ISO_CUT_LEP_VETO_ELE=   0.0994\n")
+    t.write("PT_CUT_LEP_VETO_ELE=        15\n")
+    t.write("ETA_CUT_LEP_VETO_ELE=       2.4\n")
+    t.write("REL_ISO_CUT_LEP_VETO_MU=    0.25\n")
+    t.write("PT_CUT_LEP_VETO_MU=         10\n")
+    t.write("ETA_CUT_LEP_VETO_MU=        2.4\n\n")
+    
+    t.write("DR_OVERLAP_CONE_TAU=        0.5\n")
+    t.write("DR_OVERLAP_CONE_OTHER=      0.4\n\n")
+    
+    t.write("PT_CUT_JET= 30\n")
+    t.write("ETA_CUT_JET=5\n\n")
+    
+    t.write("DELTAETA_JJ_CUT=2.5\n\n")
+    
+    #t.write("#btag info: l 13 skimtree_utils.BTAG_ALGO='CSVv2'   #CSVv2, DeepCSV, DeepFLV\n")
+    t.write("BTAG_PT_CUT =   30\n")
+    t.write("BTAG_ETA_CUT=   5\n")
+    t.write("BTAG_ALGO   =   'DeepFlv'\n")
+    t.write("BTAG_WP     =   'M'\n")
+    t.write("ID_TAU_RECO_DEEPTAU_VSJET=  " + vsJet_dict[opt.jetwp] + " #byDeepTau2017v2p1VSjet ID working points (deepTau2017v2p1): bitmask 1 = VVVLoose, 2 = VVLoose, 4 = VLoose, 8 = Loose, 16 = Medium, 32 = Tight, 64 = VTight, 128 = VVTight\n")
+    t.write("ID_TAU_RECO_DEEPTAU_VSELE=  " + vsEle_dict[opt.elewp] + "  #byDeepTau2017v2p1VSe ID working points (deepTau2017v2p1): bitmask 1 = VVVLoose, 2 = VVLoose, 4 = VLoose, 8 = Loose, 16 = Medium, 32 = Tight, 64 = VTight, 128 = VVTight\n")
+    t.write("ID_TAU_RECO_DEEPTAU_VSMU=   " + vsMu_dict[opt.muwp] + "  #byDeepTau2017v2p1VSmu ID working points (deepTau2017v2p1): bitmask 1 = VLoose, 2 = Loose, 4 = Medium, 8 = Tight\n")
+    t.write("ID_TAU_RECO_MVA=            8 #IsolationMVArun2v1DBoldDMwLT ID working point (2017v1): bitmask 1 = VVLoose, 2 = VLoose, 4 = Loose, 8 = Medium, 16 = Tight, 32 = VTight, 64 = VVTight\n")
+    t.write("ID_TAU_ANTIMU=              1 #Anti-muon discriminator V3: : bitmask 1 = Loose, 2 = Tight\n")
+    t.write("ID_TAU_ANTIELE=             2 #Anti-electron MVA discriminator V6 (2015): bitmask 1 = VLoose, 2 = Loose, 4 = Medium, 8 = Tight, 16 = VTight\n")
+    t.write("PT_CUT_TAU=30\n")
+    t.write("ETA_CUT_TAU=2.4\n")
+    t.write("M_JJ_CUT=   500\n")
+    t.write("MET_CUT=    40\n")
+    t.close()
+    
+    print "Launching jobs on condor..."
+    os.system("source ./" + cshname)
+    print "Done! Goodbye my friend :D"
