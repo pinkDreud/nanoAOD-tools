@@ -108,7 +108,7 @@ for prname, proc in class_dict.items():
     if hasattr(proc, 'components'):
         for sample in proc.components:
             if opt.dat != 'all':
-                if not (opt.dat in sample.label or opt.dat in prname):
+                if not (str(sample.label).startswith(opt.dat) or prname.startswith(opt.dat)):
                     continue
             if not DoesSampleExist(sample.label):
                 continue
@@ -119,7 +119,7 @@ for prname, proc in class_dict.items():
                 else:
                     if os.path.exists(path+sample.label):
                         print "Removing existing condored files..."
-                        os.system("rm "+ path + proc.label + "/*")
+                        os.system("rm -r "+ path + sample.label + "/*")
                     print "Writing " + sample.label + " in csh..."  
                     f.write("python submit_condor.py -d " + sample.label+ " " + optstring)
             else:
@@ -127,7 +127,7 @@ for prname, proc in class_dict.items():
 
     else:
         if opt.dat != 'all':
-            if opt.dat not in prname:
+            if prname.startswith(opt.dat):
                 continue
         if not DoesSampleExist(prname):
             continue
@@ -137,7 +137,7 @@ for prname, proc in class_dict.items():
             else:
                 if os.path.exists(path+proc.label):
                     print "Removing existing condored files..."
-                    os.system("rm "+ path + proc.label + "/*")
+                    os.system("rm -f "+ path + proc.label + "/*")
                 print "Writing " + proc.label + " in csh..."  
                 f.write("python submit_condor.py -d " + proc.label+ " " + optstring)
         else:

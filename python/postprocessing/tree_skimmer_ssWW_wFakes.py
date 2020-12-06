@@ -22,7 +22,6 @@ from skimtree_utils_ssWW_wFakes import *
 
 usage = "python tree_skimmer_ssWW_wFake.py [nome_del_sample_in_samples.py] 0 [file_in_input] local"
 
-
 if sys.argv[4] == 'remote':
     from samples import *
     Debug = False
