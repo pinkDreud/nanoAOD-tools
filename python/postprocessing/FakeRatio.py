@@ -340,7 +340,7 @@ for i in range(tree.GetEntries()):
     else:
         runPeriod = sample.runP
     
-    passMu, passEle, passHT, noTrigger = trig_map(HLT, year, runPeriod)
+    passMu, passEle, passHT, noTrigger = trig_map(HLT, PV, year, runPeriod)
 
     if not passHT: continue
 
