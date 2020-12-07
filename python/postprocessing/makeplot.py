@@ -227,7 +227,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           if('Data' in s.label):
                if ("GenPart" in variabile_._name) or ("MC_" in variabile_._name):
                     continue
-               if 'DataHT' in s.label or 'DataMET' in s.label or 'QCD_2017'==s.label:
+               if 'DataHT' in s.label or 'DataMET' in s.label:
                     continue
           tmp = (ROOT.TH1F)(infile[s.label].Get(histoname))
           tmp.SetLineColor(ROOT.kBlack)
@@ -468,7 +468,7 @@ if(opt.dat != 'all'):
           print "dataset not found!"
           print sample_dict.keys()
      print opt.dat
-     if 'DataHT' in str(opt.dat) or 'DataMET' in str(opt.dat) or 'QCD_2017'==str(opt.dat):
+     if 'DataHT' in str(opt.dat) or 'DataMET' in str(opt.dat):
           raise Exception("Not interesting dataset")
      dataset_names = map(str, opt.dat.strip('[]').split(','))
      samples = []
@@ -476,7 +476,7 @@ if(opt.dat != 'all'):
      [dataset_dict[str(sample.year)].append(sample) for sample in samples]
 else:
      for v in class_list:
-          if 'DataHT' in v.label or 'DataMET' in v.label or 'QCD_2017'==v.label:
+          if 'DataHT' in v.label or 'DataMET' in v.label:
                continue
           dataset_dict[str(v.year)].append(v)
      '''

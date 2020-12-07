@@ -22,8 +22,6 @@ path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + opt.folder +
 
 Debug = opt.check # True # False #
 
-print class_dict
-
 def DoesSampleExist(samplename):
     if samplename+".txt" not in os.listdir("../../crab/macros/files/"):
         return False
@@ -100,16 +98,12 @@ for k, v in class_dict.items():
 
         if len(doesexist) == len(v.components):
             if os.path.exists(kpath+k+".root"):
-                if Debug:
-                    print "rm -f " + kpath + k + ".root"
-                else:
-                    os.system("rm -f " + kpath + k + ".root")
-            print k + " not merged so far"
-            print "Merging lumied trees for " + k + " components..."
-            if Debug:
-                print "python makeplot.py -y ", opt.year, " --mertree -d " + k + " --folder ", opt.folder
+               print k + " already merged"
             else:
-                os.system("python makeplot.py -y " + opt.year + " --mertree -d " + k + " --folder " + opt.folder)
+                if Debug:
+                    print "python makeplot.py -y ", opt.year, " --mertree -d " + k + " --folder ", opt.folder
+                else:
+                    os.system("python makeplot.py -y " + opt.year + " --mertree -d " + k + " --folder " + opt.folder)
    
     else:
         if opt.dat != 'all':
