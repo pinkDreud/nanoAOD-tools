@@ -405,39 +405,40 @@ def get_HT(jets):
         HT += jet.pt
     return HT
 
-def trig_map(HLT, year, runPeriod):
-    passMu = False
-    passEle = False
-    passHT = False
-    noTrigger = False
-    
+def trig_map(HLT, PV, year, runPeriod):
+    #isGoodPV = (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2)
+    passMu = (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2)
+    passEle = (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2)
+    passHT = (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2)
+    noTrigger = not(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2)
+
     if(year == 2016):# and runPeriod != 'H'):
         if(HLT.IsoMu24 or HLT.IsoTkMu24):
-            passMu = True
+            passMu = passMu*True
         if(HLT.Ele27_WPTight_Gsf or HLT.Ele32_WPTight_Gsf):
-            passEle = True
+            passEle = passEle*True
         if(HLT.PFHT250 or HLT.PFHT300):
-            passHT = True
+            passHT = passHT*True
         if not(passMu or passEle):
-            noTrigger = True
+            noTrigger = noTrigger*True
     elif(year == 2017):#and runPeriod != 'B'):
         if(HLT.IsoMu27):
-            passMu = True
+            passMu = passMu*True
         if(HLT.Ele32_WPTight_Gsf_L1DoubleEG):
-            passEle = True  
+            passEle = passEle*True  
         if(HLT.PFHT250 or HLT.PFHT350):
-            passHT = True
+            passHT = passHT*True
         if not(passMu or passEle):
-            noTrigger = True
+            noTrigger = noTrigger*True
     elif(year == 2018):
         if(HLT.IsoMu24):
-            passMu = True
+            passMu = passMu*True
         if(HLT.Ele32_WPTight_Gsf_L1DoubleEG):
-            passEle = True  
+            passEle = passEle*True  
         if not(passMu or passEle):
-            noTrigger = True
+            noTrigger = noTrigger*True
         if(HLT.PFHT250 or HLT.PFHT350):
-            passHT = True
+            passHT = passHT*True
             
     else:
         print('Wrong year! Please enter 2016, 2017, or 2018')

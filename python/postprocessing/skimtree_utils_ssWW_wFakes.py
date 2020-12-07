@@ -401,11 +401,12 @@ def get_HT(jets):
         HT += jet.pt
     return HT
 
-def trig_map(HLT, year, runPeriod):
-    passMu = False
-    passEle = False
-    passHT = False
-    noTrigger = False
+def trig_map(HLT, PV, year, runPeriod):
+    #isGoodPV = (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    passMu = (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    passEle = (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    passHT = (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    noTrigger = (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
     
     if(year == 2016):# and runPeriod != 'H'):
         if(HLT.IsoMu24 or HLT.IsoTkMu24):

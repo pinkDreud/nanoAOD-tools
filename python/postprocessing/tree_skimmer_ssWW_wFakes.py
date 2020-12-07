@@ -421,9 +421,20 @@ for i in range(tree.GetEntries()):
         runPeriod = ''
     else:
         runPeriod = sample.runP
+
+    dataEle = False
+    dataMu = False
+    if 'DataMu' in sample.label:
+        dataMu = True
+    if 'DataEle' in sample.label:
+        dataEle = True
+
+    if not isMC:
+        if not Flag.eeBadScFilter:
+            continue
     
     #print "------ ", i
-    passMu, passEle, passHT, noTrigger = trig_map(HLT, year, runPeriod)
+    passMu, passEle, passHT, noTrigger = trig_map(HLT, PV, year, runPeriod)
 
     if noTrigger: continue
 
@@ -440,12 +451,6 @@ for i in range(tree.GetEntries()):
     if doublecounting:
         continue
     '''
-    dataEle = False
-    dataMu = False
-    if 'DataMu' in sample.label:
-        dataMu = True
-    if 'DataEle' in sample.label:
-        dataEle = True
 
     SingleEle=False
     SingleMu=False

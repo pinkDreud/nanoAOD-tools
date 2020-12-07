@@ -309,6 +309,11 @@ for i in range(tree.GetEntries()):
         genpart = Collection(event, "GenPart")
         if not ("WZ" in sample.label):
             LHE = Collection(event, "LHEPart")
+    
+    if not isMC:
+        if not Flag.eeBadScFilter:
+            continue
+
     chain.GetEntry(i)
     #++++++++++++++++++++++++++++++++++
     #++      defining variables      ++
