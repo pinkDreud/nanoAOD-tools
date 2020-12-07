@@ -20,7 +20,7 @@ import copy
 from array import array
 from skimtree_utils_ssWW_wFakes import *
 
-usage = "python tree_skimmer_ssWW_wFake.py [nome_del_sample_in_samples.py] 0 [file_in_input] local"
+usage = "python tree_skimmer_ssWW_wFakes.py [nome_del_sample_in_samples.py] 0 [file_in_input] local"
 
 if sys.argv[4] == 'remote':
     from samples import *
@@ -186,8 +186,17 @@ MET_phi                     =   array.array('f', [-999.])
 var_list.append(MET_pt)
 var_list.append(MET_phi)
 
+
+
 Mjj                         =   array.array('f', [-999.])
 var_list.append(Mjj)
+
+mT_lep_MET                  =   array.array('f', [-999.])
+mT_tau_MET                  =   array.array('f', [-999.])
+mT_leptau_MET                  =   array.array('f', [-999.])
+var_list.append(mT_lep_MET)
+var_list.append(mT_tau_MET)
+var_list.append(mT_leptau_MET)
 
 SF_Fake                     =   array.array('f', [1.])
 var_list.append(SF_Fake)
@@ -264,6 +273,9 @@ systTree.branchTreesSysts(trees, "all", "MET_pt",               outTreeFile, MET
 systTree.branchTreesSysts(trees, "all", "MET_phi",              outTreeFile, MET_phi)
 
 systTree.branchTreesSysts(trees, "all", "Mjj",                  outTreeFile, Mjj)
+systTree.branchTreesSysts(trees, "all", "mT_lep_MET",                  outTreeFile, mT_lep_MET)
+systTree.branchTreesSysts(trees, "all", "mT_tau_MET",                  outTreeFile, mT_tau_MET)
+systTree.branchTreesSysts(trees, "all", "mT_leptau_MET",                  outTreeFile, mT_leptau_MET)
 systTree.branchTreesSysts(trees, "all", "DeltaEta_jj",                  outTreeFile, DeltaEta_jj)
 systTree.branchTreesSysts(trees, "all", "SF_Fake",                  outTreeFile, SF_Fake)
 
@@ -510,6 +522,8 @@ for i in range(tree.GetEntries()):
     lepton_pfRelIso03[0]        =   tightlep.pfRelIso03_all
     
     GoodLep=tightlep
+    
+    mT_lep_MET=mTlepMet(met, tightlep.p4())
 
     if isMC:
         tightlep_SF = tightlep.effSF
@@ -563,6 +577,10 @@ for i in range(tree.GetEntries()):
     tau_phi[0]              =   GoodTau.phi
     tau_mass[0]             =   GoodTau.mass
     tau_charge[0]           =   GoodTau.charge
+    
+    mT_tau_MET=mTlepMet(met, GoodTau.p4())
+
+    mT_leptau_METmTlepMet(met, GoodTau.p4()+tightlep.p4())
 
     tau_DeepTau_WP[0] = GoodTau.idDeepTau2017v2p1VSjet*1000.**2. + GoodTau.idDeepTau2017v2p1VSmu*1000. + GoodTau.idDeepTau2017v2p1VSe
     
