@@ -468,7 +468,10 @@ if(opt.dat != 'all'):
           print "dataset not found!"
           print sample_dict.keys()
      print opt.dat
-     if 'DataHT' in str(opt.dat) or 'DataMET' in str(opt.dat):
+
+     if 'DataMET' in str(opt.dat):
+             raise Exception("Not interesting dataset")
+     elif 'DataHT' in str(opt.dat) and (opt.plot or opt.stack):
           raise Exception("Not interesting dataset")
      dataset_names = map(str, opt.dat.strip('[]').split(','))
      samples = []
