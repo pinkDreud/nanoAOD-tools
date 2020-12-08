@@ -6,7 +6,7 @@ from samples.samples import *
 usage = 'python SetAndLaunchMakePlot_ALL.py -y year -f folder'
 parser = optparse.OptionParser(usage)
 parser.add_option('-y', dest='year', type=str, default = '2017', help='Please enter a year, default is 2017')
-parser.add_option('-f', dest='folder', type=str, default = 'v5', help='Please enter a folder, default is v4')
+parser.add_option('-f', dest='folder', type=str, default = 'v6', help='Please enter a folder, default is v4')
 parser.add_option('-c', dest='check', default = False, action = 'store_true', help='Default runs makeplot')
 parser.add_option('-d', dest='dat', type=str, default = 'all', help='Default is all')
 

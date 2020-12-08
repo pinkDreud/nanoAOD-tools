@@ -560,7 +560,7 @@ for year in years:
                dataset_new.remove(sample_dict['DataMu_'+str(year)])
 
           variables = []
-          wzero = 'w_nominal*PFSF*lepSF*puSF'
+          wzero = 'w_nominal*PFSF*puSF'#*lepSF'
           cut = cut_dict[lep]
                     
           variables.append(variabile('lepton_pt', 'lepton p_{T} [GeV]', wzero+'*('+cut+')', 40, 35, 1000))

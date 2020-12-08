@@ -432,7 +432,7 @@ for i in range(tree.GetEntries()):
     if not isMC:
         if not Flag.eeBadScFilter:
             continue
-    
+
     #print "------ ", i
     passMu, passEle, passHT, noTrigger = trig_map(HLT, PV, year, runPeriod)
 
@@ -528,7 +528,7 @@ for i in range(tree.GetEntries()):
     
     GoodLep=tightlep
     
-    mT_lep_MET=mTlepMet(met, tightlep.p4())
+    mT_lep_MET[0]=mTlepMet(met, tightlep.p4())
 
     if isMC:
         tightlep_SF = tightlep.effSF
@@ -583,9 +583,9 @@ for i in range(tree.GetEntries()):
     tau_mass[0]             =   GoodTau.mass
     tau_charge[0]           =   GoodTau.charge
     
-    mT_tau_MET=mTlepMet(met, GoodTau.p4())
+    mT_tau_MET[0]=mTlepMet(met, GoodTau.p4())
 
-    mT_leptau_METmTlepMet(met, GoodTau.p4()+tightlep.p4())
+    mT_leptau_MET[0]=mTlepMet(met, GoodTau.p4()+tightlep.p4())
 
     tau_DeepTau_WP[0] = GoodTau.idDeepTau2017v2p1VSjet*1000.**2. + GoodTau.idDeepTau2017v2p1VSmu*1000. + GoodTau.idDeepTau2017v2p1VSe
     
@@ -626,9 +626,6 @@ for i in range(tree.GetEntries()):
     Subleadjet_DeepCSVv2_b[0]   =   jet2.btagDeepB
     Subleadjet_CSVv2_b[0]       =   jet2.btagCSVV2
     
-    
-
-
     pass_jet_selection[0]=1
 
 
