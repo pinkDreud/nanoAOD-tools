@@ -156,9 +156,9 @@ if not opt.check:
     
     t.write("PT_CUT_ELE=  35\n")
     t.write("ETA_CUT_ELE= 2.4\n")
-    t.write("ISO_CUT_ELE= 0.08\n\n")
+    t.write("ISO_CUT_ELE= 0.1\n\n")
     
-    t.write("REL_ISO_CUT_LEP_VETO_ELE=   0.0994\n")
+    t.write("REL_ISO_CUT_LEP_VETO_ELE=   0.1\n")
     t.write("PT_CUT_LEP_VETO_ELE=        15\n")
     t.write("ETA_CUT_LEP_VETO_ELE=       2.4\n")
     t.write("REL_ISO_CUT_LEP_VETO_MU=    0.25\n")

@@ -329,7 +329,7 @@ ZG_2017.sigma = 0.1097
 ZG_2017.year = 2017
 ZG_2017.dataset = "/LLAJJ_EWK_MLL-50_MJJ-120_TuneCP5_13TeV-madgraph-pythia8/"+tag_2017+"_ext1-v1/NANOAODSIM"
 
-WG_2017 = sample(ROOT.kSpring, 1, 1001, "Z #gamma", "ZG_2017")
+WG_2017 = sample(ROOT.kSpring, 1, 1001, "W #gamma", "WG_2017")
 WG_2017.sigma = 0.5439
 WG_2017.year = 2017
 WG_2017.dataset = "/LNuAJJ_EWK_MJJ-120_TuneCP5_13TeV-madgraph-pythia8/"+tag_2017+"-v1/NANOAODSIM"
@@ -577,9 +577,28 @@ DY4JetsToLL_2017.sigma = 54.80
 DY4JetsToLL_2017.year = 2017
 DY4JetsToLL_2017.dataset = "/DY4JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/" + tag1_2017 + "-v1/NANOAODSIM"
 
+DYJetsToLLM5to50_2017 = sample(ROOT.kCyan, 1, 1001, "DY M5to50", "DYJetsToLLM5to50_2017")
+DYJetsToLLM5to50_2017.sigma = 81880.0
+DYJetsToLLM5to50_2017.year = 2017
+DYJetsToLLM5to50_2017.dataset = "/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+
+DYJetsToLLM5to50_2017 = sample(ROOT.kCyan, 1, 1001, "DY M5to50", "DYJetsToLLM5to50_2017")
+DYJetsToLLM5to50_2017.sigma = 81880.0
+DYJetsToLLM5to50_2017.year = 2017
+DYJetsToLLM5to50_2017.dataset = "/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+
+DYJetsToLLM50_2017 = sample(ROOT.kCyan, 1, 1001, "DY M50", "DYJetsToLLM50_2017")
+DYJetsToLLM50_2017.sigma = 6529.0
+DYJetsToLLM50_2017.year = 2017
+DYJetsToLLM50_2017.dataset = "/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/" + tag2_2017 + "_ext1-v1/NANOAODSIM"
+
 DYJetsToLL_2017 = sample(ROOT.kCyan, 1, 1001, "DY + Jets", "DYJetsToLL_2017")
 DYJetsToLL_2017.year = 2017
-DYJetsToLL_2017.components = [DY1JetsToLL_2017, DY2JetsToLL_2017, DY3JetsToLL_2017, DY4JetsToLL_2017]
+DYJetsToLL_2017.components = [DY1JetsToLL_2017, DY2JetsToLL_2017, DY3JetsToLL_2017, DY4JetsToLL_2017, DYJetsToLLM5to50_2017]
+
+DYJetsM_2017 = sample(ROOT.kCyan, 1, 1001, "DY + Jets (M)", "DYJetsM_2017")
+DYJetsM_2017.year = 2017
+DYJetsM_2017.components = [DYJetsToLLM5to50_2017, DYJetsToLLM50_2017]
 
 ################################ ssWW EWK ################################
 WpWpJJ_EWK_2017 = sample(ROOT.kBlue, 1, 1001, "EW ssWW", "WpWpJJ_EWK_2017")
@@ -998,6 +1017,7 @@ sample_dict={
     'TT_2017':TT_2017, 'TT_SemiLep2017':TT_SemiLep_2017, 'TT_Had_2017':TT_Had_2017,#'TT_DiLep_2017':TT_DiLep_2017, 
     'WJets_2017':WJets_2017, 'WJetsHT70to100_2017':WJetsHT70to100_2017, 'WJetsHT100to200_2017':WJetsHT100to200_2017, 'WJetsHT200to400_2017':WJetsHT200to400_2017, 'WJetsHT400to600_2017':WJetsHT400to600_2017, 'WJetsHT600to800_2017':WJetsHT600to800_2017, 'WJetsHT800to1200_2017':WJetsHT800to1200_2017, 'WJetsHT1200to2500_2017':WJetsHT1200to2500_2017, 'WJetsHT2500toInf_2017':WJetsHT2500toInf_2017,
     'DYJetsToLL_2017':DYJetsToLL_2017, 'DY1JetsToLL_2017':DY1JetsToLL_2017, 'DY2JetsToLL_2017':DY2JetsToLL_2017, 'DY3JetsToLL_2017':DY3JetsToLL_2017, 'DY4JetsToLL_2017':DY4JetsToLL_2017,
+    'DYJetsM_2017':DYJetsM_2017, 'DYJetsToLLM5to50_2017':DYJetsToLLM5to50_2017, 'DYJetsToLLM50_2017':DYJetsToLLM50_2017,
     # to here
     'VG_2017':VG_2017, 'ZG_2017':ZG_2017, 'WG_2017':WG_2017,
     'TVX_2017':TVX_2017, 'TTGJets_2017':TTGJets_2017, 'TTZToQQ_2017':TTZToQQ_2017, 'TTZToLLNuNu_2017':TTZToLLNuNu_2017, 'TTWJetsToQQ_2017':TTWJetsToQQ_2017, 'TTWJetsToLNu_2017':TTWJetsToLNu_2017, 'tZq_ll_4f_2017':tZq_ll_4f_2017,
@@ -1020,6 +1040,7 @@ class_dict={
     'TT_2017':TT_2017,
     'WJets_2017':WJets_2017,
     'DYJetsToLL_2017':DYJetsToLL_2017,
+    'DYJetsM_2017':DYJetsM_2017,
     # to here
     'VG_2017':VG_2017,
     'TVX_2017':TVX_2017,
@@ -1042,6 +1063,7 @@ class_list=[
     WZ_2017,
     WrongSign_2017, 
     DYJetsToLL_2017,
+    #DYJetsM_2017,
     TT_2017,
     QCD_2017,
     WJets_2017,

@@ -125,13 +125,13 @@ lepton_eta              =   array.array('f', [-999.])
 lepton_phi              =   array.array('f', [-999.])
 lepton_mass             =   array.array('f', [-999.])
 lepton_pdgid            =   array.array('i', [-999])
-lepton_pfRelIso03       =   array.array('f', [-999.])
+lepton_pfRelIso04       =   array.array('f', [-999.])
 var_list.append(lepton_pt)
 var_list.append(lepton_eta)
 var_list.append(lepton_phi)
 var_list.append(lepton_mass)
 var_list.append(lepton_pdgid)
-var_list.append(lepton_pfRelIso03)
+var_list.append(lepton_pfRelIso04)
 
 #tau variables
 tau_pt                  =   array.array('f', [-999.])
@@ -242,7 +242,7 @@ systTree.branchTreesSysts(trees, "all", "lepton_eta",           outTreeFile, lep
 systTree.branchTreesSysts(trees, "all", "lepton_phi",           outTreeFile, lepton_phi)
 systTree.branchTreesSysts(trees, "all", "lepton_mass",          outTreeFile, lepton_mass)
 systTree.branchTreesSysts(trees, "all", "lepton_pdgid",         outTreeFile, lepton_pdgid)
-systTree.branchTreesSysts(trees, "all", "lepton_pfRelIso03",    outTreeFile, lepton_pfRelIso03)
+systTree.branchTreesSysts(trees, "all", "lepton_pfRelIso04",    outTreeFile, lepton_pfRelIso04)
 #tau variables
 systTree.branchTreesSysts(trees, "all", "tau_pt",               outTreeFile, tau_pt)
 systTree.branchTreesSysts(trees, "all", "tau_eta",              outTreeFile, tau_eta)
@@ -461,35 +461,55 @@ for i in range(tree.GetEntries()):
     
     if passEle and not HLT.Ele32_WPTight_Gsf_L1DoubleEG:
         print("Errore")#Questo ora non dovrebbe succedere
-    
+
+    '''
     if passEle or passMu:
-        if len(electrons)<1 and len(muons)<1:         continue
-    else: continue
-    
+        if len(electrons)<1 and len(muons)<1:
+            continue
+    else:
+        continue
+    '''
 
-    if passEle and not passMu and len(electrons)>0:  
-        SingleEle=True
-        LeadLepFamily="electrons"
-        HighestLepPt=electrons[0].pt
-    
-    if passMu and not passEle and len(muons)>0:
-        SingleMu=True
-        LeadLepFamily="muons"
-        HighestLepPt=muons[0].pt
+    print("n ele:", len(electrons), "n mu:", len(muons)) 
+    if passEle and not passMu:
+        if len(electrons)>0:  
+            SingleEle=True
+            LeadLepFamily="electrons"
+            HighestLepPt=electrons[0].pt
+            print("HighestLepPt:", HighestLepPt)
+        else:
+            continue
 
-    if passMu and passEle:
+    elif passMu and not passEle:
+        if len(muons)>0:
+            SingleMu=True
+            LeadLepFamily="muons"
+            HighestLepPt=muons[0].pt
+        else:
+            continue
+
+    elif passMu and passEle:
         ElMu=True
+
+    print("HighestLepPt:", HighestLepPt)
+    print("passEle:", passEle, "\tpassMu:", passMu)
 
     if ElMu:
         for mu in muons:
-            if mu.pt>HighestLepPt:
+            if abs(mu.pt)>HighestLepPt:
                 HighestLepPt=mu.pt
+                SingleEle = False
+                SingleMu = True
         for ele in electrons:
-            if ele.pt>HighestLepPt:
-                SingleEle=True
-                break
+            if abs(ele.pt)>HighestLepPt:
+                HighestLepPt=ele.pt
+                SingleEle = True
+                SingleMu = False
+                #break
     
-    if SingleEle==False and HighestLepPt>0: SingleMu=True
+    leptons = None
+
+    #if SingleEle==False and HighestLepPt>0: SingleMu=True
     
     if SingleEle==True: leptons=electrons
     if SingleMu==True:  leptons=muons
@@ -499,6 +519,8 @@ for i in range(tree.GetEntries()):
     if SingleMu and dataEle:
         continue
 
+    print("SingleEle:", SingleEle, "\tSingleMu:", SingleMu)
+    print("lepton id:", leptons[0].pdgId)
     if (SingleEle or SingleMu): Cut_dict[1][1]+=1
     
     MET_pt[0]   =   met.pt  
@@ -524,8 +546,11 @@ for i in range(tree.GetEntries()):
     lepton_phi[0]               =   tightlep.phi
     lepton_mass[0]              =   tightlep.mass
     lepton_pdgid[0]             =   tightlep.pdgId
-    lepton_pfRelIso03[0]        =   tightlep.pfRelIso03_all
-    
+    if SingleMu==1:
+        lepton_pfRelIso04[0]        =   tightlep.pfRelIso04_all
+    elif SingleEle==1:
+        lepton_pfRelIso04[0]        =   tightlep.jetRelIso
+
     GoodLep=tightlep
     
     mT_lep_MET[0]=mTlepMet(met, tightlep.p4())
@@ -552,8 +577,8 @@ for i in range(tree.GetEntries()):
         systTree.setWeightName("puUp", copy.deepcopy(PU_SFUp))
         systTree.setWeightName("puDown", copy.deepcopy(PU_SFDown))
 
-    if abs(lepton_pdgid[0])==11 and lepton_pfRelIso03[0]<ISO_CUT_ELE:   pass_lepton_iso[0]=1
-    elif abs(lepton_pdgid[0])==13 and lepton_pfRelIso03[0]<ISO_CUT_MU:  pass_lepton_iso[0]=1
+    if abs(lepton_pdgid[0])==11 and lepton_pfRelIso04[0]<ISO_CUT_ELE:   pass_lepton_iso[0]=1
+    elif abs(lepton_pdgid[0])==13 and lepton_pfRelIso04[0]<ISO_CUT_MU:  pass_lepton_iso[0]=1
     else: pass_lepton_iso[0]=0
     
     if pass_lepton_iso[0]==0:

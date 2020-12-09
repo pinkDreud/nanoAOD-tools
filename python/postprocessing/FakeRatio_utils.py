@@ -513,45 +513,45 @@ def mcbjet_filter(jets): #returns a collection of only b-gen jets (to use only f
 def sameflav_filter(jets, flav): #returns a collection of only b-gen jets (to use only forMC samples)                       
     return list(filter(lambda x : x.partonFlavour == flav, jets))
 
-def trig_map(HLT, PV, year, runPeriod):
-    #isGoodPV = (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2)                                                      
-    passMu = (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2)
-    passEle = (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2)
-    passHT = (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2)
-    noTrigger = not(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2)
+ef trig_map(HLT, PV, year, runPeriod):
+    isGoodPV = (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness                 
+    passMu = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness             
+    passEle = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness            
+    passHT = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness             
+    noTrigger = False#not(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness       
 
-    if(year == 2016):# and runPeriod != 'H'):                                                                                
+    if(year == 2016):# and runPeriod != 'H'):                                                                                    
         if(HLT.IsoMu24 or HLT.IsoTkMu24):
-            passMu = passMu*True
+            passMu = True
         if(HLT.Ele27_WPTight_Gsf or HLT.Ele32_WPTight_Gsf):
-            passEle = passEle*True
+            passEle = True
         if(HLT.PFHT250 or HLT.PFHT300):
-            passHT = passHT*True
-        if not(passMu or passEle):
-            noTrigger = noTrigger*True
+            passHT = True
+        if not(passMu or passEle) and not isGoodPV:
+            noTrigger = True
     elif(year == 2017):#and runPeriod != 'B'):                                                                                   
         if(HLT.IsoMu27):
-            passMu = passMu*True
+            passMu = True
         if(HLT.Ele32_WPTight_Gsf_L1DoubleEG):
-            passEle = passEle*True
+            passEle = True
         if(HLT.PFHT250 or HLT.PFHT350):
-            passHT = passHT*True
-        if not(passMu or passEle):
-            noTrigger = noTrigger*True
+            passHT = True
+        if not(passMu or passEle) and not isGoodPV:
+            noTrigger = True
     elif(year == 2018):
         if(HLT.IsoMu24):
-            passMu = passMu*True
+            passMu = True
         if(HLT.Ele32_WPTight_Gsf_L1DoubleEG):
-            passEle = passEle*True
-        if not(passMu or passEle):
-            noTrigger = noTrigger*True
+            passEle = True
+        if not(passMu or passEle) and not isGoodPV:
+            noTrigger = True
         if(HLT.PFHT250 or HLT.PFHT350):
-            passHT = passHT*True
+            passHT = True
 
     else:
         print('Wrong year! Please enter 2016, 2017, or 2018')
 
-    return passMu, passEle, passHT, noTrigger
+    return (passMu and isGoodPV), (passEle and isGoodPV), (passHT and isGoodPV), noTrigger
 
 def get_ptrel(lepton, jet):
     ptrel = ((jet.p4()-lepton.p4()).Vect().Cross(lepton.p4().Vect())).Mag()/(jet.p4().Vect().Mag())

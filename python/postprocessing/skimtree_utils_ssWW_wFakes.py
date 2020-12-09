@@ -102,7 +102,10 @@ def SelectLepton(lepCollection, isMu): #isMu==True -> muons else Ele
         pT_cut=PT_CUT_ELE
         eta_cut=ETA_CUT_ELE
     for i in range(len(lepCollection)):
-        if isMu and not lepCollection[i].isGlobal: continue    
+        if isMu:
+          if not lepCollection[i].tightId: continue    
+        else:
+          if not lepCollection[i].mvaFall17V2Iso_WP90: continue    
         if lepCollection[i].pt<pT_cut: continue
         if abs(lepCollection[i].eta)>eta_cut: continue 
         return i
@@ -136,19 +139,22 @@ def IsNotTheSameObject(obj1, obj2):
     return True
     
 
-def LepVetoOneCollection(GoodLepton, collection, relIsoCut, ptCut, etaCut):
+def LepVetoOneCollection(GoodLepton, collection, relIsoCut, ptCut, etaCut, isMu):
     i=0
     for i in range(len(collection)):
         lep=collection[i]
         if IsNotTheSameObject(GoodLepton, lep): 
-            if lep.pfRelIso03_all>relIsoCut: continue
+            if isMu:
+              if lep.pfRelIso04_all>relIsoCut: continue
+            else:
+              if lep.jetRelIso>relIsoCut: continue
             if lep.pt<ptCut: continue
             if abs(lep.eta)>etaCut: continue
             return False
     return True
 
 def LepVeto(GoodLepton, ElectronCollection, MuonCollection):
-    return LepVetoOneCollection(GoodLepton, ElectronCollection, REL_ISO_CUT_LEP_VETO_ELE, PT_CUT_LEP_VETO_ELE, ETA_CUT_LEP_VETO_ELE)*LepVetoOneCollection(GoodLepton, MuonCollection, REL_ISO_CUT_LEP_VETO_MU, PT_CUT_LEP_VETO_MU, ETA_CUT_LEP_VETO_MU)
+    return LepVetoOneCollection(GoodLepton, ElectronCollection, REL_ISO_CUT_LEP_VETO_ELE, PT_CUT_LEP_VETO_ELE, ETA_CUT_LEP_VETO_ELE, False)*LepVetoOneCollection(GoodLepton, MuonCollection, REL_ISO_CUT_LEP_VETO_MU, PT_CUT_LEP_VETO_MU, ETA_CUT_LEP_VETO_MU, True)
 
 #semplifica la macro
 def JetSelection(jetCollection, GoodTau, GoodMu):
@@ -402,39 +408,39 @@ def get_HT(jets):
     return HT
 
 def trig_map(HLT, PV, year, runPeriod):
-    #isGoodPV = (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
-    passMu = (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
-    passEle = (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
-    passHT = (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
-    noTrigger = not(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    isGoodPV = True#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    passMu = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    passEle = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    passHT = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    noTrigger = False#not(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
     
     if(year == 2016):# and runPeriod != 'H'):
         if(HLT.IsoMu24 or HLT.IsoTkMu24):
-            passMu = passMu*True
+            passMu = True
         if(HLT.Ele27_WPTight_Gsf or HLT.Ele32_WPTight_Gsf):
-            passEle = passEle*True
+            passEle = True
         if(HLT.PFHT250 or HLT.PFHT300):
-            passHT = passHT*True
-        if not(passMu or passEle):
-            noTrigger = noTrigger*True
+            passHT = True
+        if not(passMu or passEle) and not isGoodPV:
+            noTrigger = True
     elif(year == 2017):#and runPeriod != 'B'):
         if(HLT.IsoMu27):
-            passMu = passMu*True
+            passMu = True
         if(HLT.Ele32_WPTight_Gsf_L1DoubleEG):
-            passEle = passEle*True  
+            passEle = True  
         if(HLT.PFHT250 or HLT.PFHT350):
-            passHT = passHT*True
-        if not(passMu or passEle):
-            noTrigger = noTrigger*True
+            passHT = True
+        if not(passMu or passEle) and not isGoodPV:
+            noTrigger = True
     elif(year == 2018):
         if(HLT.IsoMu24):
-            passMu = passMu*True
+            passMu = True
         if(HLT.Ele32_WPTight_Gsf_L1DoubleEG):
-            passEle = passEle*True  
-        if not(passMu or passEle):
-            noTrigger = noTrigger*True
+            passEle = True  
+        if not(passMu or passEle) and not isGoodPV:
+            noTrigger = True
         if(HLT.PFHT250 or HLT.PFHT350):
-            passHT = passHT*True
+            passHT = True
             
     else:
         print('Wrong year! Please enter 2016, 2017, or 2018')
@@ -458,7 +464,7 @@ def trig_map(HLT, PV, year, runPeriod):
         if not(passMu or passEle or passHT):
             noTrigger = True
     '''
-    return passMu, passEle, passHT, noTrigger
+    return (passMu and isGoodPV), (passEle and isGoodPV), (passHT and isGoodPV), noTrigger
 
 def get_ptrel(lepton, jet):
     ptrel = ((jet.p4()-lepton.p4()).Vect().Cross(lepton.p4().Vect())).Mag()/(jet.p4().Vect().Mag())
