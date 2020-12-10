@@ -596,6 +596,11 @@ DYJetsToLL_2017 = sample(ROOT.kCyan, 1, 1001, "DY + Jets", "DYJetsToLL_2017")
 DYJetsToLL_2017.year = 2017
 DYJetsToLL_2017.components = [DY1JetsToLL_2017, DY2JetsToLL_2017, DY3JetsToLL_2017, DY4JetsToLL_2017, DYJetsToLLM5to50_2017]
 
+DYJetsToLL_Old_2017 = sample(ROOT.kCyan, 1, 1001, "DY + Jets", "DYJetsToLL_2017")
+DYJetsToLL_Old_2017.year = 2017
+DYJetsToLL_Old_2017.components = [DY1JetsToLL_2017, DY2JetsToLL_2017, DY3JetsToLL_2017, DY4JetsToLL_2017]
+
+
 DYJetsM_2017 = sample(ROOT.kCyan, 1, 1001, "DY + Jets (M)", "DYJetsM_2017")
 DYJetsM_2017.year = 2017
 DYJetsM_2017.components = [DYJetsToLLM5to50_2017, DYJetsToLLM50_2017]

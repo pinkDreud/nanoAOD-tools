@@ -513,7 +513,7 @@ def mcbjet_filter(jets): #returns a collection of only b-gen jets (to use only f
 def sameflav_filter(jets, flav): #returns a collection of only b-gen jets (to use only forMC samples)                       
     return list(filter(lambda x : x.partonFlavour == flav, jets))
 
-ef trig_map(HLT, PV, year, runPeriod):
+def trig_map(HLT, PV, year, runPeriod):
     isGoodPV = (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness                 
     passMu = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness             
     passEle = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness            
