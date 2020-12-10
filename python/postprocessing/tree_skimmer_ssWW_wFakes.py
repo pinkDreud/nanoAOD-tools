@@ -500,19 +500,22 @@ for i in range(tree.GetEntries()):
                 HighestLepPt=mu.pt
                 SingleEle = False
                 SingleMu = True
+                break
         for ele in electrons:
             if abs(ele.pt)>HighestLepPt:
                 HighestLepPt=ele.pt
                 SingleEle = True
                 SingleMu = False
-                #break
+                break
     
     leptons = None
 
     #if SingleEle==False and HighestLepPt>0: SingleMu=True
     
     if SingleEle==True: leptons=electrons
-    if SingleMu==True:  leptons=muons
+    elif SingleMu==True:  leptons=muons
+    elif not (SingleMu or SingleEle):
+        continue
 
     if SingleEle and dataMu:
         continue

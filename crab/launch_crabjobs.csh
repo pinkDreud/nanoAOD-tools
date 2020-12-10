@@ -5,7 +5,7 @@ python submit_crab.py -d WZ_$year -s
 python submit_crab.py -d DYJetsToLL_$year -s
 python submit_crab.py -d DYJetsToLLM50_$year -s
 python submit_crab.py -d VG_$year -s
-#python submit_crab.py -d WG_$year -s
+python submit_crab.py -d WG_$year -s
 python submit_crab.py -d TVX_$year -s
 python submit_crab.py -d WrongSign_$year -s
 python submit_crab.py -d Other_$year -s
