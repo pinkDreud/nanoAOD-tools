@@ -1,44 +1,38 @@
-#!/bin/env python3
 import os
-##print(os.environ)
-##print("**********************************************************************")
-##print("**********************************************************************")
-##print("**********************************************************************")
-##print(str(os.environ.get('PYTHONPATH')))
-##print(str(os.environ.get('PYTHON3PATH')))
 import sys
-##print("*************** This is system version info ***************************")
-##print(sys.version_info)
-#import platform
-##print("*************** This is python version info ***************************")
-##print(platform.python_version())
 import ROOT
-##print("Succesfully imported ROOT")
 import math
 import datetime
 import copy
 from array import array
+import optparse
 from FakeRatio_utils import *
+usage = "python ControlGenStatus.py -l"
 
-usage = "python FakeRatio.py [nome_dataset_come_salvato_in_samples.py] [indice, di default 0] [path_file_da_processare] local"
+parser = optparse.OptionParser(usage)
 
-usageCopyPaste="python FakeRatio.py DataHTC_2017 7 DataHTC_2017_ntuple.root local"
-eventobuono=-1
+parser.add_option('--ntuple', dest='ntuple', default = "DY4JetsToLL_prova.root", help='Set ntuple on which it should work. Default is DY4JetsToLL_prova_ntuple.root')
+parser.add_option('-p', '--part', dest='part', default = "0", help='Number of the part. Default=0')
+parser.add_option('-s', '--sample', dest='sample', default = "DY4JetsToLL_2017", help='Name of the sample in samples_local.py')
+parser.add_option('-l', '--local', dest='local', default = False, action='store_true', help='Local execution')
+parser.add_option('-d', '--dbg', dest='dbg', default = False, action='store_true', help='less events, just for debugging')
 
+(opt, args) = parser.parse_args()
 
-
-if sys.argv[4] == 'remote':
+if not opt.local:
     from samples import *
     Debug = False
 else:
-    from samples.samples import *
+    from samples.samplesLocal import *
     Debug = True
-sample = sample_dict[sys.argv[1]]
-part_idx = sys.argv[2]
-file_list = list(map(str, sys.argv[3].strip('[]').split(',')))
+
+sample = sample_dict[opt.sample]
+part_idx = opt.part
+
+file_list = list(map(str, (opt.ntuple).strip('[]').split(',')))
 print(file_list)
 
-MCReco = True
+MCReco=True
 startTime = datetime.datetime.now()
 print("Starting running at " + str(startTime))
 
@@ -49,8 +43,6 @@ chain = ROOT.TChain('Events')
 for infile in file_list: 
     print("Adding %s to the chain" %(infile))
     chain.Add(infile)
-
-
 print(chain)
 
 print("Number of events in chain " + str(chain.GetEntries()))
@@ -62,32 +54,7 @@ if ('Data' in sample.label):
 
 MCReco = MCReco * isMC
 
-Fake_dict = {}
-
-
-Fake_dict = {
-            '1A': ['|n|<1,     pT<20    ',  0,  0, 0.0],
-            '1B': ['1<|n|<1.5, pT<20    ',  0,  0, 0.0],
-            '1C': ['1.5<|n|<2, pT<20    ',  0,  0, 0.0],
-            '1D': ['2<|n|<2.4, pT<20    ',  0,  0, 0.0],
-            '2A': ['|n|<1,     20<pT<30 ',  0,  0, 0.0],
-            '2B': ['1<|n|<1.5, 20<pT<30 ',  0,  0, 0.0],
-            '2C': ['1.5<|n|<2, 20<pT<30 ',  0,  0, 0.0],
-            '2D': ['2<|n|<2.4, 20<pT<30 ',  0,  0, 0.0],
-            '3A': ['|n|<1,     30<pT<40 ',  0,  0, 0.0],
-            '3B': ['1<|n|<1.5, 30<pT<40 ',  0,  0, 0.0],
-            '3C': ['1.5<|n|<2, 30<pT<40 ',  0,  0, 0.0],
-            '3D': ['2<|n|<2.4, 30<pT<40 ',  0,  0, 0.0],
-            '4A': ['|n|<1,     40<pT<50 ',  0,  0, 0.0],
-            '4B': ['1<|n|<1.5, 40<pT<50 ',  0,  0, 0.0],
-            '4C': ['1.5<|n|<2, 40<pT<50 ',  0,  0, 0.0],
-            '4D': ['2<|n|<2.4, 40<pT<50 ',  0,  0, 0.0],
-            '5A': ['|n|<1,     pT>50    ',  0,  0, 0.0],
-            '5B': ['1<|n|<1.5, pT>50    ',  0,  0, 0.0],
-            '5C': ['1.5<|n|<2, pT>50    ',  0,  0, 0.0],
-            '5D': ['2<|n|<2.4, pT>50    ',  0,  0, 0.0],
-}
-
+isData= not isMC
 #++++++++++++++++++++++++++++++++++
 #++   branching the new trees    ++
 #++++++++++++++++++++++++++++++++++
@@ -125,6 +92,7 @@ systTree.setWeightName("lepDown",1.)
 systTree.setWeightName("PFSF",1.)
 systTree.setWeightName("PFUp",1.)
 systTree.setWeightName("PFDown",1.)
+
 
 #++++++++++++++++++++++++++++++++++
 #++     variables to branch      ++
@@ -172,7 +140,6 @@ var_list.append(FakeTau_DeepTauWP)
 MET_pt                      =   array.array('f', [-999.])
 MET_phi                     =   array.array('f', [-999.])
 mT_lepMET                     =   array.array('f', [-999.])
-
 var_list.append(MET_pt)
 var_list.append(MET_phi)
 var_list.append(mT_lepMET)
@@ -181,12 +148,9 @@ isFake_tau                   =   array.array('i', [-999])
 isFake_tauAndPassCuts       =   array.array('i', [-999])
 isFake_lepton                =   array.array('i', [-999])
 isFake_leptonAndPassCuts    =   array.array('i', [-999])
-
-
 var_list.append(isFake_tau)
 var_list.append(isFake_tauAndPassCuts)
 var_list.append(isFake_lepton)
-var_list.append(isFake_leptonAndPassCuts)
 
 w_PDF_all = array.array('f', [0.]*110) #capisci a cosa serve
 w_nominal_all = array.array('f', [0.])
@@ -201,8 +165,6 @@ systTree.branchTreesSysts(trees, "all", "FakeLepton_mass",          outTreeFile,
 systTree.branchTreesSysts(trees, "all", "FakeLepton_pdgid",         outTreeFile, FakeLepton_pdgid)
 systTree.branchTreesSysts(trees, "all", "FakeLepton_pfRelIso03",    outTreeFile, FakeLepton_pfRelIso03)
 
-
-
 #all taus for fake calculation
 systTree.branchTreesSysts(trees, "all", "FakeTau_pt",               outTreeFile, FakeTau_pt)
 systTree.branchTreesSysts(trees, "all", "FakeTau_isPrompt",      outTreeFile, FakeTau_isPrompt)
@@ -210,11 +172,8 @@ systTree.branchTreesSysts(trees, "all", "FakeTau_eta",              outTreeFile,
 systTree.branchTreesSysts(trees, "all", "FakeTau_phi",              outTreeFile, FakeTau_phi)
 systTree.branchTreesSysts(trees, "all", "FakeTau_mass",             outTreeFile, FakeTau_mass)
 systTree.branchTreesSysts(trees, "all", "FakeTau_DeepTauWP",        outTreeFile, FakeTau_DeepTauWP)
-
 systTree.branchTreesSysts(trees, "all", "MET_pt",                   outTreeFile, MET_pt)
 systTree.branchTreesSysts(trees, "all", "mT_lepMET",                outTreeFile, mT_lepMET)
-
-
 
 #fake variables
 systTree.branchTreesSysts(trees, "all", "isFake_lepton",                   outTreeFile, isFake_lepton)
@@ -260,26 +219,13 @@ if(isMC):
             addPDF = False
     newfile.Close()
 
-contagood=0
-
-'''
-#++++++++++++++++++++++++++++++++++
-#++      Efficiency studies      ++
-#++++++++++++++++++++++++++++++++++
-neutrino_failed = 0
-nrecochi = 0
-nrecoclosest = 0
-nrecosublead = 0
-nrecobest = 0
-nbinseff = 10
-h_eff_mu = ROOT.TH1D("h_eff_mu", "h_eff_mu", nbinseff, 0, nbinseff)
-h_eff_ele = ROOT.TH1D("h_eff_ele", "h_eff_ele", nbinseff, 0, nbinseff)
-'''
-contagood=0
 #++++++++++++++++++++++++++++++++++
 #++   looping over the events    ++
 #++++++++++++++++++++++++++++++++++
-for i in range(tree.GetEntries()):
+entries=tree.GetEntries()
+if opt.dbg: entries=entries/100
+
+for i in range(entries):
     #reinizializza tutte le variabili a 0, per sicurezza
     for j, var in enumerate(var_list):
         if j<len(var_list):
@@ -324,6 +270,8 @@ for i in range(tree.GetEntries()):
             continue
 
     chain.GetEntry(i)
+
+
     #++++++++++++++++++++++++++++++++++
     #++      defining variables      ++
     #++++++++++++++++++++++++++++++++++
@@ -352,67 +300,31 @@ for i in range(tree.GetEntries()):
     passMu, passEle, passHT, noTrigger = trig_map(HLT, PV, year, runPeriod)
 
     if not passHT: continue
-
-    if passHT:
-        
-        MET_pt[0]=met.pt
-        MET_phi[0]=met.phi
-
-        contagood+=1
-        QCDRegion_tau=QCDEnrichedRegionTaus(taus, electrons, muons, met)
-        QCDRegion_lep, isEle=QCDEnrichedRegionLeptons(electrons, muons, met)
-        
-        if QCDRegion_tau and len(taus)>0:
-            print('Event: ', i+1)
-            mT_tauMET=mTlepMet(met, taus[0])
-            isFake_tau[0]=1
-            if taus[0].idDeepTau2017v2p1VSjet>=64: isFake_tauAndPassCuts[0]=1 #errore, prima >=16. Deve esser >=64 (VT taglio usato in analisi)
     
-            FakeTau_pt[0]               =   taus[0].pt
-            FakeTau_eta[0]              =   taus[0].eta
-            FakeTau_phi[0]              =   taus[0].phi
-            FakeTau_mass[0]             =   taus[0].mass
-            FakeTau_charge[0]           =   taus[0].charge
-            if isMC: FakeTau_isPrompt[0]         =   taus[0].genPartFlav
+    for ele in electrons:
+        genIDX=ele.genPartIdx
         
-        if QCDRegion_lep and not (len(electrons)==0 and len(muons)==0):
-            if isEle:   mT_lepMET[0]=mTlepMet(met, electrons[0])
-            else:       mT_lepMET[0]=mTlepMet(met, muons[0])
-            isFake_lepton[0]=1
-            if isEle and electrons[0].pfRelIso03_all<0.08:        isFake_leptonAndPassCuts[0]=1
-            if isEle==0 and muons[0].pfRelIso03_all<0.15:         isFake_leptonAndPassCuts[0]=1
-            
-            if isEle:   leptons=electrons
-            else:       leptons= muons
+        if genIDX<0 or genIDX>len(genpart): continue
 
-            FakeLepton_pt[0]                =   leptons[0].pt
-            FakeLepton_eta[0]               =   leptons[0].eta
-            FakeLepton_phi[0]               =   leptons[0].phi
-            FakeLepton_mass[0]              =   leptons[0].mass
-            FakeLepton_pdgid[0]             =   leptons[0].pdgId
-            FakeLepton_pfRelIso03[0]        =   leptons[0].pfRelIso03_all
-            if isMC: FakeLepton_isPrompt[0]          =   leptons[0].genPartFlav
-            
-            eventobuono=i
-
-
-    systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
-    systTree.fillTreesSysts(trees, "all")
-
-
-
-outTreeFile.cd()
-if(isMC):
-    h_genweight.Write()
-    if not ("WZ" in sample.label):
-        h_PDFweight.Write()
+        if genpart[genIDX].pdgId==ele.pdgId: 
+            print("Event #", i+1, " out of ", tree.GetEntries())
+            #print "ele infos: ", ele.pt, " ", ele.eta, " ", ele.pdgId
+            #print "gen idx: ", genIDX
+            print "gen part infos: ", genpart[genIDX].pt, " ", genpart[genIDX].eta, " ", genpart[genIDX].pdgId
+            #print "difference genreco: ", deltaR(ele.eta, ele.phi, genpart[genIDX].eta, genpart[genIDX].phi)
+            print "genpartFlav: ", ele.genPartFlav
+            #print "status flag gen: ", genpart[genIDX].statusFlags
+            print "gen part mother: ", genpart[genIDX].genPartIdxMother
 
 
 
 
 
-systTree.writeTreesSysts(trees, outTreeFile)
-print("Number of events in output tree " + str(trees[0].GetEntries()))
 
-endTime = datetime.datetime.now()
-print("Ending running at " + str(endTime))
+
+
+
+
+
+
+
