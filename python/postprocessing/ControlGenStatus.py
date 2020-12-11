@@ -299,7 +299,7 @@ for i in range(entries):
     
     passMu, passEle, passHT, noTrigger = trig_map(HLT, PV, year, runPeriod)
 
-    if not passHT: continue
+    if not passEle: continue
     
     for ele in electrons:
         genIDX=ele.genPartIdx
@@ -314,7 +314,8 @@ for i in range(entries):
             #print "difference genreco: ", deltaR(ele.eta, ele.phi, genpart[genIDX].eta, genpart[genIDX].phi)
             print "genpartFlav: ", ele.genPartFlav
             #print "status flag gen: ", genpart[genIDX].statusFlags
-            print "gen part mother: ", genpart[genIDX].genPartIdxMother
+            if genpart[genIDX].genPartIdxMother>=0 and genpart[genIDX].genPartIdxMother<len(genpart): 
+                print "gen part mother: ", genpart[genpart[genIDX].genPartIdxMother].pdgId
 
 
 
