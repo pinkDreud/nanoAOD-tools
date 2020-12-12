@@ -567,7 +567,7 @@ for year in years:
           variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cut+')', 24, -2.4, 2.4))
           variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cut+')', 20, -3.14, 3.14))
           variables.append(variabile('lepton_pdgid', 'lepton pdgid',  wzero+'*('+cut+')', 31, -15.5, 15.5))
-          variables.append(variabile('lepton_pfRelIso03', 'lepton rel iso',  wzero+'*('+cut+')', 25, 0, 0.15))
+          variables.append(variabile('lepton_pfRelIso04', 'lepton rel iso',  wzero+'*('+cut+')', 25, 0, 0.15))
           variables.append(variabile('tau_pt',  '#tau_{p_{T}} [GeV]',  wzero+'*('+cut+')', 40, 30, 1000))
           variables.append(variabile('tau_eta', '#tau #eta',  wzero+'*('+cut+')', 24, -2.4, 2.4))
           variables.append(variabile('tau_phi', '#tau #Phi',  wzero+'*('+cut+')',  20, -3.14, 3.14))
@@ -581,6 +581,9 @@ for year in years:
           
           variables.append(variabile('MET_pt', 'p_{T}^{miss} [GeV]',  wzero+'*('+cut+')',  30, 40, 500))
           variables.append(variabile('Mjj', 'M_{jj} [GeV]',  wzero+'*('+cut+')',  40, 500, 2000))
+          variables.append(variabile('mT_lep_MET', 'M_{T}(lep, MET) [GeV]',  wzero+'*('+cut+')',  100, 0, 3000))
+          variables.append(variabile('mT_tau_MET', 'M_{T}(#tau, MET) [GeV]',  wzero+'*('+cut+')',  100, 0, 3000))
+          variables.append(variabile('mT_leptau_MET', 'M_{T}(lep, #tau, MET) [GeV]',  wzero+'*('+cut+')',  100, 0, 3000))
           variables.append(variabile('DeltaEta_jj', '#Delta #eta_{jj}',  wzero+'*('+cut+')',  20, 0, 10))
 
           for sample in dataset_new:
