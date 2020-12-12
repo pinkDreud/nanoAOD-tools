@@ -103,9 +103,9 @@ def SelectLepton(lepCollection, isMu): #isMu==True -> muons else Ele
         eta_cut=ETA_CUT_ELE
     for i in range(len(lepCollection)):
         if isMu:
-          if not lepCollection[i].tightId: continue    
+          if not (lepCollection[i].tightId and lepCollection[i].pfRelIso04_all<ISO_CUT_MU): continue
         else:
-          if not lepCollection[i].mvaFall17V2Iso_WP90: continue    
+          if not (lepCollection[i].mvaFall17V2Iso_WP90 and lepCollection[i].jetRelIso<ISO_CUT_ELE): continue    
         if lepCollection[i].pt<pT_cut: continue
         if abs(lepCollection[i].eta)>eta_cut: continue 
         return i
@@ -154,7 +154,7 @@ def LepVetoOneCollection(GoodLepton, collection, relIsoCut, ptCut, etaCut, isMu)
     return True
 
 def LepVeto(GoodLepton, ElectronCollection, MuonCollection):
-    return LepVetoOneCollection(GoodLepton, ElectronCollection, REL_ISO_CUT_LEP_VETO_ELE, PT_CUT_LEP_VETO_ELE, ETA_CUT_LEP_VETO_ELE, False)*LepVetoOneCollection(GoodLepton, MuonCollection, REL_ISO_CUT_LEP_VETO_MU, PT_CUT_LEP_VETO_MU, ETA_CUT_LEP_VETO_MU, True)
+    return bool(LepVetoOneCollection(GoodLepton, ElectronCollection, REL_ISO_CUT_LEP_VETO_ELE, PT_CUT_LEP_VETO_ELE, ETA_CUT_LEP_VETO_ELE, False) or LepVetoOneCollection(GoodLepton, MuonCollection, REL_ISO_CUT_LEP_VETO_MU, PT_CUT_LEP_VETO_MU, ETA_CUT_LEP_VETO_MU, True))
 
 #semplifica la macro
 def JetSelection(jetCollection, GoodTau, GoodMu):
