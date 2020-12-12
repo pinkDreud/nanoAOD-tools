@@ -82,7 +82,7 @@ else:
     folder = opt.fold
 
 path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/"
-print folder, path
+#print folder, path
 
 if not os.path.exists(path):
     os.makedirs(path)
@@ -96,7 +96,7 @@ f = open(cshname, "w")
 
 dirlist = [dirs for dirs in os.listdir(path) if os.path.isdir(path+dirs)]
 
-print class_dict
+
 
 for prname, proc in class_dict.items():
     if "DataHT" in prname or 'DataMET' in prname:
@@ -128,7 +128,7 @@ for prname, proc in class_dict.items():
 
     else:
         if opt.dat != 'all':
-            if prname.startswith(opt.dat):
+            if not prname.startswith(opt.dat):
                 continue
         if not DoesSampleExist(prname):
             continue
