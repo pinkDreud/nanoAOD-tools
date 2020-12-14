@@ -444,27 +444,49 @@ def trig_map(HLT, PV, year, runPeriod):
             
     else:
         print('Wrong year! Please enter 2016, 2017, or 2018')
-    '''
-    elif(year == 2016 and runPeriod == 'H'):
-        if(HLT.Mu50 or HLT.TkMu50):
-            passMu = True
-        if(HLT.Ele115_CaloIdVT_GsfTrkIdT):
-            passEle = True  
-        if(HLT.PFHT900):
-            passHT = True
-        if not(passMu or passEle or passHT):
-            noTrigger = True
-    '''
-    '''
-    elif(year == 2017 and runPeriod == 'B'):
-        if(HLT.Mu50):
-            passMu = True
-        if(HLT.PFHT780 or HLT.PFHT890):
-            passHT = True
-        if not(passMu or passEle or passHT):
-            noTrigger = True
-    '''
+   
     return (passMu and isGoodPV), (passEle and isGoodPV), (passHT and isGoodPV), noTrigger
+
+def trig_map_all(HLT, PV, year, runPeriod):
+    isGoodPV = True#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    passMu = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    passEle = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    passHT = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    noTrigger = False#not(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    
+    if(year == 2016):# and runPeriod != 'H'):
+        if(HLT.IsoMu24 or HLT.IsoTkMu24):
+            passMu = True
+        if(HLT.Ele27_WPTight_Gsf or HLT.Ele32_WPTight_Gsf):
+            passEle = True
+        if(HLT.PFHT250 or HLT.PFHT300):
+            passHT = True
+        if not(passMu or passEle) and not isGoodPV:
+            noTrigger = True
+    elif(year == 2017):#and runPeriod != 'B'):
+        if(HLT.IsoMu24 or HLT.IsoMu27 or HLT.IsoMu30 or HLT.Mu50):
+            passMu = True
+        if(HLT.Ele115_CaloIdVT_GsfTrkIdT or HLT.Ele27_WPTight_Gsf or HLT.Ele32_WPTight_Gsf or HLT.Ele35_WPTight_Gsf or HLT.Ele32_WPTight_Gsf_L1DoubleEG or HLT.Photon200):
+            passEle = True  
+        if(HLT.PFHT250 or HLT.PFHT350):
+            passHT = True
+        if not(passMu or passEle) and not isGoodPV:
+            noTrigger = True
+    elif(year == 2018):
+        if(HLT.IsoMu24):
+            passMu = True
+        if(HLT.Ele32_WPTight_Gsf_L1DoubleEG):
+            passEle = True  
+        if not(passMu or passEle) and not isGoodPV:
+            noTrigger = True
+        if(HLT.PFHT250 or HLT.PFHT350):
+            passHT = True
+            
+    else:
+        print('Wrong year! Please enter 2016, 2017, or 2018')
+   
+    return (passMu and isGoodPV), (passEle and isGoodPV), (passHT and isGoodPV), noTrigger
+
 
 def get_ptrel(lepton, jet):
     ptrel = ((jet.p4()-lepton.p4()).Vect().Cross(lepton.p4().Vect())).Mag()/(jet.p4().Vect().Mag())
