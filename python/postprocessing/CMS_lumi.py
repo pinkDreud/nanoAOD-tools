@@ -21,8 +21,8 @@ extraTextFont = 52
 lumiTextSize     = 0.7
 lumiTextOffset   = 0.2
 
-#cmsTextSize      = 0.75
-cmsTextSize      = 0.85
+cmsTextSize      = 0.75
+#cmsTextSize      = 0.85
 cmsTextOffset    = 0.1
 
 relPosX    = 0.045

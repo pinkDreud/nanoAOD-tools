@@ -470,13 +470,13 @@ for i in range(tree.GetEntries()):
         continue
     '''
 
-    print("n ele:", len(electrons), "n mu:", len(muons)) 
+    #print("n ele:", len(electrons), "n mu:", len(muons)) 
     if passEle and not passMu:
         if len(electrons)>0:  
             SingleEle=True
             LeadLepFamily="electrons"
             HighestLepPt=electrons[0].pt
-            print("HighestLepPt:", HighestLepPt)
+            #print("HighestLepPt:", HighestLepPt)
         else:
             continue
 
@@ -491,8 +491,8 @@ for i in range(tree.GetEntries()):
     elif passMu and passEle:
         ElMu=True
 
-    print("HighestLepPt:", HighestLepPt)
-    print("passEle:", passEle, "\tpassMu:", passMu)
+    #print("HighestLepPt:", HighestLepPt)
+    #print("passEle:", passEle, "\tpassMu:", passMu)
 
     if ElMu:
         for mu in muons:
@@ -522,8 +522,8 @@ for i in range(tree.GetEntries()):
     if SingleMu and dataEle:
         continue
 
-    print("SingleEle:", SingleEle, "\tSingleMu:", SingleMu)
-    print("lepton id:", leptons[0].pdgId)
+    #print("SingleEle:", SingleEle, "\tSingleMu:", SingleMu)
+    #print("lepton id:", leptons[0].pdgId)
     if (SingleEle or SingleMu): Cut_dict[1][1]+=1
     
     MET_pt[0]   =   met.pt  
