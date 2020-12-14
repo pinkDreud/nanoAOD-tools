@@ -134,7 +134,7 @@ def FakeCalc(sample, isData, nev):
 
         if Met>MET_cut or mT>mt_lepMET_cut: continue
         
-        isMC_and_haspromptLepton=isMC and FakeLepton.isPrompt==1 and isFake.lepton==1
+        isMC_and_haspromptLepton = isMC and FakeLepton.isPrompt==1 and isFake.lepton==1
         isMC_and_haspromptTau=False
         if opt.promptFakeTau: 
             isMC_and_haspromptTau=isMC and FakeTau.isPrompt==5 and isFake.tau==1 and opt.promptFakeTau

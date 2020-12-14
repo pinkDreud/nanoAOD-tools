@@ -161,13 +161,6 @@ for sample in samples:
         pu_mod = 'puWeight_'+year+'()'
         ht_producer = 'ht()'
         mht_producer = 'mht()'
-        '''
-        elif(self.year == 2017):
-            good_HLT = 
-        elif(self.year == 2018):
-            good_HLT = 
-        else:
-        '''
         if ('Data' in sample.label):
             isMC = False
             presel = "(Flag_goodVertices && Flag_HBHENoiseFilter && Flag_HBHENoiseIsoFilter && Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_BadPFMuonFilter && Flag_eeBadScFilter) "

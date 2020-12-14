@@ -96,6 +96,7 @@ for k, v in class_dict.items():
             else:
                 print c.label + " is already merged and lumied"
 
+        print len(doesexist), len(v.components)
         if len(doesexist) == len(v.components):
             if os.path.exists(kpath+k+".root"):
                print k + " already merged"
@@ -104,7 +105,8 @@ for k, v in class_dict.items():
                     print "python makeplot.py -y ", opt.year, " --mertree -d " + k + " --folder ", opt.folder
                 else:
                     os.system("python makeplot.py -y " + opt.year + " --mertree -d " + k + " --folder " + opt.folder)
-   
+        #else:
+            #print k + "not ready to be merged"
     else:
         if opt.dat != 'all':
             if not k.startswith(opt.dat):

@@ -3,7 +3,7 @@ python submit_crab.py -d TT_$year --status
 python submit_crab.py -d WJets_$year --status
 python submit_crab.py -d WZ_$year --status
 python submit_crab.py -d DYJetsToLL_$year --status
-python submit_crab.py -d DYJetsToLLM50_$year --status
+python submit_crab.py -d DYJetsM_$year --status
 python submit_crab.py -d VG_$year --status
 python submit_crab.py -d TVX_$year --status
 python submit_crab.py -d WrongSign_$year --status

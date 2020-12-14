@@ -408,9 +408,6 @@ if(isMC):
         h_PDFweight.Write()
 
 
-
-
-
 systTree.writeTreesSysts(trees, outTreeFile)
 print("Number of events in output tree " + str(trees[0].GetEntries()))
 
