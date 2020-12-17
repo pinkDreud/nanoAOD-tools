@@ -143,7 +143,7 @@ FakeLepton_eta              =   array.array('f', [-999.])
 FakeLepton_phi              =   array.array('f', [-999.])
 FakeLepton_mass             =   array.array('f', [-999.])
 FakeLepton_pdgid            =   array.array('i', [-999])
-FakeLepton_pfRelIso03       =   array.array('f', [-999.])
+FakeLepton_pfRelIso04       =   array.array('f', [-999.])
 FakeLepton_isPrompt         =   array.array('f', [-999.])
 var_list.append(FakeLepton_pt)
 var_list.append(FakeLepton_isPrompt)
@@ -151,7 +151,7 @@ var_list.append(FakeLepton_eta)
 var_list.append(FakeLepton_phi)
 var_list.append(FakeLepton_mass)
 var_list.append(FakeLepton_pdgid)
-var_list.append(FakeLepton_pfRelIso03)
+var_list.append(FakeLepton_pfRelIso04)
 
 FakeTau_pt                  =   array.array('f', [-999.])
 FakeTau_isPrompt            =   array.array('f', [-999.])
@@ -199,7 +199,7 @@ systTree.branchTreesSysts(trees, "all", "FakeLepton_eta",           outTreeFile,
 systTree.branchTreesSysts(trees, "all", "FakeLepton_phi",           outTreeFile, FakeLepton_phi)
 systTree.branchTreesSysts(trees, "all", "FakeLepton_mass",          outTreeFile, FakeLepton_mass)
 systTree.branchTreesSysts(trees, "all", "FakeLepton_pdgid",         outTreeFile, FakeLepton_pdgid)
-systTree.branchTreesSysts(trees, "all", "FakeLepton_pfRelIso03",    outTreeFile, FakeLepton_pfRelIso03)
+systTree.branchTreesSysts(trees, "all", "FakeLepton_pfRelIso04",    outTreeFile, FakeLepton_pfRelIso04)
 
 
 
@@ -379,8 +379,8 @@ for i in range(tree.GetEntries()):
             if isEle:   mT_lepMET[0]=mTlepMet(met, electrons[0])
             else:       mT_lepMET[0]=mTlepMet(met, muons[0])
             isFake_lepton[0]=1
-            if isEle and electrons[0].pfRelIso03_all<0.08:        isFake_leptonAndPassCuts[0]=1
-            if isEle==0 and muons[0].pfRelIso03_all<0.15:         isFake_leptonAndPassCuts[0]=1
+            if isEle and electrons[0].jetRelIso<0.08:        isFake_leptonAndPassCuts[0]=1
+            if isEle==0 and muons[0].pfRelIso04_all<0.15:         isFake_leptonAndPassCuts[0]=1
             
             if isEle:   leptons=electrons
             else:       leptons= muons
@@ -390,7 +390,11 @@ for i in range(tree.GetEntries()):
             FakeLepton_phi[0]               =   leptons[0].phi
             FakeLepton_mass[0]              =   leptons[0].mass
             FakeLepton_pdgid[0]             =   leptons[0].pdgId
-            FakeLepton_pfRelIso03[0]        =   leptons[0].pfRelIso03_all
+            FLrelIso04=-999
+            if abs(leptons[0])==11:     FLrelIso04=leptons[0].jetRelIso
+            elif abs(leptons[0])==13:   FLrelIso04=leptons[0].pfRelIso04_all
+
+            FakeLepton_pfRelIso04[0]        =   FLrelIso04
             if isMC: FakeLepton_isPrompt[0]          =   leptons[0].genPartFlav
             
             eventobuono=i
