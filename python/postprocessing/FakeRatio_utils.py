@@ -184,9 +184,9 @@ def QCDEnrichedRegionLeptons(ele, mu, MET):
     nEle=0
     nMu=0
     for electron in ele:
-        if electron.pfRelIso03_all<1: nEle+=1
+        if electron.jetRelIso<1 and electron.mvaFall17V2Iso_WP90: nEle+=1
     for muon in mu:
-        if muon.pfRelIso03_all<1: nMu=+1
+        if muon.pfRelIso04_all<1 and muon.tightId: nMu=+1
     
     nLeps=nEle+nMu
     #if(nLeps==1): print("This evento is good")
@@ -195,13 +195,6 @@ def QCDEnrichedRegionLeptons(ele, mu, MET):
         isEle=1
     if nMu==1:
         isMu=1
-    
-    #if isEle:    
-        #print("mT ele-MET: ", mTlepMet(MET, ele[0]))
-    #    if mTlepMet(MET, ele[0])>MTLEPMETQCDCUT: return False, isEle
-    #if isMu==1:
-        #print("mT mu-MET: ", mTlepMet(MET, mu[0]))
-    #    if mTlepMet(MET, mu[0])>MTLEPMETQCDCUT: return False, isEle
     
     return True, isEle
 

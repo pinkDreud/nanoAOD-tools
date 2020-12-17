@@ -376,26 +376,40 @@ for i in range(tree.GetEntries()):
             if isMC: FakeTau_isPrompt[0]         =   taus[0].genPartFlav
         
         if QCDRegion_lep and not (len(electrons)==0 and len(muons)==0):
-            if isEle:   mT_lepMET[0]=mTlepMet(met, electrons[0])
-            else:       mT_lepMET[0]=mTlepMet(met, muons[0])
-            isFake_lepton[0]=1
-            if isEle and electrons[0].jetRelIso<0.08:        isFake_leptonAndPassCuts[0]=1
-            if isEle==0 and muons[0].pfRelIso04_all<0.15:         isFake_leptonAndPassCuts[0]=1
-            
             if isEle:   leptons=electrons
             else:       leptons= muons
+            lepgood=none
+            if isEle:
+                for ele in electrons:
+                    if ele.jetRelIso<1 and ele.mvaFall17V2Iso_WP90: 
+                        lepgood=ele
+                        break
+            else:
+                for mu in muons:
+                    if mu.pfRelIso04_all<1 and mu.tightId:
+                        lepgood=mu
+                        break
 
-            FakeLepton_pt[0]                =   leptons[0].pt
-            FakeLepton_eta[0]               =   leptons[0].eta
-            FakeLepton_phi[0]               =   leptons[0].phi
-            FakeLepton_mass[0]              =   leptons[0].mass
-            FakeLepton_pdgid[0]             =   leptons[0].pdgId
+            mT_lepMET[0]=mTlepMet(met, lepgood)
+            
+            isFake_lepton[0]=1
+            
+            if abs(lepgood.pdgId)==11:
+                if lepgood.jetRelIso<0.08:        isFake_leptonAndPassCuts[0]=1
+            if abs(lephood.pdgId)==13:
+                if lepgood.pfRelIso04_all<0.15:         isFake_leptonAndPassCuts[0]=1
+
+            FakeLepton_pt[0]                =   lepgood.pt
+            FakeLepton_eta[0]               =   lepgood.eta
+            FakeLepton_phi[0]               =   lepgood.phi
+            FakeLepton_mass[0]              =   lepgood.mass
+            FakeLepton_pdgid[0]             =   lepgood.pdgId
             FLrelIso04=-999
-            if abs(leptons[0])==11:     FLrelIso04=leptons[0].jetRelIso
-            elif abs(leptons[0])==13:   FLrelIso04=leptons[0].pfRelIso04_all
+            if abs(leptons[0])==11:     FLrelIso04=lepgood.jetRelIso
+            elif abs(leptons[0])==13:   FLrelIso04=lepgood.pfRelIso04_all
 
             FakeLepton_pfRelIso04[0]        =   FLrelIso04
-            if isMC: FakeLepton_isPrompt[0]          =   leptons[0].genPartFlav
+            if isMC: FakeLepton_isPrompt[0]          =   lepgood.genPartFlav
             
             eventobuono=i
 
