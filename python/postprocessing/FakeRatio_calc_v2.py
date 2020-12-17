@@ -11,7 +11,7 @@ from PhysicsTools.NanoAODTools.postprocessing.samples.samples import *
 
 MET_cut=30
 mt_lepMET_cut=20
-evs=1000000
+evs=0
 
 usage = 'python FakeRatio_calc_v2.py -b -o --promptFakeTau'
 parser = optparse.OptionParser(usage)
@@ -20,7 +20,7 @@ parser.add_option('-b', '--bkg', dest='bkg', default = False,action='store_true'
 parser.add_option('-o', '--onlybkg', dest='onlybkg', default = False,action='store_true', help='Only MC contribution, default false')
 parser.add_option('--promptFakeTau', dest='promptFakeTau', default = False,action='store_true', help='Only MC contribution, default false')
 
-parser.add_option('--input', dest='infolder', type=str, default = 'FakeRatio_v4', help='Please enter an input folder folder')
+parser.add_option('--input', dest='infolder', type=str, default = 'FR_v6', help='Please enter an input folder folder')
 (opt, args) = parser.parse_args()
 input_folder="/eos/user/m/mmagheri/VBS/nosynch/"+opt.infolder+"/"
 
