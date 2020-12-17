@@ -1,7 +1,7 @@
-root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/GluGluToWWToMNEN_13TeV_MCFM701_pythia8/GluGluToWWToMNuENu_2017/201124_093744/0000/tree_hadd_7.root
-root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/GluGluToWWToMNEN_13TeV_MCFM701_pythia8/GluGluToWWToMNuENu_2017/201124_093744/0000/tree_hadd_3.root
-root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/GluGluToWWToMNEN_13TeV_MCFM701_pythia8/GluGluToWWToMNuENu_2017/201124_093744/0000/tree_hadd_6.root
-root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/GluGluToWWToMNEN_13TeV_MCFM701_pythia8/GluGluToWWToMNuENu_2017/201124_093744/0000/tree_hadd_1.root
-root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/GluGluToWWToMNEN_13TeV_MCFM701_pythia8/GluGluToWWToMNuENu_2017/201124_093744/0000/tree_hadd_4.root
-root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/GluGluToWWToMNEN_13TeV_MCFM701_pythia8/GluGluToWWToMNuENu_2017/201124_093744/0000/tree_hadd_2.root
-root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/GluGluToWWToMNEN_13TeV_MCFM701_pythia8/GluGluToWWToMNuENu_2017/201124_093744/0000/tree_hadd_5.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/GluGluToWWToMNEN_13TeV_MCFM701_pythia8/GluGluToWWToMNuENu_2017/201210_115203/0000/tree_hadd_7.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/GluGluToWWToMNEN_13TeV_MCFM701_pythia8/GluGluToWWToMNuENu_2017/201210_115203/0000/tree_hadd_3.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/GluGluToWWToMNEN_13TeV_MCFM701_pythia8/GluGluToWWToMNuENu_2017/201210_115203/0000/tree_hadd_6.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/GluGluToWWToMNEN_13TeV_MCFM701_pythia8/GluGluToWWToMNuENu_2017/201210_115203/0000/tree_hadd_1.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/GluGluToWWToMNEN_13TeV_MCFM701_pythia8/GluGluToWWToMNuENu_2017/201210_115203/0000/tree_hadd_4.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/GluGluToWWToMNEN_13TeV_MCFM701_pythia8/GluGluToWWToMNuENu_2017/201210_115203/0000/tree_hadd_2.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/GluGluToWWToMNEN_13TeV_MCFM701_pythia8/GluGluToWWToMNuENu_2017/201210_115203/0000/tree_hadd_5.root
