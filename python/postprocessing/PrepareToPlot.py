@@ -12,8 +12,11 @@ parser.add_option('-d', dest='dat', type=str, default = 'all', help='Default is 
 
 (opt, args) = parser.parse_args()
 
-username = str(os.environ.get('USER'))
-inituser = str(os.environ.get('USER')[0])
+#username = str(os.environ.get('USER'))
+#inituser = str(os.environ.get('USER')[0])
+
+username = 'mmagheri'
+inituser = 'm'
 
 #folder = "Eff_Jet" + opt.jetwp + "_Mu" + opt.muwp + "_Ele" + opt.elewp
 path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + opt.folder + "/"
@@ -61,6 +64,7 @@ def AreAllCondored(samplename):
 for k, v in class_dict.items():
     ismerged = False
     doesexist = []
+    merging = []
 
     kpath = path+k+"/"
 
@@ -88,6 +92,7 @@ for k, v in class_dict.items():
                         os.system("rm -f " + cpath + c.label + "_merged.root")
                 print c.label + " not merged so far"
                 print "Merging and luming " + c.label + "..."
+                merging.append(True)
                 if Debug:
                     print "python makeplot.py -y " + opt.year + " --merpart --lumi -d " + c.label + " --folder " + opt.folder
                 else:
@@ -96,11 +101,22 @@ for k, v in class_dict.items():
             else:
                 print c.label + " is already merged and lumied"
 
+        samplemerge = False
+
         print len(doesexist), len(v.components)
         if len(doesexist) == len(v.components):
-            if os.path.exists(kpath+k+".root"):
-               print k + " already merged"
+            if len(merging) == 0:
+                if os.path.exists(kpath+k+".root"):
+                    print k + " already merged"
+                    samplemerge = False
+                else:
+                    samplemerge = True
             else:
+                samplemerge = True
+
+            if samplemerge:
+                if os.path.exists(kpath+k+".root"):
+                    os.system("rm -f "+kpath+k+".root")
                 if Debug:
                     print "python makeplot.py -y ", opt.year, " --mertree -d " + k + " --folder ", opt.folder
                 else:

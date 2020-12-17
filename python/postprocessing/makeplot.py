@@ -31,6 +31,7 @@ parser.add_option('-f', '--folder', dest='folder', type='string', default = 'v7'
 parser.add_option('-d', '--dat', dest='dat', type='string', default = 'all', help="")
 parser.add_option('--user', dest='user', type='string', default=str(os.environ.get('USER')), help='User')
 parser.add_option('--ttbar', dest='ttbar', default = False, action='store_true', help='Enable ttbar CR, default disabled')
+parser.add_option('--wjets', dest='wjets', default = False, action='store_true', help='Enable WJets CR, default disabled')
 
 (opt, args) = parser.parse_args()
 
@@ -520,7 +521,12 @@ if opt.bveto:
 elif opt.ttbar:
      cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==0&&pass_jet_selection==1&&pass_b_veto==0&&(" + cut + ")", 
                  'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==0&&pass_jet_selection==1&&pass_b_veto==0&&pass_mjj_cut==1&&pass_MET_cut==1&&(" + cut + ")", 
-                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1&&(" + cut + ")", 
+                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==0&&pass_jet_selection==1&&pass_b_veto==0&&pass_mjj_cut==1&&pass_MET_cut==1&&(" + cut + ")", 
+          }
+elif opt.wjets:
+     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&(" + cut + ")", 
+                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&(" + cut + ")",
+                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&(" + cut + ")",
           }
      cut_tag = 'ttbar_CR'
      if opt.cut != "lepton_eta>-10.":
