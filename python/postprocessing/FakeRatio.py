@@ -361,24 +361,11 @@ for i in range(tree.GetEntries()):
         contagood+=1
         QCDRegion_tau=QCDEnrichedRegionTaus(taus, electrons, muons, met)
         QCDRegion_lep, isEle=QCDEnrichedRegionLeptons(electrons, muons, met)
-        
-        if QCDRegion_tau and len(taus)>0:
-            print('Event: ', i+1)
-            mT_tauMET=mTlepMet(met, taus[0])
-            isFake_tau[0]=1
-            if taus[0].idDeepTau2017v2p1VSjet>=64: isFake_tauAndPassCuts[0]=1 #errore, prima >=16. Deve esser >=64 (VT taglio usato in analisi)
-    
-            FakeTau_pt[0]               =   taus[0].pt
-            FakeTau_eta[0]              =   taus[0].eta
-            FakeTau_phi[0]              =   taus[0].phi
-            FakeTau_mass[0]             =   taus[0].mass
-            FakeTau_charge[0]           =   taus[0].charge
-            if isMC: FakeTau_isPrompt[0]         =   taus[0].genPartFlav
-        
+
         if QCDRegion_lep and not (len(electrons)==0 and len(muons)==0):
             if isEle:   leptons=electrons
             else:       leptons= muons
-            lepgood=none
+            lepgood=None
             if isEle:
                 for ele in electrons:
                     if ele.jetRelIso<1 and ele.mvaFall17V2Iso_WP90: 
@@ -412,11 +399,25 @@ for i in range(tree.GetEntries()):
             if isMC: FakeLepton_isPrompt[0]          =   lepgood.genPartFlav
             
             eventobuono=i
+        
+        elif QCDRegion_tau and len(taus)>0:
+            print('Event: ', i+1)
+            mT_tauMET=mTlepMet(met, taus[0])
+            isFake_tau[0]=1
+            if taus[0].idDeepTau2017v2p1VSjet>=64: isFake_tauAndPassCuts[0]=1 #errore, prima >=16. Deve esser >=64 (VT taglio usato in analisi)
+    
+            FakeTau_pt[0]               =   taus[0].pt
+            FakeTau_eta[0]              =   taus[0].eta
+            FakeTau_phi[0]              =   taus[0].phi
+            FakeTau_mass[0]             =   taus[0].mass
+            FakeTau_charge[0]           =   taus[0].charge
+            if isMC: FakeTau_isPrompt[0]         =   taus[0].genPartFlav
+        
+            eventobuono=i
 
 
     systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
     systTree.fillTreesSysts(trees, "all")
-
 
 
 outTreeFile.cd()

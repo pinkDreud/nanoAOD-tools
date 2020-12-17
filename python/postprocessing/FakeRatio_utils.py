@@ -175,8 +175,6 @@ def LeptonVetoTau(taus, ele, mu):
         
         return True
         
-
-
 def QCDEnrichedRegionLeptons(ele, mu, MET):
     isEle=0
     isMu=0
@@ -201,7 +199,7 @@ def QCDEnrichedRegionLeptons(ele, mu, MET):
 def QCDEnrichedRegionTaus(taus,ele, mu, MET):
     nTau=0
     for tau in taus:
-        if tau.idDeepTau2017v2p1VSjet>=+8: nTau+=1
+        if tau.idDeepTau2017v2p1VSjet>=8: nTau+=1
     if nTau==0: return False
     #   if MET.pt>METQCDENRICHEDCUT: return False
     #nTauL=0
@@ -226,7 +224,6 @@ def QCDEnrichedRegionTaus(taus,ele, mu, MET):
     if LeptonVetoTau(taus, ele, mu): return True
     else: return False
 
-
 def pTCalculator(pT):
     if pT<20:       return 1
     elif pT<30:     return 2
@@ -234,15 +231,11 @@ def pTCalculator(pT):
     elif pT<50:     return 4
     else:           return 5
 
-
 def etaCalculator(eta):
     if abs(eta)<1:      return "A"
     elif abs(eta)<1.4:  return "B"
     elif abs(eta)<2:    return "C"
     elif abs(eta)<2.4:  return "D"
-
-
-
 
 def IsNotTheSameObject(obj1, obj2):
     if obj1==obj2: return False

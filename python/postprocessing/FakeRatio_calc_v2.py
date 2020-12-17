@@ -24,10 +24,7 @@ parser.add_option('--input', dest='infolder', type=str, default = 'FR_v6', help=
 (opt, args) = parser.parse_args()
 input_folder="/eos/user/m/mmagheri/VBS/nosynch/"+opt.infolder+"/"
 
-
-
 bkg_files= ["DYJetsToLL_2017/DYJetsToLL_2017.root", "WJets_2017/WJets_2017.root"]
-
 
 Fake_dicti_ele = {
             '1A': ['|n|<1,     pT<20    ',  0,  0, 0.0],
@@ -138,6 +135,13 @@ def FakeCalc(sample, isData, nev):
         isMC_and_haspromptTau=False
         if opt.promptFakeTau: 
             isMC_and_haspromptTau=isMC and FakeTau.isPrompt==5 and isFake.tau==1 and opt.promptFakeTau
+
+        if isMC_and_haspromptLepton and isMC_and_haspromptTau:
+            isMC_and_hasprompTau=False
+
+        pTbin = 0
+        etaBin = 0
+        pos = 0
         
         if isMC_and_haspromptLepton or isData:    
             if abs(FakeLepton.eta)<2.4:

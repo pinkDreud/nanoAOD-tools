@@ -550,6 +550,57 @@ WJets_2017 = sample(ROOT.kGreen+2, 1, 1001, "W + Jets", "WJets_2017")
 WJets_2017.year = 2017
 WJets_2017.components = [WJetsHT70to100_2017, WJetsHT100to200_2017, WJetsHT200to400_2017, WJetsHT400to600_2017, WJetsHT600to800_2017, WJetsHT800to1200_2017, WJetsHT1200to2500_2017, WJetsHT2500toInf_2017]
 
+WJetsHT70to100_Fake_2017 = sample(ROOT.kGreen+2, 1, 1001, "W + Jets", "WJetsHT70to100_Fake_2017")
+WJetsHT70to100_Fake_2017.sigma = 1353 * 1.21 #pb
+WJetsHT70to100_Fake_2017.year = 2017
+WJetsHT70to100_Fake_2017.dataset = "/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8/"+tag_2017+"-v1/NANOAODSIM"
+
+WJetsHT100to200_Fake_2017 = sample(ROOT.kGreen+2, 1, 1001, "W + Jets", "WJetsHT100to200_Fake_2017")
+WJetsHT100to200_Fake_2017.sigma = 1345 * 1.21 #pb
+WJetsHT100to200_Fake_2017.year = 2017
+WJetsHT100to200_Fake_2017.dataset = "/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8/"+tag_2017+"-v1/NANOAODSIM"
+
+WJetsHT200to400_Fake_2017 = sample(ROOT.kGreen+2, 1, 1001, "W + Jets", "WJetsHT200to400_Fake_2017")
+WJetsHT200to400_Fake_2017.sigma = 359.7 * 1.21 #pb
+WJetsHT200to400_Fake_2017.year = 2017
+WJetsHT200to400_Fake_2017.dataset = "/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8/"+tag_2017+"-v1/NANOAODSIM"
+#WJetsHT200to400_Fake_2017.files = jr.json_reader(path+"/WJets_HT200To400_2017.json")
+
+WJetsHT400to600_Fake_2017 = sample(ROOT.kGreen+2, 1, 1001, "W + Jets", "WJetsHT400to600_Fake_2017")
+WJetsHT400to600_Fake_2017.sigma = 48.91 * 1.21 #pb
+WJetsHT400to600_Fake_2017.year = 2017
+WJetsHT400to600_Fake_2017.dataset = "/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8/"+tag_2017+"-v1/NANOAODSIM"
+#WJetsHT400to600_Fake_2017.files = jr.json_reader(path+"/WJets_HT400To600_2017.json")
+
+WJetsHT600to800_Fake_2017 = sample(ROOT.kGreen+2, 1, 1001, "W + Jets", "WJetsHT600to800_Fake_2017")
+WJetsHT600to800_Fake_2017.sigma = 12.05 * 1.21 #pb
+WJetsHT600to800_Fake_2017.year = 2017
+WJetsHT600to800_Fake_2017.dataset = "/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8/"+tag_2017+"-v1/NANOAODSIM"
+#WJetsHT600to800_Fake_2017.files = jr.json_reader(path+"/WJets_HT600To800_2017.json")
+
+WJetsHT800to1200_Fake_2017 = sample(ROOT.kGreen+2, 1, 1001, "W + Jets", "WJetsHT800to1200_Fake_2017")
+WJetsHT800to1200_Fake_2017.sigma = 5.501 * 1.21 #pb
+WJetsHT800to1200_Fake_2017.year = 2017
+WJetsHT800to1200_Fake_2017.dataset = "/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8/"+tag_2017+"-v1/NANOAODSIM"
+#WJetsHT800to1200_Fake_2017.files = jr.json_reader(path+"/WJets_HT800To1200_2017.json")
+
+WJetsHT1200to2500_Fake_2017 = sample(ROOT.kGreen+2, 1, 1001, "W + Jets", "WJetsHT1200to2500_Fake_2017")
+WJetsHT1200to2500_Fake_2017.sigma = 1.329 * 1.21 #pb
+WJetsHT1200to2500_Fake_2017.year = 2017
+WJetsHT1200to2500_Fake_2017.dataset = "/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8/"+tag_2017+"-v1/NANOAODSIM"
+#WJetsHT1200to2500_Fake_2017.files = jr.json_reader(path+"/WJets_HT1200To2500_2017.json")
+
+WJetsHT2500toInf_Fake_2017 = sample(ROOT.kGreen+2, 1, 1001, "W + Jets", "WJetsHT2500toInf_Fake_2017")
+WJetsHT2500toInf_Fake_2017.sigma = 0.03216 * 1.21 #pb
+WJetsHT2500toInf_Fake_2017.year = 2017
+WJetsHT2500toInf_Fake_2017.dataset = "/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/"+tag_2017+"-v1/NANOAODSIM"
+#WJetsHT2500toInf_Fake_2017.files = jr.json_reader(path+"/WJets_HT2500ToInf_2017.json")
+
+WJets_Fake_2017 = sample(ROOT.kGreen+2, 1, 1001, "W + Jets", "WJets_Fake_2017")
+WJets_Fake_2017.year = 2017
+WJets_Fake_2017.components = [WJetsHT70to100_Fake_2017, WJetsHT100to200_Fake_2017, WJetsHT200to400_Fake_2017, WJetsHT400to600_Fake_2017, WJetsHT600to800_Fake_2017, WJetsHT800to1200_Fake_2017, WJetsHT1200to2500_Fake_2017, WJetsHT2500toInf_Fake_2017]
+
+
 ################################ WZ ################################
 WZ_2017 = sample(ROOT.kYellow, 1, 1001, "WZ", "WZ_2017")
 WZ_2017.sigma = 47.13
@@ -591,10 +642,33 @@ DYJetsToLL_2017 = sample(ROOT.kCyan, 1, 1001, "DY + Jets", "DYJetsToLL_2017")
 DYJetsToLL_2017.year = 2017
 DYJetsToLL_2017.components = [DY1JetsToLL_2017, DY2JetsToLL_2017, DY3JetsToLL_2017, DY4JetsToLL_2017, DYJetsToLLM5to50_2017]
 
+DY1JetsToLL_Fake_2017 = sample(ROOT.kCyan, 1, 1001, "DY + 1 Jet", "DY1JetsToLL_Fake_2017")
+DY1JetsToLL_Fake_2017.sigma = 1012.0
+DY1JetsToLL_Fake_2017.year = 2017
+DY1JetsToLL_Fake_2017.dataset = "/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/" + tag2_2017 + "-v1/NANOAODSIM"
+
+DY2JetsToLL_Fake_2017 = sample(ROOT.kCyan, 1, 1001, "DY + 2 Jets", "DY2JetsToLL_Fake_2017")
+DY2JetsToLL_Fake_2017.sigma = 330.4
+DY2JetsToLL_Fake_2017.year = 2017
+DY2JetsToLL_Fake_2017.dataset = "/DY2JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/" + tag2_2017 + "_ext1-v1/NANOAODSIM"
+
+DY3JetsToLL_Fake_2017 = sample(ROOT.kCyan, 1, 1001, "DY + 3 Jets", "DY3JetsToLL_Fake_2017")
+DY3JetsToLL_Fake_2017.sigma = 101.8
+DY3JetsToLL_Fake_2017.year = 2017
+DY3JetsToLL_Fake_2017.dataset = "/DY3JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+
+DY4JetsToLL_Fake_2017 = sample(ROOT.kCyan, 1, 1001, "DY + 4+ Jets", "DY4JetsToLL_Fake_2017")
+DY4JetsToLL_Fake_2017.sigma = 54.80
+DY4JetsToLL_Fake_2017.year = 2017
+DY4JetsToLL_Fake_2017.dataset = "/DY4JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/" + tag1_2017 + "-v1/NANOAODSIM"
+
+DYJetsToLL_Fake_2017 = sample(ROOT.kCyan, 1, 1001, "DY + Jets", "DYJetsToLL_Fake_2017")
+DYJetsToLL_Fake_2017.year = 2017
+DYJetsToLL_Fake_2017.components = [DY1JetsToLL_Fake_2017, DY2JetsToLL_Fake_2017, DY3JetsToLL_Fake_2017, DY4JetsToLL_Fake_2017]
+
 DYJetsToLL_Old_2017 = sample(ROOT.kCyan, 1, 1001, "DY + Jets", "DYJetsToLL_2017")
 DYJetsToLL_Old_2017.year = 2017
 DYJetsToLL_Old_2017.components = [DY1JetsToLL_2017, DY2JetsToLL_2017, DY3JetsToLL_2017, DY4JetsToLL_2017]
-
 
 DYJetsM_2017 = sample(ROOT.kCyan, 1, 1001, "DY + Jets (M)", "DYJetsM_2017")
 DYJetsM_2017.year = 2017
@@ -1015,8 +1089,10 @@ sample_dict={
     'QCD_2017':QCD_2017, 'QCDHT_100to200_2017':QCDHT_100to200_2017, 'QCDHT_200to300_2017':QCDHT_200to300_2017, 'QCDHT_300to500_2017':QCDHT_300to500_2017, 'QCDHT_500to700_2017':QCDHT_500to700_2017, 'QCDHT_700to1000_2017':QCDHT_700to1000_2017, 'QCDHT_1000to1500_2017':QCDHT_1000to1500_2017, 'QCDHT_1500to2000_2017':QCDHT_1500to2000_2017, 'QCDHT_2000toInf_2017':QCDHT_2000toInf_2017,
     'ZZtoLep_2017':ZZtoLep_2017, 'ZZTo2L2Nu_2017':ZZTo2L2Nu_2017, 'ZZJJTo4L_EWK_2017':ZZJJTo4L_EWK_2017, 'ZZJJTo4L_QCD_2017':ZZJJTo4L_QCD_2017, 'GluGluToContinToZZTo2e2nu_2017':GluGluToContinToZZTo2e2nu_2017, 'GluGluToContinToZZTo2e2mu_2017':GluGluToContinToZZTo2e2mu_2017, 'GluGluToContinToZZTo2e2tau_2017':GluGluToContinToZZTo2e2tau_2017, 'GluGluToContinToZZTo2mu2nu_2017':GluGluToContinToZZTo2mu2nu_2017, 'GluGluToContinToZZTo2mu2tau_2017':GluGluToContinToZZTo2mu2tau_2017, 'GluGluToContinToZZTo4e_2017':GluGluToContinToZZTo4e_2017, 'GluGluToContinToZZTo4mu_2017':GluGluToContinToZZTo4mu_2017,
     'TT_2017':TT_2017, 'TT_SemiLep2017':TT_SemiLep_2017, 'TT_Had_2017':TT_Had_2017,#'TT_DiLep_2017':TT_DiLep_2017, 
-    'WJets_2017':WJets_2017, 'WJetsHT70to100_2017':WJetsHT70to100_2017, 'WJetsHT100to200_2017':WJetsHT100to200_2017, 'WJetsHT200to400_2017':WJetsHT200to400_2017, 'WJetsHT400to600_2017':WJetsHT400to600_2017, 'WJetsHT600to800_2017':WJetsHT600to800_2017, 'WJetsHT800to1200_2017':WJetsHT800to1200_2017, 'WJetsHT1200to2500_2017':WJetsHT1200to2500_2017, 'WJetsHT2500toInf_2017':WJetsHT2500toInf_2017,
+    'WJets_2017':WJets_2017, 'WJets_Fake_2017':WJets_Fake_2017, 'WJetsHT70to100_2017':WJetsHT70to100_2017, 'WJetsHT100to200_2017':WJetsHT100to200_2017, 'WJetsHT200to400_2017':WJetsHT200to400_2017, 'WJetsHT400to600_2017':WJetsHT400to600_2017, 'WJetsHT600to800_2017':WJetsHT600to800_2017, 'WJetsHT800to1200_2017':WJetsHT800to1200_2017, 'WJetsHT1200to2500_2017':WJetsHT1200to2500_2017, 'WJetsHT2500toInf_2017':WJetsHT2500toInf_2017,
+    'WJets_Fake_2017':WJets_Fake_2017, 'WJetsHT70to100_Fake_2017':WJetsHT70to100_Fake_2017, 'WJetsHT100to200_Fake_2017':WJetsHT100to200_Fake_2017, 'WJetsHT200to400_Fake_2017':WJetsHT200to400_Fake_2017, 'WJetsHT400to600_Fake_2017':WJetsHT400to600_Fake_2017, 'WJetsHT600to800_Fake_2017':WJetsHT600to800_Fake_2017, 'WJetsHT800to1200_Fake_2017':WJetsHT800to1200_Fake_2017, 'WJetsHT1200to2500_Fake_2017':WJetsHT1200to2500_Fake_2017, 'WJetsHT2500toInf_Fake_2017':WJetsHT2500toInf_Fake_2017,
     'DYJetsToLL_2017':DYJetsToLL_2017, 'DY1JetsToLL_2017':DY1JetsToLL_2017, 'DY2JetsToLL_2017':DY2JetsToLL_2017, 'DY3JetsToLL_2017':DY3JetsToLL_2017, 'DY4JetsToLL_2017':DY4JetsToLL_2017,
+    'DYJetsToLL_Fake_2017':DYJetsToLL_Fake_2017, 'DY1JetsToLL_Fake_2017':DY1JetsToLL_Fake_2017, 'DY2JetsToLL_Fake_2017':DY2JetsToLL_Fake_2017, 'DY3JetsToLL_Fake_2017':DY3JetsToLL_Fake_2017, 'DY4JetsToLL_Fake_2017':DY4JetsToLL_Fake_2017,
     'DYJetsM_2017':DYJetsM_2017, 'DYJetsToLLM5to50_2017':DYJetsToLLM5to50_2017, 'DYJetsToLLM50_2017':DYJetsToLLM50_2017,
     # to here
     'VG_2017':VG_2017, 'ZG_2017':ZG_2017, 'WG_2017':WG_2017,
@@ -1039,7 +1115,9 @@ class_dict={
     'ZZtoLep_2017':ZZtoLep_2017,
     'TT_2017':TT_2017,
     'WJets_2017':WJets_2017,
+    'WJets_Fake_2017':WJets_Fake_2017,
     'DYJetsToLL_2017':DYJetsToLL_2017,
+    'DYJetsToLL_Fake_2017':DYJetsToLL_Fake_2017,
     #'DYJetsM_2017':DYJetsM_2017,
     # to here
     'VG_2017':VG_2017,
@@ -1063,10 +1141,12 @@ class_list=[
     WZ_2017,
     WrongSign_2017, 
     DYJetsToLL_2017,
+    DYJetsToLL_Fake_2017,
     #DYJetsM_2017,
     TT_2017,
     QCD_2017,
     WJets_2017,
+    WJets_Fake_2017,
     DataMu_2017,
     DataEle_2017,
 ]
