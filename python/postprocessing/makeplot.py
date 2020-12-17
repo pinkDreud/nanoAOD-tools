@@ -324,6 +324,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
                ytitle = "Events / %.0f units" %step
           else:
                ytitle = "Events / %.2f units" %step
+     print stack
      stack.GetYaxis().SetTitle(ytitle)
      stack.GetYaxis().SetTitleFont(42)
      stack.GetXaxis().SetLabelOffset(1.8)
@@ -523,6 +524,9 @@ elif opt.ttbar:
                  'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==0&&pass_jet_selection==1&&pass_b_veto==0&&pass_mjj_cut==1&&pass_MET_cut==1&&(" + cut + ")", 
                  'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==0&&pass_jet_selection==1&&pass_b_veto==0&&pass_mjj_cut==1&&pass_MET_cut==1&&(" + cut + ")", 
           }
+     cut_tag = 'ttbar_CR'
+     if opt.cut != "lepton_eta>-10.":
+          cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut)           
 elif opt.wjets:
      cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&(" + cut + ")", 
                  'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&(" + cut + ")",
@@ -549,7 +553,7 @@ else:
 
 lumi = {'2016': 35.9, "2017": 41.53, "2018": 59.7}
 
-print cut_dict, cut_tag
+print cut_tag
 
 for year in years:
     for sample in dataset_dict[year]:
