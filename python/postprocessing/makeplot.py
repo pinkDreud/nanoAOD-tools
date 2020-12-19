@@ -528,9 +528,9 @@ elif opt.ttbar:
      if opt.cut != "lepton_eta>-10.":
           cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut)           
 elif opt.wjets:
-     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&(" + cut + ")", 
-                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&(" + cut + ")",
-                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&(" + cut + ")",
+     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&MET_pt>=20.&&(" + cut + ")", 
+                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&MET_pt>=20.&&(" + cut + ")",
+                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&MET_pt>=20.(" + cut + ")",
           }
      cut_tag = 'wjets_CR'
      if opt.cut != "lepton_eta>-10.":
