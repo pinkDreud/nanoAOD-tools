@@ -19,7 +19,7 @@ import datetime
 import copy
 from array import array
 from skimtree_utils_ssWW_wFakes import *
-#prova just to vedere if it's big problema
+
 usage = "python tree_skimmer_ssWW_wFakes.py [nome_del_sample_in_samples.py] 0 [file_in_input] local"
 
 if sys.argv[4] == 'remote':
@@ -172,6 +172,7 @@ Subleadjet_mass             =   array.array('f', [-999.])
 Subleadjet_CSVv2_b          =   array.array('f', [-999.])
 Subleadjet_DeepFlv_b        =   array.array('f', [-999.])
 Subleadjet_DeepCSVv2_b      =   array.array('f', [-999.])
+nJets                       =   array.array('f', [-999.]) 
 var_list.append(Subleadjet_pt)
 var_list.append(Subleadjet_eta)
 var_list.append(Subleadjet_phi)
@@ -179,6 +180,7 @@ var_list.append(Subleadjet_mass)
 var_list.append(Subleadjet_CSVv2_b)
 var_list.append(Subleadjet_DeepFlv_b)
 var_list.append(Subleadjet_DeepCSVv2_b)
+var_list.append(nJets)
 
 #MET
 MET_pt                      =   array.array('f', [-999.])
@@ -189,7 +191,9 @@ var_list.append(MET_phi)
 
 
 Mjj                         =   array.array('f', [-999.])
+M_lepTau                    =   array.array('f', [-999.]) 
 var_list.append(Mjj)
+var_list.append(M_leptau)
 
 mT_lep_MET                  =   array.array('f', [-999.])
 mT_tau_MET                  =   array.array('f', [-999.])
@@ -267,6 +271,8 @@ systTree.branchTreesSysts(trees, "all", "Subleadjet_CSVv2_b",      outTreeFile, 
 systTree.branchTreesSysts(trees, "all", "Subleadjet_DeepFlv_b",    outTreeFile, Subleadjet_DeepFlv_b)
 systTree.branchTreesSysts(trees, "all", "Subleadjet_DeepCSVv2_b",  outTreeFile, Subleadjet_DeepCSVv2_b)
 
+systTree.branchTreesSysts(trees, "all", "nJets",  outTreeFile, nJets)
+
 #MET
 
 systTree.branchTreesSysts(trees, "all", "MET_pt",               outTreeFile, MET_pt)
@@ -276,6 +282,8 @@ systTree.branchTreesSysts(trees, "all", "Mjj",                  outTreeFile, Mjj
 systTree.branchTreesSysts(trees, "all", "mT_lep_MET",                  outTreeFile, mT_lep_MET)
 systTree.branchTreesSysts(trees, "all", "mT_tau_MET",                  outTreeFile, mT_tau_MET)
 systTree.branchTreesSysts(trees, "all", "mT_leptau_MET",                  outTreeFile, mT_leptau_MET)
+systTree.branchTreesSysts(trees, "all", "M_leptau",                  outTreeFile, M_leptau)
+
 systTree.branchTreesSysts(trees, "all", "DeltaEta_jj",                  outTreeFile, DeltaEta_jj)
 systTree.branchTreesSysts(trees, "all", "SF_Fake",                  outTreeFile, SF_Fake)
 
@@ -620,6 +628,9 @@ for i in range(tree.GetEntries()):
     
     tau_isolation[0]=   GoodTau.neutralIso
     
+    M_leptau=(GoodTau.p4() + tightlep.p4()).M()
+
+
     if GoodTau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET: pass_tau_vsJetWP[0]=1
     else: pass_tau_vsJetWP[0]=0
 
@@ -628,9 +639,11 @@ for i in range(tree.GetEntries()):
         pass_charge_selection[0]=1
 
     if (SingleEle or SingleMu) and pass_lepton_iso[0]==1 and pass_tau_vsJetWP[0]==1 and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1: Cut_dict[5][1]+=1
+    
+    nJets[0]=len(jets)
 
     outputJetSel=JetSelection(list(jets), GoodTau, GoodLep)
-    #generating casual differences 
+    
     if outputJetSel==-999:
         systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
         systTree.fillTreesSysts(trees, "all")
