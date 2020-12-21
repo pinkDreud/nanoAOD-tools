@@ -521,7 +521,7 @@ if opt.bveto:
           cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut) 
 elif opt.ttbar:
      cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==0&&pass_b_veto==0&&(" + cut + ")", 
-                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==0&&pass_b_veto==0&&pass_mjj_cut==1&&pass_MET_cut==1&&(" + cut + ")", 
+                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==0&&pass_b_veto==0&&(" + cut + ")", 
                  'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==0&&pass_b_veto==0&&(" + cut + ")", 
           }
      cut_tag = 'ttbar_CR'
