@@ -166,7 +166,7 @@ for sample in samples:
             presel = "(Flag_goodVertices && Flag_HBHENoiseFilter && Flag_HBHENoiseIsoFilter && Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_BadPFMuonFilter && Flag_eeBadScFilter) "
             if year == '2016':# and sample.runP != 'H':
                 if 'DataHT' not in sample.label:
-                    presel += " && ((HLT_Ele27_WPTight_Gsf || HLT_Ele32_WPTight_Gsf || HLT_IsoMu24 || HLT_IsoTkMu24) && Flag_globalSuperTightHalo2016Filter)"
+                    presel += " &&((HLT_Ele27_WPTight_Gsf || HLT_Ele32_WPTight_Gsf || HLT_IsoMu24 || HLT_IsoTkMu24) && Flag_globalSuperTightHalo2016Filter)"
                 else:
                     presel += " && (HLT_PFHT250 || HLT_PFHT300)"
             elif year == '2017':# and sample.runP != 'B':
