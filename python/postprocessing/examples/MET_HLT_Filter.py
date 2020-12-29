@@ -22,7 +22,7 @@ class MET_HLT_Filter(Module):
         if(self.year == 2016):
             good_HLT = (HLT.Ele27_WPTight_Gsf or HLT.Ele32_WPTight_Gsf or HLT.IsoMu24 or HLT.IsoTkMu24) and flag.globalSuperTightHalo2016Filter
         elif(self.year == 2017):
-            good_HLT = HLT.IsoMu24 or HLT.IsoMu27 or HLT.IsoMu30 or HLT.Mu50 or HLT.Ele115_CaloIdVT_GsfTrkIdT or HLT.Ele27_WPTight_Gsf or HLT.Ele32_WPTight_Gsf or HLT.Ele35_WPTight_Gsf or HLT.Ele32_WPTight_Gsf_L1DoubleEG or HLT.Photon200 or HLT.PFHT250 or HLT_PFHT350
+            good_HLT = HLT.IsoMu24 or HLT.IsoMu27 or HLT.Mu50 or HLT.Ele27_WPTight_Gsf or HLT.Ele32_WPTight_Gsf or HLT.Ele35_WPTight_Gsf or HLT.Ele32_WPTight_Gsf_L1DoubleEG or HLT.Photon200 or HLT.PFHT250 or HLT.PFHT350
         elif(self.year == 2018):
             good_HLT = HLT.IsoMu24 or HLT.Ele32_WPTight_Gsf_L1DoubleEG
         else:
