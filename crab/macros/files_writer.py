@@ -24,8 +24,11 @@ path = ".."
 for sample in samples:
     if not os.path.exists("./files/"):
         os.makedirs("./files/")
-    f = open("./files/"+str(sample.label)+".txt", "w")
-    url = os.popen('crab getoutput --xrootd --quantity="all" -d ' + path + '/crab_' + str(sample.label) + '/').readlines()#[0]
+    f = open("./files/"+str(sample.label)+"_bu.txt", "w")
+    #url = os.popen('crab getoutput --xrootd --quantity="all" -d ' + path + '/crab_' + str(sample.label) + '/').readlines()#[0]
+    url = os.popen('crab getoutput --xrootd --jobids=1 -d ' + path + '/crab_' + str(sample.label) + '/').readlines()[0]
+    '''
+    print("Printing out crabbed files for "+str(sample.label))
     for u in url:
         #f.write
         if 'root' not in u:
@@ -50,7 +53,7 @@ for sample in samples:
             f.write(u)
 f.close()
 
-'''
+    '''
     s1=url.split(str(os.environ.get('USER')))
     print(s1[1])
     s2=s1[1].split('0000')
@@ -62,7 +65,6 @@ f.close()
 
     #newurl = path_xrd
     #print(newurl)
-
 
     i=0
     print('\nChecking files in the folder '+newurl.strip('\n')+'\n')
@@ -88,4 +90,4 @@ f.close()
     #print('Setting cmsenv again')
     #os.popen("eval `scram runtime -csh`")
     print('Goodbye')
-'''
+
