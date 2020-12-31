@@ -153,20 +153,20 @@ def LeptonVetoTau(taus, ele, mu):
         tau1.SetPtEtaPhiM(taus[i].pt, taus[i].eta, taus[i].phi, taus[i].mass)
         j=i
         while j<len(taus):
-            print('Combination: ', i, j)
+            #print('Combination: ', i, j)
             if taus[j].idDeepTau2017v2p1VSjet>=+16:
                 tau2.SetPtEtaPhiM(taus[j].pt, taus[j].eta, taus[j].phi, taus[j].mass)
                 tauSum=tau1+tau2
                 if(abs(tauSum.M()-90)<15): return False
             j=j+1
         for electron in ele:
-            print('Electron')
+            #print('Electron')
             eleV=ROOT.TLorentzVector(0,0,0,0)
             eleV.SetPtEtaPhiM(electron.pt, electron.eta, electron.phi, electron.mass)
             tauSum=tau1+eleV
             if(abs(tauSum.M()-90)<15): return False
         for muon in mu:
-            print('Muon')
+            #print('Muon')
             muV=ROOT.TLorentzVector(0,0,0,0)
             muV.SetPtEtaPhiM(muon.pt, muon.eta, muon.phi, muon.mass)
             tauSum=tau1+muV
@@ -500,11 +500,14 @@ def sameflav_filter(jets, flav): #returns a collection of only b-gen jets (to us
     return list(filter(lambda x : x.partonFlavour == flav, jets))
 
 def trig_map(HLT, PV, year, runPeriod):
-    isGoodPV = (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness                 
-    passMu = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness             
-    passEle = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness            
-    passHT = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness             
-    noTrigger = False#not(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness       
+    isGoodPV    =   (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness                 
+    passMu      =   False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness             
+    passEle     =   False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness            
+    passHT      =   False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness             
+    noTrigger   =   False#not(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness       
+    
+    passEleLoose    =   False #theese 2 "pass*Loose" will use the loose triggers for ele/mu and be used for the Fake calculation
+    passMuLoose     =   False
 
     if(year == 2016):# and runPeriod != 'H'):                                                                                    
         if(HLT.IsoMu24 or HLT.IsoTkMu24):
@@ -524,6 +527,11 @@ def trig_map(HLT, PV, year, runPeriod):
             passHT = True
         if not(passMu or passEle) and not isGoodPV:
             noTrigger = True
+        if (HLT.IsoMu27): #triggers for loose must be updated TODO
+            passMuLoose = True
+        if(HLT.Ele32_WPTight_Gsf_L1DoubleEG): #triggers for loose must be updated TODO
+            passEleLoose = True
+    
     elif(year == 2018):
         if(HLT.IsoMu24):
             passMu = True
@@ -537,7 +545,7 @@ def trig_map(HLT, PV, year, runPeriod):
     else:
         print('Wrong year! Please enter 2016, 2017, or 2018')
 
-    return (passMu and isGoodPV), (passEle and isGoodPV), (passHT and isGoodPV), noTrigger
+    return (passMu and isGoodPV), (passEle and isGoodPV), (passHT and isGoodPV), noTrigger, (passMuLoose and isGoodPV), (passEleLoose and isGoodPV)
 
 def get_ptrel(lepton, jet):
     ptrel = ((jet.p4()-lepton.p4()).Vect().Cross(lepton.p4().Vect())).Mag()/(jet.p4().Vect().Mag())

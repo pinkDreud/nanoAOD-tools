@@ -9,8 +9,8 @@ from PhysicsTools.NanoAODTools.postprocessing.samples.samples import *
 
 
 
-MET_cut=30
-mt_lepMET_cut=20
+MET_cut=40
+mt_lepMET_cut=40
 evs=0
 
 usage = 'python FakeRatio_calc_v2.py -b -o --promptFakeTau'
