@@ -279,7 +279,8 @@ contagood=0
 #++++++++++++++++++++++++++++++++++
 #++   looping over the events    ++
 #++++++++++++++++++++++++++++++++++
-for i in range(tree.GetEntries()):
+#for i in range(tree.GetEntries()):
+for i in range(10000):
     #reinizializza tutte le variabili a 0, per sicurezza
     for j, var in enumerate(var_list):
         if j<len(var_list):
@@ -349,11 +350,24 @@ for i in range(tree.GetEntries()):
     else:
         runPeriod = sample.runP
     
-    passMu, passEle, passHT, noTrigger = trig_map(HLT, PV, year, runPeriod)
+    passMu, passEle, passHT, noTrigger, passEleLoose, passMuLoose = trig_map(HLT, PV, year, runPeriod)
 
-    if not passHT: continue
-
-    if passHT:
+    conditionToSave=False
+    waw="niet"
+    if "SingleElectron" in sample.dataset:  
+        conditionToSave= passEleLoose
+        waw="electron"
+    if "SingleMuon" in sample.dataset:      
+        conditionToSave= passMuLoose 
+        waw="mu"
+    if "JetHT" in sample.dataset:           
+        conditionToSave= passHT 
+        waw="other stuff"
+    
+    print i+1, waw
+    if not conditionToSave: continue
+    
+    else:
         
         MET_pt[0]=met.pt
         MET_phi[0]=met.phi
@@ -383,7 +397,7 @@ for i in range(tree.GetEntries()):
             
             if abs(lepgood.pdgId)==11:
                 if lepgood.jetRelIso<0.08:        isFake_leptonAndPassCuts[0]=1
-            if abs(lephood.pdgId)==13:
+            if abs(lepgood.pdgId)==13:
                 if lepgood.pfRelIso04_all<0.15:         isFake_leptonAndPassCuts[0]=1
 
             FakeLepton_pt[0]                =   lepgood.pt
@@ -392,16 +406,17 @@ for i in range(tree.GetEntries()):
             FakeLepton_mass[0]              =   lepgood.mass
             FakeLepton_pdgid[0]             =   lepgood.pdgId
             FLrelIso04=-999
-            if abs(leptons[0])==11:     FLrelIso04=lepgood.jetRelIso
-            elif abs(leptons[0])==13:   FLrelIso04=lepgood.pfRelIso04_all
+            
+            if abs(lepgood.pdgId)==11:     FLrelIso04=lepgood.jetRelIso
+            elif abs(lepgood.pdgId)==13:   FLrelIso04=lepgood.pfRelIso04_all
 
-            FakeLepton_pfRelIso04[0]        =   FLrelIso04
-            if isMC: FakeLepton_isPrompt[0]          =   lepgood.genPartFlav
+            FakeLepton_pfRelIso04[0]            =   FLrelIso04
+            if isMC: FakeLepton_isPrompt[0]     =   lepgood.genPartFlav
             
             eventobuono=i
         
         elif QCDRegion_tau and len(taus)>0:
-            print('Event: ', i+1)
+            #print('Event: ', i+1)
             mT_tauMET=mTlepMet(met, taus[0])
             isFake_tau[0]=1
             if taus[0].idDeepTau2017v2p1VSjet>=64: isFake_tauAndPassCuts[0]=1 #errore, prima >=16. Deve esser >=64 (VT taglio usato in analisi)
