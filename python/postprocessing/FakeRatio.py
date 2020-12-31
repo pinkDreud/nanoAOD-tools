@@ -350,7 +350,7 @@ for i in range(10000):
     else:
         runPeriod = sample.runP
     
-    passMu, passEle, passHT, noTrigger, passEleLoose, passMuLoose = trig_map(HLT, PV, year, runPeriod)
+    passMu, passEle, passHT, noTrigger, passMuLoose, passEleLoose = trig_map(HLT, PV, year, runPeriod)
 
     conditionToSave=False
     waw="niet"
@@ -364,11 +364,16 @@ for i in range(10000):
         conditionToSave= passHT 
         waw="other stuff"
     
-    print i+1, waw
+    if passEle!=passEleLoose: print "maremmamaiala"    
+    if conditionToSave!=passEleLoose: 
+        print "NINOOOO", conditionToSave, passEleLoose, passEle
+
     if not conditionToSave: continue
+    
     
     else:
         
+        print i+1, waw
         MET_pt[0]=met.pt
         MET_phi[0]=met.phi
 
