@@ -24,7 +24,7 @@ path = ".."
 for sample in samples:
     if not os.path.exists("./files/"):
         os.makedirs("./files/")
-    f = open("./files/"+str(sample.label)+"_bu.txt", "w")
+    f = open("./files/"+str(sample.label)+".txt", "w")
     url = os.popen('crab getoutput --xrootd --quantity="all" -d ' + path + '/crab_' + str(sample.label) + '/').readlines()#[0]
     #url = os.popen('crab getoutput --xrootd --jobids=1 -d ' + path + '/crab_' + str(sample.label) + '/').readlines()[0]
     
