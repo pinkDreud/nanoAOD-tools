@@ -191,7 +191,7 @@ var_list.append(MET_phi)
 
 
 Mjj                         =   array.array('f', [-999.])
-M_lepTau                    =   array.array('f', [-999.]) 
+M_leptau                    =   array.array('f', [-999.]) 
 var_list.append(Mjj)
 var_list.append(M_leptau)
 
