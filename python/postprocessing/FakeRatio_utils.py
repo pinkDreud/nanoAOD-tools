@@ -141,88 +141,78 @@ def mTlepMet(MET, lepton):
     return math.sqrt(2*lepton.pt*MET.sumEt*(1-math.cos(lepton.phi-MET.phi)))
 
 
-def LeptonVetoTau(taus, ele, mu):
+def Veto_Tau_ZMass(taus, ele, mu):
     #veto the event if:
     #   we have two taus with mass within 15 GeV from the Z
     #   we have one tau and one lepton within 15 GeV from the Z
+    if len(taus)==0: return True
     
     for i in range(len(taus)):
         tauSum=ROOT.TLorentzVector(0,0,0,0)
         tau1=ROOT.TLorentzVector(0,0,0,0)
         tau2=ROOT.TLorentzVector(0,0,0,0)
         tau1.SetPtEtaPhiM(taus[i].pt, taus[i].eta, taus[i].phi, taus[i].mass)
-        j=i
+        j=i+1
         while j<len(taus):
-            #print('Combination: ', i, j)
-            if taus[j].idDeepTau2017v2p1VSjet>=+16:
+            if taus[j].idDeepTau2017v2p1VSjet>=+16 and deltaR(taus[j].eta, taus[j].phi, taus[i].eta, taus[i].phi)>0.5:
                 tau2.SetPtEtaPhiM(taus[j].pt, taus[j].eta, taus[j].phi, taus[j].mass)
                 tauSum=tau1+tau2
-                if(abs(tauSum.M()-90)<15): return False
+                if(abs(tauSum.M()-90)<15): return True
             j=j+1
+
         for electron in ele:
-            #print('Electron')
+            #print('Electrion')
+            if not (electron.jetRelIso<1 and electron.mvaFall17V2Iso_WP90): continue
+            if deltaR(electron.eta, electron.phi, tau1.Eta(), tau1.Phi())<0.5: continue
             eleV=ROOT.TLorentzVector(0,0,0,0)
             eleV.SetPtEtaPhiM(electron.pt, electron.eta, electron.phi, electron.mass)
             tauSum=tau1+eleV
-            if(abs(tauSum.M()-90)<15): return False
+            if(abs(tauSum.M()-90)<15): return True
+        
         for muon in mu:
             #print('Muon')
+            if not(muon.pfRelIso04_all<1 and muon.tightId): continue
+            if deltaR(muon.eta, muon.phi, tau1.Eta(), tau1.Phi())<0.5: continue
             muV=ROOT.TLorentzVector(0,0,0,0)
             muV.SetPtEtaPhiM(muon.pt, muon.eta, muon.phi, muon.mass)
             tauSum=tau1+muV
-            if(abs(tauSum.M()-90)<15): return False
-        
-        
-        return True
-        
-def QCDEnrichedRegionLeptons(ele, mu, MET):
+            if(abs(tauSum.M()-90)<15): return True
+        return False
+    #return false if we have tau+lepton (tau,e,mu)  within 15 GeV from the Z with .5 distance in dR
+
+
+
+def Veto_Tau_Leptons(taus,ele, mu):
+
+    if len(taus)==0: return True
+    nTau=0
+    for tau in taus:
+        if tau.idDeepTau2017v2p1VSjet>=16: nTau+=1
+    if nTau!=1: return False
+    for electron in ele:
+        if deltaR(taus[0].eta, taus[0].phi, electron.eta, electron.pt)>0.5 and electron.jetRelIso<1 and electron.mvaFall17V2Iso_WP90: return False
+    for muon in mu:
+        if deltaR(taus[0].eta, taus[0].phi, muon.eta, muon.phi)>0.5 and muon.pfRelIso04_all<1 and muon.tightId: return False 
+    else: return False
+
+       
+def Veto_Light_Leptons(ele, mu):
     isEle=0
     isMu=0
-    #if MET.pt>METQCDENRICHEDCUT: return False, isEle
     nEle=0
     nMu=0
     for electron in ele:
         if electron.jetRelIso<1 and electron.mvaFall17V2Iso_WP90: nEle+=1
     for muon in mu:
         if muon.pfRelIso04_all<1 and muon.tightId: nMu=+1
-    
     nLeps=nEle+nMu
-    #if(nLeps==1): print("This evento is good")
-    if nLeps!=1: return False, 0
+    if nLeps!=1: return True, 0
     if nEle==1:
         isEle=1
     if nMu==1:
         isMu=1
     
-    return True, isEle
-
-def QCDEnrichedRegionTaus(taus,ele, mu, MET):
-    nTau=0
-    for tau in taus:
-        if tau.idDeepTau2017v2p1VSjet>=8: nTau+=1
-    if nTau==0: return False
-    #   if MET.pt>METQCDENRICHEDCUT: return False
-    #nTauL=0
-    #nTauM=0
-    #for tau in taus:
-    #    if tau.idDeepTau2017v2p1VSjet>=+8: nTauL+=1
-    #    if tau.idDeepTau2017v2p1VSjet>=+16: nTauM+=1
-    #if nTau!=1: return False
-    '''
-    for electron in ele:
-        if electron.pfRelIso03_all<1: nEle+=1
-    for muon in mu:
-        if muon.pfRelIso03_all<1: nMu=+1
-    
-    nLeps=nEle+nMu
-    #if(nLeps==1): print("This evento is good")
-    if nLeps>0: return False
-    '''
-    #if nTauM>1: return False
-    #if nTauL==0: return False
-    #if mTlepMet(MET, taus[0])>MTLEPMETQCDCUT: return False
-    if LeptonVetoTau(taus, ele, mu): return True
-    else: return False
+    return False, isEle
 
 def pTCalculator(pT):
     if pT<20:       return 1

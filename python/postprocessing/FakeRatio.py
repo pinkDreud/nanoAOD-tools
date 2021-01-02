@@ -20,12 +20,19 @@ import copy
 from array import array
 from FakeRatio_utils import *
 
-usage = "python FakeRatio.py [nome_dataset_come_salvato_in_samples.py] [indice, di default 0] [path_file_da_processare] local"
+usage = "python FakeRatio.py [nome_dataset_come_salvato_in_samples.py] [indice, di default 0] [path_file_da_processare] local chosenTrigger"
+#chosenTrigger can be: electron, muon, HT
 
 usageCopyPaste="python FakeRatio.py DataHTC_2017 7 DataHTC_2017_ntuple.root local"
-eventobuono=-1
+
+chosenTrigger="Depending on the sample"
+
+if sys.argv[5]=="electron": chosenTrigger=sys.argv[5]
+if sys.argv[5]=="muon": chosenTrigger=sys.argv[5]
+if sys.argv[5]=="HT": chosenTrigger=sys.argv[5]
 
 
+print("Saving events with: ", chosenTrigger)
 
 if sys.argv[4] == 'remote':
     from samples import *
@@ -33,6 +40,7 @@ if sys.argv[4] == 'remote':
 else:
     from samples.samples import *
     Debug = True
+
 sample = sample_dict[sys.argv[1]]
 part_idx = sys.argv[2]
 file_list = list(map(str, sys.argv[3].strip('[]').split(',')))
@@ -159,7 +167,7 @@ FakeTau_eta                 =   array.array('f', [-999.])
 FakeTau_phi                 =   array.array('f', [-999.])
 FakeTau_charge              =   array.array('i', [-999])
 FakeTau_mass                =   array.array('f', [-999.])
-FakeTau_DeepTauWP       =   array.array('f', [-999.])
+FakeTau_DeepTauWP           =   array.array('f', [-999.])
 var_list.append(FakeTau_pt)
 var_list.append(FakeTau_isPrompt)
 var_list.append(FakeTau_eta)
@@ -168,18 +176,27 @@ var_list.append(FakeTau_charge)
 var_list.append(FakeTau_mass)
 var_list.append(FakeTau_DeepTauWP)
 
+
+Veto_LightLeptons           =   array.array('f', [-999.])
+Veto_TauLeptons             =   array.array('f', [-999.])
+Veto_TauZMass               =   array.array('f', [-999.])
+var_list.append(Veto_LightLeptons)
+var_list.append(Veto_TauLeptons)
+var_list.append(Veto_TauZMass)
+
+
 #MET
 MET_pt                      =   array.array('f', [-999.])
 MET_phi                     =   array.array('f', [-999.])
-mT_lepMET                     =   array.array('f', [-999.])
+mT_lepMET                   =   array.array('f', [-999.])
 
 var_list.append(MET_pt)
 var_list.append(MET_phi)
 var_list.append(mT_lepMET)
 
-isFake_tau                   =   array.array('i', [-999])
+isFake_tau                  =   array.array('i', [-999])
 isFake_tauAndPassCuts       =   array.array('i', [-999])
-isFake_lepton                =   array.array('i', [-999])
+isFake_lepton               =   array.array('i', [-999])
 isFake_leptonAndPassCuts    =   array.array('i', [-999])
 
 
@@ -205,11 +222,17 @@ systTree.branchTreesSysts(trees, "all", "FakeLepton_pfRelIso04",    outTreeFile,
 
 #all taus for fake calculation
 systTree.branchTreesSysts(trees, "all", "FakeTau_pt",               outTreeFile, FakeTau_pt)
-systTree.branchTreesSysts(trees, "all", "FakeTau_isPrompt",      outTreeFile, FakeTau_isPrompt)
+systTree.branchTreesSysts(trees, "all", "FakeTau_isPrompt",         outTreeFile, FakeTau_isPrompt)
 systTree.branchTreesSysts(trees, "all", "FakeTau_eta",              outTreeFile, FakeTau_eta)
 systTree.branchTreesSysts(trees, "all", "FakeTau_phi",              outTreeFile, FakeTau_phi)
 systTree.branchTreesSysts(trees, "all", "FakeTau_mass",             outTreeFile, FakeTau_mass)
 systTree.branchTreesSysts(trees, "all", "FakeTau_DeepTauWP",        outTreeFile, FakeTau_DeepTauWP)
+
+
+#Veto variables
+systTree.branchTreesSysts(trees, "all", "Veto_LightLeptons",        outTreeFile, Veto_LightLeptons)
+systTree.branchTreesSysts(trees, "all", "Veto_TauLeptons",          outTreeFile, Veto_TauLeptons)
+systTree.branchTreesSysts(trees, "all", "Veto_TauZMass",            outTreeFile, Veto_TauZMass)
 
 systTree.branchTreesSysts(trees, "all", "MET_pt",                   outTreeFile, MET_pt)
 systTree.branchTreesSysts(trees, "all", "mT_lepMET",                outTreeFile, mT_lepMET)
@@ -260,7 +283,6 @@ if(isMC):
             addPDF = False
     newfile.Close()
 
-contagood=0
 
 '''
 #++++++++++++++++++++++++++++++++++
@@ -275,12 +297,11 @@ nbinseff = 10
 h_eff_mu = ROOT.TH1D("h_eff_mu", "h_eff_mu", nbinseff, 0, nbinseff)
 h_eff_ele = ROOT.TH1D("h_eff_ele", "h_eff_ele", nbinseff, 0, nbinseff)
 '''
-contagood=0
 #++++++++++++++++++++++++++++++++++
 #++   looping over the events    ++
 #++++++++++++++++++++++++++++++++++
 #for i in range(tree.GetEntries()):
-for i in range(10000):
+for i in range(tree.GetEntries()):
     #reinizializza tutte le variabili a 0, per sicurezza
     for j, var in enumerate(var_list):
         if j<len(var_list):
@@ -353,49 +374,80 @@ for i in range(10000):
     passMu, passEle, passHT, noTrigger, passMuLoose, passEleLoose = trig_map(HLT, PV, year, runPeriod)
 
     conditionToSave=False
-    waw="niet"
-    if "SingleElectron" in sample.dataset:  
-        conditionToSave= passEleLoose
-        waw="electron"
-    if "SingleMuon" in sample.dataset:      
-        conditionToSave= passMuLoose 
-        waw="mu"
-    if "JetHT" in sample.dataset:           
-        conditionToSave= passHT 
-        waw="other stuff"
-    
-    if passEle!=passEleLoose: print "maremmamaiala"    
-    if conditionToSave!=passEleLoose: 
-        print "NINOOOO", conditionToSave, passEleLoose, passEle
-
+    if chosenTrigger=="Depending on the sample":
+        if "SingleElectron" in sample.dataset:  
+            conditionToSave= passEleLoose
+            waw="electron"
+        if "SingleMuon" in sample.dataset:      
+            conditionToSave= passMuLoose 
+            waw="mu"
+        if "JetHT" in sample.dataset:           
+            conditionToSave= passHT 
+            waw="other stuff"
+    elif chosenTrigger=="electron":
+        conditionToSave = passEleLoose
+    elif chosenTrigger=="muon":
+        conditionToSave = passMuLoose
+    elif chosenTrigger=="HT":
+        conditionToSave=passHT
+   
     if not conditionToSave: continue
     
     
-    else:
         
-        print i+1, waw
-        MET_pt[0]=met.pt
-        MET_phi[0]=met.phi
+    MET_pt[0]=met.pt
+    MET_phi[0]=met.phi
+    
+    if Veto_Tau_Leptons(taus, electrons, muons):    Veto_TauLeptons[0]=1
+    else:                                           Veto_TauLeptons[0]=0
 
-        contagood+=1
-        QCDRegion_tau=QCDEnrichedRegionTaus(taus, electrons, muons, met)
-        QCDRegion_lep, isEle=QCDEnrichedRegionLeptons(electrons, muons, met)
+    if Veto_Tau_ZMass(taus, electrons, muons):      Veto_TauZMass[0]=1
+    else:                                           Veto_TauZMass[0]=0
 
-        if QCDRegion_lep and not (len(electrons)==0 and len(muons)==0):
-            if isEle:   leptons=electrons
-            else:       leptons= muons
-            lepgood=None
-            if isEle:
-                for ele in electrons:
-                    if ele.jetRelIso<1 and ele.mvaFall17V2Iso_WP90: 
-                        lepgood=ele
-                        break
-            else:
-                for mu in muons:
-                    if mu.pfRelIso04_all<1 and mu.tightId:
-                        lepgood=mu
-                        break
+    eleGood=list(electrons)
+    muGood=list(muons)
+   
+    #print('Event n. ', i+1)
+    #print('Veto TauLeptons: ', Veto_TauLeptons[0], '\n', 'Veto Tau ZMass: ', Veto_TauZMass[0], '\n')
+    #print('len tau: ', len(taus))
+    if Veto_TauLeptons[0]==0 or Veto_TauZMass[0]==0: 
+        for ele in eleGood:
+            if deltaR(ele.eta, ele.phi, taus[0].eta, taus[0].phi)<0.5: eleGood.remove(ele)
+        for mu in muGood:
+            if deltaR(mu.eta, mu.phi, taus[0].eta, taus[0].phi)<0.5: muGood.remove(mu)
+   
 
+    Veto_LightLeptons[0], isEle=Veto_Light_Leptons(eleGood, muGood)
+    
+    nLepGood=-999
+    if isEle:   
+        leptons     =   eleGood
+        nLepGood    =   len(eleGood)
+    else:       
+        leptons     =   muGood
+        nLepGood    =   len(muGood)
+    
+    if nLepGood>0:
+         
+        lepgood=None
+        if isEle:
+            for ele in eleGood:
+                if ele.jetRelIso<1 and ele.mvaFall17V2Iso_WP90: 
+                    lepgood=ele
+                    break
+        else:
+            for mu in muGood:
+                if mu.pfRelIso04_all<1 and mu.tightId:
+                    lepgood=mu
+                    break
+        #print('Event n. ', i+1)
+        #print('number of good leptons: ', nLepGood)
+        #print('is it an electron?      ', isEle)
+        #print('is it a muon?           ', not isEle)
+        #print('does lepgood exist?     ', lepgood!=None)
+
+        if lepgood!=None:
+            
             mT_lepMET[0]=mTlepMet(met, lepgood)
             
             isFake_lepton[0]=1
@@ -418,23 +470,18 @@ for i in range(10000):
             FakeLepton_pfRelIso04[0]            =   FLrelIso04
             if isMC: FakeLepton_isPrompt[0]     =   lepgood.genPartFlav
             
-            eventobuono=i
-        
-        elif QCDRegion_tau and len(taus)>0:
-            #print('Event: ', i+1)
-            mT_tauMET=mTlepMet(met, taus[0])
-            isFake_tau[0]=1
-            if taus[0].idDeepTau2017v2p1VSjet>=64: isFake_tauAndPassCuts[0]=1 #errore, prima >=16. Deve esser >=64 (VT taglio usato in analisi)
+    if len(taus)>0:
+        mT_tauMET=mTlepMet(met, taus[0])
+        isFake_tau[0]=1
+        if taus[0].idDeepTau2017v2p1VSjet>=64: isFake_tauAndPassCuts[0]=1 #errore, prima >=16. Deve esser >=64 (VT taglio usato in analisi)
     
-            FakeTau_pt[0]               =   taus[0].pt
-            FakeTau_eta[0]              =   taus[0].eta
-            FakeTau_phi[0]              =   taus[0].phi
-            FakeTau_mass[0]             =   taus[0].mass
-            FakeTau_charge[0]           =   taus[0].charge
-            if isMC: FakeTau_isPrompt[0]         =   taus[0].genPartFlav
-        
-            eventobuono=i
-
+        FakeTau_pt[0]                   =   taus[0].pt
+        FakeTau_eta[0]                  =   taus[0].eta
+        FakeTau_phi[0]                  =   taus[0].phi
+        FakeTau_mass[0]                 =   taus[0].mass
+        FakeTau_charge[0]               =   taus[0].charge
+        if isMC: FakeTau_isPrompt[0]    =   taus[0].genPartFlav
+      
 
     systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
     systTree.fillTreesSysts(trees, "all")

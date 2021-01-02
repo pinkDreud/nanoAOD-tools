@@ -4,13 +4,15 @@ import optparse
 import sys
 
 
-usage = 'python submit_condor_FakeRatio.py -d dataset_name -f destination_folder' 
+usage = 'python submit_condor_FakeRatio.py -d dataset_name -f destination_folder --trig HT' 
 parser = optparse.OptionParser(usage)
 parser.add_option('-d', '--dat', dest='dat', type=str, default = '', help='Please enter a dataset name')
 parser.add_option('-f', '--folder', dest='folder', type=str, default = '', help='Please enter a destination folder')
 parser.add_option('--max', dest='maxj', type=int, default = 0, help='Please enter working point!')
+parser.add_option('--trig', dest='trig', type=str, default = '', help='Please enter trigger (electron, muon, HT)')
 #parser.add_option('-u', '--user', dest='us', type='string', default = 'ade', help="")
 (opt, args) = parser.parse_args()
+
 #Insert here your uid... you can see it typing echo $uid
 
 username = str(os.environ.get('USER'))
@@ -86,11 +88,11 @@ for sample in samples:
             os.popen('condor_submit condor.sub')
             print('condor_submit condor.sub')
             #os.popen("python FakeRatio.py " " + sample.label + " " + str(i) + " " + str(files))
-            print("python FakeRatio.py " + sample.label + " " + str(i) + " " + str(files) + " remote")
+            print("python FakeRatio.py " + sample.label + " " + str(i) + " " + str(files) + " remote " + opt.trig)
     else:
         for i in range(len(files_list)/split+1):
             sub_writer(sample, i,  ",".join( e for e in files_list[split*i:split*(i+1)]), folder)
             print('condor_submit condor.sub')
             os.popen('condor_submit condor.sub')
             #os.popen("python FakeRatio.py " + sample.label + " " + str(i) + " " + ",".join( e for e in files_list[split*i:split*(i+1)]))
-            print("python FakeRatio.py " + sample.label + " " + str(i) + " " + ",".join( e for e in files_list[split*i:split*(i+1)]) + " remote")
+            print("python FakeRatio.py " + sample.label + " " + str(i) + " " + ",".join( e for e in files_list[split*i:split*(i+1)]) + " remote " + opt.trig)
