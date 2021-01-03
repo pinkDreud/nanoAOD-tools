@@ -449,7 +449,47 @@ for i in range(tree.GetEntries()):
    
     if not conditionToSave: continue
     
+    SingleEle   =   False
+    SingleMu    =   False
+    ElMu        =   False
+
+    HighestLepPt  = -999.
+    LeadLepFamily = "not selected"
     
+    if passEle and not passMu:
+        if len(electrons)>0:  
+            SingleEle=True
+            LeadLepFamily="electrons"
+            HighestLepPt=electrons[0].pt
+            #print("HighestLepPt:", HighestLepPt)
+        else:
+            continue
+
+    elif passMu and not passEle:
+        if len(muons)>0:
+            SingleMu=True
+            LeadLepFamily="muons"
+            HighestLepPt=muons[0].pt
+        else:
+            continue
+
+    elif passMu and passEle:
+        ElMu=True
+
+    if ElMu:
+        for mu in muons:
+            if abs(mu.pt)>HighestLepPt:
+                HighestLepPt=mu.pt
+                SingleEle = False
+                SingleMu = True
+                break
+        for ele in electrons:
+            if abs(ele.pt)>HighestLepPt:
+                HighestLepPt=ele.pt
+                SingleEle = True
+                SingleMu = False
+                break
+  
         
     MET_pt[0]=met.pt
     MET_phi[0]=met.phi
@@ -463,9 +503,6 @@ for i in range(tree.GetEntries()):
     eleGood=list(electrons)
     muGood=list(muons)
    
-    #print('Event n. ', i+1)
-    #print('Veto TauLeptons: ', Veto_TauLeptons[0], '\n', 'Veto Tau ZMass: ', Veto_TauZMass[0], '\n')
-    #print('len tau: ', len(taus))
     if Veto_TauLeptons[0]==0 or Veto_TauZMass[0]==0: 
         for ele in eleGood:
             if deltaR(ele.eta, ele.phi, taus[0].eta, taus[0].phi)<0.5: eleGood.remove(ele)
@@ -473,7 +510,7 @@ for i in range(tree.GetEntries()):
             if deltaR(mu.eta, mu.phi, taus[0].eta, taus[0].phi)<0.5: muGood.remove(mu)
    
 
-    if len(muGood)>0:
+    if len(muGood)>0 and SingleMu:
         Veto_Muons[0]=Veto_muons(muGood)
         singleMuGood=None
         for mu in muGood:
@@ -489,7 +526,7 @@ for i in range(tree.GetEntries()):
             FakeMuon_pdgid[0]   =   singleMuGood.pdgId
             FakeMuon_relIso[0]  =   singleMuGood.pfRelIso04_all
     
-    if len(eleGood)>0:
+    if len(eleGood)>0 and SingleEle:
         Veto_Electrons[0]=Veto_electrons(eleGood)
         singleEleGood=None
         for ele in eleGood:
