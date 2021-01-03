@@ -214,6 +214,30 @@ def Veto_Light_Leptons(ele, mu):
     
     return False, isEle
 
+def Veto_electrons(ele):
+    nEle=0
+
+    for electron in ele:
+        if electron.jetRelIso<1 and electron.mvaFall17V2Iso_WP90: 
+            nEle+=1
+            if nEle>1: return True
+    
+    if nEle!=1: return True
+    else: return False
+    
+def Veto_muons(mu):
+    nMu=0
+
+    for muon in mu:
+        if muon.pfRelIso04_all<1 and muon.tightId:
+            nMu=+1
+            if nMu>1: return True
+    if nMu!=1: return True
+    else: return False
+               
+
+
+
 def pTCalculator(pT):
     if pT<20:       return 1
     elif pT<30:     return 2

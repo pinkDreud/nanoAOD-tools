@@ -161,6 +161,46 @@ var_list.append(FakeLepton_mass)
 var_list.append(FakeLepton_pdgid)
 var_list.append(FakeLepton_pfRelIso04)
 
+FakeElectron_pt             =   array.array('f', [-999.])
+FakeElectron_relIso         =   array.array('f', [-999.])
+FakeElectron_eta            =   array.array('f', [-999.])
+FakeElectron_phi            =   array.array('f', [-999.])
+FakeElectron_mass           =   array.array('f', [-999.])
+FakeElectron_pdgid          =   array.array('i', [-999])
+FakeElectron_pfRelIso04     =   array.array('f', [-999.])
+FakeElectron_isPrompt       =   array.array('f', [-999.])
+var_list.append(FakeElectron_pt)
+var_list.append(FakeElectron_relIso)
+var_list.append(FakeElectron_isPrompt)
+var_list.append(FakeElectron_eta)
+var_list.append(FakeElectron_phi)
+var_list.append(FakeElectron_mass)
+var_list.append(FakeElectron_pdgid)
+var_list.append(FakeElectron_pfRelIso04)
+
+mT_eleMET                   =   array.array('f', [-999.])
+var_list.append(mT_eleMET)
+
+FakeMuon_pt             =   array.array('f', [-999.])
+FakeMuon_relIso         =   array.array('f', [-999.])
+FakeMuon_eta            =   array.array('f', [-999.])
+FakeMuon_phi            =   array.array('f', [-999.])
+FakeMuon_mass           =   array.array('f', [-999.])
+FakeMuon_pdgid          =   array.array('i', [-999])
+FakeMuon_pfRelIso04     =   array.array('f', [-999.])
+FakeMuon_isPrompt       =   array.array('f', [-999.])
+var_list.append(FakeMuon_pt)
+var_list.append(FakeMuon_relIso)
+var_list.append(FakeMuon_isPrompt)
+var_list.append(FakeMuon_eta)
+var_list.append(FakeMuon_phi)
+var_list.append(FakeMuon_mass)
+var_list.append(FakeMuon_pdgid)
+var_list.append(FakeMuon_pfRelIso04)
+
+mT_muMET                   =   array.array('f', [-999.])
+var_list.append(mT_muMET)
+
 FakeTau_pt                  =   array.array('f', [-999.])
 FakeTau_isPrompt            =   array.array('f', [-999.])
 FakeTau_eta                 =   array.array('f', [-999.])
@@ -178,9 +218,13 @@ var_list.append(FakeTau_DeepTauWP)
 
 
 Veto_LightLeptons           =   array.array('f', [-999.])
+Veto_Electrons              =   array.array('f', [-999.])
+Veto_Muons                  =   array.array('f', [-999.])
 Veto_TauLeptons             =   array.array('f', [-999.])
 Veto_TauZMass               =   array.array('f', [-999.])
 var_list.append(Veto_LightLeptons)
+var_list.append(Veto_Electrons)
+var_list.append(Veto_Muons)
 var_list.append(Veto_TauLeptons)
 var_list.append(Veto_TauZMass)
 
@@ -218,8 +262,23 @@ systTree.branchTreesSysts(trees, "all", "FakeLepton_mass",          outTreeFile,
 systTree.branchTreesSysts(trees, "all", "FakeLepton_pdgid",         outTreeFile, FakeLepton_pdgid)
 systTree.branchTreesSysts(trees, "all", "FakeLepton_pfRelIso04",    outTreeFile, FakeLepton_pfRelIso04)
 
+systTree.branchTreesSysts(trees, "all", "FakeElectron_pt",          outTreeFile, FakeElectron_pt)
+systTree.branchTreesSysts(trees, "all", "FakeElectron_relIso",      outTreeFile, FakeElectron_relIso)
+systTree.branchTreesSysts(trees, "all", "FakeElectron_isPrompt",    outTreeFile, FakeElectron_isPrompt)
+systTree.branchTreesSysts(trees, "all", "FakeElectron_eta",         outTreeFile, FakeElectron_eta)
+systTree.branchTreesSysts(trees, "all", "FakeElectron_phi",         outTreeFile, FakeElectron_phi)
+systTree.branchTreesSysts(trees, "all", "FakeElectron_mass",        outTreeFile, FakeElectron_mass)
+systTree.branchTreesSysts(trees, "all", "FakeElectron_pdgid",       outTreeFile, FakeElectron_pdgid)
+systTree.branchTreesSysts(trees, "all", "FakeElectron_pfRelIso04",  outTreeFile, FakeElectron_pfRelIso04)
 
-
+systTree.branchTreesSysts(trees, "all", "FakeMuon_pt",              outTreeFile, FakeMuon_pt)
+systTree.branchTreesSysts(trees, "all", "FakeMuon_relIso",          outTreeFile, FakeMuon_relIso)
+systTree.branchTreesSysts(trees, "all", "FakeMuon_isPrompt",        outTreeFile, FakeMuon_isPrompt)
+systTree.branchTreesSysts(trees, "all", "FakeMuon_eta",             outTreeFile, FakeMuon_eta)
+systTree.branchTreesSysts(trees, "all", "FakeMuon_phi",             outTreeFile, FakeMuon_phi)
+systTree.branchTreesSysts(trees, "all", "FakeMuon_mass",            outTreeFile, FakeMuon_mass)
+systTree.branchTreesSysts(trees, "all", "FakeMuon_pdgid",           outTreeFile, FakeMuon_pdgid)
+systTree.branchTreesSysts(trees, "all", "FakeMuon_pfRelIso04",      outTreeFile, FakeMuon_pfRelIso04)
 #all taus for fake calculation
 systTree.branchTreesSysts(trees, "all", "FakeTau_pt",               outTreeFile, FakeTau_pt)
 systTree.branchTreesSysts(trees, "all", "FakeTau_isPrompt",         outTreeFile, FakeTau_isPrompt)
@@ -227,23 +286,20 @@ systTree.branchTreesSysts(trees, "all", "FakeTau_eta",              outTreeFile,
 systTree.branchTreesSysts(trees, "all", "FakeTau_phi",              outTreeFile, FakeTau_phi)
 systTree.branchTreesSysts(trees, "all", "FakeTau_mass",             outTreeFile, FakeTau_mass)
 systTree.branchTreesSysts(trees, "all", "FakeTau_DeepTauWP",        outTreeFile, FakeTau_DeepTauWP)
-
-
 #Veto variables
 systTree.branchTreesSysts(trees, "all", "Veto_LightLeptons",        outTreeFile, Veto_LightLeptons)
 systTree.branchTreesSysts(trees, "all", "Veto_TauLeptons",          outTreeFile, Veto_TauLeptons)
 systTree.branchTreesSysts(trees, "all", "Veto_TauZMass",            outTreeFile, Veto_TauZMass)
-
 systTree.branchTreesSysts(trees, "all", "MET_pt",                   outTreeFile, MET_pt)
 systTree.branchTreesSysts(trees, "all", "mT_lepMET",                outTreeFile, mT_lepMET)
-
-
+systTree.branchTreesSysts(trees, "all", "mT_eleMET",                outTreeFile, mT_eleMET)
+systTree.branchTreesSysts(trees, "all", "mT_muMET",                 outTreeFile, mT_muMET)
 
 #fake variables
-systTree.branchTreesSysts(trees, "all", "isFake_lepton",                   outTreeFile, isFake_lepton)
-systTree.branchTreesSysts(trees, "all", "isFake_tau",                   outTreeFile, isFake_tau)
-systTree.branchTreesSysts(trees, "all", "isFake_leptonAndPassCuts",       outTreeFile, isFake_leptonAndPassCuts)
-systTree.branchTreesSysts(trees, "all", "isFake_tauAndPassCuts",       outTreeFile, isFake_tauAndPassCuts)
+systTree.branchTreesSysts(trees, "all", "isFake_lepton",            outTreeFile, isFake_lepton)
+systTree.branchTreesSysts(trees, "all", "isFake_tau",               outTreeFile, isFake_tau)
+systTree.branchTreesSysts(trees, "all", "isFake_leptonAndPassCuts", outTreeFile, isFake_leptonAndPassCuts)
+systTree.branchTreesSysts(trees, "all", "isFake_tauAndPassCuts",    outTreeFile, isFake_tauAndPassCuts)
 
 
 #print("Is MC: " + str(isMC) + "      option addPDF: " + str(addPDF))
@@ -393,7 +449,52 @@ for i in range(tree.GetEntries()):
    
     if not conditionToSave: continue
     
+    SingleEle   =   False
+    SingleMu    =   False
+    ElMu        =   False
+
+    HighestLepPt  = -999.
+    LeadLepFamily = "not selected"
     
+    if sys.argv[5]=="HT": #just to be sure that it selects the highest pt ele/mu in the case we're using HT triggers, principally because now the loose trigger paths have not been implemented
+        passEle =   True
+        passMu  =   True 
+
+
+    if passEleLoose and not passMuLoose:
+        if len(electrons)>0:  
+            SingleEle=True
+            LeadLepFamily="electrons"
+            HighestLepPt=electrons[0].pt
+            #print("HighestLepPt:", HighestLepPt)
+        else:
+            continue
+
+    elif passMuLoose and not passEleLoose:
+        if len(muons)>0:
+            SingleMu=True
+            LeadLepFamily="muons"
+            HighestLepPt=muons[0].pt
+        else:
+            continue
+
+    elif passMuLoose and passEleLoose:
+        ElMu=True
+
+    if ElMu:
+        for mu in muons:
+            if abs(mu.pt)>HighestLepPt:
+                HighestLepPt=mu.pt
+                SingleEle = False
+                SingleMu = True
+                break
+        for ele in electrons:
+            if abs(ele.pt)>HighestLepPt:
+                HighestLepPt=ele.pt
+                SingleEle = True
+                SingleMu = False
+                break
+  
         
     MET_pt[0]=met.pt
     MET_phi[0]=met.phi
@@ -407,9 +508,6 @@ for i in range(tree.GetEntries()):
     eleGood=list(electrons)
     muGood=list(muons)
    
-    #print('Event n. ', i+1)
-    #print('Veto TauLeptons: ', Veto_TauLeptons[0], '\n', 'Veto Tau ZMass: ', Veto_TauZMass[0], '\n')
-    #print('len tau: ', len(taus))
     if Veto_TauLeptons[0]==0 or Veto_TauZMass[0]==0: 
         for ele in eleGood:
             if deltaR(ele.eta, ele.phi, taus[0].eta, taus[0].phi)<0.5: eleGood.remove(ele)
@@ -417,7 +515,42 @@ for i in range(tree.GetEntries()):
             if deltaR(mu.eta, mu.phi, taus[0].eta, taus[0].phi)<0.5: muGood.remove(mu)
    
 
+    if len(muGood)>0 and SingleMu:
+        Veto_Muons[0]=Veto_muons(muGood)
+        singleMuGood=None
+        for mu in muGood:
+            if mu.pfRelIso04_all<1 and mu.tightId:
+                singleMuGood=mu
+                break
+        if singleMuGood!=None:
+            mT_muMET[0]         =   mTlepMet(met, singleMuGood)
+            FakeMuon_pt[0]      =   singleMuGood.pt
+            FakeMuon_eta[0]     =   singleMuGood.eta
+            FakeMuon_phi[0]     =   singleMuGood.phi
+            FakeMuon_mass[0]    =   singleMuGood.mass
+            FakeMuon_pdgid[0]   =   singleMuGood.pdgId
+            FakeMuon_relIso[0]  =   singleMuGood.pfRelIso04_all
+    
+    if len(eleGood)>0 and SingleEle:
+        Veto_Electrons[0]=Veto_electrons(eleGood)
+        singleEleGood=None
+        for ele in eleGood:
+            if ele.jetRelIso<1 and ele.mvaFall17V2Iso_WP90: 
+                singleEleGood=ele
+                break
+        if singleEleGood!=None:
+            mT_eleMET[0]            =   mTlepMet(met, singleEleGood)
+            FakeElectron_pt[0]      =   singleEleGood.pt
+            FakeElectron_eta[0]     =   singleEleGood.eta
+            FakeElectron_phi[0]     =   singleEleGood.phi
+            FakeElectron_mass[0]    =   singleEleGood.mass
+            FakeElectron_pdgid[0]   =   singleEleGood.pdgId
+            FakeElectron_relIso[0]  =   singleEleGood.jetRelIso
+    
+
     Veto_LightLeptons[0], isEle=Veto_Light_Leptons(eleGood, muGood)
+       
+
     
     nLepGood=-999
     if isEle:   
