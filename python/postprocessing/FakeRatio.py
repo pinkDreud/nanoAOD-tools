@@ -456,7 +456,12 @@ for i in range(tree.GetEntries()):
     HighestLepPt  = -999.
     LeadLepFamily = "not selected"
     
-    if passEle and not passMu:
+    if sys.argv[5]=="HT": #just to be sure that it selects the highest pt ele/mu in the case we're using HT triggers, principally because now the loose trigger paths have not been implemented
+        passEle =   True
+        passMu  =   True 
+
+
+    if passEleLoose and not passMuLoose:
         if len(electrons)>0:  
             SingleEle=True
             LeadLepFamily="electrons"
@@ -465,7 +470,7 @@ for i in range(tree.GetEntries()):
         else:
             continue
 
-    elif passMu and not passEle:
+    elif passMuLoose and not passEleLoose:
         if len(muons)>0:
             SingleMu=True
             LeadLepFamily="muons"
@@ -473,7 +478,7 @@ for i in range(tree.GetEntries()):
         else:
             continue
 
-    elif passMu and passEle:
+    elif passMuLoose and passEleLoose:
         ElMu=True
 
     if ElMu:
