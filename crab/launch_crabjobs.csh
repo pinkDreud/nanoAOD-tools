@@ -1,12 +1,12 @@
 set year = '2017'
 #python submit_crab.py -d TT_$year -s
 #python submit_crab.py -d WJets_$year -s
-#python submit_crab.py -d WJets_Fake_$year -s
-python submit_crab.py -d WJetsHT400to600_Fake_$year -s
-python submit_crab.py -d WJetsHT600to800_Fake_$year -s
-python submit_crab.py -d WJetsHT800to1200_Fake_$year -s
-python submit_crab.py -d WJetsHT1200to2500_Fake_$year -s
-python submit_crab.py -d WJetsHT2500toInf_Fake_$year -s
+python submit_crab.py -d WJets_Fake_$year -s
+#python submit_crab.py -d WJetsHT400to600_Fake_$year -s
+#python submit_crab.py -d WJetsHT600to800_Fake_$year -s
+#python submit_crab.py -d WJetsHT800to1200_Fake_$year -s
+#python submit_crab.py -d WJetsHT1200to2500_Fake_$year -s
+#python submit_crab.py -d WJetsHT2500toInf_Fake_$year -s
 #python submit_crab.py -d WZ_$year -s
 #python submit_crab.py -d DYJetsToLL_$year -s
 #python submit_crab.py -d DYJetsToLL_Fake_$year -s
