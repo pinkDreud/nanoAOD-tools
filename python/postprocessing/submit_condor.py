@@ -20,6 +20,8 @@ if username == 'mmagheri':
     uid = 102889
 elif username == 'apiccine':
     uid = 124949
+elif username == 'ttedesch':
+    uid = 103343
 
 def sub_writer(sample, n, files, folder):
     f = open("condor.sub", "w")
