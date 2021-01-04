@@ -1,4 +1,3 @@
-#!/bin/env python3
 import os
 ##print(os.environ)
 ##print("**********************************************************************")
@@ -57,7 +56,6 @@ if ('Data' in sample.label):
 
 MCReco = MCReco * isMC
 
-Cut_dict = {}
 
 #if Debug:
 Cut_dict = {1: ['Trigger             ', 0, 0.0, 0.0, 0.0, 0.0],
@@ -119,7 +117,7 @@ systTree.setWeightName("PFDown",1.)
 
 #ssWW variables
 var_list = []
-#lepton variables
+#lepton
 lepton_pt               =   array.array('f', [-999.])
 lepton_eta              =   array.array('f', [-999.])
 lepton_phi              =   array.array('f', [-999.])
@@ -132,15 +130,20 @@ var_list.append(lepton_phi)
 var_list.append(lepton_mass)
 var_list.append(lepton_pdgid)
 var_list.append(lepton_pfRelIso04)
-
-#tau variables
+#tau
 tau_pt                  =   array.array('f', [-999.])
 tau_eta                 =   array.array('f', [-999.])
 tau_phi                 =   array.array('f', [-999.])
 tau_charge              =   array.array('i', [-999])
 tau_mass                =   array.array('f', [-999.])
+tau_isolation           =   array.array('f', [-999.])
 tau_DeepTau_WP          =   array.array('f', [-999.])
-tau_isolation           = array.array('f', [-999])
+tau_DeepTauVsEle_WP     =   array.array('f', [-999.])
+tau_DeepTauVsEle_raw    =   array.array('f', [-999.])
+tau_DeepTauVsMu_WP      =   array.array('f', [-999.])
+tau_DeepTauVsMu_raw     =   array.array('f', [-999.])
+tau_DeepTauVsJet_WP     =   array.array('f', [-999.])
+tau_DeepTauVsJet_raw    =   array.array('f', [-999.])
 var_list.append(tau_isolation)
 var_list.append(tau_pt)
 var_list.append(tau_eta)
@@ -148,65 +151,87 @@ var_list.append(tau_phi)
 var_list.append(tau_charge)
 var_list.append(tau_mass)
 var_list.append(tau_DeepTau_WP)
+var_list.append(tau_DeepTauVsEle_WP)
+var_list.append(tau_DeepTauVsEle_raw)
+var_list.append(tau_DeepTauVsMu_WP)
+var_list.append(tau_DeepTauVsMu_raw)
+var_list.append(tau_DeepTauVsJet_WP)
+var_list.append(tau_DeepTauVsJet_raw)
+#tau leadTk
+tauleadTk_ptOverTau     =   array.array('f', [-999.])
+tauleadTk_deltaPhi      =   array.array('f', [-999.])
+tauleadTk_deltaEta      =   array.array('f', [-999.])
+var_list.append(tauleadTk_ptOverTau)
+var_list.append(tauleadTk_deltaPhi)
+var_list.append(tauleadTk_deltaEta)
 
-#jet variables
-Leadjet_pt                  =   array.array('f', [-999.])
-Leadjet_eta                 =   array.array('f', [-999.])
-Leadjet_phi                 =   array.array('f', [-999.])
-Leadjet_mass                =   array.array('f', [-999.])
-Leadjet_CSVv2_b             =   array.array('f', [-999.])
-Leadjet_DeepFlv_b           =   array.array('f', [-999.])
-Leadjet_DeepCSVv2_b         =   array.array('f', [-999.])
-var_list.append(Leadjet_pt)
-var_list.append(Leadjet_eta)
-var_list.append(Leadjet_phi)
-var_list.append(Leadjet_mass)
-var_list.append(Leadjet_CSVv2_b)
-var_list.append(Leadjet_DeepFlv_b)
-var_list.append(Leadjet_DeepCSVv2_b)
-
-Subleadjet_pt               =   array.array('f', [-999.])
-Subleadjet_eta              =   array.array('f', [-999.])
-Subleadjet_phi              =   array.array('f', [-999.])
-Subleadjet_mass             =   array.array('f', [-999.])
-Subleadjet_CSVv2_b          =   array.array('f', [-999.])
-Subleadjet_DeepFlv_b        =   array.array('f', [-999.])
-Subleadjet_DeepCSVv2_b      =   array.array('f', [-999.])
+#jet
+leadjet_pt                  =   array.array('f', [-999.])
+leadjet_eta                 =   array.array('f', [-999.])
+leadjet_phi                 =   array.array('f', [-999.])
+leadjet_mass                =   array.array('f', [-999.])
+leadjet_CSVv2_b             =   array.array('f', [-999.])
+leadjet_DeepFlv_b           =   array.array('f', [-999.])
+leadjet_DeepCSVv2_b         =   array.array('f', [-999.])
+var_list.append(leadjet_pt)
+var_list.append(leadjet_eta)
+var_list.append(leadjet_phi)
+var_list.append(leadjet_mass)
+var_list.append(leadjet_CSVv2_b)
+var_list.append(leadjet_DeepFlv_b)
+var_list.append(leadjet_DeepCSVv2_b)
+subleadjet_pt               =   array.array('f', [-999.])
+subleadjet_eta              =   array.array('f', [-999.])
+subleadjet_phi              =   array.array('f', [-999.])
+subleadjet_mass             =   array.array('f', [-999.])
+subleadjet_CSVv2_b          =   array.array('f', [-999.])
+subleadjet_DeepFlv_b        =   array.array('f', [-999.])
+subleadjet_DeepCSVv2_b      =   array.array('f', [-999.])
 nJets                       =   array.array('f', [-999.]) 
-var_list.append(Subleadjet_pt)
-var_list.append(Subleadjet_eta)
-var_list.append(Subleadjet_phi)
-var_list.append(Subleadjet_mass)
-var_list.append(Subleadjet_CSVv2_b)
-var_list.append(Subleadjet_DeepFlv_b)
-var_list.append(Subleadjet_DeepCSVv2_b)
+nBJets                      =   array.array('f', [-999.]) 
+var_list.append(subleadjet_pt)
+var_list.append(subleadjet_eta)
+var_list.append(subleadjet_phi)
+var_list.append(subleadjet_mass)
+var_list.append(subleadjet_CSVv2_b)
+var_list.append(subleadjet_DeepFlv_b)
+var_list.append(subleadjet_DeepCSVv2_b)
 var_list.append(nJets)
-
+var_list.append(nBJets)
 #MET
 MET_pt                      =   array.array('f', [-999.])
 MET_phi                     =   array.array('f', [-999.])
 var_list.append(MET_pt)
 var_list.append(MET_phi)
-
-
-
-Mjj                         =   array.array('f', [-999.])
-M_leptau                    =   array.array('f', [-999.]) 
-var_list.append(Mjj)
-var_list.append(M_leptau)
-
-mT_lep_MET                  =   array.array('f', [-999.])
+#random masses
+mjj                         =   array.array('f', [-999.])
+m_leptau                    =   array.array('f', [-999.]) 
 mT_tau_MET                  =   array.array('f', [-999.])
-mT_leptau_MET                  =   array.array('f', [-999.])
+mT_leptau_MET               =   array.array('f', [-999.])
+mT_lep_MET                  =   array.array('f', [-999.])
+var_list.append(mjj)
+var_list.append(m_leptau)
 var_list.append(mT_lep_MET)
 var_list.append(mT_tau_MET)
 var_list.append(mT_leptau_MET)
-
+#deltaPhi
+deltaPhi_jj                 =   array.array('f', [-999.])
+deltaPhi_taulep             =   array.array('f', [-999.])
+deltaPhi_tauj1              =   array.array('f', [-999.])
+deltaPhi_tauj2              =   array.array('f', [-999.])
+deltaPhi_lepj1              =   array.array('f', [-999.])
+deltaPhi_lepj2              =   array.array('f', [-999.])
+var_list.append(deltaPhi_jj)
+var_list.append(deltaPhi_taulep)
+var_list.append(deltaPhi_tauj1)
+var_list.append(deltaPhi_tauj2)
+var_list.append(deltaPhi_lepj1)
+var_list.append(deltaPhi_lepj2)
+#other
 SF_Fake                     =   array.array('f', [1.])
+deltaEta_jj                 =   array.array('f', [-999.])
 var_list.append(SF_Fake)
-
-DeltaEta_jj                 =   array.array('f', [-999.])
-var_list.append(DeltaEta_jj)
+var_list.append(deltaEta_jj)
 #cut variables
 pass_lepton_selection       =   array.array('i', [0])
 pass_lepton_iso             =   array.array('i', [0])
@@ -218,88 +243,99 @@ pass_jet_selection          =   array.array('i', [0])
 pass_b_veto                 =   array.array('i', [0])
 pass_mjj_cut                =   array.array('i', [0])
 pass_MET_cut                =   array.array('i', [0])
-
 pass_upToBVeto              =   array.array('i', [0])
+pass_upToBVeto_ML           =   array.array('i', [0])
+pass_tau_selection_ML       =   array.array('i', [0])
 pass_everyCut               =   array.array('i', [0])
 var_list.append(pass_lepton_selection)
 var_list.append(pass_lepton_veto)
 var_list.append(pass_lepton_iso)
 var_list.append(pass_tau_selection)
+var_list.append(pass_tau_selection_ML)
 var_list.append(pass_tau_vsJetWP)
 var_list.append(pass_charge_selection)
 var_list.append(pass_jet_selection)
 var_list.append(pass_b_veto)
 var_list.append(pass_mjj_cut)
 var_list.append(pass_MET_cut)
-
 var_list.append(pass_upToBVeto)
+var_list.append(pass_upToBVeto_ML)
 var_list.append(pass_everyCut)
-
-
-w_PDF_all = array.array('f', [0.]*110) #capisci a cosa serve
-w_nominal_all = array.array('f', [0.])
+#weights
+w_PDF_all                   = array.array('f', [0.]*110) 
+w_nominal_all               = array.array('f', [0.])
 
 #branches added for ssWW analysis
 #lepton
-systTree.branchTreesSysts(trees, "all", "lepton_pt",            outTreeFile, lepton_pt)
-systTree.branchTreesSysts(trees, "all", "lepton_eta",           outTreeFile, lepton_eta)
-systTree.branchTreesSysts(trees, "all", "lepton_phi",           outTreeFile, lepton_phi)
-systTree.branchTreesSysts(trees, "all", "lepton_mass",          outTreeFile, lepton_mass)
-systTree.branchTreesSysts(trees, "all", "lepton_pdgid",         outTreeFile, lepton_pdgid)
-systTree.branchTreesSysts(trees, "all", "lepton_pfRelIso04",    outTreeFile, lepton_pfRelIso04)
-#tau variables
-systTree.branchTreesSysts(trees, "all", "tau_pt",               outTreeFile, tau_pt)
-systTree.branchTreesSysts(trees, "all", "tau_eta",              outTreeFile, tau_eta)
-systTree.branchTreesSysts(trees, "all", "tau_phi",              outTreeFile, tau_phi)
-systTree.branchTreesSysts(trees, "all", "tau_mass",             outTreeFile, tau_mass)
-systTree.branchTreesSysts(trees, "all", "tau_DeepTau_WP",             outTreeFile, tau_DeepTau_WP)
-systTree.branchTreesSysts(trees, "all", "tau_isolation",             outTreeFile, tau_isolation)
-#jet variables
-systTree.branchTreesSysts(trees, "all", "Leadjet_pt",           outTreeFile, Leadjet_pt)
-systTree.branchTreesSysts(trees, "all", "Leadjet_eta",          outTreeFile, Leadjet_eta)
-systTree.branchTreesSysts(trees, "all", "Leadjet_phi",          outTreeFile, Leadjet_phi)
-systTree.branchTreesSysts(trees, "all", "Leadjet_mass",         outTreeFile, Leadjet_mass)
-systTree.branchTreesSysts(trees, "all", "Leadjet_CSVv2_b",      outTreeFile, Leadjet_CSVv2_b)
-systTree.branchTreesSysts(trees, "all", "Leadjet_DeepFlv_b",    outTreeFile, Leadjet_DeepFlv_b)
-systTree.branchTreesSysts(trees, "all", "Leadjet_DeepCSVv2_b",  outTreeFile, Leadjet_DeepCSVv2_b)
-
-systTree.branchTreesSysts(trees, "all", "Subleadjet_pt",           outTreeFile, Subleadjet_pt)
-systTree.branchTreesSysts(trees, "all", "Subleadjet_eta",          outTreeFile, Subleadjet_eta)
-systTree.branchTreesSysts(trees, "all", "Subleadjet_phi",          outTreeFile, Subleadjet_phi)
-systTree.branchTreesSysts(trees, "all", "Subleadjet_mass",         outTreeFile, Subleadjet_mass)
-systTree.branchTreesSysts(trees, "all", "Subleadjet_CSVv2_b",      outTreeFile, Subleadjet_CSVv2_b)
-systTree.branchTreesSysts(trees, "all", "Subleadjet_DeepFlv_b",    outTreeFile, Subleadjet_DeepFlv_b)
-systTree.branchTreesSysts(trees, "all", "Subleadjet_DeepCSVv2_b",  outTreeFile, Subleadjet_DeepCSVv2_b)
-
-systTree.branchTreesSysts(trees, "all", "nJets",  outTreeFile, nJets)
-
+systTree.branchTreesSysts(trees, "all", "lepton_pt",                outTreeFile, lepton_pt)
+systTree.branchTreesSysts(trees, "all", "lepton_eta",               outTreeFile, lepton_eta)
+systTree.branchTreesSysts(trees, "all", "lepton_phi",               outTreeFile, lepton_phi)
+systTree.branchTreesSysts(trees, "all", "lepton_mass",              outTreeFile, lepton_mass)
+systTree.branchTreesSysts(trees, "all", "lepton_pdgid",             outTreeFile, lepton_pdgid)
+systTree.branchTreesSysts(trees, "all", "lepton_pfRelIso04",        outTreeFile, lepton_pfRelIso04)
+#tau
+systTree.branchTreesSysts(trees, "all", "tau_pt",                   outTreeFile, tau_pt)
+systTree.branchTreesSysts(trees, "all", "tau_eta",                  outTreeFile, tau_eta)
+systTree.branchTreesSysts(trees, "all", "tau_phi",                  outTreeFile, tau_phi)
+systTree.branchTreesSysts(trees, "all", "tau_mass",                 outTreeFile, tau_mass)
+systTree.branchTreesSysts(trees, "all", "tau_isolation",            outTreeFile, tau_isolation)
+systTree.branchTreesSysts(trees, "all", "tau_DeepTau_WP",           outTreeFile, tau_DeepTau_WP)
+systTree.branchTreesSysts(trees, "all", "tau_DeepTauVsEle_WP",      outTreeFile, tau_DeepTauVsEle_WP)
+systTree.branchTreesSysts(trees, "all", "tau_DeepTauVsEle_raw",     outTreeFile, tau_DeepTauVsEle_raw)
+systTree.branchTreesSysts(trees, "all", "tau_DeepTauVsMu_WP",       outTreeFile, tau_DeepTauVsMu_WP)
+systTree.branchTreesSysts(trees, "all", "tau_DeepTauVsMu_raw",      outTreeFile, tau_DeepTauVsMu_raw)
+systTree.branchTreesSysts(trees, "all", "tau_DeepTauVsJet_WP",      outTreeFile, tau_DeepTauVsJet_WP)
+systTree.branchTreesSysts(trees, "all", "tau_DeepTauVsJet_raw",     outTreeFile, tau_DeepTauVsJet_raw)
+#jet
+systTree.branchTreesSysts(trees, "all", "leadjet_pt",               outTreeFile, leadjet_pt)
+systTree.branchTreesSysts(trees, "all", "leadjet_eta",              outTreeFile, leadjet_eta)
+systTree.branchTreesSysts(trees, "all", "leadjet_phi",              outTreeFile, leadjet_phi)
+systTree.branchTreesSysts(trees, "all", "leadjet_mass",             outTreeFile, leadjet_mass)
+systTree.branchTreesSysts(trees, "all", "leadjet_CSVv2_b",          outTreeFile, leadjet_CSVv2_b)
+systTree.branchTreesSysts(trees, "all", "leadjet_DeepFlv_b",        outTreeFile, leadjet_DeepFlv_b)
+systTree.branchTreesSysts(trees, "all", "leadjet_DeepCSVv2_b",      outTreeFile, leadjet_DeepCSVv2_b)
+systTree.branchTreesSysts(trees, "all", "subleadjet_pt",            outTreeFile, subleadjet_pt)
+systTree.branchTreesSysts(trees, "all", "subleadjet_eta",           outTreeFile, subleadjet_eta)
+systTree.branchTreesSysts(trees, "all", "subleadjet_phi",           outTreeFile, subleadjet_phi)
+systTree.branchTreesSysts(trees, "all", "subleadjet_mass",          outTreeFile, subleadjet_mass)
+systTree.branchTreesSysts(trees, "all", "subleadjet_CSVv2_b",       outTreeFile, subleadjet_CSVv2_b)
+systTree.branchTreesSysts(trees, "all", "subleadjet_DeepFlv_b",     outTreeFile, subleadjet_DeepFlv_b)
+systTree.branchTreesSysts(trees, "all", "subleadjet_DeepCSVv2_b",   outTreeFile, subleadjet_DeepCSVv2_b)
+systTree.branchTreesSysts(trees, "all", "nJets",                    outTreeFile, nJets)
+systTree.branchTreesSysts(trees, "all", "nBJets",                   outTreeFile, nBJets)
 #MET
-
-systTree.branchTreesSysts(trees, "all", "MET_pt",               outTreeFile, MET_pt)
-systTree.branchTreesSysts(trees, "all", "MET_phi",              outTreeFile, MET_phi)
-
-systTree.branchTreesSysts(trees, "all", "Mjj",                  outTreeFile, Mjj)
-systTree.branchTreesSysts(trees, "all", "mT_lep_MET",                  outTreeFile, mT_lep_MET)
-systTree.branchTreesSysts(trees, "all", "mT_tau_MET",                  outTreeFile, mT_tau_MET)
-systTree.branchTreesSysts(trees, "all", "mT_leptau_MET",                  outTreeFile, mT_leptau_MET)
-systTree.branchTreesSysts(trees, "all", "M_leptau",                  outTreeFile, M_leptau)
-
-systTree.branchTreesSysts(trees, "all", "DeltaEta_jj",                  outTreeFile, DeltaEta_jj)
+systTree.branchTreesSysts(trees, "all", "MET_pt",                   outTreeFile, MET_pt)
+systTree.branchTreesSysts(trees, "all", "MET_phi",                  outTreeFile, MET_phi)
+#Masses
+systTree.branchTreesSysts(trees, "all", "mjj",                      outTreeFile, mjj)
+systTree.branchTreesSysts(trees, "all", "mT_lep_MET",               outTreeFile, mT_lep_MET)
+systTree.branchTreesSysts(trees, "all", "mT_tau_MET",               outTreeFile, mT_tau_MET)
+systTree.branchTreesSysts(trees, "all", "mT_leptau_MET",            outTreeFile, mT_leptau_MET)
+systTree.branchTreesSysts(trees, "all", "m_leptau",                 outTreeFile, m_leptau)
+#deltaphi
+systTree.branchTreesSysts(trees, "all", "deltaPhi_jj",              outTreeFile, deltaPhi_jj)
+systTree.branchTreesSysts(trees, "all", "deltaPhi_taulep",          outTreeFile, deltaPhi_taulep)
+systTree.branchTreesSysts(trees, "all", "deltaPhi_tauj1",           outTreeFile, deltaPhi_tauj1)
+systTree.branchTreesSysts(trees, "all", "deltaPhi_tauj2",           outTreeFile, deltaPhi_tauj2)
+systTree.branchTreesSysts(trees, "all", "deltaPhi_lepj1",           outTreeFile, deltaPhi_lepj1)
+systTree.branchTreesSysts(trees, "all", "deltaPhi_lepj2",           outTreeFile, deltaPhi_lepj2)
+#other
+systTree.branchTreesSysts(trees, "all", "deltaEta_jj",              outTreeFile, deltaEta_jj)
 systTree.branchTreesSysts(trees, "all", "SF_Fake",                  outTreeFile, SF_Fake)
-
 #cut variables
 systTree.branchTreesSysts(trees, "all", "pass_lepton_selection",    outTreeFile, pass_lepton_selection)
 systTree.branchTreesSysts(trees, "all", "pass_lepton_iso",          outTreeFile, pass_lepton_iso)
 systTree.branchTreesSysts(trees, "all", "pass_lepton_veto",         outTreeFile, pass_lepton_veto)
 systTree.branchTreesSysts(trees, "all", "pass_tau_selection",       outTreeFile, pass_tau_selection)
+systTree.branchTreesSysts(trees, "all", "pass_tau_selection_ML",    outTreeFile, pass_tau_selection_ML)
 systTree.branchTreesSysts(trees, "all", "pass_tau_vsJetWP",         outTreeFile, pass_tau_vsJetWP)
 systTree.branchTreesSysts(trees, "all", "pass_charge_selection",    outTreeFile, pass_charge_selection)
 systTree.branchTreesSysts(trees, "all", "pass_jet_selection",       outTreeFile, pass_jet_selection)
 systTree.branchTreesSysts(trees, "all", "pass_b_veto",              outTreeFile, pass_b_veto)
 systTree.branchTreesSysts(trees, "all", "pass_mjj_cut",             outTreeFile, pass_mjj_cut)
 systTree.branchTreesSysts(trees, "all", "pass_MET_cut",             outTreeFile, pass_MET_cut)
-
 systTree.branchTreesSysts(trees, "all", "pass_upToBVeto",           outTreeFile, pass_upToBVeto)
+systTree.branchTreesSysts(trees, "all", "pass_upToBVeto_ML",        outTreeFile, pass_upToBVeto_ML)
 systTree.branchTreesSysts(trees, "all", "pass_everyCut",            outTreeFile, pass_everyCut)
 
 
@@ -359,7 +395,7 @@ contagood=0
 for i in range(tree.GetEntries()):
     #reinizializza tutte le variabili a 0, per sicurezza
     for j, var in enumerate(var_list):
-        if j<len(var_list)-12:
+        if j<len(var_list)-14:
             var_list[j][0] = -999
         else:
             var_list[j][0] = 0
@@ -446,62 +482,33 @@ for i in range(tree.GetEntries()):
 
     if noTrigger: continue
 
-    '''
-    doublecounting = True
-    if(isMC):
-        doublecounting = False
-    #Double counting removal
-    if('DataMu' in sample.label and passMu):
-        doublecounting = False
-    if('DataEle' in sample.label and (not passMu and passEle)):
-        doublecounting = False
+    SingleEle   =   False
+    SingleMu    =   False
+    ElMu        =   False
 
-    if doublecounting:
-        continue
-    '''
-
-    SingleEle=False
-    SingleMu=False
-    ElMu=False
-
-    HighestLepPt=-999.
-    LeadLepFamily="not selected"
+    HighestLepPt = -999.
+    leadLepFamily ="not selected"
     
-    if passEle and not HLT.Ele32_WPTight_Gsf_L1DoubleEG:
-        print("Errore")#Questo ora non dovrebbe succedere
-
-    '''
-    if passEle or passMu:
-        if len(electrons)<1 and len(muons)<1:
-            continue
-    else:
-        continue
-    '''
-
-    #print("n ele:", len(electrons), "n mu:", len(muons)) 
     if passEle and not passMu:
         if len(electrons)>0:  
-            SingleEle=True
-            LeadLepFamily="electrons"
-            HighestLepPt=electrons[0].pt
+            SingleEle = True
+            leadLepFamily = "electrons"
+            HighestLepPt = electrons[0].pt
             #print("HighestLepPt:", HighestLepPt)
         else:
             continue
-
     elif passMu and not passEle:
         if len(muons)>0:
-            SingleMu=True
-            LeadLepFamily="muons"
-            HighestLepPt=muons[0].pt
+            SingleMu = True
+            leadLepFamily = "muons"
+            HighestLepPt = muons[0].pt
         else:
             continue
-
     elif passMu and passEle:
-        ElMu=True
+        ElMu = True
 
     #print("HighestLepPt:", HighestLepPt)
     #print("passEle:", passEle, "\tpassMu:", passMu)
-
     if ElMu:
         for mu in muons:
             if abs(mu.pt)>HighestLepPt:
@@ -515,41 +522,31 @@ for i in range(tree.GetEntries()):
                 SingleEle = True
                 SingleMu = False
                 break
-    
+   
     leptons = None
 
-    #if SingleEle==False and HighestLepPt>0: SingleMu=True
-    
-    if SingleEle==True: leptons=electrons
-    elif SingleMu==True:  leptons=muons
+    if SingleEle==True:     leptons = electrons
+    elif SingleMu==True:    leptons = muons
     elif not (SingleMu or SingleEle):
         continue
-
+     
     if SingleEle and dataMu:
-        continue
+         continue
     if SingleMu and dataEle:
         continue
-
-    #print("SingleEle:", SingleEle, "\tSingleMu:", SingleMu)
-    #print("lepton id:", leptons[0].pdgId)
-    if (SingleEle or SingleMu): Cut_dict[1][1]+=1
-    
+                
     MET_pt[0]   =   met.pt  
     MET_phi[0]  =   met.phi
 
-    indexGoodLep=SelectLepton(leptons, SingleMu)
+    indexGoodLep = SelectLepton(leptons, SingleMu)
 
     if indexGoodLep<0 or indexGoodLep>=len(leptons): 
         systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
         systTree.fillTreesSysts(trees, "all")
         continue
     
-
-    pass_lepton_selection[0]       =   1
+    pass_lepton_selection[0] = 1
     
-
-    if (SingleEle==1 or SingleMu==1) and pass_lepton_selection[0]==1: Cut_dict[2][1]+=1
-
     tightlep = leptons[indexGoodLep]
 
     lepton_pt[0]                =   tightlep.pt
@@ -558,9 +555,9 @@ for i in range(tree.GetEntries()):
     lepton_mass[0]              =   tightlep.mass
     lepton_pdgid[0]             =   tightlep.pdgId
     if SingleMu==1:
-        lepton_pfRelIso04[0]        =   tightlep.pfRelIso04_all
+        lepton_pfRelIso04[0]    =   tightlep.pfRelIso04_all
     elif SingleEle==1:
-        lepton_pfRelIso04[0]        =   tightlep.jetRelIso
+        lepton_pfRelIso04[0]    =   tightlep.jetRelIso
 
     GoodLep=tightlep
     
@@ -596,105 +593,106 @@ for i in range(tree.GetEntries()):
         if abs(lepton_pdgid[0])==11: SF_Fake[0]=SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0])
         if abs(lepton_pdgid[0])==13: SF_Fake[0]=SFFakeRatio_mu_calc(lepton_pt[0], lepton_eta[0])
 
-    pass_lepton_veto[0]=LepVeto(GoodLep, electrons, muons)
+    pass_lepton_veto[0] = LepVeto(GoodLep, electrons, muons)
     
-    if (SingleEle or SingleMu) and pass_lepton_iso[0]==1 and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1: Cut_dict[3][1]+=1    
-    
-    UseDeepTau=True
-    indexGoodTau=SelectTau(taus, GoodLep)#, UseDeepTau)
+    DeepTauVsEle = 1
+    DeepTauVsMu = 1
+    DeepTauVsJet = 16
+    indexGoodTau = SelectTau(taus, GoodLep, DeepTauVsEle, DeepTauVsMu, DeepTauVsJet)
 
     if indexGoodTau<0:
         systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
         systTree.fillTreesSysts(trees, "all")
         continue      
 
-    pass_tau_selection[0]=1
     
-    if (SingleEle or SingleMu) and pass_lepton_iso[0]==1 and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1: Cut_dict[4][1]+=1
 
-    GoodTau=taus[indexGoodTau]
+    GoodTau = taus[indexGoodTau]
+    pass_tau_selection_ML[0] = 1
+
+    if GoodTau.idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and GoodTau.idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and GoodTau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET:
+        pass_tau_selection[0] = 1
+    
     tau_pt[0]               =   GoodTau.pt
     tau_eta[0]              =   GoodTau.eta
     tau_phi[0]              =   GoodTau.phi
     tau_mass[0]             =   GoodTau.mass
     tau_charge[0]           =   GoodTau.charge
-    
-    mT_tau_MET[0]=mTlepMet(met, GoodTau.p4())
-
-    mT_leptau_MET[0]=mTlepMet(met, GoodTau.p4()+tightlep.p4())
-
-    tau_DeepTau_WP[0] = GoodTau.idDeepTau2017v2p1VSjet*1000.**2. + GoodTau.idDeepTau2017v2p1VSmu*1000. + GoodTau.idDeepTau2017v2p1VSe
-    
-    
-    tau_isolation[0]=   GoodTau.neutralIso
-    
-    M_leptau=(GoodTau.p4() + tightlep.p4()).M()
-
-
-    if GoodTau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET: pass_tau_vsJetWP[0]=1
-    else: pass_tau_vsJetWP[0]=0
-
+    mT_tau_MET[0]           =   mTlepMet(met, GoodTau.p4())
+    mT_leptau_MET[0]        =   mTlepMet(met, GoodTau.p4()+tightlep.p4())
+    tau_DeepTauVsEle_WP[0]  =   GoodTau.idDeepTau2017v2p1VSe
+    tau_DeepTauVsEle_raw[0] =   GoodTau.rawDeepTau2017v2p1VSe
+    tau_DeepTauVsMu_WP[0]   =   GoodTau.idDeepTau2017v2p1VSmu
+    tau_DeepTauVsMu_raw[0]  =   GoodTau.rawDeepTau2017v2p1VSmu
+    tau_DeepTauVsJet_WP[0]  =   GoodTau.idDeepTau2017v2p1VSjet
+    tau_DeepTauVsJet_raw[0] =   GoodTau.rawDeepTau2017v2p1VSjet
+    tau_DeepTau_WP[0]       =   GoodTau.idDeepTau2017v2p1VSjet*1000.**2. + GoodTau.idDeepTau2017v2p1VSmu*1000. + GoodTau.idDeepTau2017v2p1VSe
+    tau_isolation[0]        =   GoodTau.neutralIso
+    m_leptau[0]             =   (GoodTau.p4() + tightlep.p4()).M()
+    tauleadTk_ptOverTau[0]  =   GoodTau.leadTkPtOverTauPt
+    tauleadTk_deltaPhi[0]   =   GoodTau.leadTkDeltaPhi
+    tauleadTk_deltaEta[0]   =   GoodTau.leadTkDeltaEta
 
     if GoodTau.charge==GoodLep.charge:
-        pass_charge_selection[0]=1
+        pass_charge_selection[0] = 1
 
-    if (SingleEle or SingleMu) and pass_lepton_iso[0]==1 and pass_tau_vsJetWP[0]==1 and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1: Cut_dict[5][1]+=1
-    
-    nJets[0]=len(jets)
+    nJets[0]    =   len(jets)
+    nBJets[0]   =   CountBJets(jets)
 
-    outputJetSel=JetSelection(list(jets), GoodTau, GoodLep)
+    outputJetSel = SelectJet(list(jets), GoodTau, GoodLep)
     
     if outputJetSel==-999:
         systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
         systTree.fillTreesSysts(trees, "all")
         continue  
 
-    jet1, jet2=outputJetSel
+    jet1, jet2 = outputJetSel
     
-    Leadjet_pt[0]               =   jet1.pt
-    Leadjet_eta[0]              =   jet1.eta
-    Leadjet_phi[0]              =   jet1.phi
-    Leadjet_mass[0]             =   jet1.mass
-    Leadjet_DeepFlv_b[0]        =   jet1.btagDeepFlavB
-    Leadjet_DeepCSVv2_b[0]      =   jet1.btagDeepB
-    Leadjet_CSVv2_b[0]          =   jet1.btagCSVV2
-    
-    Subleadjet_pt[0]            =   jet2.pt
-    Subleadjet_eta[0]           =   jet2.eta
-    Subleadjet_phi[0]           =   jet2.phi
-    Subleadjet_mass[0]          =   jet2.mass
-    Subleadjet_DeepFlv_b[0]     =   jet2.btagDeepFlavB
-    Subleadjet_DeepCSVv2_b[0]   =   jet2.btagDeepB
-    Subleadjet_CSVv2_b[0]       =   jet2.btagCSVV2
+    leadjet_pt[0]               =   jet1.pt
+    leadjet_eta[0]              =   jet1.eta
+    leadjet_phi[0]              =   jet1.phi
+    leadjet_mass[0]             =   jet1.mass
+    leadjet_DeepFlv_b[0]        =   jet1.btagDeepFlavB
+    leadjet_DeepCSVv2_b[0]      =   jet1.btagDeepB
+    leadjet_CSVv2_b[0]          =   jet1.btagCSVV2
+    subleadjet_pt[0]            =   jet2.pt
+    subleadjet_eta[0]           =   jet2.eta
+    subleadjet_phi[0]           =   jet2.phi
+    subleadjet_mass[0]          =   jet2.mass
+    subleadjet_DeepFlv_b[0]     =   jet2.btagDeepFlavB
+    subleadjet_DeepCSVv2_b[0]   =   jet2.btagDeepB
+    subleadjet_CSVv2_b[0]       =   jet2.btagCSVV2
     
     pass_jet_selection[0]=1
-
+    
+    #calculating deltaPhi
+    deltaPhi_jj[0]      =   deltaPhi(jet1, jet2)
+    deltaPhi_taulep[0]  =   deltaPhi(GoodTau, GoodLep)
+    deltaPhi_tauj1[0]   =   deltaPhi(GoodTau, jet1)
+    deltaPhi_tauj2[0]   =   deltaPhi(GoodTau, jet2)
+    deltaPhi_lepj1[0]   =   deltaPhi(GoodLep, jet1)
+    deltaPhi_lepj2[0]   =   deltaPhi(GoodLep, jet2)
 
     if not BVeto(jets): pass_b_veto[0]=1
 
-    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_iso[0]==1 and pass_tau_vsJetWP[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1:
-        Cut_dict[7][1]+=1
+    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection_ML[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1:  pass_upToBVeto_ML[0]=1
 
-    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1:
-        pass_upToBVeto[0]=1
+    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1: pass_upToBVeto[0]=1
 
-    LeadJet=ROOT.TLorentzVector()
-    SubleadJet=ROOT.TLorentzVector()
-    LeadJet.SetPtEtaPhiM(jet1.pt, jet1.eta, jet1.phi, jet1.mass)
-    SubleadJet.SetPtEtaPhiM(jet2.pt, jet2.eta, jet2.phi, jet2.mass) 
+    leadJet=ROOT.TLorentzVector()
+    subleadJet=ROOT.TLorentzVector()
+    leadJet.SetPtEtaPhiM(jet1.pt, jet1.eta, jet1.phi, jet1.mass)
+    subleadJet.SetPtEtaPhiM(jet2.pt, jet2.eta, jet2.phi, jet2.mass) 
     
-    if not JetCut(LeadJet, SubleadJet): pass_mjj_cut[0]=1
+    if not JetCut(leadJet, subleadJet): pass_mjj_cut[0]=1
 
-    Mjj[0]=(LeadJet+SubleadJet).M()
-    DeltaEta_jj[0]=abs(LeadJet.Eta()-SubleadJet.Eta())
+    mjj[0]=(leadJet+subleadJet).M()
+    deltaEta_jj[0]=abs(leadJet.Eta()-subleadJet.Eta())
 
 
-    if (SingleEle or SingleMu) and pass_lepton_iso[0]==1 and pass_tau_vsJetWP[0]==1 and  pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1 and pass_mjj_cut[0]==1: Cut_dict[8][1]+=1
 
     if not metCut(met): pass_MET_cut[0]=1
 
-    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_iso[0]==1 and pass_tau_vsJetWP[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1 and pass_mjj_cut[0]==1 and pass_MET_cut[0]==1:
-        Cut_dict[9][1]+=1
 
     if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1 and pass_mjj_cut[0]==1 and pass_MET_cut[0]==1:
         pass_everyCut[0]=1
