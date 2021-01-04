@@ -35,7 +35,7 @@ def sub_writer(sample, n, files, folder):
     f.write("transfer_output_remaps  = \""+ sample.label + "_part" + str(n) + ".root=/eos/home-"+inituser + "/" + username+"/VBS/nosynch/" + folder + "/" + sample.label +"/"+ sample.label + "_part" + str(n) + ".root\"\n")
     f.write("+JobFlavour             = \"workday\"\n") # options are espresso = 20 minutes, microcentury = 1 hour, longlunch = 2 hours, workday = 8 hours, tomorrow = 1 day, testmatch = 3 days, nextweek     = 1 week
     f.write("executable              = FakeRatio.py\n")
-    f.write("arguments               = " + sample.label + " " + str(n) + " " + str(files) + " remote" + "\n")
+    f.write("arguments               = " + sample.label + " " + str(n) + " " + str(files) + " remote " + str(opt.trig) + "\n")
     #f.write("input                   = input.txt\n")
     f.write("output                  = condor/output/"+ sample.label + "_part" + str(n) + ".out\n")
     f.write("error                   = condor/error/"+ sample.label + "_part" + str(n) + ".err\n")

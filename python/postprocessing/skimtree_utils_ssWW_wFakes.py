@@ -111,11 +111,15 @@ def SelectLepton(lepCollection, isMu): #isMu==True -> muons else Ele
         return i
     return -1
 
-def SelectTau(tauCollection, GoodMuon):
+
+#WP vs Ele: ID_TAU_RECO_DEEPTAU_VSELE
+#WP vs Mu:  ID_TAU_RECO_DEEPTAU_VSMU
+#WP vs jet: ID_TAU_RECO_DEEPTAU_VSJET
+def SelectTau(tauCollection, GoodMuon, vsEleWP, vsMuWP, vsJetWP):
     if len(tauCollection)<1: return -1
     for i in range(len(tauCollection)):
         if deltaR(tauCollection[i].eta, tauCollection[i].phi, GoodMuon.eta, GoodMuon.phi)<DR_OVERLAP_CONE_TAU: continue
-        if not (tauCollection[i].idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and tauCollection[i].idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and tauCollection[i].idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET and tauCollection[i].idDecayModeNewDMs):   continue
+        if not (tauCollection[i].idDeepTau2017v2p1VSe>=vsEleWP and tauCollection[i].idDeepTau2017v2p1VSmu>=vsMuWP and tauCollection[i].idDeepTau2017v2p1VSjet>=vsJetWP and tauCollection[i].idDecayModeNewDMs):   continue
         if tauCollection[i].pt<PT_CUT_TAU: continue
         if abs(tauCollection[i].eta)>ETA_CUT_TAU: continue
         return i
@@ -132,6 +136,13 @@ def BVeto(jetCollection):
         #if jetCollection[k].btagCSVV2<0.5803: continue #b-tag WP from https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
         #if jetCollection[k].pt>30.: return True
     #return False
+
+def CountBJets(jetCollection):
+    nb=0
+    for k in range(len(jetCollection)):
+        if (jetCollection[k].btagDeepFlavB>=WP_btagger[BTAG_ALGO][BTAG_WP])*(jetCollection[k].pt>BTAG_PT_CUT)*abs(jetCollection[k].eta<BTAG_ETA_CUT): nb+=1
+    return nb
+
 
 
 def IsNotTheSameObject(obj1, obj2):
@@ -157,7 +168,7 @@ def LepVeto(GoodLepton, ElectronCollection, MuonCollection):
     return bool(LepVetoOneCollection(GoodLepton, ElectronCollection, REL_ISO_CUT_LEP_VETO_ELE, PT_CUT_LEP_VETO_ELE, ETA_CUT_LEP_VETO_ELE, False) or LepVetoOneCollection(GoodLepton, MuonCollection, REL_ISO_CUT_LEP_VETO_MU, PT_CUT_LEP_VETO_MU, ETA_CUT_LEP_VETO_MU, True))
 
 #semplifica la macro
-def JetSelection(jetCollection, GoodTau, GoodMu):
+def SelectJet(jetCollection, GoodTau, GoodMu):
     if len(jetCollection)<2: return -999
     if jetCollection[0].pt<PT_CUT_JET: return -999
     if jetCollection==None: return -999
@@ -168,7 +179,7 @@ def JetSelection(jetCollection, GoodTau, GoodMu):
         jetCollection.remove(GoodJet)
         if len(jetCollection)==1:
              return -999
-        return JetSelection(jetCollection, GoodTau, GoodMu)
+        return SelectJet(jetCollection, GoodTau, GoodMu)
     
     #searches for the best second jet
     secondJetIndex=FindSecondJet(GoodJet, jetCollection, GoodTau, GoodMu)
@@ -177,7 +188,7 @@ def JetSelection(jetCollection, GoodTau, GoodMu):
         jetCollection.remove(GoodJet)
         if len(jetCollection)==1:
             return -999
-        else: return JetSelection(jetCollection, GoodTau, GoodMu)
+        else: return SelectJet(jetCollection, GoodTau, GoodMu)
 
 
 def JetCut(jet1, jet2):
