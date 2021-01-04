@@ -12,11 +12,11 @@ parser.add_option('-d', dest='dat', type=str, default = 'all', help='Default is 
 
 (opt, args) = parser.parse_args()
 
-#username = str(os.environ.get('USER'))
-#inituser = str(os.environ.get('USER')[0])
+username = str(os.environ.get('USER'))
+inituser = str(os.environ.get('USER')[0])
 
-username = 'mmagheri'
-inituser = 'm'
+#username = 'mmagheri'
+#inituser = 'm'
 
 #folder = "Eff_Jet" + opt.jetwp + "_Mu" + opt.muwp + "_Ele" + opt.elewp
 path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + opt.folder + "/"
