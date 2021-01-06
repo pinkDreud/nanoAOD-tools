@@ -111,10 +111,17 @@ def SelectLepton(lepCollection, isMu): #isMu==True -> muons else Ele
         return i
     return -1
 
-
-#WP vs Ele: ID_TAU_RECO_DEEPTAU_VSELE
-#WP vs Mu:  ID_TAU_RECO_DEEPTAU_VSMU
-#WP vs jet: ID_TAU_RECO_DEEPTAU_VSJET
+'''
+def SelectTau(tauCollection, GoodMuon):
+    if len(tauCollection)<1: return -1
+    for i in range(len(tauCollection)):
+        if deltaR(tauCollection[i].eta, tauCollection[i].phi, GoodMuon.eta, GoodMuon.phi)<DR_OVERLAP_CONE_TAU: continue
+        if not (tauCollection[i].idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and tauCollection[i].idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and tauCollection[i].idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET and tauCollection[i].idDecayModeNewDMs):   continue
+        if tauCollection[i].pt<PT_CUT_TAU: continue
+        if abs(tauCollection[i].eta)>ETA_CUT_TAU: continue
+        return i
+    return -1
+'''
 def SelectTau(tauCollection, GoodMuon, vsEleWP, vsMuWP, vsJetWP):
     if len(tauCollection)<1: return -1
     for i in range(len(tauCollection)):
@@ -139,10 +146,11 @@ def BVeto(jetCollection):
 
 def CountBJets(jetCollection):
     nb=0
-    for k in range(len(jetCollection)):
-        if (jetCollection[k].btagDeepFlavB>=WP_btagger[BTAG_ALGO][BTAG_WP])*(jetCollection[k].pt>BTAG_PT_CUT)*abs(jetCollection[k].eta<BTAG_ETA_CUT): nb+=1
+    #for k in range(len(jetCollection)):
+    for jet in jetCollection:
+        if jet.btagDeepFlavB>=WP_btagger[BTAG_ALGO][BTAG_WP] and jet.pt>BTAG_PT_CUT and abs(jet.eta)<BTAG_ETA_CUT: 
+          nb+=1
     return nb
-
 
 
 def IsNotTheSameObject(obj1, obj2):
