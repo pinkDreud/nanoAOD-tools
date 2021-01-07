@@ -101,6 +101,8 @@ dirlist = [dirs for dirs in os.listdir(path) if os.path.isdir(path+dirs)]
 
 
 for prname, proc in class_dict.items():
+    if "Fake" in prname:
+        continue
     if "DataHT" in prname or 'DataMET' in prname:
         continue
     if opt.year not in prname:
@@ -110,6 +112,8 @@ for prname, proc in class_dict.items():
 
     if hasattr(proc, 'components'):
         for sample in proc.components:
+            if "Fake" in sample.label:
+                continue
             if opt.dat != 'all':
                 if not (str(sample.label).startswith(opt.dat) or prname.startswith(opt.dat)):
                     continue
