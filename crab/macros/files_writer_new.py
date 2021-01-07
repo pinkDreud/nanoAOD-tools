@@ -3,10 +3,13 @@ from PhysicsTools.NanoAODTools.postprocessing.samples.samples import *
 import os
 import optparse
 
-usage = 'python files_writer.py -d sample_name'
+usage = 'python files_writer.py -d sample_name --fake'
 parser = optparse.OptionParser(usage)
 parser.add_option('-d', '--dat', dest='dat', type=str, default = '', help='Please enter a dataset name')
+parser.add_option('--fake', dest = 'fake', default = False, action = 'store_true', help = 'Default runs analysis')
 (opt, args) = parser.parse_args()
+
+print "Is Fake?", opt.fake
 
 if not(opt.dat in sample_dict.keys()):
     print sample_dict.keys()
@@ -22,16 +25,28 @@ else:
 path = ".."
 
 for sample in samples:
-    if not os.path.exists("./files/"):
-        os.makedirs("./files/")
-    f = open("./files/"+str(sample.label)+".txt", "w")
-    url = os.popen('crab getoutput --xrootd --quantity="all" -d ' + path + '/crab_' + str(sample.label) + '/').readlines()#[0]
-    #url = os.popen('crab getoutput --xrootd --jobids=1 -d ' + path + '/crab_' + str(sample.label) + '/').readlines()[0]
-    
+    dirpath = "./files/"
+    crabdir = "/crab_" + str(sample.label)
+    if opt.fake:
+        dirpath = dirpath + "Fake/"
+        crabdir = crabdir + "_Fake/"
+    else:
+        crabdir = crabdir + "/"
+
+    print dirpath, crabdir
+
+    if not os.path.exists(dirpath):
+        os.makedirs(dirpath)
+
+    f = open(dirpath+str(sample.label)+".txt", "w")
+    url = os.popen('crab getoutput --xrootd --quantity="all" -d ' + path + crabdir).readlines()
+
     print("Printing out crabbed files for "+str(sample.label))
     for u in url:
         #f.write
         if 'root' not in u:
+            print u.split("for ")[-1].split(" ")[0]
+
             npaths = int(u.split("for ")[-1].split(" ")[0])
 
             finished = False
@@ -41,7 +56,8 @@ for sample in samples:
                 intmin = int(t*500+1)
                 intmax = int(min((t+1)*500, npaths))
                 crabgo = str(intmin)+'-'+str(intmax)
-                curl = os.popen('crab getoutput --xrootd --jobids=' + str(crabgo) + ' -d ' + path + '/crab_' + str(sample.label) + '/').readlines()
+                curl = os.popen('crab getoutput --xrootd --jobids=' + str(crabgo) + ' -d ' + path + crabdir).readlines()
+               
                 for cu in curl:
                     f.write(cu)
                 if intmax == npaths:
@@ -52,3 +68,4 @@ for sample in samples:
         else:
             f.write(u)
 f.close()
+

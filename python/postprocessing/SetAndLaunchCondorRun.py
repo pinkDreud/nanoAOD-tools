@@ -40,7 +40,7 @@ parser.add_option('-y', dest='year', type=str, default = '2017', help='Please en
 parser.add_option('-j', dest='jetwp', type=str, default = 'VT', help='Please enter a TauID WP for vsJet')
 parser.add_option('-m', dest='muwp', type=str, default = 'L', help='Please enter a TauID WP for vsMu')
 parser.add_option('-e', dest='elewp', type=str, default = 'VL', help='Please enter a TauID WP for vsEle')
-parser.add_option('-f', dest='fold', type=str, default = 'v8', help='Please enter a folder')
+parser.add_option('-f', dest='fold', type=str, default = 'v30', help='Please enter a folder')
 parser.add_option('--max', dest='maxj', type=int, default = 0, help='Please enter a maximum for number of condor jobs')
 parser.add_option('-c', dest='check', default = False, action='store_true', help='Default executes condorrun')
 parser.add_option('-d', dest='dat', type=str, default = 'all', help='Default is all')
@@ -76,12 +76,14 @@ vsEle_dict = {"VVVL": '1',
 username = str(os.environ.get('USER'))
 inituser = str(os.environ.get('USER')[0])
 
+print username
+
 if opt.fold == '':
     folder = "Eff_Jet" + opt.jetwp + "_Mu" + opt.muwp + "_Ele" + opt.elewp
 else:
     folder = opt.fold
 
-path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/"
+path = "/eos/user/" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/"
 #print folder, path
 
 if not os.path.exists(path):
@@ -99,6 +101,8 @@ dirlist = [dirs for dirs in os.listdir(path) if os.path.isdir(path+dirs)]
 
 
 for prname, proc in class_dict.items():
+    if "Fake" in prname:
+        continue
     if "DataHT" in prname or 'DataMET' in prname:
         continue
     if opt.year not in prname:
@@ -108,6 +112,8 @@ for prname, proc in class_dict.items():
 
     if hasattr(proc, 'components'):
         for sample in proc.components:
+            if "Fake" in sample.label:
+                continue
             if opt.dat != 'all':
                 if not (str(sample.label).startswith(opt.dat) or prname.startswith(opt.dat)):
                     continue

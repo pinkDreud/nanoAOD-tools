@@ -1,6 +1,7 @@
 set year = '2017'
 #python submit_crab.py -d TT_$year -r
 #python submit_crab.py -d WJets_$year -r
+#python submit_crab.py -d WJets_Fake_$year -r
 python submit_crab.py -d WJets_Fake_$year -r
 #python submit_crab.py -d WZ_$year -r
 #python submit_crab.py -d DYJetsToLL_$year -r

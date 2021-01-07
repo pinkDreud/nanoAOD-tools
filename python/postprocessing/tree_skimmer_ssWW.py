@@ -18,7 +18,7 @@ import math
 import datetime
 import copy
 from array import array
-from skimtree_utils import *
+from skimtree_utils_ssWW_wFakes import *
 
 if sys.argv[4] == 'remote':
     from samples import *
@@ -388,7 +388,7 @@ for i in range(tree.GetEntries()):
         runPeriod = sample.runP
     
     #print "------ ", i
-    passMu, passEle, passHT, noTrigger = trig_map(HLT, year, runPeriod)
+    passMu, passEle, passHT, noTrigger = trig_map(HLT, PV, year, runPeriod)
 
     if noTrigger: continue
 
@@ -490,7 +490,10 @@ for i in range(tree.GetEntries()):
     if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1: Cut_dict[3][1]+=1    
     
     UseDeepTau=True
-    indexGoodTau=SelectTau(taus, GoodLep, UseDeepTau)
+    DeepTauVsEle = 1
+    DeepTauVsMu = 1
+    DeepTauVsJet = 16
+    indexGoodTau=SelectTau(taus, GoodLep, DeepTauVsEle, DeepTauVsMu, DeepTauVsJet)#SelectTau(taus, GoodLep, UseDeepTau)
 
     if indexGoodTau<0:
         systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
