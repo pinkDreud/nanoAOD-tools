@@ -3,6 +3,7 @@ import sys
 import optparse
 import ROOT
 import math
+from datetime import date
 
 from FakeRatio_utils import *
 from PhysicsTools.NanoAODTools.postprocessing.samples.samples import *
@@ -20,7 +21,7 @@ parser.add_option('-b', '--bkg', dest='bkg', default = False,action='store_true'
 parser.add_option('-o', '--onlybkg', dest='onlybkg', default = False,action='store_true', help='Only MC contribution, default false')
 parser.add_option('--promptFakeTau', dest='promptFakeTau', default = False,action='store_true', help='Only MC contribution, default false')
 
-parser.add_option('--input', dest='infolder', type=str, default = 'FR_v6', help='Please enter an input folder folder')
+parser.add_option('--input', dest='infolder', type=str, default = 'FR_v8', help='Please enter an input folder folder')
 (opt, args) = parser.parse_args()
 input_folder="/eos/user/m/mmagheri/VBS/nosynch/"+opt.infolder+"/"
 
@@ -123,9 +124,9 @@ def FakeCalc(sample, isData, nev):
         FakeLepton      =   Object(event, "FakeLepton")
         FakeTau         =   Object(event, "FakeTau")
         
-        Met             = Object(event, "MET_pt")
-        mT              = Object(event, "mT_lepMET")
-        w               = Object(event, "w")
+        Met             =   Object(event, "MET_pt")
+        mT              =   Object(event, "mT_lepMET")
+        w               =   Object(event, "w")
     
         SF=w.nominal*sign*event.PFSF*event.puSF
 
@@ -145,21 +146,20 @@ def FakeCalc(sample, isData, nev):
         
         if isMC_and_haspromptLepton or isData:    
             if abs(FakeLepton.eta)<2.4:
-                pTbin=  pTCalculator(FakeLepton.pt)
-                etaBin= etaCalculator(FakeLepton.eta)
-
-                pos=    str(pTbin)+etaBin
+                pTbin =  pTCalculator(FakeLepton.pt)
+                etaBin = etaCalculator(FakeLepton.eta)
+                pos =    str(pTbin)+etaBin
                 
                 if isMC and not(FakeLepton.isPrompt==1): SF=0
             
                 if abs(FakeLepton.pdgid)==11:
                     Fake_dicti_ele[pos][1]+=SF
-                    if isFake.leptonAndPassCuts==1:
+                    if FakeLepton.pfRelIso04<0.08:
                         Fake_dicti_ele[pos][2]+=SF
                 
                 if abs(FakeLepton.pdgid)==13:
                     Fake_dicti_mu[pos][1]+=SF
-                    if isFake.leptonAndPassCuts==1:
+                    if FakeLepton.pfRelIso04<0.15:
                         Fake_dicti_mu[pos][2]+=SF
         
         if isMC_and_haspromptTau or isData:
@@ -169,15 +169,15 @@ def FakeCalc(sample, isData, nev):
 
                 if isMC and not(FakeTau.isPrompt==5): SF=0
                 
-                pos=    str(pTbin)+etaBin
+                pos =    str(pTbin)+etaBin
                 
                 Fake_dicti_tau[pos][1]+=SF
-                if FakeTau.DeepTauWP>=64: #isFake.tauAndPassCuts==1:
+                if isFake.tauAndPassCuts==1:#FakeTau.DeepTauWP>=64: #isFake.tauAndPassCuts==1:
                     Fake_dicti_tau[pos][2]+=SF
 
 
+today = date.today()
 
-if not opt.onlybkg: FakeCalc("/eos/user/m/mmagheri/VBS/nosynch/FakeRatio_v4/DataHT_2017/DataHT_2017.root", True, evs)
 
 if opt.bkg or opt.onlybkg:
     for bkg in bkg_files:
@@ -201,8 +201,8 @@ if not(opt.onlybkg) or opt.promptFakeTau:
 
 numberOfEvs=str(evs)
 if evs<10: numberOfEvs="all"
-filename="FakeRatio_calcs/FakeRatios"+opt.infolder+"_MetCUT_"+str(MET_cut)+"_mTLepMetCUT_"+str(mt_lepMET_cut)+"_nEv_"+numberOfEvs
-if(opt.bkg): filename="FakeRatio_calcs/FakeRatios_MetCUT_"+str(MET_cut)+"_mTLepMetCUT_"+str(mt_lepMET_cut)+"_removeBKG"
+filename="FakeRatio_calcs/FakeRatios"+opt.infolder+"_MetCUT_"+str(MET_cut)+"_mTLepMetCUT_"+str(mt_lepMET_cut)+"_nEv_"+numberOfEvs+"_"+today
+if(opt.bkg): filename="FakeRatio_calcs/FakeRatios_MetCUT_"+str(MET_cut)+"_mTLepMetCUT_"+str(mt_lepMET_cut)+"_removeBKG"+"_"+today
 if opt.onlybkg: filename+="_onlyBKG"
 
 outFile=open(filename+".txt", "w")
