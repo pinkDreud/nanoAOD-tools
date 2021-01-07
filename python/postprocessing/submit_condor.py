@@ -32,10 +32,10 @@ def sub_writer(sample, n, files, folder):
     f.write("use_x509userproxy       = true\n")
     f.write("should_transfer_files   = YES\n")
     f.write("when_to_transfer_output = ON_EXIT\n")
-    f.write("transfer_input_files    = $(Proxy_path), TH2F_FakeRatio_ele.root, TH2F_FakeRatio_mu.root, samples/samples.py, skimtree_utils_ssWW_wFakes.py, CutsAndValues_bu.py, __init__.py\n")
-    f.write("transfer_output_remaps  = \""+ sample.label + "_part" + str(n) + ".root=/eos/home-"+inituser + "/" + username+"/VBS/nosynch/" + folder + "/" + sample.label +"/"+ sample.label + "_part" + str(n) + ".root\"\n")
+    f.write("transfer_input_files    = $(Proxy_path), TH2F_FakeRatio_ele.root, TH2F_FakeRatio_mu.root, samples/samples.py, skimtree_utils_ssWW_wFakes_dev.py, CutsAndValues_bu.py, __init__.py\n")
+    f.write("transfer_output_remaps  = \""+ sample.label + "_part" + str(n) + ".root=/eos/home-"+inituser + "/" + username+"/PG/nosynch/" + folder + "/" + sample.label +"/"+ sample.label + "_part" + str(n) + ".root\"\n")
     f.write("+JobFlavour             = \"workday\"\n") # options are espresso = 20 minutes, microcentury = 1 hour, longlunch = 2 hours, workday = 8 hours, tomorrow = 1 day, testmatch = 3 days, nextweek     = 1 week
-    f.write("executable              = tree_skimmer_ssWW_wFakes.py\n")
+    f.write("executable              = tree_skimmer_ssWW_wFakes_dev.py\n")
     f.write("arguments               = " + sample.label + " " + str(n) + " " + str(files) + " remote" + "\n")
     #f.write("input                   = input.txt\n")
     f.write("output                  = condor/output/"+ sample.label + "_" + opt.wp + "_part" + str(n) + ".out\n")
@@ -76,8 +76,8 @@ for sample in samples:
     isMC = True
     if('Data' in sample.label):
         isMC = False
-    if not os.path.exists("/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/" + sample.label):
-        os.makedirs("/eos/home-" + inituser + "/" + username +"/VBS/nosynch/" + folder + "/" + sample.label)
+    if not os.path.exists("/eos/home-" + inituser + "/" + username + "/PG/nosynch/" + folder + "/" + sample.label):
+        os.makedirs("/eos/home-" + inituser + "/" + username +"/PG/nosynch/" + folder + "/" + sample.label)
     f = open("../../crab/macros/files/" + sample.label + ".txt", "r")
     files_list = f.read().splitlines()
     print(str(len(files_list)))
