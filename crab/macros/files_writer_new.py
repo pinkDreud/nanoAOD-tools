@@ -46,9 +46,10 @@ for sample in samples:
         #f.write
         if 'root' not in u:
             print u.split("for ")[-1].split(" ")[0]
-
-            npaths = int(u.split("for ")[-1].split(" ")[0])
-
+            try:
+                npaths = int(u.split("for ")[-1].split(" ")[0])
+            except:
+                continue
             finished = False
             rang = 500
             t = 0

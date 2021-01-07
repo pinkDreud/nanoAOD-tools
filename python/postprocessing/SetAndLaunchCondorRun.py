@@ -31,6 +31,9 @@ def AreAllCondored(samplename):
     if len(condoredlist) < lenstore:
         print "condored: ", len(condoredlist), "\tlenstore: ", lenstore
         return False
+    elif lenstore==0 and len(condoredlist)==0:
+        print "Warning for", samplename, "False flag for crabbed files! need to recrab them"
+        return True
     else:
         return True
         
