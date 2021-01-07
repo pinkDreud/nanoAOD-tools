@@ -367,15 +367,14 @@ for i in range(tree.GetEntries()):
     #++++++++++++++++++++++++++++++++++
     #++        taking objects        ++
     #++++++++++++++++++++++++++++++++++
-    '''
+
     if Debug:
         print("evento n. " + str(i))
         if i > 2000:
             break
     
-    if not Debug and i%5000 == 0:
-    '''
-    #print("Event #", i+1, " out of ", tree.GetEntries())
+    if not Debug and i%500 == 0:
+        print("Event #", i+1, " out of ", tree.GetEntries())
 
     event       = Event(tree,i)
     electrons   = Collection(event, "Electron")
