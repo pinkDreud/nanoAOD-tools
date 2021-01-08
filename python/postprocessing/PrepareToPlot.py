@@ -25,6 +25,7 @@ path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + opt.folder +
 #datas = opt.dataset + "_" + opt.year
 
 Debug = opt.check # True # False #
+split = 50
 
 def DoesSampleExist(samplename):
     if samplename+".txt" not in os.listdir("../../crab/macros/files/"):
@@ -47,7 +48,7 @@ def AreAllCondored(samplename):
     lenstore = len(storelist)
 
     if 'Data' in samplename:
-        lenstore = lenstore/50
+        lenstore = lenstore/split
 
     if len(condoredlist) < lenstore:
         print "condored: ", len(condoredlist), "\tlenstore: ", lenstore

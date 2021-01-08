@@ -1,4 +1,4 @@
-# prende i path da path_writer (crab_paths.txt) e usando gfal-ls scorre su tutti i file e li salva su un file .txt
+#prende i path da path_writer (crab_paths.txt) e usando gfal-ls scorre su tutti i file e li salva su un file .txt
 from PhysicsTools.NanoAODTools.postprocessing.samples.samples import *
 import os
 import optparse
@@ -28,6 +28,8 @@ for sample in samples:
     dirpath = "./files/"
     crabdir = "/crab_" + str(sample.label)
     if opt.fake:
+        if "DataEleB" in sample.label or "DataMuB" in sample.label:
+            continue
         dirpath = dirpath + "Fake/"
         crabdir = crabdir + "_Fake/"
     else:
@@ -68,5 +70,5 @@ for sample in samples:
             break
         else:
             f.write(u)
-f.close()
+    f.close()
 

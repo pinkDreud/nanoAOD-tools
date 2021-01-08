@@ -4,6 +4,7 @@ import sys
 from samples.samples import *
 
 cshname = "condorrun_tauwp.csh"
+split = 50
 
 def DoesSampleExist(samplename):
     if samplename+".txt" not in os.listdir("../../crab/macros/files/"):
@@ -26,7 +27,7 @@ def AreAllCondored(samplename):
     lenstore = len(storelist)
 
     if 'Data' in samplename:
-        lenstore = lenstore/50
+        lenstore = lenstore/split
 
     if len(condoredlist) < lenstore:
         print "condored: ", len(condoredlist), "\tlenstore: ", lenstore
