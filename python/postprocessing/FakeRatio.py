@@ -21,14 +21,14 @@ from array import array
 from FakeRatio_utils import *
 
 usage = "python FakeRatio.py [nome_dataset_come_salvato_in_samples.py] [indice, di default 0] [path_file_da_processare] local chosenTrigger"
-#chosenTrigger can be: electron, muon, HT
+#chosenTrigger can be: Ele, Mu, HT
 
 usageCopyPaste="python FakeRatio.py DataHTC_2017 7 DataHTC_2017_ntuple.root local"
 
 chosenTrigger="Depending on the sample"
 
-if sys.argv[5]=="electron": chosenTrigger=sys.argv[5]
-if sys.argv[5]=="muon": chosenTrigger=sys.argv[5]
+if sys.argv[5]=="Ele": chosenTrigger=sys.argv[5]
+if sys.argv[5]=="Mu": chosenTrigger=sys.argv[5]
 if sys.argv[5]=="HT": chosenTrigger=sys.argv[5]
 
 
@@ -228,6 +228,9 @@ var_list.append(Veto_Muons)
 var_list.append(Veto_TauLeptons)
 var_list.append(Veto_TauZMass)
 
+#luminosity
+HLT_effLumi                 =   array.array('f', [-999.])
+var_list.append(HLT_effLumi)
 
 #MET
 MET_pt                      =   array.array('f', [-999.])
@@ -279,6 +282,8 @@ systTree.branchTreesSysts(trees, "all", "FakeMuon_phi",             outTreeFile,
 systTree.branchTreesSysts(trees, "all", "FakeMuon_mass",            outTreeFile, FakeMuon_mass)
 systTree.branchTreesSysts(trees, "all", "FakeMuon_pdgid",           outTreeFile, FakeMuon_pdgid)
 systTree.branchTreesSysts(trees, "all", "FakeMuon_pfRelIso04",      outTreeFile, FakeMuon_pfRelIso04)
+#lumi stuff
+systTree.branchTreesSysts(trees, "all", "HLT_effLumi",              outTreeFile, HLT_effLumi)#
 #all taus for fake calculation
 systTree.branchTreesSysts(trees, "all", "FakeTau_pt",               outTreeFile, FakeTau_pt)
 systTree.branchTreesSysts(trees, "all", "FakeTau_isPrompt",         outTreeFile, FakeTau_isPrompt)
@@ -432,16 +437,13 @@ for i in range(tree.GetEntries()):
     if chosenTrigger=="Depending on the sample":
         if "SingleElectron" in sample.dataset:  
             conditionToSave= passEleLoose
-            waw="electron"
         if "SingleMuon" in sample.dataset:      
             conditionToSave= passMuLoose 
-            waw="mu"
         if "JetHT" in sample.dataset:           
             conditionToSave= passHT 
-            waw="other stuff"
-    elif chosenTrigger=="electron":
+    elif chosenTrigger=="Ele":
         conditionToSave = passEleLoose
-    elif chosenTrigger=="muon":
+    elif chosenTrigger=="Mu":
         conditionToSave = passMuLoose
     elif chosenTrigger=="HT":
         conditionToSave=passHT
@@ -459,7 +461,7 @@ for i in range(tree.GetEntries()):
         passEle =   True
         passMu  =   True 
 
-
+    
     if passEleLoose and not passMuLoose:
         if len(electrons)>0:  
             SingleEle=True
@@ -479,7 +481,7 @@ for i in range(tree.GetEntries()):
 
     elif passMuLoose and passEleLoose:
         ElMu=True
-
+    
     if ElMu:
         for mu in muons:
             if abs(mu.pt)>HighestLepPt:
@@ -494,7 +496,14 @@ for i in range(tree.GetEntries()):
                 SingleMu = False
                 break
   
-        
+    
+    if isMC:
+        vTrigEle, vTrigMu, vTrigHT = trig_finder(HLT, sample.year)
+        if sys.argv[5] == "Ele": HLT_effLumi[0] = lumiFinder(sys.argv[5], vTrigEle)
+        if sys.argv[5] == "Mu":  HLT_effLumi[0] = lumiFinder(sys.argv[5], vTrigMu)
+        if sys.argv[5] == "HT":  HLT_effLumi[0] = lumiFinder(sys.argv[5], vTrigHT)
+
+
     MET_pt[0]=met.pt
     MET_phi[0]=met.phi
     
