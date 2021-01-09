@@ -27,7 +27,13 @@ def AreAllCondored(samplename):
     lenstore = len(storelist)
 
     if 'Data' in samplename:
+        print lenstore
+        print lenstore/split, lenstore%split
+        remainder = lenstore%split
         lenstore = lenstore/split
+        if remainder > 0:
+            lenstore += 1
+        print lenstore, remainder
 
     if len(condoredlist) < lenstore:
         print "condored: ", len(condoredlist), "\tlenstore: ", lenstore
