@@ -35,19 +35,22 @@ for sample in samples:
     else:
         crabdir = crabdir + "/"
 
-    print dirpath, crabdir
+    #print dirpath, crabdir
 
     if not os.path.exists(dirpath):
         os.makedirs(dirpath)
 
     f = open(dirpath+str(sample.label)+".txt", "w")
     url = os.popen('crab getoutput --xrootd --quantity="all" -d ' + path + crabdir).readlines()
+    #print len(url)
 
     print("Printing out crabbed files for "+str(sample.label))
     for u in url:
+        #print u, u.split("hadd_")[-1].split(".")[0]
+
         #f.write
         if 'root' not in u:
-            print u.split("for ")[-1].split(" ")[0]
+            #print u.split("for ")[-1].split(" ")[0]
             try:
                 npaths = int(u.split("for ")[-1].split(" ")[0])
             except:
@@ -71,4 +74,5 @@ for sample in samples:
         else:
             f.write(u)
     f.close()
+
 
