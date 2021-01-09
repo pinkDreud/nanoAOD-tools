@@ -45,34 +45,46 @@ for sample in samples:
     #print len(url)
 
     print("Printing out crabbed files for "+str(sample.label))
-    for u in url:
-        #print u, u.split("hadd_")[-1].split(".")[0]
 
-        #f.write
+    url_dict = {}
+    for u in url:
         if 'root' not in u:
-            #print u.split("for ")[-1].split(" ")[0]
+            print u.split("for ")[-1].split(" ")[0]
             try:
                 npaths = int(u.split("for ")[-1].split(" ")[0])
             except:
                 continue
+
             finished = False
             rang = 500
             t = 0
             while not finished:
+                #for key, value in url_dict.items():
+                #print type(key), key, value
                 intmin = int(t*500+1)
                 intmax = int(min((t+1)*500, npaths))
                 crabgo = str(intmin)+'-'+str(intmax)
                 curl = os.popen('crab getoutput --xrootd --jobids=' + str(crabgo) + ' -d ' + path + crabdir).readlines()
-               
+                
                 for cu in curl:
-                    f.write(cu)
+                    idx = int(cu.split("hadd_")[-1].split(".")[0])
+                    url_dict[idx] = cu
+                    
+                    #f.write(cu)
                 if intmax == npaths:
                     finished = True
                 t+=1
-                
             break
+
         else:
-            f.write(u)
+            idx = int(u.split("hadd_")[-1].split(".")[0])
+            url_dict[idx] = u
+
+    for u_idx in range(len(url_dict)):
+        ru_idx = u_idx + 1
+        try:
+            f.write(url_dict[ru_idx])
+        except:
+            continue
+
     f.close()
-
-
