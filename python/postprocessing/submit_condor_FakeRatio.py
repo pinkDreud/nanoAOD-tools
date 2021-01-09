@@ -10,6 +10,7 @@ parser.add_option('-d', '--dat', dest='dat', type=str, default = '', help='Pleas
 parser.add_option('-f', '--folder', dest='folder', type=str, default = '', help='Please enter a destination folder')
 parser.add_option('--max', dest='maxj', type=int, default = 0, help='Please enter working point!')
 parser.add_option('--trig', dest='trig', type=str, default = '', help='Please enter trigger (electron, muon, HT)')
+parser.add_option('--infold', dest = 'infold', type = str, default= '', help = 'input folder for the crabbed files')
 #parser.add_option('-u', '--user', dest='us', type='string', default = 'ade', help="")
 (opt, args) = parser.parse_args()
 
@@ -77,7 +78,9 @@ for sample in samples:
         isMC = False
     if not os.path.exists("/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/" + sample.label):
         os.makedirs("/eos/home-" + inituser + "/" + username +"/VBS/nosynch/" + folder + "/" + sample.label)
-    f = open("../../crab/macros/files/" + sample.label + ".txt", "r")
+    inFiles="../../crab/macros/files/"+opt.infold + "/" + sample.label + ".txt"
+    print(inFiles)
+    f = open(inFiles, "r")
     files_list = f.read().splitlines()
     print(str(len(files_list)))
     if(isMC):

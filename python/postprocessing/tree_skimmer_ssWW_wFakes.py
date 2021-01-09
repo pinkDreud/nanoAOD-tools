@@ -57,6 +57,8 @@ if ('Data' in sample.label):
 
 MCReco = MCReco * isMC
 
+
+
 #Cut_dict = {}
 
 #if Debug:
@@ -237,8 +239,10 @@ var_list.append(deltaPhi_lepj2)#
 #other#
 SF_Fake                     =   array.array('f', [1.])
 var_list.append(SF_Fake)
+HLT_effLumi                 =   array.array('f', [-999.])
+var_list.append(HLT_effLumi)
 deltaEta_jj                 =   array.array('f', [-999.])#
-var_list.append(deltaEta_jj)#
+var_list.append(deltaEta_jj)
 
 #cut variables
 pass_lepton_selection       =   array.array('i', [0])
@@ -331,6 +335,7 @@ systTree.branchTreesSysts(trees, "all", "deltaPhi_lepj2",           outTreeFile,
 #other                                                                                    
 systTree.branchTreesSysts(trees, "all", "deltaEta_jj",              outTreeFile, deltaEta_jj)#
 systTree.branchTreesSysts(trees, "all", "SF_Fake",                  outTreeFile, SF_Fake)#
+systTree.branchTreesSysts(trees, "all", "HLT_effLumi",              outTreeFile, HLT_effLumi)#
 #cut variables
 systTree.branchTreesSysts(trees, "all", "pass_lepton_selection",    outTreeFile, pass_lepton_selection)
 systTree.branchTreesSysts(trees, "all", "pass_lepton_iso",          outTreeFile, pass_lepton_iso)
@@ -556,12 +561,18 @@ for i in range(tree.GetEntries()):
     leptons = None
 
     #if SingleEle==False and HighestLepPt>0: SingleMu=True
+    vTrigEle, vTrigMu, vTrigHT = trig_finder(HLT, sample.year)
     
-    if SingleEle==True: leptons=electrons
-    elif SingleMu==True:  leptons=muons
+    if SingleEle==True:
+        if isMC: HLT_effLumi[0] = lumiFinder("Ele", vTrigEle)
+        leptons = electrons
+    elif SingleMu==True:
+        if isMC: HLT_effLumi[0] = lumiFinder("Mu", vTrigMu)
+        leptons = muons
+    
+    
     elif not (SingleMu or SingleEle):
         continue
-
     if SingleEle and dataMu:
         continue
     if SingleMu and dataEle:

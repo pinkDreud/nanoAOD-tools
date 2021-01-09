@@ -19,9 +19,10 @@ parser = optparse.OptionParser(usage)
 parser.add_option('-f', '--folder', dest='folder', type=str, default = '', help='Please enter a destination folder')
 parser.add_option('-b', '--bkg', dest='bkg', default = False,action='store_true', help='Eliminate contribution from W+Jets && DY+Jets, default false')
 parser.add_option('-o', '--onlybkg', dest='onlybkg', default = False,action='store_true', help='Only MC contribution, default false')
+parser.add_option('-d', '--debug', dest='debug', default = False, action='store_true', help='Debug mode, only runs in a file')
 parser.add_option('--promptFakeTau', dest='promptFakeTau', default = False,action='store_true', help='Only MC contribution, default false')
 
-parser.add_option('--input', dest='infolder', type=str, default = 'FR_v8', help='Please enter an input folder folder')
+parser.add_option('--input', dest='infolder', type=str, default = 'FR_v8/HT', help='Please enter an input folder folder')
 (opt, args) = parser.parse_args()
 input_folder="/eos/user/m/mmagheri/VBS/nosynch/"+opt.infolder+"/"
 
@@ -97,6 +98,15 @@ Fake_dicti_tau = {
             '5C': ['1.5<|n|<2, pT>50    ',  0,  0, 0.0],
             '5D': ['2<|n|<2.4, pT>50    ',  0,  0, 0.0],
 }
+today = date.today()
+
+
+if evs<10: numberOfEvs="all"
+filename="FakeRatio_calcs/FakeRatios"+opt.infolder+"_MetCUT_"+str(MET_cut)+"_mTLepMetCUT_"+str(mt_lepMET_cut)+"_nEv_"+numberOfEvs+"_"+str(today)
+if(opt.bkg): filename="FakeRatio_calcs/FakeRatios_MetCUT_"+str(MET_cut)+"_mTLepMetCUT_"+str(mt_lepMET_cut)+"_removeBKG"+"_"+str(today)
+if opt.onlybkg: filename+="_onlyBKG"
+
+print("saving events in: ", filename)
 
 
 def FakeCalc(sample, isData, nev):
@@ -112,11 +122,11 @@ def FakeCalc(sample, isData, nev):
     tree = InputTree(chain)
     
     sign=1
-    if not isData: sign=-1
+    if isMC: sign=-1
     if nev<10: nev=tree.GetEntries()
 
     for i in range(nev):
-        if i%100000==0: print "Processing event: ",i+1 
+        if i%1000000==0: print "Processing event: ",i+1 
         
         event           =   Event(tree,i)
         isFake          =   Object(event, "isFake")
@@ -127,8 +137,10 @@ def FakeCalc(sample, isData, nev):
         Met             =   Object(event, "MET_pt")
         mT              =   Object(event, "mT_lepMET")
         w               =   Object(event, "w")
-    
-        SF=w.nominal*sign*event.PFSF*event.puSF
+        veto            =   Object(event, "Veto")
+        
+        SF=1
+        if isMC: SF=w.nominal*sign*event.PFSF*event.puSF*0.17/41.53 #last two numbers are to scale to the lumi of PFHT350
 
         if Met>MET_cut or mT>mt_lepMET_cut: continue
         
@@ -145,6 +157,7 @@ def FakeCalc(sample, isData, nev):
         pos = 0
         
         if isMC_and_haspromptLepton or isData:    
+            if veto.LightLeptons==1: continue
             if abs(FakeLepton.eta)<2.4:
                 pTbin =  pTCalculator(FakeLepton.pt)
                 etaBin = etaCalculator(FakeLepton.eta)
@@ -163,6 +176,7 @@ def FakeCalc(sample, isData, nev):
                         Fake_dicti_mu[pos][2]+=SF
         
         if isMC_and_haspromptTau or isData:
+            if veto.TauLeptons==1: continue
             if abs(FakeTau.eta)<2.4:
                 pTbin=  pTCalculator(FakeTau.pt)
                 etaBin= etaCalculator(FakeTau.eta)
@@ -170,61 +184,88 @@ def FakeCalc(sample, isData, nev):
                 if isMC and not(FakeTau.isPrompt==5): SF=0
                 
                 pos =    str(pTbin)+etaBin
-                
+                        
                 Fake_dicti_tau[pos][1]+=SF
                 if isFake.tauAndPassCuts==1:#FakeTau.DeepTauWP>=64: #isFake.tauAndPassCuts==1:
                     Fake_dicti_tau[pos][2]+=SF
 
 
-today = date.today()
 
+if not opt.debug:
+    dataSample="/eos/user/m/mmagheri/VBS/nosynch/FR_v8/HT/DataHT_2017/DataHT_2017.root"
+    print("working on data sample: ", dataSample)
+    FakeCalc(dataSample,True, evs)
+    if opt.bkg or opt.onlybkg:
+        for bkg in bkg_files:
+            FakeCalc(input_folder+bkg, False, evs)
 
-if opt.bkg or opt.onlybkg:
-    for bkg in bkg_files:
-        FakeCalc(input_folder+bkg, False, evs)
+    print("Electrons")
+    for pos in Fake_dicti_ele:
+        Fake_dicti_ele[pos][3]=Fake_dicti_ele[pos][2]*1.0/Fake_dicti_ele[pos][1]
+        print pos, Fake_dicti_ele[pos][0], ": nTot ", Fake_dicti_ele[pos][1], " nGood ", Fake_dicti_ele[pos][2], " FR: ", Fake_dicti_ele[pos][3]
 
-print("Electrons")
-for pos in Fake_dicti_ele:
-    Fake_dicti_ele[pos][3]=Fake_dicti_ele[pos][2]*1.0/Fake_dicti_ele[pos][1]
-    print pos, Fake_dicti_ele[pos][0], ": nTot ", Fake_dicti_ele[pos][1], " nGood ", Fake_dicti_ele[pos][2], " FR: ", Fake_dicti_ele[pos][3]
+    print("Muons:")
+    for pos in Fake_dicti_mu:
+        Fake_dicti_mu[pos][3]=Fake_dicti_mu[pos][2]*1.0/Fake_dicti_mu[pos][1]
+        print pos, Fake_dicti_mu[pos][0], ": nTot ", Fake_dicti_mu[pos][1], " nGood ", Fake_dicti_mu[pos][2], " FR: ", Fake_dicti_mu[pos][3]
 
-print("Muons:")
-for pos in Fake_dicti_mu:
-    Fake_dicti_mu[pos][3]=Fake_dicti_mu[pos][2]*1.0/Fake_dicti_mu[pos][1]
-    print pos, Fake_dicti_mu[pos][0], ": nTot ", Fake_dicti_mu[pos][1], " nGood ", Fake_dicti_mu[pos][2], " FR: ", Fake_dicti_mu[pos][3]
+    if not(opt.onlybkg) or opt.promptFakeTau:
+        print("Taus:")
+        for pos in Fake_dicti_tau:
+            Fake_dicti_tau[pos][3]=Fake_dicti_tau[pos][2]*1.0/Fake_dicti_tau[pos][1]
+            print pos, Fake_dicti_tau[pos][0], ": nTot ", Fake_dicti_tau[pos][1], " nGood ", Fake_dicti_tau[pos][2], " FR: ", Fake_dicti_tau[pos][3]
 
-if not(opt.onlybkg) or opt.promptFakeTau:
-    print("Taus:")
-    for pos in Fake_dicti_tau:
-        Fake_dicti_tau[pos][3]=Fake_dicti_tau[pos][2]*1.0/Fake_dicti_tau[pos][1]
-        print pos, Fake_dicti_tau[pos][0], ": nTot ", Fake_dicti_tau[pos][1], " nGood ", Fake_dicti_tau[pos][2], " FR: ", Fake_dicti_tau[pos][3]
+    numberOfEvs=str(evs)
+    if evs<10: numberOfEvs="all"
+    filename="FakeRatio_calcs/FakeRatios"+opt.infolder+"_MetCUT_"+str(MET_cut)+"_mTLepMetCUT_"+str(mt_lepMET_cut)+"_nEv_"+numberOfEvs+"_"+str(today)
+    if(opt.bkg): filename="FakeRatio_calcs/FakeRatios_MetCUT_"+str(MET_cut)+"_mTLepMetCUT_"+str(mt_lepMET_cut)+"_removeBKG"+"_"+str(today)
+    if opt.onlybkg: filename+="_onlyBKG"
 
-numberOfEvs=str(evs)
-if evs<10: numberOfEvs="all"
-filename="FakeRatio_calcs/FakeRatios"+opt.infolder+"_MetCUT_"+str(MET_cut)+"_mTLepMetCUT_"+str(mt_lepMET_cut)+"_nEv_"+numberOfEvs+"_"+today
-if(opt.bkg): filename="FakeRatio_calcs/FakeRatios_MetCUT_"+str(MET_cut)+"_mTLepMetCUT_"+str(mt_lepMET_cut)+"_removeBKG"+"_"+today
-if opt.onlybkg: filename+="_onlyBKG"
+    outFile=open(filename+".txt", "w")
 
-outFile=open(filename+".txt", "w")
-
-outFile.write("Electrons \n")
-for pos in Fake_dicti_ele:
-    L=[str(Fake_dicti_ele[pos][0]), "\t : nTot \t", str(Fake_dicti_ele[pos][1]), "\t nGood \t", str(Fake_dicti_ele[pos][2]), "\t FR:\t ", str(Fake_dicti_ele[pos][3]), "\n"]
-    outFile.writelines(L)
-
-outFile.write("Muons \n")
-for pos in Fake_dicti_mu:
-    L=[str(Fake_dicti_mu[pos][0]), "\t : nTot \t", str(Fake_dicti_mu[pos][1]), "\t nGood \t", str(Fake_dicti_mu[pos][2]), "\t FR:\t ", str(Fake_dicti_mu[pos][3]), "\n"]
-    outFile.writelines(L)
-
-if not(opt.onlybkg) or opt.promptFakeTau:
-    print("Taus:")
- 
-    outFile.write("Tau \n")
-    for pos in Fake_dicti_tau:
-        L=[str(Fake_dicti_tau[pos][0]), "\t : nTot \t", str(Fake_dicti_tau[pos][1]), "\t nGood \t", str(Fake_dicti_tau[pos][2]), "\t FR:\t ", str(Fake_dicti_tau[pos][3]), "\n"]
+    outFile.write("Electrons \n")
+    for pos in Fake_dicti_ele:
+        L=[str(Fake_dicti_ele[pos][0]), "\t : nTot \t", str(Fake_dicti_ele[pos][1]), "\t nGood \t", str(Fake_dicti_ele[pos][2]), "\t FR:\t ", str(Fake_dicti_ele[pos][3]), "\n"]
         outFile.writelines(L)
 
+    outFile.write("Muons \n")
+    for pos in Fake_dicti_mu:
+        L=[str(Fake_dicti_mu[pos][0]), "\t : nTot \t", str(Fake_dicti_mu[pos][1]), "\t nGood \t", str(Fake_dicti_mu[pos][2]), "\t FR:\t ", str(Fake_dicti_mu[pos][3]), "\n"]
+    outFile.writelines(L)
 
-outFile.close()
+    if not(opt.onlybkg) or opt.promptFakeTau:
+        print("Taus:")
+ 
+        outFile.write("Tau \n")
+        for pos in Fake_dicti_tau:
+            L=[str(Fake_dicti_tau[pos][0]), "\t : nTot \t", str(Fake_dicti_tau[pos][1]), "\t nGood \t", str(Fake_dicti_tau[pos][2]), "\t FR:\t ", str(Fake_dicti_tau[pos][3]), "\n"]
+            outFile.writelines(L)
+
+
+    outFile.close()
+
+else:
+    littleSample="/eos/user/m/mmagheri/VBS/nosynch/FR_v8/HT/DataHTB_2017/DataHTB_2017.root"
+    print("working on little sample:", littleSample)
+    FakeCalc(littleSample, True, 1000000)
+
+    print("Electrons")
+    for pos in Fake_dicti_ele:
+        Fake_dicti_ele[pos][3]=Fake_dicti_ele[pos][2]*1.0/Fake_dicti_ele[pos][1]
+        print pos, Fake_dicti_ele[pos][0], ": nTot ", Fake_dicti_ele[pos][1], " nGood ", Fake_dicti_ele[pos][2], " FR: ", Fake_dicti_ele[pos][3]
+
+    print("Muons:")
+    for pos in Fake_dicti_mu:
+        Fake_dicti_mu[pos][3]=Fake_dicti_mu[pos][2]*1.0/Fake_dicti_mu[pos][1]
+        print pos, Fake_dicti_mu[pos][0], ": nTot ", Fake_dicti_mu[pos][1], " nGood ", Fake_dicti_mu[pos][2], " FR: ", Fake_dicti_mu[pos][3]
+
+    if not(opt.onlybkg) or opt.promptFakeTau:
+        print("Taus:")
+        for pos in Fake_dicti_tau:
+            Fake_dicti_tau[pos][3]=Fake_dicti_tau[pos][2]*1.0/Fake_dicti_tau[pos][1]
+            print pos, Fake_dicti_tau[pos][0], ": nTot ", Fake_dicti_tau[pos][1], " nGood ", Fake_dicti_tau[pos][2], " FR: ", Fake_dicti_tau[pos][3]
+
+
+
+
 
