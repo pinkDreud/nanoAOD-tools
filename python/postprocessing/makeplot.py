@@ -114,7 +114,7 @@ def lumi_writer(dataset, lumi):
                     if event%10000==1:
                          #print("Processing event %s     complete %s percent" %(event, 100*event/tree.GetEntries()))
                          sys.stdout.write("\rProcessing event {}     complete {} percent".format(event, 100*event/tree.GetEntries()))
-                    w_nom[0] = tree.w_nominal * sample.sigma * lumi * 1000./float(h_genw_tmp.GetBinContent(1))
+                    w_nom[0] = tree.w_nominal * sample.sigma * tree.HLT_effLumi * 1000./float(h_genw_tmp.GetBinContent(1))
                     if isthere_pdf: #not ("WZ" in sample.label):
                          for i in xrange(1, nbins):
                               w_PDF[i] = h_pdfw_tmp.GetBinContent(i+1)/h_genw_tmp.GetBinContent(2) 
