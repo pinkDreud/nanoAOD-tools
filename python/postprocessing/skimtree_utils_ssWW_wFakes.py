@@ -264,7 +264,7 @@ def metCut(met):
     return False
 
 def mTlepMet(MET, lepton):
-        return math.sqrt(2*lepton.Pt()*MET.sumEt*(1-math.cos(lepton.Phi()-MET.phi)))
+        return math.sqrt(2*lepton.Pt()*MET.pt*(1-math.cos(lepton.Phi()-MET.phi)))
 
 def closest(obj,collection,presel=lambda x,y: True):
     ret = None; drMin = 999
