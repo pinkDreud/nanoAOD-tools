@@ -29,6 +29,62 @@ WP_btagger = {
   },
 }
 
+effLumi_2017 = {
+        "HT" : {
+            "PFHT250"                       : 0.0147,
+            "PFHT350"                       : 0.17,
+            },
+        "Ele" : {
+            "Ele35_WPTight_Gsf"                     : 41.54,
+            "Ele32_WPTight_Gsf_L1DoubleEG"          : 41.54,
+            "Photon200"                             : 41.54,
+            "Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30"   : 0.0038,
+            "Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30"  : 0.0276,
+            "Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30"  : 0.0434,
+            },
+        "Mu" : {
+            "IsoMu27"                       : 41.54,
+            "Mu50"                          : 41.54,
+            "Mu8_TrkIsoVVL"                 : 0.0027,
+            "Mu17_TrkIsoVVL"                : 0.0658,
+            },
+        }
+
+def lumiFinder(particleTrig, vTrigger):
+    lumi=0
+    for trigtype in effLumi_2017:
+        if particleTrig==trigtype:
+            for trig in vTrigger:
+                effLumi=effLumi_2017[trigtype][trig]
+                if effLumi>lumi: lumi=effLumi
+    return lumi
+
+def trig_finder(HLT, year):
+    vTrigEle = []
+    vTrigMu = []
+    vTrigHT = []
+
+    if (year == 2017):
+        if HLT.IsoMu27:                                 vTrigMu.append("IsoMu27")
+        if HLT.Mu50:                                    vTrigMu.append("Mu50")
+        if HLT.Mu8_TrkIsoVVL:                           vTrigMu.append("Mu8_TrkIsoVVL")
+        if HLT.Mu17_TrkIsoVVL:                          vTrigMu.append("Mu17_TrkIsoVVL")
+        if HLT.Ele35_WPTight_Gsf:                       vTrigEle.append("Ele35_WPTight_Gsf")
+        if HLT.Ele32_WPTight_Gsf_L1DoubleEG:            vTrigEle.append("Ele32_WPTight_Gsf_L1DoubleEG")
+        if HLT.Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30:     vTrigEle.append("Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30")
+        if HLT.Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30:    vTrigEle.append("Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30")
+        if HLT.Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30:    vTrigEle.append("Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30")
+        if HLT.Photon200:                               vTrigEle.append("Photon200")
+        if HLT.PFHT250:                                 vTrigHT.append("PFHT250")
+        if HLT.PFHT350:                                 vTrigHT.append("PFHT350")
+    
+    else:
+        print('Wrong year! Please enter 2017')
+   
+    return vTrigEle, vTrigMu, vTrigHT
+    
+       
+
 
 def Chi_TopMass(mT):
   sigma = 28.8273

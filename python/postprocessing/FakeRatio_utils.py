@@ -28,6 +28,113 @@ WP_btagger = {
   },
 }
 
+effLumi_2017 = {
+        "HT" : {
+            "PFHT250"                       : 0.0147,
+            "PFHT350"                       : 0.17,
+            },
+        "Ele" : {
+            "Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30"   : 0.0038,
+            "Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30"  : 0.0276,
+            "Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30"  : 0.0434,
+            },
+        "Mu" : {
+            "Mu8_TrkIsoVVL"                 : 0.0027,
+            "Mu17_TrkIsoVVL"                : 0.0658,
+            },
+        }
+
+
+orderList= ['1A', '1B', '1C', '1D',
+            '2A', '2B', '2C', '2D',
+            '3A', '3B', '3C', '3D',
+            '4A', '4B', '4C', '4D',
+            '5A', '5B', '5C', '5D']
+def dict_print(dict):
+    for pos in orderList:
+        if dict[pos][1]!=0: dict[pos][3]=dict[pos][2]*1.0/dict[pos][1]
+        else: dict[pos][3]= "undefined"
+        print(dict[pos][0], "---- nTot:\t", dict[pos][1], "\tnGood:\t", dict[pos][2], "\t -- FR: \t", dict[pos][3])
+
+def dict_save(dict, dict1, dict2, outname):
+    outfile=open(outname, "w")
+    outfile.write("Electrons -------")
+    outfile.write("\n")
+    for pos in orderList:
+        if dict[pos][1]!=0: dict[pos][3]=dict[pos][2]*1.0/dict[pos][1]
+        else: dict[pos][3]= "undefined"
+        L=[dict[pos][0], "---- nTot:\t", str(dict[pos][1]), "\tnGood:\t", str(dict[pos][2]), "\t -- FR: \t", str(dict[pos][3]), "\n"]
+        outfile.writelines(L)
+    outfile.write("-------------------------")
+    outfile.write("\n")
+    
+
+    outfile.write("Muons -------")
+    outfile.write("\n")
+    for pos in dict1:
+        if dict1[pos][1]!=0: dict1[pos][3]=dict1[pos][2]*1.0/dict1[pos][1]
+        else: dict1[pos][3]= "undefined"
+        L=[dict1[pos][0], "---- nTot:\t", str(dict1[pos][1]), "\tnGood:\t", str(dict1[pos][2]), "\t -- FR: \t", str(dict1[pos][3]), "\n"]
+        outfile.writelines(L)
+   
+    outfile.write("-------------------------")
+    outfile.write("\n")
+
+    outfile.write("Tau -------")
+    outfile.write("\n")
+    for pos in dict2:
+        if dict2[pos][1]!=0: dict2[pos][3]=dict2[pos][2]*1.0/dict2[pos][1]
+        else: dict2[pos][3]= "undefined"
+        L=[dict2[pos][0], "---- nTot:\t", str(dict2[pos][1]), "\tnGood:\t", str(dict2[pos][2]), "\t -- FR: \t", str(dict2[pos][3]), "\n"]
+        outfile.writelines(L)
+   
+    outfile.write("-------------------------")
+    outfile.write("\n")
+
+
+
+
+
+
+
+
+
+
+
+def lumiFinder(particleTrig, vTrigger):
+    lumi=0
+    for trigtype in effLumi_2017:
+        if particleTrig==trigtype:
+            for trig in vTrigger:
+                effLumi=effLumi_2017[trigtype][trig]
+                if effLumi>lumi: lumi=effLumi
+    return lumi
+
+def trig_finder(HLT, year):
+    vTrigEle = []
+    vTrigMu = []
+    vTrigHT = []
+
+    if (year == 2017):
+#        if HLT.IsoMu27:                                 vTrigMu.append("IsoMu27")
+#        if HLT.Mu50:                                    vTrigMu.append("Mu50")
+        if HLT.Mu8_TrkIsoVVL:                           vTrigMu.append("Mu8_TrkIsoVVL")
+        if HLT.Mu17_TrkIsoVVL:                          vTrigMu.append("Mu17_TrkIsoVVL")
+#        if HLT.Ele35_WPTight_Gsf:                       vTrigEle.append("Ele35_WPTight_Gsf")
+#        if HLT.Ele32_WPTight_Gsf_L1DoubleEG:            vTrigEle.append("Ele32_WPTight_Gsf_L1DoubleEG")
+        if HLT.Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30:     vTrigEle.append("Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30")
+        if HLT.Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30:    vTrigEle.append("Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30")
+        if HLT.Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30:    vTrigEle.append("Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30")
+#        if HLT.Photon200:                               vTrigEle.append("Photon200")
+        if HLT.PFHT250:                                 vTrigHT.append("PFHT250")
+        if HLT.PFHT350:                                 vTrigHT.append("PFHT350")
+    
+    else:
+        print('Wrong year! Please enter 2017')
+   
+    return vTrigEle, vTrigMu, vTrigHT
+    
+
 
 def Chi_TopMass(mT):
   sigma = 28.8273
@@ -537,13 +644,13 @@ def trig_map(HLT, PV, year, runPeriod):
             passMu = True
         if(HLT.Ele27_WPTight_Gsf or HLT.Ele35_WPTight_Gsf or HLT.Ele32_WPTight_Gsf_L1DoubleEG or HLT.Photon200):
             passEle = True
-        if(HLT.PFHT250 or HLT.PFHT350 or HLT.PFHT370 or HLT.PFHT430 or HLT.PFHT510 or HLT.PFHT590 or HLT.PFHT680 or HLT.PFHT780 or HLT.PFHT890):
+        if(HLT.PFHT250 or HLT.PFHT350):
             passHT = True
         if not(passMu or passEle) and not isGoodPV:
             noTrigger = True
-        if (HLT.IsoMu24 or HLT.IsoMu27 or HLT.Mu50): #triggers for loose must be updated TODO
+        if runPeriod != 'B' and (HLT.Mu8_TrkIsoVVL or HLT.Mu17_TrkIsoVVL):
             passMuLoose = True
-        if(HLT.Ele27_WPTight_Gsf or HLT.Ele35_WPTight_Gsf or HLT.Ele32_WPTight_Gsf_L1DoubleEG or HLT.Photon200): #triggers for loose must be updated TODO
+        if runPeriod != 'B' and (HLT.Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30 or HLT.Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30 or HLT.Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30):
             passEleLoose = True
     
     elif(year == 2018):

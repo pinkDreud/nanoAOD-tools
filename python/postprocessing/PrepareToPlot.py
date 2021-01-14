@@ -20,7 +20,7 @@ inituser = str(os.environ.get('USER')[0])
 #inituser = 'm'
 
 #folder = "Eff_Jet" + opt.jetwp + "_Mu" + opt.muwp + "_Ele" + opt.elewp
-path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + opt.folder + "/"
+path = "/eos/home/" + inituser + "/" + username + "/VBS/nosynch/" + opt.folder + "/"
 #dirlist = [dirs for dirs in os.listdir(path) if os.path.isdir(path+dirs) and opt.folder in dirs]
 #datas = opt.dataset + "_" + opt.year
 
