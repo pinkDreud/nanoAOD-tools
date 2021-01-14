@@ -245,7 +245,7 @@ def BVeto(jetCollection):
 
 
 def mTlepMet(MET, lepton):
-    return math.sqrt(2*lepton.pt*MET.sumEt*(1-math.cos(lepton.phi-MET.phi)))
+    return math.sqrt(2*lepton.pt*MET.pt*(1-math.cos(lepton.phi-MET.phi)))
 
 
 def Veto_Tau_ZMass(taus, ele, mu):

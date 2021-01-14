@@ -14,7 +14,7 @@ MET_cut=30
 mt_lepMET_cut=20
 evs=0
 
-usage = 'python FakeRatio_calc_v2.py -b --promptFakeTau --met 40 --mt 40'
+usage = 'python FakeRatio_calc_v2.py -b --promptFakeTau --met 40 --mt 40 -f Ele'
 parser = optparse.OptionParser(usage)
 parser.add_option('-f', '--folder', dest='folder', type=str, default = '', help='Please enter a destination folder')
 parser.add_option('--met', dest='met_cut', type=int, default = '30', help='insert met cut, default 30')
@@ -27,6 +27,8 @@ parser.add_option('--promptFakeTau', dest='promptFakeTau', default = False,actio
 
 parser.add_option('--input', dest='infolder', type=str, default = 'FR_v9/Ele', help='Please enter an input folder folder')
 (opt, args) = parser.parse_args()
+
+
 input_folder="/eos/user/m/mmagheri/VBS/nosynch/"+opt.infolder+"/"
 
 
