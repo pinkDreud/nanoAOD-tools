@@ -23,6 +23,8 @@ if username == 'mmagheri':
 elif username == 'apiccine':
     uid = 124949
 
+print("seppiolineee")
+
 def sub_writer(sample, n, files, folder):
     f = open("condor.sub", "w")
     f.write("Proxy_filename          = x509up\n")

@@ -373,13 +373,13 @@ for i in range(tree.GetEntries()):
     #++        taking objects        ++
     #++++++++++++++++++++++++++++++++++
 
-    if Debug:
-        print("evento n. " + str(i))
-        if i > 2000:
-            break
+    #if Debug:
+    #    print("evento n. " + str(i))
+    #    if i > 2000:
+    #        break
     
-    if not Debug and i%500 == 0:
-        print("Event #", i+1, " out of ", tree.GetEntries())
+    #if not Debug and i%500 == 0:
+        #print("Event #", i+1, " out of ", tree.GetEntries())
 
     event       = Event(tree,i)
     electrons   = Collection(event, "Electron")
@@ -447,7 +447,13 @@ for i in range(tree.GetEntries()):
         conditionToSave = passMuLoose
     elif chosenTrigger=="HT":
         conditionToSave=passHT
-   
+    
+    #if(HLT.Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30 or HLT.Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30 or HLT.Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30): print("YAY")
+
+
+    if i%1000==0: print("event n. ", i, "------")
+    #print("HLT Ele: HLT.Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30 or HLT.Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30 or HLT.Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30 : ", HLT.Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30, HLT.Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30, HLT.Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30, " isNot RunB ", runPeriod!='B')
+    #if conditionToSave==True:   print("condition to save ", chosenTrigger, " Ele condition ", passEleLoose, conditionToSave)
     if not conditionToSave: continue
     
     SingleEle   =   False
