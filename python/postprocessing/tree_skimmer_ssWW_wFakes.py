@@ -561,7 +561,7 @@ for i in range(tree.GetEntries()):
     leptons = None
 
     #if SingleEle==False and HighestLepPt>0: SingleMu=True
-    vTrigEle, vTrigMu, vTrigHT = trig_finder(HLT, sample.year)
+    vTrigEle, vTrigMu, vTrigHT = trig_finder(HLT, sample.year, sample.label)
     
     if SingleEle==True:
         if isMC: HLT_effLumi[0] = lumiFinder("Ele", vTrigEle)

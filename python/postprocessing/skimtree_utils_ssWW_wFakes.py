@@ -59,7 +59,7 @@ def lumiFinder(particleTrig, vTrigger):
                 if effLumi>lumi: lumi=effLumi
     return lumi
 
-def trig_finder(HLT, year):
+def trig_finder(HLT, year, samplename):
     vTrigEle = []
     vTrigMu = []
     vTrigHT = []
@@ -71,9 +71,10 @@ def trig_finder(HLT, year):
         if HLT.Mu17_TrkIsoVVL:                          vTrigMu.append("Mu17_TrkIsoVVL")
         if HLT.Ele35_WPTight_Gsf:                       vTrigEle.append("Ele35_WPTight_Gsf")
         if HLT.Ele32_WPTight_Gsf_L1DoubleEG:            vTrigEle.append("Ele32_WPTight_Gsf_L1DoubleEG")
-        if HLT.Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30:     vTrigEle.append("Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30")
-        if HLT.Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30:    vTrigEle.append("Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30")
-        if HLT.Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30:    vTrigEle.append("Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30")
+        if not ('DataMuB' in samplename or 'DataEleB' in samplename):
+            if HLT.Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30:     vTrigEle.append("Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30")
+            if HLT.Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30:    vTrigEle.append("Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30")
+            if HLT.Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30:    vTrigEle.append("Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30")
         if HLT.Photon200:                               vTrigEle.append("Photon200")
         if HLT.PFHT250:                                 vTrigHT.append("PFHT250")
         if HLT.PFHT350:                                 vTrigHT.append("PFHT350")

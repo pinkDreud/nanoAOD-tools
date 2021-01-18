@@ -3,7 +3,7 @@ import optparse
 import sys
 from samples.samples import *
 
-usage = 'python SetAndLaunchMakePlot_ALL.py -y year -f folder'
+usage = 'python PrepareToPlot.py -y year -f folder'
 parser = optparse.OptionParser(usage)
 parser.add_option('-y', dest='year', type=str, default = '2017', help='Please enter a year, default is 2017')
 parser.add_option('-f', dest='folder', type=str, default = 'v20', help='Please enter a folder, default is v4')
@@ -20,7 +20,7 @@ inituser = str(os.environ.get('USER')[0])
 #inituser = 'm'
 
 #folder = "Eff_Jet" + opt.jetwp + "_Mu" + opt.muwp + "_Ele" + opt.elewp
-path = "/eos/home/" + inituser + "/" + username + "/VBS/nosynch/" + opt.folder + "/"
+path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + opt.folder + "/"
 #dirlist = [dirs for dirs in os.listdir(path) if os.path.isdir(path+dirs) and opt.folder in dirs]
 #datas = opt.dataset + "_" + opt.year
 
@@ -35,6 +35,8 @@ def DoesSampleExist(samplename):
 
 def AreAllCondored(samplename):
     storelist = [line for line in open("../../crab/macros/files/"+samplename+".txt")]
+    #print storelist
+    print path+samplename
     try:
         condoredlist = os.listdir(path+samplename)
     except:
@@ -105,7 +107,7 @@ for k, v in class_dict.items():
 
         samplemerge = False
 
-        print len(doesexist), len(v.components)
+        #print len(doesexist), len(v.components)
         if len(doesexist) == len(v.components):
             if len(merging) == 0:
                 if os.path.exists(kpath+k+".root"):

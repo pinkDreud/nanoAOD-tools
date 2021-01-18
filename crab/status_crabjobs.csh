@@ -17,6 +17,6 @@ set year = '2017'
 #python submit_crab.py -d WZZ_$year --status
 #python submit_crab.py -d ZZZ_$year --status
 #python submit_crab.py -d VBFHToWWTo2L2Nu_$year --status
-python submit_crab.py -d ttHToNonbb_$year --status
+#python submit_crab.py -d ttHToNonbb_$year --status
 #python submit_crab.py -d WWW_4F_$year --status
 python submit_crab.py -d ZZtoLep_$year --status
