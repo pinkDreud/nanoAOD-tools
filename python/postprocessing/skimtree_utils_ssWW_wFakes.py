@@ -165,6 +165,7 @@ def SelectLepton(lepCollection, isMu): #isMu==True -> muons else Ele
           if not (lepCollection[i].mvaFall17V2Iso_WP90 and lepCollection[i].jetRelIso<ISO_CUT_ELE): continue    
         if lepCollection[i].pt<pT_cut: continue
         if abs(lepCollection[i].eta)>eta_cut: continue 
+        if not isMu and(abs(FakeLepton.eta)>1.4442 and abs(FakeLepton.eta)<1.566): continue
         return i
     return -1
 

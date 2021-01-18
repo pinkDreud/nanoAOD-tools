@@ -982,6 +982,14 @@ DataEleFake_2017.year = 2017
 DataEleFake_2017.components = [DataEleC_2017, DataEleD_2017, DataEleE_2017, DataEleF_2017]
 
 
+SampleEleFake_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataEleFake_2017")
+SampleEleFake_2017.year = 2017
+SampleEleFake_2017.components = [DataEleC_2017, DataEleD_2017, DataEleE_2017, DataEleF_2017, WJetsHT70to100_2017, WJetsHT100to200_2017, WJetsHT200to400_2017, WJetsHT400to600_2017, WJetsHT600to800_2017, WJetsHT800to1200_2017, WJetsHT1200to2500_2017, WJetsHT2500toInf_2017, DY1JetsToLL_2017, DY2JetsToLL_2017, DY3JetsToLL_2017, DY4JetsToLL_2017, DYJetsToLLM5to50_2017]
+SampleMuFake_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataEleFake_2017")
+SampleMuFake_2017.year = 2017
+SampleMuFake_2017.components = [DataMuC_2017, DataMuD_2017, DataMuE_2017, DataMuF_2017, WJetsHT70to100_2017, WJetsHT100to200_2017, WJetsHT200to400_2017, WJetsHT400to600_2017, WJetsHT600to800_2017, WJetsHT800to1200_2017, WJetsHT1200to2500_2017, WJetsHT2500toInf_2017, DY1JetsToLL_2017, DY2JetsToLL_2017, DY3JetsToLL_2017, DY4JetsToLL_2017, DYJetsToLLM5to50_2017]
+
+
 DataHTB_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataHTB_2017")
 DataHTB_2017.runP = 'B'
 DataHTB_2017.year = 2017
@@ -1005,6 +1013,18 @@ DataHTF_2017.dataset = '/JetHT/Run2017F-'+tag_data + '-v1/NANOAOD'
 DataHT_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataHT_2017")
 DataHT_2017.year = 2017
 DataHT_2017.components = [DataHTB_2017, DataHTC_2017, DataHTD_2017, DataHTE_2017, DataHTF_2017]
+
+
+SampleHTFake_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataEleFake_2017")
+SampleHTFake_2017.year = 2017
+SampleHTFake_2017.components = [DataHTB_2017, DataHTC_2017, DataHTD_2017, DataHTE_2017, DataHTF_2017, WJetsHT70to100_2017, WJetsHT100to200_2017, WJetsHT200to400_2017, WJetsHT400to600_2017, WJetsHT600to800_2017, WJetsHT800to1200_2017, WJetsHT1200to2500_2017, WJetsHT2500toInf_2017, DY1JetsToLL_2017, DY2JetsToLL_2017, DY3JetsToLL_2017, DY4JetsToLL_2017, DYJetsToLLM5to50_2017]
+
+
+
+
+
+
+
 
 DataMETB_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataMETB_2017")
 DataMETB_2017.runP = 'B'
@@ -1113,6 +1133,8 @@ sample_dict={
     'DataEle_2017':DataEle_2017, 'DataEleB_2017':DataEleB_2017, 'DataEleC_2017':DataEleC_2017, 'DataEleD_2017':DataEleD_2017, 'DataEleE_2017':DataEleE_2017, 'DataEleF_2017':DataEleF_2017, 'DataEleFake_2017': DataEleFake_2017,
     'DataHT_2017':DataHT_2017, 'DataHTB_2017':DataHTB_2017, 'DataHTC_2017':DataHTC_2017, 'DataHTD_2017':DataHTD_2017, 'DataHTE_2017':DataHTE_2017, 'DataHTF_2017':DataHTF_2017,
     'DataMET_2017':DataMET_2017, 'DataMETB_2017':DataMETB_2017, 'DataMETC_2017':DataMETC_2017, 'DataMETD_2017':DataMETD_2017, 'DataMETE_2017':DataMETE_2017, 'DataMETF_2017':DataMETF_2017,
+
+    'SampleEleFake_2017': SampleEleFake_2017, 'SampleMuFake_2017': SampleMuFake_2017, 'SampleHTFake_2017': SampleHTFake_2017,
 
 }
 
