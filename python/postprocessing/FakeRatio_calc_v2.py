@@ -14,9 +14,8 @@ MET_cut=30
 mt_lepMET_cut=20
 evs=0
 
-usage = 'python FakeRatio_calc_v2.py -b --promptFakeTau --met 40 --mt 40 -f Ele'
+usage = 'python FakeRatio_calc_v2.py -b --promptFakeTau --met 50 --mt 50 --input FR_v10/Ele -t Ele'
 parser = optparse.OptionParser(usage)
-parser.add_option('-f', '--folder', dest='folder', type=str, default = '', help='Please enter a destination folder')
 parser.add_option('--met', dest='met_cut', type=int, default = '30', help='insert met cut, default 30')
 parser.add_option('--mt', dest='mt_lepMET_cut', type=int, default = '20', help='insert met cut, default 20')
 parser.add_option('-b', '--bkg', dest='bkg', default = False,action='store_true', help='Eliminate contribution from W+Jets && DY+Jets, default false')
@@ -25,7 +24,7 @@ parser.add_option('-d', '--debug', dest='debug', default = False, action='store_
 parser.add_option('-t', '--trig', dest='trig', type=str, default = 'all', help='trigger used')
 parser.add_option('--promptFakeTau', dest='promptFakeTau', default = False,action='store_true', help='Only MC contribution, default false')
 
-parser.add_option('--input', dest='infolder', type=str, default = 'FR_v9/Ele', help='Please enter an input folder folder')
+parser.add_option('--input', dest='infolder', type=str, default = 'FR_v10/Ele', help='Please enter an input folder folder')
 (opt, args) = parser.parse_args()
 
 
@@ -109,8 +108,8 @@ today = date.today()
 
 
 if evs<10: numberOfEvs="all"
-filename="FakeRatio_calcs/Ele/FakeRatios__MetCUT_"+str(opt.met_cut)+"_mTLepMetCUT_"+str(opt.mt_lepMET_cut)+"_nEv_"+numberOfEvs+"_"+str(today)
-if(opt.bkg): filename="FakeRatio_calcs/Ele/FakeRatios_MetCUT_"+str(opt.met_cut)+"_mTLepMetCUT_"+str(opt.mt_lepMET_cut)+"_removeBKG"+"_"+str(today)
+filename="FakeRatio_calcs/v10/Ele/FakeRatios__MetCUT_"+str(opt.met_cut)+"_mTLepMetCUT_"+str(opt.mt_lepMET_cut)+"_nEv_"+numberOfEvs+"_"+str(today)
+if(opt.bkg): filename="FakeRatio_calcs/v10/Ele/FakeRatios_MetCUT_"+str(opt.met_cut)+"_mTLepMetCUT_"+str(opt.mt_lepMET_cut)+"_removeBKG"+"_"+str(today)
 if opt.onlybkg: filename+="_onlyBKG"
 
 filename+=".txt"
@@ -223,7 +222,7 @@ def FakeCalc(sample, isData, nev):
         
         
         
-        if(contaEle%1000==0 or contaMu%1000==0 or contaTau%1000==0):
+        if(contaEle%10000==0 or contaMu%1000==0 or contaTau%1000==0):
             print("Electrons, nGood: ", contaEle)
             dict_print(Fake_dicti_ele)
             contaEle+=1
@@ -253,10 +252,16 @@ def FakeCalc(sample, isData, nev):
             dict_save(Fake_dicti_ele, Fake_dicti_mu, Fake_dicti_tau, filename)
 
 
+
+DataToRun = None
+if 'Ele' in input_folder: DataToRun = "DataEleFake_2017/DataEleFake_2017.root"
+elif 'Mu' in input_folder: DataToRun = "DataMuFake_2017/DataMuFake_2017.root"
+elif 'HT' in input_folder: DataToRun = "DataHT/DataHT_2017.root"
+
 if not opt.debug and not opt.onlybkg:
-    dataSample="/eos/user/m/mmagheri/VBS/nosynch/FR_v9/Ele/DataEleFake_2017/DataEleFake_2017.root"
+    dataSample=input_folder+ DataToRun
     print("working on data sample: ", dataSample)
-    FakeCalc(dataSample,True, evs)
+    FakeCalc(dataSample, True, evs)
     if opt.bkg or opt.onlybkg:
         for bkg in bkg_files:
             FakeCalc(input_folder+bkg, False, evs)
