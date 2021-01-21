@@ -50,6 +50,7 @@ orderList= ['1A', '1B', '1C', '1D',
             '3A', '3B', '3C', '3D',
             '4A', '4B', '4C', '4D',
             '5A', '5B', '5C', '5D']
+
 def dict_print(dict):
     for pos in orderList:
         if dict[pos][1]!=0: dict[pos][3]=dict[pos][2]*1.0/dict[pos][1]
@@ -71,7 +72,7 @@ def dict_save(dict, dict1, dict2, outname):
 
     outfile.write("Muons -------")
     outfile.write("\n")
-    for pos in dict1:
+    for pos in orderList:
         if dict1[pos][1]!=0: dict1[pos][3]=dict1[pos][2]*1.0/dict1[pos][1]
         else: dict1[pos][3]= "undefined"
         L=[dict1[pos][0], "---- nTot:\t", str(dict1[pos][1]), "\tnGood:\t", str(dict1[pos][2]), "\t -- FR: \t", str(dict1[pos][3]), "\n"]
@@ -82,7 +83,7 @@ def dict_save(dict, dict1, dict2, outname):
 
     outfile.write("Tau -------")
     outfile.write("\n")
-    for pos in dict2:
+    for pos in orderList:
         if dict2[pos][1]!=0: dict2[pos][3]=dict2[pos][2]*1.0/dict2[pos][1]
         else: dict2[pos][3]= "undefined"
         L=[dict2[pos][0], "---- nTot:\t", str(dict2[pos][1]), "\tnGood:\t", str(dict2[pos][2]), "\t -- FR: \t", str(dict2[pos][3]), "\n"]
@@ -353,10 +354,10 @@ def pTCalculator(pT):
     else:           return 5
 
 def etaCalculator(eta):
-    if abs(eta)<1:      return "A"
-    elif abs(eta)<1.4:  return "B"
-    elif abs(eta)<2:    return "C"
-    elif abs(eta)<2.4:  return "D"
+    if abs(eta)<1:      return "A", 1
+    elif abs(eta)<1.4:  return "B", 2
+    elif abs(eta)<2:    return "C", 3
+    elif abs(eta)<2.4:  return "D", 4
 
 def IsNotTheSameObject(obj1, obj2):
     if obj1==obj2: return False
