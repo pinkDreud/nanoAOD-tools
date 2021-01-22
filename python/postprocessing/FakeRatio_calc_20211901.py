@@ -12,7 +12,7 @@ MET_cut=30
 mt_lepMET_cut=20
 evs=0
 
-usage = 'python FakeRatio_calc_20211901.py -b --promptFakeTau --met 50 --mt 50 --input FR_11/Ele -t Ele'
+usage = 'python FakeRatio_calc_20211901.py -b --promptFakeTau --met 50 --mt 50 --input FR_v12/Ele -t Ele'
 parser = optparse.OptionParser(usage)
 parser.add_option('--met', dest='met_cut', type=int, default = '30', help='insert met cut, default 30')
 parser.add_option('--mt', dest='mt_lepMET_cut', type=int, default = '20', help='insert met cut, default 20')
@@ -22,7 +22,7 @@ parser.add_option('-d', '--debug', dest='debug', default = False, action='store_
 parser.add_option('-t', '--trig', dest='trig', type=str, default = 'all', help='trigger used')
 parser.add_option('--promptFakeTau', dest='promptFakeTau', default = False,action='store_true', help='Only MC contribution, default false')
 
-parser.add_option('--input', dest='infolder', type=str, default = 'FR_v10/Ele', help='Please enter an input folder folder')
+parser.add_option('--input', dest='infolder', type=str, default = 'FR_v12/Ele', help='Please enter an input folder folder')
 (opt, args) = parser.parse_args()
 
 
@@ -107,8 +107,8 @@ today = date.today()
 
 
 if evs<10: numberOfEvs="all"
-filename="FakeRatio_calcs/v11/"+str(opt.trig)+"/FakeRatios_MetCUT_"+str(opt.met_cut)+"_mTLepMetCUT_"+str(opt.mt_lepMET_cut)+"_nEv_"+numberOfEvs+"_"+str(today)
-if(opt.bkg): filename="FakeRatio_calcs/v11/"+str(opt.trig)+"/FakeRatios_MetCUT_"+str(opt.met_cut)+"_mTLepMetCUT_"+str(opt.mt_lepMET_cut)+"_removeBKG"+"_"+str(today)
+filename="FakeRatio_calcs/v12/"+str(opt.trig)+"/FakeRatios_MetCUT_"+str(opt.met_cut)+"_mTLepMetCUT_"+str(opt.mt_lepMET_cut)+"_nEv_"+numberOfEvs+"_"+str(today)
+if(opt.bkg): filename="FakeRatio_calcs/v12/"+str(opt.trig)+"/FakeRatios_MetCUT_"+str(opt.met_cut)+"_mTLepMetCUT_"+str(opt.mt_lepMET_cut)+"_removeBKG"+"_"+str(today)
 if opt.onlybkg: filename+="_onlyBKG"
 
 
@@ -274,7 +274,7 @@ def FakeCalc(sample, isData, nev):
                     #print Fake_dicti_ele[pos][1], hNLooseEle_Data.GetBinContent(pTbin, netaBin), Fake_dicti_ele[pos][1]==hNLooseEle_Data.GetBinContent(pTbin, netaBin)
 
 
-                    if FakeLepton.pfRelIso04<0.08 and FakeElectron.WP90==1:
+                    if FakeLepton.pfRelIso04<0.08 and FakeLepton.isTight==1:
                         if isData:  hNTightEle_Data.Fill(FakeLepton.pt, abs(FakeLepton.eta), SF)
                         else:       hNTightEle_MC.Fill(FakeLepton.pt, abs(FakeLepton.eta), -SF)
                         Fake_dicti_ele[pos][2]+=SF
@@ -286,7 +286,7 @@ def FakeCalc(sample, isData, nev):
                     if isData:  hNLooseMu_Data.Fill(FakeLepton.pt, abs(FakeLepton.eta), SF)
                     else:       hNLooseMu_MC.Fill(FakeLepton.pt, abs(FakeLepton.eta), -SF)
 
-                    if FakeLepton.pfRelIso04<0.15 and FakeMuon.TightId==1:
+                    if FakeLepton.pfRelIso04<0.15 and FakeLepton.isTight==1:
                         if isData:  hNTightMu_Data.Fill(FakeLepton.pt, abs(FakeLepton.eta), SF)
                         else:       hNTightMu_MC.Fill(FakeLepton.pt, abs(FakeLepton.eta), -SF)
                         Fake_dicti_mu[pos][2]+=SF
