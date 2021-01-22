@@ -10,6 +10,7 @@ from array import array
 
 #print TT_2017
 
+print("cavallotti")
 usage = 'python makeplot.py'# -y year --lep lepton -d dataset --merpart --lumi --mertree --sel --cut cut_string -p -s'
 usageToCopyPaste= "python makeplot.py -y 2017 --lep muon --bveto --user apiccine -f v4 -p"
 
@@ -34,7 +35,7 @@ parser.add_option('--ttbar', dest='ttbar', default = False, action='store_true',
 parser.add_option('--wjets', dest='wjets', default = False, action='store_true', help='Enable WJets CR, default disabled')
 
 (opt, args) = parser.parse_args()
-
+print("cavallotti")
 #print (opt, args)
 
 folder = opt.folder
