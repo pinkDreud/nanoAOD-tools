@@ -10,7 +10,7 @@ parser.add_option('-d', '--dat', dest='dat', type=str, default = '', help='Pleas
 parser.add_option('-f', '--folder', dest='folder', type=str, default = '', help='Please enter a destination folder')
 parser.add_option('--max', dest='maxj', type=int, default = 0, help='Please enter working point!')
 parser.add_option('--trig', dest='trig', type=str, default = '', help='Please enter trigger (electron, muon, HT)')
-parser.add_option('--infold', dest = 'infold', type = str, default= '', help = 'input folder for the crabbed files')
+parser.add_option('--infold', dest = 'infold', type = str, default= 'Fake', help = 'input folder for the crabbed files')
 #parser.add_option('-u', '--user', dest='us', type='string', default = 'ade', help="")
 (opt, args) = parser.parse_args()
 
@@ -34,10 +34,10 @@ def sub_writer(sample, n, files, folder):
     f.write("use_x509userproxy       = true\n")
     f.write("should_transfer_files   = YES\n")
     f.write("when_to_transfer_output = ON_EXIT\n")
-    f.write("transfer_input_files    = $(Proxy_path), samples/samples.py, skimtree_utils_ssWW_wFakes.py, CutsAndValues_bu.py, FakeRatio_utils.py, __init__.py\n")
+    f.write("transfer_input_files    = $(Proxy_path), samples/samples.py, FakeRatio_utils.py, __init__.py\n")
     f.write("transfer_output_remaps  = \""+ sample.label + "_part" + str(n) + ".root=/eos/home-"+inituser + "/" + username+"/VBS/nosynch/" + folder + "/" + sample.label +"/"+ sample.label + "_part" + str(n) + ".root\"\n")
     f.write("+JobFlavour             = \"workday\"\n") # options are espresso = 20 minutes, microcentury = 1 hour, longlunch = 2 hours, workday = 8 hours, tomorrow = 1 day, testmatch = 3 days, nextweek     = 1 week
-    f.write("executable              = FakeRatio.py\n")
+    f.write("executable              = FakeRatio_2.py\n")
     f.write("arguments               = " + sample.label + " " + str(n) + " " + str(files) + " remote " + str(opt.trig) + "\n")
     #f.write("input                   = input.txt\n")
     f.write("output                  = condor/output/"+ sample.label + "_part" + str(n) + ".out\n")
