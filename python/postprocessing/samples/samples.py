@@ -979,7 +979,7 @@ DataEle_2017.components = [DataEleB_2017, DataEleC_2017, DataEleD_2017, DataEleE
 
 DataEleFake_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataEleFake_2017")
 DataEleFake_2017.year = 2017
-DataEleFake_2017.components = [DataEleC_2017, DataEleD_2017, DataEleE_2017, DataEleF_2017]
+DataEleFake_2017.components = [DataEleC_2017]#, DataEleD_2017, DataEleE_2017, DataEleF_2017]
 
 
 SampleEleFake_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataEleFake_2017")

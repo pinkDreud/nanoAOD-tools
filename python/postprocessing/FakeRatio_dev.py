@@ -1,28 +1,41 @@
+#!/bin/env python3
 import os
+##print(os.environ)
+##print("**********************************************************************")
+##print("**********************************************************************")
+##print("**********************************************************************")
+##print(str(os.environ.get('PYTHONPATH')))
+##print(str(os.environ.get('PYTHON3PATH')))
 import sys
+##print("*************** This is system version info ***************************")
+##print(sys.version_info)
+#import platform
+##print("*************** This is python version info ***************************")
+##print(platform.python_version())
 import ROOT
+##print("Succesfully imported ROOT")
 import math
 import datetime
 import copy
 from array import array
-from FakeRatio_utils_2 import *
+from FakeRatio_utils_dev import *
 
-usage = "python FakeRatio_2.py [nome_dataset_come_salvato_in_samples.py] [indice, di default 0] [path_file_da_processare] local chosenTrigger"
-usageCopyPaste = "python FakeRatio_2.py DataHTC_2017 7 DataHTC_2017_ntuple.root local"
+usage = "python FakeRatio_apc.py [nome_del_sample_in_samples.py] 0 [file_in_input] [local_or_remote] [chosen_trigger]"
 
-chosenTrigger = "Depending on sample"
-if sys.argv[5]=="Ele" or sys.argv[5]=="Mu" or sys.argv[5]=="HT": chosenTrigger = sys.argv[5]
+chosenTrigger = ""
+
+if sys.argv[5]=="Ele" or sys.argv[5]=="Mu" or sys.argv[5]=="HT":
+    chosenTrigger = sys.argv[5]
 
 print("Saving events with trigger: ", chosenTrigger)
+
 
 if sys.argv[4] == 'remote':
     from samples import *
     Debug = False
 else:
     from samples.samples import *
-    Debug = True
-print('Debug' , Debug)
-
+    Debug = False
 sample = sample_dict[sys.argv[1]]
 part_idx = sys.argv[2]
 file_list = list(map(str, sys.argv[3].strip('[]').split(',')))
@@ -33,12 +46,15 @@ startTime = datetime.datetime.now()
 print("Starting running at " + str(startTime))
 
 ROOT.gROOT.SetBatch()
+
 chain = ROOT.TChain('Events')
+#print(chain)
 for infile in file_list: 
     print("Adding %s to the chain" %(infile))
     chain.Add(infile)
 
 print(chain)
+
 print("Number of events in chain " + str(chain.GetEntries()))
 print("Number of events in tree from chain " + str((chain.GetTree()).GetEntries()))
 tree = InputTree(chain)
@@ -53,9 +69,12 @@ MCReco = MCReco * isMC
 #++++++++++++++++++++++++++++++++++
 outTreeFile = ROOT.TFile(sample.label+"_part"+str(part_idx)+".root", "RECREATE") # output file
 
+
 trees = []
 for i in range(10):
     trees.append(None)
+#systZero = systWeights()
+# defining the operations to be done with the systWeights class
 maxSysts = 0
 addPDF = True
 addQ2 = False
@@ -87,9 +106,15 @@ systTree.setWeightName("PFDown",1.)
 #++     variables to branch      ++
 #++++++++++++++++++++++++++++++++++
 
-var_list=[]
 
-#Leptons
+
+#++++++++++++++++++++++++++++++++++
+#++         All category         ++
+#++++++++++++++++++++++++++++++++++
+
+#ssWW variables
+var_list = []
+#lepton#
 FakeLepton_pt               =   array.array('f', [-999.])
 FakeLepton_eta              =   array.array('f', [-999.])
 FakeLepton_phi              =   array.array('f', [-999.])
@@ -245,8 +270,10 @@ systTree.branchTreesSysts(trees, "all", "mT_eleMET",                outTreeFile,
 systTree.branchTreesSysts(trees, "all", "mT_muMET",                 outTreeFile, mT_muMET)
 systTree.branchTreesSysts(trees, "all", "mT_tauMET",                outTreeFile, mT_tauMET)
 
+#print("Is MC: " + str(isMC) + "      option addPDF: " + str(addPDF))
 if(isMC and addPDF):
     systTree.branchTreesSysts(trees, "all", "w_PDF", outTreeFile, w_PDF_all)
+####################################################################################################################################################################################################################################
 
 #++++++++++++++++++++++++++++++++++
 #++      taking MC weights       ++
@@ -279,28 +306,44 @@ if(isMC):
         else:
             addPDF = False
     newfile.Close()
+'''
+#++++++++++++++++++++++++++++++++++
+#++      Efficiency studies      ++
+#++++++++++++++++++++++++++++++++++
+neutrino_failed = 0
+nrecochi = 0
+nrecoclosest = 0
+nrecosublead = 0
+nrecobest = 0
+nbinseff = 10
+h_eff_mu = ROOT.TH1D("h_eff_mu", "h_eff_mu", nbinseff, 0, nbinseff)
+h_eff_ele = ROOT.TH1D("h_eff_ele", "h_eff_ele", nbinseff, 0, nbinseff)
+'''
+contagood=0
 
+print sample.dataset
 #++++++++++++++++++++++++++++++++++
 #++   looping over the events    ++
 #++++++++++++++++++++++++++++++++++
-
 for i in range(tree.GetEntries()):
-    
-    #reinitialize all variables to -999
+    #reinizializza tutte le variabili a 0, per sicurezza
     for j, var in enumerate(var_list):
-        if j<len(var_list):
-            var_list[j][0] = -999
-    
+        var_list[j][0] = -999
+        
     w_nominal_all[0] = 1.
-
     #++++++++++++++++++++++++++++++++++
     #++        taking objects        ++
     #++++++++++++++++++++++++++++++++++
-    #if Debug:
-    #    if(i%1000==0): print("event n. ------ " + str(i))
-    #    if i>1000000: 
-    #        break
-    event       = Event(tree, i)
+    
+    if Debug:
+        print("evento n. " + str(i))
+        if i > 2000:
+            break
+    
+    if not Debug and i%500 == 0:#
+        print("Event #", i+1, " out of ", tree.GetEntries())
+
+    event       = Event(tree,i)
     electrons   = Collection(event, "Electron")
     muons       = Collection(event, "Muon")
     jets        = Collection(event, "Jet")
@@ -314,15 +357,12 @@ for i in range(tree.GetEntries()):
     met         = Object(event, "MET")
     
     genpart = None
+    
 
     if isMC:
         genpart = Collection(event, "GenPart")
-        if not ("WZ" in sample.label):
+        if not ("WZ" in sample.label or "WWTo2L2Nu_DoubleScattering"):
             LHE = Collection(event, "LHEPart")
-    elif not isMC:
-        if not Flag.eeBadScFilter:
-            continue
-    
     chain.GetEntry(i)
 
     year = sample.year
@@ -334,6 +374,7 @@ for i in range(tree.GetEntries()):
     passMu, passEle, passHT, noTrigger, passMuLoose, passEleLoose = trig_map(HLT, PV, year, runPeriod)
 
     saveIf = False
+    #print (HLT.Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30 or HLT.Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30 or HLT.Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30)
 
     #trigger management
     
@@ -344,6 +385,7 @@ for i in range(tree.GetEntries()):
             saveIf = passMuLoose
         elif "JetHT" in sample.dataset:
             saveIf = passHT
+
     elif chosenTrigger == "Depending on sample" and isMC == True:
         saveIf = passHT    
     elif chosenTrigger == "Ele":
@@ -353,16 +395,17 @@ for i in range(tree.GetEntries()):
     elif chosenTrigger == "HT":
         saveIf = passHT
 
-    if (i+1)%10000 == 0: print ("Processing event n. " + str(i) + "------------")
-
-    if not saveIf: continue
+    if not saveIf:
+        systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
+        systTree.fillTreesSysts(trees, "all")
+        continue
 
     if isMC:
         vTrigEle, vTrigMu, vTrigHT = trig_finder(HLT, sample.year)
         if chosenTrigger == "Ele": HLT_effLumi[0] = lumiFinder(chosenTrigger, vTrigEle)
         if chosenTrigger == "Mu":  HLT_effLumi[0] = lumiFinder(chosenTrigger, vTrigMu)
         if chosenTrigger == "HT":  HLT_effLumi[0] = lumiFinder(chosenTrigger, vTrigHT)
-    
+        
     #actually runnin'
 
     MET_pt[0]=met.pt
@@ -373,9 +416,8 @@ for i in range(tree.GetEntries()):
     Veto_TauLeptons[0]  =   Veto_Tau_Leptons(taus, electrons, muons)    #1 if there's another lepton, 0 if not
     Veto_TauZMass[0]    =   Veto_Tau_ZMass(taus, electrons, muons)      #1 if there's another lepton in the Z mass range, 0 if not
 
-    if len(taus)>0:
-
-        mT_tauMET[0]                    =   mTlepMet(met, taus[0])
+    if len(taus) > 0:
+        mT_tauMET[0]                    =   mTlepMet(met, taus[0].p4())
         FakeTau_pt[0]                   =   taus[0].pt
         FakeTau_eta[0]                  =   taus[0].eta
         FakeTau_phi[0]                  =   taus[0].phi
@@ -385,9 +427,8 @@ for i in range(tree.GetEntries()):
         if isMC: 
             FakeTau_isPrompt[0]         =   taus[0].genPartFlav
 
-
     #light leptons
-    
+
     Veto_LightLeptons[0], isEle=Veto_Light_Leptons(list(electrons), list(muons))
 
     if isEle:
@@ -408,9 +449,9 @@ for i in range(tree.GetEntries()):
                 if mu.pfRelIso04_all<1 and mu.looseId:
                     lepGood = mu
                     break
-        
+                    
         if lepGood!=None:
-            mT_lepMET[0]        =   mTlepMet(met, lepGood)
+            mT_lepMET[0]        =   mTlepMet(met, lepGood.p4())
             FakeLepton_pt[0]    =   lepGood.pt
             FakeLepton_eta[0]   =   lepGood.eta
             FakeLepton_phi[0]   =   lepGood.phi
@@ -423,20 +464,22 @@ for i in range(tree.GetEntries()):
                 FakeLepton_pfRelIso04[0]    =   lepGood.pfRelIso04_all
             if isMC: 
                 FakeLepton_isPrompt[0]      =   lepGood.genPartFlav
-    
+
     systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
     systTree.fillTreesSysts(trees, "all")
 
+#trees[0].Print()
 outTreeFile.cd()
 if(isMC):
+    #print("h_genweight first bin content is %f and h_PDFweight has %f bins" %(h_genweight.GetBinContent(1), h_PDFweight.GetNbinsX()))
     h_genweight.Write()
-    if not ("WZ" in sample.label):
+    if isthere_pdf:
         h_PDFweight.Write()
-
+    #h_eff_mu.Write()
+    #h_eff_ele.Write()
 
 systTree.writeTreesSysts(trees, outTreeFile)
 print("Number of events in output tree " + str(trees[0].GetEntries()))
 
 endTime = datetime.datetime.now()
-print("Ending running at " + str(endTime))
-
+print("Ending running at " + str(endTime) + "\n Goodbye")

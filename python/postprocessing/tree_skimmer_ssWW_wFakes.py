@@ -525,7 +525,7 @@ for i in range(tree.GetEntries()):
         if len(electrons)>0:  
             SingleEle=True
             LeadLepFamily="electrons"
-            HighestLepPt=electrons[0].pt
+            HighestLepPt=copy.deepcopy(electrons[0].pt)
             #print("HighestLepPt:", HighestLepPt)
         else:
             continue
@@ -534,7 +534,7 @@ for i in range(tree.GetEntries()):
         if len(muons)>0:
             SingleMu=True
             LeadLepFamily="muons"
-            HighestLepPt=muons[0].pt
+            HighestLepPt=copy.deepcopy(muons[0].pt)
         else:
             continue
 
@@ -547,13 +547,13 @@ for i in range(tree.GetEntries()):
     if ElMu:
         for mu in muons:
             if abs(mu.pt)>HighestLepPt:
-                HighestLepPt=mu.pt
+                HighestLepPt=copy.deepcopy(mu.pt)
                 SingleEle = False
                 SingleMu = True
                 break
         for ele in electrons:
             if abs(ele.pt)>HighestLepPt:
-                HighestLepPt=ele.pt
+                HighestLepPt=copy.deepcopy(ele.pt)
                 SingleEle = True
                 SingleMu = False
                 break
@@ -598,7 +598,7 @@ for i in range(tree.GetEntries()):
 
     #if (SingleEle==1 or SingleMu==1) and pass_lepton_selection[0]==1: Cut_dict[2][1]+=1
 
-    tightlep = leptons[indexGoodLep]
+    tightlep = copy.deepcopy(leptons[indexGoodLep])
 
     lepton_pt[0]                =   tightlep.pt
     lepton_eta[0]               =   tightlep.eta
@@ -661,7 +661,7 @@ for i in range(tree.GetEntries()):
         systTree.fillTreesSysts(trees, "all")
         continue      
 
-    GoodTau=taus[indexGoodTau]
+    GoodTau=copy.deepcopy(taus[indexGoodTau])
     pass_tau_selection_ML[0]=1#
 
     if GoodTau.idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and GoodTau.idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and GoodTau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET:#

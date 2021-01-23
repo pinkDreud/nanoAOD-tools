@@ -8,7 +8,8 @@ import array
 import types
 from CutsAndValues_bu import *
 
-#Root.PyConfig.IgnoreCommandLineOptions = True
+
+ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 WP_btagger = {
   "CSVv2":{
@@ -34,16 +35,20 @@ effLumi_2017 = {
             "PFHT350"                       : 0.17,
             },
         "Ele" : {
+            "Ele35_WPTight_Gsf"                     : 41.54,
+            "Ele32_WPTight_Gsf_L1DoubleEG"          : 41.54,
+            "Photon200"                             : 41.54,
             "Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30"   : 0.0038,
             "Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30"  : 0.0276,
             "Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30"  : 0.0434,
             },
         "Mu" : {
+            "IsoMu27"                       : 41.54,
+            "Mu50"                          : 41.54,
             "Mu8_TrkIsoVVL"                 : 0.0027,
             "Mu17_TrkIsoVVL"                : 0.0658,
             },
         }
-
 
 orderList= ['1A', '1B', '1C', '1D',
             '2A', '2B', '2C', '2D',
@@ -51,10 +56,13 @@ orderList= ['1A', '1B', '1C', '1D',
             '4A', '4B', '4C', '4D',
             '5A', '5B', '5C', '5D']
 
+
 def dict_print(dict):
     for pos in orderList:
-        if dict[pos][1]!=0: dict[pos][3]=dict[pos][2]*1.0/dict[pos][1]
-        else: dict[pos][3]= "undefined"
+        if dict[pos][1]!=0:
+            dict[pos][3]=dict[pos][2]*1.0/dict[pos][1]
+        else:
+            dict[pos][3]= "undefined"
         print(dict[pos][0], "---- nTot:\t", dict[pos][1], "\tnGood:\t", dict[pos][2], "\t -- FR: \t", dict[pos][3])
 
 def dict_save(dict, dict1, dict2, outname):
@@ -62,8 +70,10 @@ def dict_save(dict, dict1, dict2, outname):
     outfile.write("Electrons -------")
     outfile.write("\n")
     for pos in orderList:
-        if dict[pos][1]!=0: dict[pos][3]=dict[pos][2]*1.0/dict[pos][1]
-        else: dict[pos][3]= "undefined"
+        if dict[pos][1]!=0:
+            dict[pos][3]=dict[pos][2]*1.0/dict[pos][1]
+        else:
+            dict[pos][3]= "undefined"
         L=[dict[pos][0], "---- nTot:\t", str(dict[pos][1]), "\tnGood:\t", str(dict[pos][2]), "\t -- FR: \t", str(dict[pos][3]), "\n"]
         outfile.writelines(L)
     outfile.write("-------------------------")
@@ -72,9 +82,12 @@ def dict_save(dict, dict1, dict2, outname):
 
     outfile.write("Muons -------")
     outfile.write("\n")
+
     for pos in orderList:
-        if dict1[pos][1]!=0: dict1[pos][3]=dict1[pos][2]*1.0/dict1[pos][1]
-        else: dict1[pos][3]= "undefined"
+        if dict1[pos][1]!=0: 
+            dict1[pos][3]=dict1[pos][2]*1.0/dict1[pos][1]
+        else:
+            dict1[pos][3]= "undefined"
         L=[dict1[pos][0], "---- nTot:\t", str(dict1[pos][1]), "\tnGood:\t", str(dict1[pos][2]), "\t -- FR: \t", str(dict1[pos][3]), "\n"]
         outfile.writelines(L)
    
@@ -84,16 +97,15 @@ def dict_save(dict, dict1, dict2, outname):
     outfile.write("Tau -------")
     outfile.write("\n")
     for pos in orderList:
-        if dict2[pos][1]!=0: dict2[pos][3]=dict2[pos][2]*1.0/dict2[pos][1]
-        else: dict2[pos][3]= "undefined"
+        if dict2[pos][1]!=0:
+            dict2[pos][3]=dict2[pos][2]*1.0/dict2[pos][1]
+        else:
+            dict2[pos][3]= "undefined"
         L=[dict2[pos][0], "---- nTot:\t", str(dict2[pos][1]), "\tnGood:\t", str(dict2[pos][2]), "\t -- FR: \t", str(dict2[pos][3]), "\n"]
         outfile.writelines(L)
    
     outfile.write("-------------------------")
     outfile.write("\n")
-
-
-
 
 
 def lumiFinder(particleTrig, vTrigger):
@@ -105,22 +117,23 @@ def lumiFinder(particleTrig, vTrigger):
                 if effLumi>lumi: lumi=effLumi
     return lumi
 
-def trig_finder(HLT, year):
+def trig_finder(HLT, year, samplename):
     vTrigEle = []
     vTrigMu = []
     vTrigHT = []
 
     if (year == 2017):
-#        if HLT.IsoMu27:                                 vTrigMu.append("IsoMu27")
-#        if HLT.Mu50:                                    vTrigMu.append("Mu50")
+        if HLT.IsoMu27:                                 vTrigMu.append("IsoMu27")
+        if HLT.Mu50:                                    vTrigMu.append("Mu50")
         if HLT.Mu8_TrkIsoVVL:                           vTrigMu.append("Mu8_TrkIsoVVL")
         if HLT.Mu17_TrkIsoVVL:                          vTrigMu.append("Mu17_TrkIsoVVL")
-#        if HLT.Ele35_WPTight_Gsf:                       vTrigEle.append("Ele35_WPTight_Gsf")
-#        if HLT.Ele32_WPTight_Gsf_L1DoubleEG:            vTrigEle.append("Ele32_WPTight_Gsf_L1DoubleEG")
-        if HLT.Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30:     vTrigEle.append("Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30")
-        if HLT.Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30:    vTrigEle.append("Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30")
-        if HLT.Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30:    vTrigEle.append("Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30")
-#        if HLT.Photon200:                               vTrigEle.append("Photon200")
+        if HLT.Ele35_WPTight_Gsf:                       vTrigEle.append("Ele35_WPTight_Gsf")
+        if HLT.Ele32_WPTight_Gsf_L1DoubleEG:            vTrigEle.append("Ele32_WPTight_Gsf_L1DoubleEG")
+        if not ('DataMuB' in samplename or 'DataEleB' in samplename):
+            if HLT.Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30:     vTrigEle.append("Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30")
+            if HLT.Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30:    vTrigEle.append("Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30")
+            if HLT.Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30:    vTrigEle.append("Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30")
+        if HLT.Photon200:                               vTrigEle.append("Photon200")
         if HLT.PFHT250:                                 vTrigHT.append("PFHT250")
         if HLT.PFHT350:                                 vTrigHT.append("PFHT350")
     
@@ -129,6 +142,7 @@ def trig_finder(HLT, year):
    
     return vTrigEle, vTrigMu, vTrigHT
     
+       
 
 
 def Chi_TopMass(mT):
@@ -196,31 +210,39 @@ def FindSecondJet(jet, jetCollection, GoodTau, GoodMu):
 def SelectLepton(lepCollection, isMu): #isMu==True -> muons else Ele 
     pT_cut=-999
     eta_cut=-999
-    iso_cut=-999
     if isMu:
         pT_cut=PT_CUT_MU
         eta_cut=ETA_CUT_MU
-        iso_cut=ISO_CUT_MU
     else:
         pT_cut=PT_CUT_ELE
         eta_cut=ETA_CUT_ELE
-        iso_cut=ISO_CUT_ELE
     for i in range(len(lepCollection)):
-        if isMu and not lepCollection[i].isGlobal: continue    
+        if isMu:
+          if not (lepCollection[i].tightId and lepCollection[i].pfRelIso04_all<ISO_CUT_MU): continue
+        else:
+          if not (lepCollection[i].mvaFall17V2Iso_WP90 and lepCollection[i].jetRelIso<ISO_CUT_ELE): continue    
         if lepCollection[i].pt<pT_cut: continue
         if abs(lepCollection[i].eta)>eta_cut: continue 
-        if lepCollection[i].pfRelIso03_all>iso_cut: continue 
+        if not isMu and(abs(lepCollection[i].eta)>1.4442 and abs(lepCollection[i].eta)<1.566): continue
         return i
     return -1
 
-def SelectTau(tauCollection, GoodMuon, DeepTau):
+'''
+def SelectTau(tauCollection, GoodMuon):
     if len(tauCollection)<1: return -1
     for i in range(len(tauCollection)):
         if deltaR(tauCollection[i].eta, tauCollection[i].phi, GoodMuon.eta, GoodMuon.phi)<DR_OVERLAP_CONE_TAU: continue
-        if DeepTau:
-            if not (tauCollection[i].idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET and tauCollection[i].idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and tauCollection[i].idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and tauCollection[i].idDecayModeNewDMs):   continue #medium WP
-        else:
-            if not (tauCollection[i].idMVAoldDM2017v1>=ID_TAU_RECO_MVA and tauCollection[i].idAntiMu>=ID_TAU_ANTIMU and tauCollection[i].idAntiEle>=ID_TAU_ANTIELE): continue
+        if not (tauCollection[i].idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and tauCollection[i].idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and tauCollection[i].idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET and tauCollection[i].idDecayModeNewDMs):   continue
+        if tauCollection[i].pt<PT_CUT_TAU: continue
+        if abs(tauCollection[i].eta)>ETA_CUT_TAU: continue
+        return i
+    return -1
+'''
+def SelectTau(tauCollection, GoodMuon, vsEleWP, vsMuWP, vsJetWP):
+    if len(tauCollection)<1: return -1
+    for i in range(len(tauCollection)):
+        if deltaR(tauCollection[i].eta, tauCollection[i].phi, GoodMuon.eta, GoodMuon.phi)<DR_OVERLAP_CONE_TAU: continue
+        if not (tauCollection[i].idDeepTau2017v2p1VSe>=vsEleWP and tauCollection[i].idDeepTau2017v2p1VSmu>=vsMuWP and tauCollection[i].idDeepTau2017v2p1VSjet>=vsJetWP and tauCollection[i].idDecayModeNewDMs):   continue
         if tauCollection[i].pt<PT_CUT_TAU: continue
         if abs(tauCollection[i].eta)>ETA_CUT_TAU: continue
         return i
@@ -238,10 +260,71 @@ def BVeto(jetCollection):
         #if jetCollection[k].pt>30.: return True
     #return False
 
+def CountBJets(jetCollection):
+    nb=0
+    #for k in range(len(jetCollection)):
+    for jet in jetCollection:
+        if jet.btagDeepFlavB>=WP_btagger[BTAG_ALGO][BTAG_WP] and jet.pt>BTAG_PT_CUT and abs(jet.eta)<BTAG_ETA_CUT: 
+          nb+=1
+    return nb
+
+
+def IsNotTheSameObject(obj1, obj2):
+    if obj1==obj2: return False
+    return True
+    
+
+def LepVetoOneCollection(GoodLepton, collection, relIsoCut, ptCut, etaCut, isMu):
+    i=0
+    for i in range(len(collection)):
+        lep=collection[i]
+        if IsNotTheSameObject(GoodLepton, lep): 
+            if isMu:
+              if lep.pfRelIso04_all>relIsoCut: continue
+            else:
+              if lep.jetRelIso>relIsoCut: continue
+            if lep.pt<ptCut: continue
+            if abs(lep.eta)>etaCut: continue
+            return False
+    return True
+
+def LepVeto(GoodLepton, ElectronCollection, MuonCollection):
+    return bool(LepVetoOneCollection(GoodLepton, ElectronCollection, REL_ISO_CUT_LEP_VETO_ELE, PT_CUT_LEP_VETO_ELE, ETA_CUT_LEP_VETO_ELE, False) or LepVetoOneCollection(GoodLepton, MuonCollection, REL_ISO_CUT_LEP_VETO_MU, PT_CUT_LEP_VETO_MU, ETA_CUT_LEP_VETO_MU, True))
+
+#semplifica la macro
+def SelectJet(jetCollection, GoodTau, GoodMu):
+    if len(jetCollection)<2: return -999
+    if jetCollection[0].pt<PT_CUT_JET: return -999
+    if jetCollection==None: return -999
+    #select higher pT jet
+    GoodJet=copy.deepcopy(jetCollection[0])
+    #if the jet matches in dR one of the previously selected particles (e, tau), than it searches in the other jets
+    if deltaR(GoodJet.eta, GoodJet.phi, GoodTau.eta, GoodTau.phi)<DR_OVERLAP_CONE_TAU or deltaR(GoodJet.eta, GoodJet.phi, GoodMu.eta, GoodMu.phi)<DR_OVERLAP_CONE_OTHER: 
+        jetCollection.remove(GoodJet)
+        if len(jetCollection)==1:
+             return -999
+        return SelectJet(jetCollection, GoodTau, GoodMu)
+    
+    #searches for the best second jet
+    secondJetIndex=FindSecondJet(GoodJet, jetCollection, GoodTau, GoodMu)
+    if secondJetIndex>0: return GoodJet, jetCollection[secondJetIndex]
+    else:
+        jetCollection.remove(GoodJet)
+        if len(jetCollection)==1:
+            return -999
+        else: return SelectJet(jetCollection, GoodTau, GoodMu)
+
+
+def JetCut(jet1, jet2):
+    if (jet1+jet2).M()<M_JJ_CUT: return True
+    return False
+
+def metCut(met):
+    if met.pt<MET_CUT: return True
+    return False
 
 def mTlepMet(MET, lepton):
-    return math.sqrt(2*lepton.pt*MET.pt*(1-math.cos(lepton.phi-MET.phi)))
-
+        return math.sqrt(2*lepton.Pt()*MET.pt*(1-math.cos(lepton.Phi()-MET.phi)))
 
 def Veto_Tau_ZMass(taus, ele, mu): #return 0 if the event is okay, 1 if there are other leptons in the Z mass range
     #veto the event if:
@@ -280,35 +363,39 @@ def Veto_Tau_ZMass(taus, ele, mu): #return 0 if the event is okay, 1 if there ar
             tauSum=tau1+muV
             if(abs(tauSum.M()-90)<15): return 1
         return 0
-    #return false if we have tau+lepton (tau,e,mu)  within 15 GeV from the Z with .5 distance in dR
+    #return false if we have tau+lepton (tau,e,mu)  within 15 GeV from the Z with .5 distance in 
 
-
-#gives 1 if the event needs to be vetoed, else 0
 def Veto_Tau_Leptons(taus, ele, mu):
 
     if len(taus)==0: return 1
     nTau=0
     for tau in taus:
-        if tau.idDeepTau2017v2p1VSjet>=16: nTau+=1
-    if nTau!=1: return 1
+        if tau.idDeepTau2017v2p1VSjet>=16: 
+            nTau+=1
+    if nTau!=1:
+        return 1
 
     for electron in ele:
-        if deltaR(taus[0].eta, taus[0].phi, electron.eta, electron.pt)>0.5 and electron.jetRelIso<1 and electron.mvaFall17V2Iso_WP90: return 1
+        if deltaR(taus[0].eta, taus[0].phi, electron.eta, electron.pt)>0.5 and electron.jetRelIso<1 and electron.mvaFall17V2Iso_WP90:
+            return 1
+
     for muon in mu:
-        if deltaR(taus[0].eta, taus[0].phi, muon.eta, muon.phi)>0.5 and muon.pfRelIso04_all<1 and muon.tightId: return 1
+        if deltaR(taus[0].eta, taus[0].phi, muon.eta, muon.phi)>0.5 and muon.pfRelIso04_all<1 and muon.tightId:
+            return 1
     
     return 0
 
-       
 def Veto_Light_Leptons(ele, mu):
     isEle=0
     isMu=0
     nEle=0
     nMu=0
     for electron in ele:
-        if electron.jetRelIso<1 and electron.mvaFall17V2Iso_WP90: nEle+=1
+        if electron.jetRelIso<1 and electron.mvaFall17V2Iso_WP90:
+            nEle+=1
     for muon in mu:
-        if muon.pfRelIso04_all<1 and muon.tightId: nMu=+1
+        if muon.pfRelIso04_all<1 and muon.tightId:
+            nMu=+1
     nLeps=nEle+nMu
     if nLeps!=1: return True, 0
     if nEle==1:
@@ -324,10 +411,13 @@ def Veto_electrons(ele):
     for electron in ele:
         if electron.jetRelIso<1 and electron.mvaFall17V2Iso_WP90: 
             nEle+=1
-            if nEle>1: return True
+            if nEle>1:
+                return True
     
-    if nEle!=1: return True
-    else: return False
+    if nEle!=1:
+        return True
+    else:
+        return False
     
 def Veto_muons(mu):
     nMu=0
@@ -335,12 +425,12 @@ def Veto_muons(mu):
     for muon in mu:
         if muon.pfRelIso04_all<1 and muon.tightId:
             nMu=+1
-            if nMu>1: return True
-    if nMu!=1: return True
-    else: return False
-               
-
-
+            if nMu>1:
+                return True
+    if nMu!=1:
+        return True
+    else:
+        return False
 
 def pTCalculator(pT):
     if pT<20:       return 1
@@ -355,58 +445,6 @@ def etaCalculator(eta):
     elif abs(eta)<2:    return "C", 3
     elif abs(eta)<2.4:  return "D", 4
 
-def IsNotTheSameObject(obj1, obj2):
-    if obj1==obj2: return False
-    return True
-    
-
-def LepVetoOneCollection(GoodLepton, collection, relIsoCut, ptCut, etaCut):
-    i=0
-    for i in range(len(collection)):
-        lep=collection[i]
-        if IsNotTheSameObject(GoodLepton, lep): 
-            if lep.pfRelIso03_all>relIsoCut: continue
-            if lep.pt<ptCut: continue
-            if abs(lep.eta)>etaCut: continue
-            return False
-    return True
-
-def LepVeto(GoodLepton, ElectronCollection, MuonCollection):
-    return LepVetoOneCollection(GoodLepton, ElectronCollection, REL_ISO_CUT_LEP_VETO_ELE, PT_CUT_LEP_VETO_ELE, ETA_CUT_LEP_VETO_ELE)*LepVetoOneCollection(GoodLepton, MuonCollection, REL_ISO_CUT_LEP_VETO_MU, PT_CUT_LEP_VETO_MU, ETA_CUT_LEP_VETO_MU)
-
-#semplifica la macro
-def JetSelection(jetCollection, GoodTau, GoodMu):
-    if len(jetCollection)<2: return -999
-    if jetCollection[0].pt<PT_CUT_JET: return -999
-    if jetCollection==None: return -999
-    #select higher pT jet
-    GoodJet=jetCollection[0]
-    #if the jet matches in dR one of the previously selected particles (e, tau), than it searches in the other jets
-    if deltaR(GoodJet.eta, GoodJet.phi, GoodTau.eta, GoodTau.phi)<DR_OVERLAP_CONE_TAU or deltaR(GoodJet.eta, GoodJet.phi, GoodMu.eta, GoodMu.phi)<DR_OVERLAP_CONE_OTHER: 
-        jetCollection.remove(GoodJet)
-        if len(jetCollection)==1:
-             return -999
-        return JetSelection(jetCollection, GoodTau, GoodMu)
-    
-    #searches for the best second jet
-    secondJetIndex=FindSecondJet(GoodJet, jetCollection, GoodTau, GoodMu)
-    if secondJetIndex>0: return GoodJet, jetCollection[secondJetIndex]
-    else:
-        jetCollection.remove(GoodJet)
-        if len(jetCollection)==1:
-            return -999
-        else: return JetSelection(jetCollection, GoodTau, GoodMu)
-
-
-def JetCut(jet1, jet2):
-    if (jet1+jet2).M()<M_JJ_CUT: return True
-    return False
-
-def metCut(met):
-    if met.pt<MET_CUT: return True
-    return False
-
-
 def closest(obj,collection,presel=lambda x,y: True):
     ret = None; drMin = 999
     for x in collection:
@@ -415,143 +453,6 @@ def closest(obj,collection,presel=lambda x,y: True):
         if dr < drMin: 
             ret = x; drMin = dr
     return (ret,drMin)
-
-def add_to_hemisphere(selobj, obj, pos, neg):
-    px_obj = obj.pt*ROOT.TMath.Cos(obj.phi)
-    py_obj = obj.pt*ROOT.TMath.Sin(obj.phi)
-    if obj == selobj:
-        pos.append([copy.deepcopy(px_obj), copy.deepcopy(py_obj)])
-        neg.append([copy.deepcopy(px_obj), copy.deepcopy(py_obj)])
-    elif 0. < deltaPhi(selobj, obj) < math.pi:
-        pos.append([copy.deepcopy(px_obj), copy.deepcopy(py_obj)])
-    elif -math.pi < deltaPhi(selobj, obj) < 0.:
-        neg.append([copy.deepcopy(px_obj), copy.deepcopy(py_obj)])
-
-def hemisphere_pt(objs):
-    thrust_px = 0.
-    thrust_py = 0.
-    num = 0.
-    den = 0.
-    for obj in objs:
-        obj_px = copy.deepcopy(obj[0])
-        thrust_px += obj_px
-        obj_py = copy.deepcopy(obj[1])
-        thrust_py += obj_py
-    #den = copy.deepcopy(total_pt)
-    mod = math.hypot(thrust_px, thrust_py)
-    return thrust_px, thrust_py, mod
-    '''
-    thrust_px = thrust_px / mod
-    thrust_py = thrust_py / mod
-    for obj in objs:
-        num += math.fabs(thrust_px*obj[0] + thrust_py*obj[1])
-    #print("num: ", num)
-    thrust = * num / den
-    #print( "thrust: ", thrust)
-    return thrust
-    '''
-
-def event_thrust(lep, jets, met):
-    ovr_thrust = 0.
-    had_thrust = 0.
-    ovr_pt = 0.
-    had_pt = 0.
-    for jet in jets:
-        had_pt += math.fabs(jet.pt)
-
-    ovr_pt = copy.deepcopy(had_pt)
-    ovr_pt += math.fabs(lep.pt) + math.fabs(met.pt)
-
-    had_max_hempt = 0.
-    had_thrust_ax_x = 0.
-    had_thrust_ax_y = 0.
-    ovr_max_hempt = 0.
-    ovr_thrust_ax_x = 0.
-    ovr_thrust_ax_y = 0.
-    for i, seljet in enumerate(jets): #build hemispheres for every jet
-        neg_ovr = []
-        neg_had = []
-        pos_ovr = []
-        pos_had = []
-        neg_ovr_res = []
-        neg_had_res = []
-        pos_ovr_res = []
-        pos_had_res = []
-        for j, jet in enumerate(jets):
-            add_to_hemisphere(seljet, jet, pos_had, neg_had)
-        pos_ovr = copy.deepcopy(pos_had)
-        neg_ovr = copy.deepcopy(neg_had)
-        add_to_hemisphere(seljet, lep, pos_ovr, neg_ovr)
-        add_to_hemisphere(seljet, met, pos_ovr, neg_ovr)
-
-        pos_had_res = list(hemisphere_pt(pos_had))
-        neg_had_res = list(hemisphere_pt(neg_had))
-
-        if had_max_hempt < pos_had_res[2]:
-            had_max_hempt = copy.deepcopy(pos_had_res[2])
-            had_thrust_ax_x = copy.deepcopy(pos_had_res[0]/pos_had_res[2])
-            had_thrust_ax_y = copy.deepcopy(pos_had_res[1]/pos_had_res[2])        
-        if had_max_hempt < neg_had_res[2]:
-            had_max_hempt = copy.deepcopy(neg_had_res[2])
-            had_thrust_ax_x = copy.deepcopy(neg_had_res[0]/neg_had_res[2])
-            had_thrust_ax_y = copy.deepcopy(neg_had_res[1]/neg_had_res[2])        
-
-        pos_ovr_res = list(hemisphere_pt(pos_ovr))
-        neg_ovr_res = list(hemisphere_pt(neg_ovr))
-
-        if ovr_max_hempt < pos_ovr_res[2]:
-            ovr_max_hempt = copy.deepcopy(pos_ovr_res[2])
-            ovr_thrust_ax_x = copy.deepcopy(pos_ovr_res[0]/pos_ovr_res[2])
-            ovr_thrust_ax_y = copy.deepcopy(pos_ovr_res[1]/pos_ovr_res[2])        
-        if ovr_max_hempt < neg_ovr_res[2]:
-            ovr_max_hempt = copy.deepcopy(neg_ovr_res[2])
-            ovr_thrust_ax_x = copy.deepcopy(neg_ovr_res[0]/neg_ovr_res[2])
-            ovr_thrust_ax_y = copy.deepcopy(neg_ovr_res[1]/neg_ovr_res[2])
-  
-    for jet in jets:
-        jpx = jet.pt*ROOT.TMath.Cos(jet.phi)
-        jpy = jet.pt*ROOT.TMath.Sin(jet.phi)
-        had_thrust += math.fabs(jpx*had_thrust_ax_x + jpy*had_thrust_ax_y)
-        ovr_thrust += math.fabs(jpx*ovr_thrust_ax_x + jpy*ovr_thrust_ax_y)
-    ovr_thrust += math.fabs(lep.pt*(ROOT.TMath.Cos(lep.phi)*ovr_thrust_ax_x + ROOT.TMath.Sin(lep.phi)*ovr_thrust_ax_y))
-    ovr_thrust += math.fabs(met.pt*(ROOT.TMath.Cos(met.phi)*ovr_thrust_ax_x + ROOT.TMath.Sin(met.phi)*ovr_thrust_ax_y))
-    had_thrust = had_thrust / had_pt
-    ovr_thrust = ovr_thrust / ovr_pt
-    
-    return round(ovr_thrust, 5), round(had_thrust, 5)
-
-'''
-def event_thrust(lep, jets, met):
-    ovr_thrust = []
-    had_thrust = []
-    ovr_pt = 0.
-    had_pt = 0.
-    for jet in jets:
-        had_pt += math.fabs(jet.pt)
-    #print( "had_pt: ", had_pt)
-    ovr_pt = copy.deepcopy(had_pt)
-    ovr_pt += math.fabs(lep.pt) + math.fabs(met.pt)
-    #print( "ovr_pt: ", ovr_pt)
-    for i, seljet in enumerate(jets): #build hemispheres for every jet
-        neg_ovr = []
-        neg_had = []
-        pos_ovr = []
-        pos_had = []
-        for j, jet in enumerate(jets):
-            add_to_hemisphere(seljet, jet, pos_had, neg_had)
-        pos_ovr = copy.deepcopy(pos_had)
-        neg_ovr = copy.deepcopy(neg_had)
-        add_to_hemisphere(seljet, lep, pos_ovr, neg_ovr)
-        add_to_hemisphere(seljet, met, pos_ovr, neg_ovr)
-        ovr_thrust.append(copy.deepcopy(hemisphere_thrust(pos_ovr, ovr_pt)))
-        ovr_thrust.append(copy.deepcopy(hemisphere_thrust(neg_ovr, ovr_pt)))
-        had_thrust.append(copy.deepcopy(hemisphere_thrust(pos_had, had_pt)))
-        had_thrust.append(copy.deepcopy(hemisphere_thrust(neg_had, had_pt)))
-
-    ovr_thrust.sort(reverse = True)
-    had_thrust.sort(reverse = True)
-    return round(ovr_thrust[0], 5), round(had_thrust[0], 5)
-'''
 
 def matchObjectCollection(objs,collection,dRmax=0.4,presel=lambda x,y: True):
     pairs = {}
@@ -617,17 +518,23 @@ def mcbjet_filter(jets): #returns a collection of only b-gen jets (to use only f
 def sameflav_filter(jets, flav): #returns a collection of only b-gen jets (to use only forMC samples)                       
     return list(filter(lambda x : x.partonFlavour == flav, jets))
 
+def get_HT(jets):
+    HT = 0.
+    for jet in jets:
+        HT += jet.pt
+    return HT
+
 def trig_map(HLT, PV, year, runPeriod):
-    isGoodPV    =   (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness                 
-    passMu      =   False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness             
-    passEle     =   False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness            
-    passHT      =   False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness             
-    noTrigger   =   False#not(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness       
+    isGoodPV = True#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    passMu = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    passEle = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    passHT = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    noTrigger = False#not(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
     
     passEleLoose    =   False #theese 2 "pass*Loose" will use the loose triggers for ele/mu and be used for the Fake calculation
     passMuLoose     =   False
 
-    if(year == 2016):# and runPeriod != 'H'):                                                                                    
+    if(year == 2016):# and runPeriod != 'H'):
         if(HLT.IsoMu24 or HLT.IsoTkMu24):
             passMu = True
         if(HLT.Ele27_WPTight_Gsf or HLT.Ele32_WPTight_Gsf):
@@ -636,12 +543,12 @@ def trig_map(HLT, PV, year, runPeriod):
             passHT = True
         if not(passMu or passEle) and not isGoodPV:
             noTrigger = True
-    elif(year == 2017):#and runPeriod != 'B'):                                            
-        if(HLT.Mu8_TrkIsoVVL or HLT.Mu17_TrkIsoVVLHLT.Ele27_WPTight_Gsf):
+    elif(year == 2017):#and runPeriod != 'B'):
+        if(HLT.IsoMu27 or HLT.Mu50):#HLT.IsoMu24 or 
             passMu = True
-        if(HLT.Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30 or HLT.Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30 or HLT.Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30):
-            passEle = True
-        if(HLT.PFHT250 or HLT.PFHT350):
+        if(HLT.Ele35_WPTight_Gsf or HLT.Ele32_WPTight_Gsf_L1DoubleEG or HLT.Photon200):#HLT.Ele27_WPTight_Gsf or 
+            passEle = True  
+        if(HLT.PFHT250 or HLT.PFHT350 or HLT.PFHT370 or HLT.PFHT430 or HLT.PFHT510 or HLT.PFHT590 or HLT.PFHT680 or HLT.PFHT780 or HLT.PFHT890):
             passHT = True
         if not(passMu or passEle) and not isGoodPV:
             noTrigger = True
@@ -649,21 +556,61 @@ def trig_map(HLT, PV, year, runPeriod):
             passMuLoose = True
         if runPeriod != 'B' and (HLT.Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30 or HLT.Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30 or HLT.Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30):
             passEleLoose = True
-    
     elif(year == 2018):
         if(HLT.IsoMu24):
             passMu = True
         if(HLT.Ele32_WPTight_Gsf_L1DoubleEG):
-            passEle = True
+            passEle = True  
         if not(passMu or passEle) and not isGoodPV:
             noTrigger = True
         if(HLT.PFHT250 or HLT.PFHT350):
             passHT = True
-
+            
     else:
         print('Wrong year! Please enter 2016, 2017, or 2018')
-
+    
     return (passMu and isGoodPV), (passEle and isGoodPV), (passHT and isGoodPV), noTrigger, (passMuLoose and isGoodPV), (passEleLoose and isGoodPV)
+
+def trig_map_all(HLT, PV, year, runPeriod):
+    isGoodPV = True#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    passMu = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    passEle = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    passHT = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    noTrigger = False#not(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    
+    if(year == 2016):# and runPeriod != 'H'):
+        if(HLT.IsoMu24 or HLT.IsoTkMu24):
+            passMu = True
+        if(HLT.Ele27_WPTight_Gsf or HLT.Ele32_WPTight_Gsf):
+            passEle = True
+        if(HLT.PFHT250 or HLT.PFHT300):
+            passHT = True
+        if not(passMu or passEle) and not isGoodPV:
+            noTrigger = True
+    elif(year == 2017):#and runPeriod != 'B'):
+        if(HLT.IsoMu24 or HLT.IsoMu27 or HLT.IsoMu30 or HLT.Mu50):
+            passMu = True
+        if(HLT.Ele115_CaloIdVT_GsfTrkIdT or HLT.Ele27_WPTight_Gsf or HLT.Ele32_WPTight_Gsf or HLT.Ele35_WPTight_Gsf or HLT.Ele32_WPTight_Gsf_L1DoubleEG or HLT.Photon200):
+            passEle = True  
+        if(HLT.PFHT250 or HLT.PFHT350):
+            passHT = True
+        if not(passMu or passEle) and not isGoodPV:
+            noTrigger = True
+    elif(year == 2018):
+        if(HLT.IsoMu24):
+            passMu = True
+        if(HLT.Ele32_WPTight_Gsf_L1DoubleEG):
+            passEle = True  
+        if not(passMu or passEle) and not isGoodPV:
+            noTrigger = True
+        if(HLT.PFHT250 or HLT.PFHT350):
+            passHT = True
+            
+    else:
+        print('Wrong year! Please enter 2016, 2017, or 2018')
+   
+    return (passMu and isGoodPV), (passEle and isGoodPV), (passHT and isGoodPV), noTrigger
+
 
 def get_ptrel(lepton, jet):
     ptrel = ((jet.p4()-lepton.p4()).Vect().Cross(lepton.p4().Vect())).Mag()/(jet.p4().Vect().Mag())
@@ -1935,3 +1882,75 @@ class systWeights(object):
 ###############################################
 ###        End of tree_skimmer_utlis        ###
 ###############################################
+
+
+
+
+
+def SFFakeRatio_ele_calc(pT, eta):
+    inFile = ROOT.TFile.Open("TH2F_FakeRatio_ele.root" ,"READ")
+    histo=inFile.Get("h2FRele")
+    FR=0
+    if(pT<=20):
+        if(abs(eta)<1):         FR=histo.GetBinContent(1,1)
+        elif(abs(eta)<1.5):     FR=histo.GetBinContent(1,2)
+        elif(abs(eta)<2):       FR=histo.GetBinContent(1,3)
+        elif(abs(eta)<2.4):     FR=histo.GetBinContent(1,4)
+    elif(pT<=30):
+        if(abs(eta)<1):         FR=histo.GetBinContent(2,1)
+        elif(abs(eta)<1.5):     FR=histo.GetBinContent(2,2)
+        elif(abs(eta)<2):       FR=histo.GetBinContent(2,3)
+        elif(abs(eta)<2.4):     FR=histo.GetBinContent(2,4)
+    elif(pT<=40):
+        if(abs(eta)<1):         FR=histo.GetBinContent(3,1)
+        elif(abs(eta)<1.5):     FR=histo.GetBinContent(3,2)
+        elif(abs(eta)<2):       FR=histo.GetBinContent(3,3)
+        elif(abs(eta)<2.4):     FR=histo.GetBinContent(3,4)
+    elif(pT<=50):
+        if(abs(eta)<1):         FR=histo.GetBinContent(4,1)
+        elif(abs(eta)<1.5):     FR=histo.GetBinContent(4,2)
+        elif(abs(eta)<2):       FR=histo.GetBinContent(4,3)
+        elif(abs(eta)<2.4):     FR=histo.GetBinContent(4,4)
+    elif(pT>50):
+        if(abs(eta)<1):         FR=histo.GetBinContent(5,1)
+        elif(abs(eta)<1.5):     FR=histo.GetBinContent(5,2)
+        elif(abs(eta)<2):       FR=histo.GetBinContent(5,3)
+        elif(abs(eta)<2.4):     FR=histo.GetBinContent(5,4)
+    else: FR=0    
+    return FR/(1-FR)
+
+def SFFakeRatio_mu_calc(pT, eta):
+    inFile = ROOT.TFile.Open("TH2F_FakeRatio_mu.root" ,"READ")
+    histo=inFile.Get("h2FRmu")
+    FR=0
+    if(pT<=20):
+        if(abs(eta)<1):         FR=histo.GetBinContent(1,1)
+        elif(abs(eta)<1.5):     FR=histo.GetBinContent(1,2)
+        elif(abs(eta)<2):       FR=histo.GetBinContent(1,3)
+        elif(abs(eta)<2.4):     FR=histo.GetBinContent(1,4)
+    elif(pT<=30):
+        if(abs(eta)<1):         FR=histo.GetBinContent(2,1)
+        elif(abs(eta)<1.5):     FR=histo.GetBinContent(2,2)
+        elif(abs(eta)<2):       FR=histo.GetBinContent(2,3)
+        elif(abs(eta)<2.4):     FR=histo.GetBinContent(2,4)
+    elif(pT<=40):
+        if(abs(eta)<1):         FR=histo.GetBinContent(3,1)
+        elif(abs(eta)<1.5):     FR=histo.GetBinContent(3,2)
+        elif(abs(eta)<2):       FR=histo.GetBinContent(3,3)
+        elif(abs(eta)<2.4):     FR=histo.GetBinContent(3,4)
+    elif(pT<=50):
+        if(abs(eta)<1):         FR=histo.GetBinContent(4,1)
+        elif(abs(eta)<1.5):     FR=histo.GetBinContent(4,2)
+        elif(abs(eta)<2):       FR=histo.GetBinContent(4,3)
+        elif(abs(eta)<2.4):     FR=histo.GetBinContent(4,4)
+    elif(pT>50):
+        if(abs(eta)<1):         FR=histo.GetBinContent(5,1)
+        elif(abs(eta)<1.5):     FR=histo.GetBinContent(5,2)
+        elif(abs(eta)<2):       FR=histo.GetBinContent(5,3)
+        elif(abs(eta)<2.4):     FR=histo.GetBinContent(5,4)
+    else: FR=0    
+    return FR/(1-FR)
+
+
+
+

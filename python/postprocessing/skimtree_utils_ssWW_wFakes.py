@@ -239,7 +239,7 @@ def SelectJet(jetCollection, GoodTau, GoodMu):
     if jetCollection[0].pt<PT_CUT_JET: return -999
     if jetCollection==None: return -999
     #select higher pT jet
-    GoodJet=jetCollection[0]
+    GoodJet=copy.deepcopy(jetCollection[0])
     #if the jet matches in dR one of the previously selected particles (e, tau), than it searches in the other jets
     if deltaR(GoodJet.eta, GoodJet.phi, GoodTau.eta, GoodTau.phi)<DR_OVERLAP_CONE_TAU or deltaR(GoodJet.eta, GoodJet.phi, GoodMu.eta, GoodMu.phi)<DR_OVERLAP_CONE_OTHER: 
         jetCollection.remove(GoodJet)
