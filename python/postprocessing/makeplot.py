@@ -10,7 +10,7 @@ from array import array
 
 #print TT_2017
 
-print("cavallotti")
+print("cavalletti")
 usage = 'python makeplot.py'# -y year --lep lepton -d dataset --merpart --lumi --mertree --sel --cut cut_string -p -s'
 usageToCopyPaste= "python makeplot.py -y 2017 --lep muon --bveto --user apiccine -f v4 -p"
 
@@ -137,7 +137,10 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
 
      nbins = variable._nbins
      histoname = "h_" + reg + "_" + variable._name + "_" + cut_tag
-     h1 = ROOT.TH1F(histoname, variable._name + "_" + reg, variable._nbins, variable._xmin, variable._xmax)
+     if not variable._iscustom:
+          h1 = ROOT.TH1F(histoname, variable._name + "_" + reg, variable._nbins, variable._xmin, variable._xmax)
+     else:
+          h1 = ROOT.TH1F(histoname, variable._name + "_" + reg, variable._nbins, variable._xmin)
      h1.Sumw2()
 
      cut = variable._taglio
@@ -189,7 +192,10 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      histo = []
      tmp = ROOT.TH1F()
      h = ROOT.TH1F()
-     hdata = ROOT.TH1F('h','h', variabile_._nbins, variabile_._xmin, variabile_._xmax)
+     if not variabile_._iscustom:
+          hdata = ROOT.TH1F('h','h', variabile_._nbins, variabile_._xmin, variabile_._xmax)
+     else:
+          hdata = ROOT.TH1F('h','h', variabile_._nbins, variabile_._xmin)
      h_sig = []
      h_err = ROOT.TH1F()
      h_bkg_err = ROOT.TH1F()
@@ -313,18 +319,25 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           stack.Draw("HIST")
      else:
           stack.Draw("HIST NOSTACK")
-     step = float(variabile_._xmax - variabile_._xmin)/float(variabile_._nbins)
-     print str(step)
-     if "GeV" in variabile_._title:
-          if step.is_integer():
-               ytitle = "Events / %.0f GeV" %step
+     if not variabile_._iscustom:
+          step = float(variabile_._xmax - variabile_._xmin)/float(variabile_._nbins)
+          print str(step)
+          if "GeV" in variabile_._title:
+               if step.is_integer():
+                    ytitle = "Events"#/ %.0f GeV" %step
+               else:
+                    ytitle = "Events"# / %.2f GeV" %step
           else:
-               ytitle = "Events / %.2f GeV" %step
+               if step.is_integer():
+                    ytitle = "Events"# / %.0f units" %step
+               else:
+                    ytitle = "Events"# / %.2f units" %step
      else:
-          if step.is_integer():
-               ytitle = "Events / %.0f units" %step
+          if "GeV" in variabile_._title:
+               ytitle = "Events"# / GeV"
           else:
-               ytitle = "Events / %.2f units" %step
+               ytitle = "Events"# / a.u"
+     
      print stack
      stack.GetYaxis().SetTitle(ytitle)
      stack.GetYaxis().SetTitleFont(42)
@@ -409,7 +422,11 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      h_bkg_err.SetFillColor(ROOT.kGray+1)
      h_bkg_err.Draw("e20same")
      
-     f1 = ROOT.TLine(variabile_._xmin, 1., variabile_._xmax,1.)
+     if not variabile_._iscustom:
+          xmin = variabile_._xmin
+     else:
+          xmin = variabile_._xmin[0]
+     f1 = ROOT.TLine(xmin, 1., variabile_._xmax,1.)
      f1.SetLineColor(ROOT.kBlack)
      f1.SetLineStyle(ROOT.kDashed)
      f1.Draw("same")
@@ -581,53 +598,77 @@ for year in years:
           variables = []
           wzero = 'w_nominal*PFSF*puSF'#*lepSF'
           cut = cut_dict[lep]
-                    
-          variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cut+')', 24, -2.4, 2.4))
-          variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cut+')', 20, -3.14, 3.14))
+
+
+          variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cut+')', 20, -5., 5.))
+          variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cut+')', 14, -3.50, 3.50))
+          bin_lepton_pt = array("f", [0., 100., 200., 300., 400., 600., 800., 1000., 1500.])
+          nbin_lepton_pt = len(bin_lepton_pt)-1
+          variables.append(variabile('lepton_pt',  'Lepton p_{T} [GeV]',  wzero+'*('+cut+')', nbin_lepton_pt, bin_lepton_pt))#30, 1500))
+
+
           variables.append(variabile('lepton_pdgid', 'lepton pdgid',  wzero+'*('+cut+')', 31, -15.5, 15.5))
           variables.append(variabile('lepton_pfRelIso04', 'lepton rel iso',  wzero+'*('+cut+')', 15, 0, 0.15))
 
-          variables.append(variabile('tau_pt',  '#tau_{p_{T}} [GeV]',  wzero+'*('+cut+')', 30, 30, 1000))
-
-          variables.append(variabile('tau_eta', '#tau #eta',  wzero+'*('+cut+')', 24, -2.4, 2.4))
-          variables.append(variabile('tau_phi', '#tau #Phi',  wzero+'*('+cut+')',  20, -3.14, 3.14))
+          bin_taupt = array("f", [0., 100., 200., 300., 400., 600., 800., 1000., 1500.])
+          nbin_taupt = len(bin_taupt) - 1
+          variables.append(variabile('tau_pt',  '#tau p_{T} [GeV]',  wzero+'*('+cut+')', nbin_taupt, bin_taupt))
+          variables.append(variabile('tau_eta', '#tau #eta',  wzero+'*('+cut+')', 20, -5, 5))
+          variables.append(variabile('tau_phi', '#tau #Phi',  wzero+'*('+cut+')',  14, -3.50, 3.50))
 
           '''                                                                                                                                                                                                                                               
           variables.append(variabile('TMath::Log2(tau_DeepTauVsEle_WP+1)', 'log_2(#tau DeepTauVsEle WP)',  wzero+'*('+cut+')'+'*(tau_DeepTauVsEle_WP>0)',  8, -0.5, 7.5))                                                                                   
           variables.append(variabile('TMath::Log2(tau_DeepTauVsMu_WP+1)', 'log_2(#tau DeepTauVsMu WP)',  wzero+'*('+cut+')'+'*(tau_DeepTauVsMu_WP>0)',  4, -0.5, 3.5))                                                                                      
           variables.append(variabile('TMath::Log2(tau_DeepTauVsJet_WP+1)', 'log_2(#tau DeepTauVsJet WP)',  wzero+'*('+cut+')'+'*(tau_DeepTauVsJet_WP>0)',  8, -0.5, 7.5))                                                                                   
           '''
+
           variables.append(variabile('tau_DeepTauVsEle_raw', '#tau DeepTauVsEle raw',  wzero+'*('+cut+')',  20, 0.35, 1.35))
           variables.append(variabile('tau_DeepTauVsMu_raw', '#tau DeepTauVsMu raw',  wzero+'*('+cut+')',  20, 0.2, 1.2))
           variables.append(variabile('tau_DeepTauVsJet_raw', '#tau DeepTauVsJet raw',  wzero+'*('+cut+')',  20, 0.35, 1.35))
 
-          variables.append(variabile('leadjet_pt',  'Lead jet_{p_{T}} [GeV]',  wzero+'*('+cut+')', 40, 30, 1500))
-          variables.append(variabile('leadjet_eta', 'Lead jet #eta',  wzero+'*('+cut+')', 24, -5, 5))
-          variables.append(variabile('leadjet_phi', 'Lead jet #Phi',  wzero+'*('+cut+')',  20, -3.14, 3.14))
+          bin_leadjet_pt = array("f", [0., 100., 200., 300., 400., 600., 800., 1000., 1500.])
+          nbin_leadjet_pt = len(bin_leadjet_pt)-1
+          variables.append(variabile('leadjet_pt',  'Lead jet p_{T} [GeV]',  wzero+'*('+cut+')', nbin_leadjet_pt, bin_leadjet_pt))#30, 1500))
 
-          variables.append(variabile('subleadjet_pt',  'Sublead jet_{p_{T}} [GeV]',  wzero+'*('+cut+')', 40, 30, 1000))
-          variables.append(variabile('subleadjet_eta', 'Sublead jet #eta',  wzero+'*('+cut+')', 24, -5, 5))
-          variables.append(variabile('subleadjet_phi', 'Sublead jet #Phi',  wzero+'*('+cut+')',  20, -3.14, 3.14))
+          variables.append(variabile('leadjet_eta', 'Lead jet #eta',  wzero+'*('+cut+')', 20, -5., 5.))
+          variables.append(variabile('leadjet_phi', 'Lead jet #Phi',  wzero+'*('+cut+')',  14, -3.50, 3.50))
+
+
+          bin_subleadjet_pt = array("f", [0., 50., 100., 150., 200., 300., 400., 600., 1000.])
+          nbin_subleadjet_pt = len(bin_subleadjet_pt) - 1
+          variables.append(variabile('subleadjet_pt',  'Sublead jet p_{T} [GeV]',  wzero+'*('+cut+')', nbin_subleadjet_pt, bin_subleadjet_pt))#40, 30, 1000))
+          variables.append(variabile('subleadjet_eta', 'Sublead jet #eta',  wzero+'*('+cut+')', 20, -5., 5.))
+          variables.append(variabile('subleadjet_phi', 'Sublead jet #Phi',  wzero+'*('+cut+')',  14, -3.50, 3.50))
 
           variables.append(variabile('nJets', 'n jets',  wzero+'*('+cut+')',  11, -0.5, 10.5))
           variables.append(variabile('nBJets', 'n bjets (DeepJet M)',  wzero+'*('+cut+')',  6, -0.5, 5.5))
 
-          variables.append(variabile('MET_pt', 'p_{T}^{miss} [GeV]',  wzero+'*('+cut+')',  30, 40, 500))
+          bin_metpt = array("f", [0., 25., 50., 75., 100., 125., 150., 175., 200., 250., 300., 350., 400., 500., 600.])
+          nbin_metpt = len(bin_metpt) - 1
+          variables.append(variabile('MET_pt', 'p_{T}^{miss} [GeV]',  wzero+'*('+cut+')', nbin_metpt, bin_metpt))#30, 40, 500))
 
+          bin_mjj = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 900., 1000., 1100., 1200., 1350., 1500., 1650., 1800., 2000., 2200.])
+          nbin_mjj = len(bin_mjj) - 1 
+          variables.append(variabile('mjj', 'M_{jj} [GeV]',  wzero+'*('+cut+')', nbin_mjj, bin_mjj))# 20, 500, 2000))
 
-          variables.append(variabile('mjj', 'M_{jj} [GeV]',  wzero+'*('+cut+')',  20, 500, 2000))
-          variables.append(variabile('mT_lep_MET', 'M_{T}(lep, MET) [GeV]',  wzero+'*('+cut+')',  20, 0, 300))
-          variables.append(variabile('mT_tau_MET', 'M_{T}(#tau, MET) [GeV]',  wzero+'*('+cut+')',  20, 0, 300))
-          variables.append(variabile('mT_leptau_MET', 'M_{T}(lep, #tau, MET) [GeV]',  wzero+'*('+cut+')',  20, 0, 300))
+          bin_mTs = array("f", [0., 25., 50., 75., 100., 125., 150., 200., 250., 300., 400., 500.])
+          nbin_mTs = len(bin_mTs) - 1
 
-          variables.append(variabile('deltaEta_jj', '#Delta #eta_{jj}',  wzero+'*('+cut+')',  20, 0, 10))
+          variables.append(variabile('mT_lep_MET', 'M_{T}(lep, MET) [GeV]',  wzero+'*('+cut+')', nbin_mTs, bin_mTs))
+          variables.append(variabile('mT_tau_MET', 'M_{T}(#tau, MET) [GeV]',  wzero+'*('+cut+')', nbin_mTs, bin_mTs))
+          variables.append(variabile('mT_leptau_MET', 'M_{T}(lep, #tau, MET) [GeV]',  wzero+'*('+cut+')', nbin_mTs, bin_mTs))
+
+          bin_deltaeta_jj = array("f", [0., 0.2, 0.4, 0.6, 0.8, 1., 1.2, 1.4, 1.6, 1.8, 2., 2.2, 2.4, 2.6, 2.8, 3., 3.2, 3.4, 3.6, 3.8, 4., 4.2, 4.4, 4.6, 4.8, 5., 5.2, 5.4, 5.6, 5.8, 6., 6.4, 6.8, 7.2, 8., 8.8, 10.])
+          nbin_deltaeta_jj = len(bin_deltaeta_jj) - 1
+          variables.append(variabile('deltaEta_jj', '#Delta #eta_{jj}',  wzero+'*('+cut+')', nbin_deltaeta_jj, bin_deltaeta_jj))#20, 0, 10))
 
           variables.append(variabile('deltaPhi_jj', '#Delta #phi_{jj}',  wzero+'*('+cut+')',  16, -4., 4.))
           variables.append(variabile('deltaPhi_taulep', '#Delta #phi_{#tau l}',  wzero+'*('+cut+')',  16, -4., 4.))
-          variables.append(variabile('deltaPhi_tauj1', '#Delta #phi_{#tau j_1}',  wzero+'*('+cut+')',  16, -4., 4.))
-          variables.append(variabile('deltaPhi_tauj2', '#Delta #phi_{#tau j_2}',  wzero+'*('+cut+')',  16, -4., 4.))
-          variables.append(variabile('deltaPhi_lepj1', '#Delta #phi_{l j_1}',  wzero+'*('+cut+')', 16, -4., 4.))
-          variables.append(variabile('deltaPhi_lepj2', '#Delta #phi_{l j_2}',  wzero+'*('+cut+')', 16, -4., 4.))
+          variables.append(variabile('deltaPhi_tauj1', '#Delta #phi_{#tau j_{1}}',  wzero+'*('+cut+')',  16, -4., 4.))
+          variables.append(variabile('deltaPhi_tauj2', '#Delta #phi_{#tau j_{2}}',  wzero+'*('+cut+')',  16, -4., 4.))
+          variables.append(variabile('deltaPhi_lepj1', '#Delta #phi_{l j_{1}}',  wzero+'*('+cut+')', 16, -4., 4.))
+          variables.append(variabile('deltaPhi_lepj2', '#Delta #phi_{l j_{2}}',  wzero+'*('+cut+')', 16, -4., 4.))
+
 
           for sample in dataset_new:
                if 'DataHT' in sample.label or 'DataMET' in sample.label:
@@ -640,6 +681,7 @@ for year in years:
 
           if(opt.stack):
                for var in variables:
+                    print var._xmax
                     os.system('set LD_PRELOAD=libtcmalloc.so')
                     makestack(lep, 'jets', var, dataset_new, cut_tag, "", lumi[str(year)])
                     os.system('set LD_PRELOAD=libtcmalloc.so')

@@ -925,6 +925,33 @@ DataHT_2016 = sample(ROOT.kBlack, 1, 1001, "Data", "DataHT_2016")
 DataHT_2016.year = 2016
 DataHT_2016.components = [DataHTB_2016, DataHTC_2016, DataHTD_2016, DataHTE_2016, DataHTF_2016, DataHTG_2016, DataHTH_2016]
 
+DataTauB_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataTauB_2017")
+DataTauB_2017.runP = 'B'
+DataTauB_2017.year = 2017
+DataTauB_2017.dataset = '/Tau/Run2017B-'+tag_data + '-v1/NANOAOD'
+DataTauC_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataTauC_2017")
+DataTauC_2017.runP = 'C'
+DataTauC_2017.year = 2017
+DataTauC_2017.dataset = '/Tau/Run2017C-'+tag_data + '-v1/NANOAOD'
+DataTauD_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataTauD_2017")
+DataTauD_2017.runP = 'D'
+DataTauD_2017.year = 2017
+DataTauD_2017.dataset = '/Tau/Run2017D-'+tag_data + '-v1/NANOAOD'
+DataTauE_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataTauE_2017")
+DataTauE_2017.runP = 'E'
+DataTauE_2017.year = 2017
+DataTauE_2017.dataset = '/Tau/Run2017E-'+tag_data + '-v1/NANOAOD'
+DataTauF_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataTauF_2017")
+DataTauF_2017.runP = 'F'
+DataTauF_2017.year = 2017
+DataTauF_2017.dataset = '/Tau/Run2017F-'+tag_data + '-v1/NANOAOD'
+DataTau_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataTau_2017")
+DataTau_2017.year = 2017
+DataTau_2017.components = [DataTauB_2017, DataTauC_2017, DataTauD_2017, DataTauE_2017, DataTauF_2017]
+DataTauFake_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataTauFake_2017")
+DataTauFake_2017.year = 2017
+DataTauFake_2017.components = [DataTauC_2017, DataTauD_2017, DataTauE_2017, DataTauF_2017]
+
 DataMuB_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataMuB_2017")
 DataMuB_2017.runP = 'B'
 DataMuB_2017.year = 2017
@@ -951,7 +978,6 @@ DataMu_2017.components = [DataMuB_2017, DataMuC_2017, DataMuD_2017, DataMuE_2017
 DataMuFake_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataMuFake_2017")
 DataMuFake_2017.year = 2017
 DataMuFake_2017.components = [DataMuC_2017, DataMuD_2017, DataMuE_2017, DataMuF_2017]
-
 
 DataEleB_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataEleB_2017")
 DataEleB_2017.runP = 'B'
