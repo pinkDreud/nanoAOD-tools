@@ -185,6 +185,17 @@ var_list.append(FakeTau_charge)
 var_list.append(FakeTau_mass)
 var_list.append(FakeTau_DeepTauWP)
 
+Jet_pt                  =   array.array('f', [-999.])
+Jet_eta                 =   array.array('f', [-999.])
+Jet_phi                 =   array.array('f', [-999.])
+Jet_number              =   array.array('f', [-999.])
+Jet_numberSeparate      =   array.array('f', [-999.])
+var_list.append(Jet_pt)
+var_list.append(Jet_phi)
+var_list.append(Jet_eta)
+var_list.append(Jet_number)
+var_list.append(Jet_numberSeparate)
+
 #mT
 mT_eleMET                   =   array.array('f', [-999.])
 mT_muMET                   =   array.array('f', [-999.])
@@ -196,12 +207,16 @@ var_list.append(mT_tauMET)
 var_list.append(mT_lepMET)
 
 #Vetoes
-Veto_LightLeptons           =   array.array('f', [-999.])
+nLeps_LightLeptonsVL         =   array.array('f', [-999.])
+nLeps_LightLeptons           =   array.array('f', [-999.])
+nLeps_LightLeptonsTight      =   array.array('f', [-999.])
 Veto_Electrons              =   array.array('f', [-999.])
 Veto_Muons                  =   array.array('f', [-999.])
 Veto_TauLeptons             =   array.array('f', [-999.])
 Veto_TauZMass               =   array.array('f', [-999.])
-var_list.append(Veto_LightLeptons)
+var_list.append(nLeps_LightLeptons)
+var_list.append(nLeps_LightLeptonsVL)
+var_list.append(nLeps_LightLeptonsTight)
 var_list.append(Veto_Electrons)
 var_list.append(Veto_Muons)
 var_list.append(Veto_TauLeptons)
@@ -260,8 +275,17 @@ systTree.branchTreesSysts(trees, "all", "FakeTau_eta",              outTreeFile,
 systTree.branchTreesSysts(trees, "all", "FakeTau_phi",              outTreeFile, FakeTau_phi)
 systTree.branchTreesSysts(trees, "all", "FakeTau_mass",             outTreeFile, FakeTau_mass)
 systTree.branchTreesSysts(trees, "all", "FakeTau_DeepTauWP",        outTreeFile, FakeTau_DeepTauWP)
+
+systTree.branchTreesSysts(trees, "all", "Jet_pt",                outTreeFile, Jet_pt)
+systTree.branchTreesSysts(trees, "all", "Jet_eta",               outTreeFile, Jet_eta)
+systTree.branchTreesSysts(trees, "all", "Jet_phi",               outTreeFile, Jet_phi)
+systTree.branchTreesSysts(trees, "all", "Jet_number",            outTreeFile, Jet_number)
+systTree.branchTreesSysts(trees, "all", "Jet_numberSeparate",    outTreeFile, Jet_numberSeparate)
+
 #Veto variables
-systTree.branchTreesSysts(trees, "all", "Veto_LightLeptons",        outTreeFile, Veto_LightLeptons)
+systTree.branchTreesSysts(trees, "all", "nLeps_LightLeptonsVL",      outTreeFile, nLeps_LightLeptonsVL)
+systTree.branchTreesSysts(trees, "all", "nLeps_LightLeptons",        outTreeFile, nLeps_LightLeptons)
+systTree.branchTreesSysts(trees, "all", "nLeps_LightLeptonsTight",   outTreeFile, nLeps_LightLeptonsTight)
 systTree.branchTreesSysts(trees, "all", "Veto_TauLeptons",          outTreeFile, Veto_TauLeptons)
 systTree.branchTreesSysts(trees, "all", "Veto_TauZMass",            outTreeFile, Veto_TauZMass)
 systTree.branchTreesSysts(trees, "all", "MET_pt",                   outTreeFile, MET_pt)
@@ -358,6 +382,7 @@ for i in range(tree.GetEntries()):
     
     genpart = None
     
+    Jet_number[0] = njets
 
     if isMC:
         genpart = Collection(event, "GenPart")
@@ -428,41 +453,65 @@ for i in range(tree.GetEntries()):
             FakeTau_isPrompt[0]         =   taus[0].genPartFlav
 
     #light leptons
+    nLeps_LightLeptonsVL[0]      = Veto_Light_Leptons_VL(list(electrons), list(muons))
+    nLeps_LightLeptons[0]        = Veto_Light_Leptons(list(electrons), list(muons))
+    nLeps_LightLeptonsTight[0]   = Veto_Light_Leptons_tight(list(electrons), list(muons))
 
-    Veto_LightLeptons[0], isEle=Veto_Light_Leptons(list(electrons), list(muons))
+    isEle = None
+
+    if nLeps_LightLeptonsVL[0] == 1 or nLeps_LightLeptons[0] == 1 or nLeps_LightLeptonsTight[0] == 1:
+        if len(electrons) == 0:
+            isEle = False
+        elif len(muons) == 0:
+            isEle == True
+        elif muons[0].pt> electrons[0].pt:
+            isEle = False
+        else:
+            isEle = True
 
     if isEle:
-        leptons = list(electrons)
+        leptons = electrons
     else:
-        leptons = list(muons)
+        leptons = muons
     
-    if len(leptons)>0:
+    if len(leptons)>0 and isEle != None:
 
         lepGood=None
+        lepGood_p4 = ROOT.TLorentzVector()
         if isEle:
             for ele in leptons:
                 if ele.jetRelIso<1 and ele.mvaFall17V2Iso_WPL:
                     lepGood = ele
+                    lepGood_p4 = ele.p4()
                     break
         else:
             for mu in leptons:
                 if mu.pfRelIso04_all<1 and mu.looseId:
                     lepGood = mu
+                    lepGood_p4 = mu.p4()
                     break
                     
         if lepGood!=None:
-            mT_lepMET[0]        =   mTlepMet(met, lepGood.p4())
-            FakeLepton_pt[0]    =   lepGood.pt
-            FakeLepton_eta[0]   =   lepGood.eta
-            FakeLepton_phi[0]   =   lepGood.phi
-            FakeLepton_mass[0]  =   lepGood.mass
+            mT_lepMET[0]        =   mTlepMet(met, lepGood_p4)
+            FakeLepton_pt[0]    =   lepGood_p4.Pt()
+            FakeLepton_eta[0]   =   lepGood_p4.Eta()
+            FakeLepton_phi[0]   =   lepGood_p4.Phi()
+            FakeLepton_mass[0]  =   lepGood_p4.M()
             FakeLepton_pdgid[0] =   lepGood.pdgId
 
+            Jet_numberSeparate[0] = 0
+            for j in jets:
+                if deltaR(j.eta, j.phi, FakeLepton_eta[0], FakeLepton_phi[0])>0.4:
+                    Jet_numberSeparate[0]+=1
+
+            #print('nJets ', Jet_number[0], ' n sep jets: ', Jet_numberSeparate[0])
             if isEle:
                 FakeLepton_pfRelIso04[0]    =   lepGood.jetRelIso
+                FakeLepton_isTight[0]       =   lepGood.mvaFall17V2Iso_WP90
             else:
                 FakeLepton_pfRelIso04[0]    =   lepGood.pfRelIso04_all
-            if isMC: 
+                FakeLepton_isTight[0]       =   lepGood.tightId
+            if isMC:
                 FakeLepton_isPrompt[0]      =   lepGood.genPartFlav
 
     systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))

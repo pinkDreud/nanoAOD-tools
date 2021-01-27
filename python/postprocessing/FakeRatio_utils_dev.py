@@ -385,6 +385,21 @@ def Veto_Tau_Leptons(taus, ele, mu):
     
     return 0
 
+def Veto_Light_Leptons_VL(ele, mu):
+    isEle = 0
+    isMu = 0
+    nEle = 0
+    nMu = 0
+    for electron in ele:
+        if electron.jetRelIso<1:
+            nEle+=1
+    for muon in mu:
+        if muon.pfRelIso04_all<1:
+            nMu=+1
+    nLeps=nEle+nMu
+    #print("number of leptons is: ", nLeps, '                                   ele ', nEle, ' nMu ', nMu)                     
+    return nLeps
+
 def Veto_Light_Leptons(ele, mu):
     isEle=0
     isMu=0
@@ -397,13 +412,22 @@ def Veto_Light_Leptons(ele, mu):
         if muon.pfRelIso04_all<1 and muon.tightId:
             nMu=+1
     nLeps=nEle+nMu
-    if nLeps!=1: return True, 0
-    if nEle==1:
-        isEle=1
-    if nMu==1:
-        isMu=1
-    
-    return False, isEle
+    return nLeps
+
+def Veto_Light_Leptons_tight(ele, mu):
+    isEle=0
+    isMu=0
+    nEle=0
+    nMu=0
+    for electron in ele:
+        if electron.jetRelIso<1 and electron.mvaFall17V2Iso_WP90:
+            nEle+=1
+    for muon in mu:
+        if muon.pfRelIso04_all<1  and muon.tightId:
+            nMu=+1
+    nLeps=nEle+nMu
+    #print("number of leptons is: ", nLeps, '                                   ele ', nEle, ' nMu ', nMu)                       
+    return nLeps
 
 def Veto_electrons(ele):
     nEle=0
