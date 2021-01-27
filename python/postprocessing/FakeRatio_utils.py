@@ -45,17 +45,17 @@ effLumi_2017 = {
         }
 
 
-orderList= ['1A', '1B', '1C', '1D',
-            '2A', '2B', '2C', '2D',
-            '3A', '3B', '3C', '3D',
-            '4A', '4B', '4C', '4D',
-            '5A', '5B', '5C', '5D']
+orderList= ['11', '12', '13', '14',
+            '21', '22', '23', '24',
+            '31', '32', '33', '34',
+            '41', '42', '43', '44',
+            '51', '52', '53', '54']
 
 def dict_print(dict):
     for pos in orderList:
         if dict[pos][1]!=0: dict[pos][3]=dict[pos][2]*1.0/dict[pos][1]
         else: dict[pos][3]= "undefined"
-        print(dict[pos][0], "---- nTot:\t", dict[pos][1], "\tnGood:\t", dict[pos][2], "\t -- FR: \t", dict[pos][3])
+        print(dict[pos][0], "---- nTot:" + '\t', dict[pos][1], '\t' +"nGood:"+'\t', dict[pos][2], '\t'+ "-- FR:"+ '\t', dict[pos][3])
 
 def dict_save(dict, dict1, dict2, outname):
     outfile=open(outname, "w")
@@ -354,10 +354,10 @@ def pTCalculator(pT):
     else:           return 5
 
 def etaCalculator(eta):
-    if abs(eta)<1:      return "A", 1
-    elif abs(eta)<1.4:  return "B", 2
-    elif abs(eta)<2:    return "C", 3
-    elif abs(eta)<2.4:  return "D", 4
+    if abs(eta)<1:      return  1
+    elif abs(eta)<1.4:  return  2
+    elif abs(eta)<2:    return  3
+    elif abs(eta)<2.4:  return  4
 
 def IsNotTheSameObject(obj1, obj2):
     if obj1==obj2: return False

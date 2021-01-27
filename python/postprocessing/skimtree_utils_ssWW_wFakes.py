@@ -166,8 +166,45 @@ def SelectLepton(lepCollection, isMu): #isMu==True -> muons else Ele
         if lepCollection[i].pt<pT_cut: continue
         if abs(lepCollection[i].eta)>eta_cut: continue 
         if not isMu and(abs(lepCollection[i].eta)>1.4442 and abs(lepCollection[i].eta)<1.566): continue
+        return i, 1
+    
+    for i in range(len(lepCollection)):
+        if abs(lepCollection[i].pdgid) == 13:
+            if not (lepCollection[i].looseId and not(lepCollection[i].tightId) and  lepCollection[i].pfRelIso04_all>ISO_CUT_ELE and lepCollection[i].pfRelIso04_all<1):
+                continue
+            if lepCollection[i].pt<PT_CUT_MU: continue
+            if abs(lepCollection[i].eta)>ETA_CUT_MU: continue 
+            return i, 0
+        if abs(lepCollection[i].pdgid) == 11:
+            if not (lepCollection[i].mvaFall17V2Iso_WPL and not(lepCollection[i].mvaFall17V2Iso_WP90) and  lepCollection[i].jetRelIso>ISO_CUT_ELE and lepCollection[i].jetRelIso<1):
+                continue
+            if lepCollection[i].pt<PT_CUT_MU: continue
+            if abs(lepCollection[i].eta)>ETA_CUT_ELE: continue 
+            return i, 0
+    return -1, -1
+
+
+def SelectLooseLepton(lepCollection, isMu): #isMu==True -> muons else Ele 
+    pT_cut=-999
+    eta_cut=-999
+    if isMu:
+        pT_cut=PT_CUT_MU
+        eta_cut=ETA_CUT_MU
+    else:
+        pT_cut=PT_CUT_ELE
+        eta_cut=ETA_CUT_ELE
+    for i in range(len(lepCollection)):
+        if isMu:
+          if not (lepCollection[i].looseId and not(lepCollection[i].tightId) and lepCollection[i].pfRelIso04_all<1 and lepCollection[i].pfRelIso04_all>ISO_CUT_MU): continue
+        else:
+          if not (lepCollection[i].mvaFall17V2Iso_WPL and lepCollection[i].jetRelIso>ISO_CUT_ELE and lepCollection[i].jetRelIso<1 and not(lepCollection[i].mvaFall17V2Iso_WP90)): continue    
+        if lepCollection[i].pt<pT_cut: continue
+        if abs(lepCollection[i].eta)>eta_cut: continue 
+        if not isMu and(abs(lepCollection[i].eta)>1.4442 and abs(lepCollection[i].eta)<1.566): continue
         return i
     return -1
+
+
 
 '''
 def SelectTau(tauCollection, GoodMuon):
@@ -187,7 +224,14 @@ def SelectTau(tauCollection, GoodMuon, vsEleWP, vsMuWP, vsJetWP):
         if not (tauCollection[i].idDeepTau2017v2p1VSe>=vsEleWP and tauCollection[i].idDeepTau2017v2p1VSmu>=vsMuWP and tauCollection[i].idDeepTau2017v2p1VSjet>=vsJetWP and tauCollection[i].idDecayModeNewDMs):   continue
         if tauCollection[i].pt<PT_CUT_TAU: continue
         if abs(tauCollection[i].eta)>ETA_CUT_TAU: continue
-        return i
+        return i, 1
+    for i in range(len(tauCollection)):
+        if deltaR(tauCollection[i].eta, tauCollection[i].phi, GoodMuon.eta, GoodMuon.phi)<DR_OVERLAP_CONE_TAU: continue
+        if not (tauCollection[i].idDeepTau2017v2p1VSe>=vsEleWP and tauCollection[i].idDeepTau2017v2p1VSmu>=vsMuWP and tauCollection[i].idDeepTau2017v2p1VSjet>=vsJetWP and tauCollection[i].idDecayModeNewDMs):   continue
+        if tauCollection[i].pt<PT_CUT_TAU: continue
+        if abs(tauCollection[i].eta)>ETA_CUT_TAU: continue
+        return i, 1
+     
     return -1
 
 def BVeto(jetCollection):

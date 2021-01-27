@@ -127,7 +127,9 @@ lepton_eta              =   array.array('f', [-999.])
 lepton_phi              =   array.array('f', [-999.])
 lepton_mass             =   array.array('f', [-999.])
 lepton_pdgid            =   array.array('i', [-999])
-lepton_pfRelIso04       =   array.array('f', [-999.])
+lepton_TightRegion      =   array.array('f', [-999.])
+lepton_LnTRegion        =   array.array('f', [-999.])
+lepton_SFFake           =   array.array('f', [-999.])
 var_list.append(lepton_pt)
 var_list.append(lepton_eta)
 var_list.append(lepton_phi)
@@ -139,16 +141,19 @@ var_list.append(lepton_pfRelIso04)
 tau_pt                  =   array.array('f', [-999.])
 tau_eta                 =   array.array('f', [-999.])
 tau_phi                 =   array.array('f', [-999.])
-tau_charge              =   array.array('i', [-999])
+tau_charge              =   array.array('i', [-999.])
 tau_mass                =   array.array('f', [-999.])
 tau_DeepTau_WP          =   array.array('f', [-999.])
-tau_isolation           = array.array('f', [-999])
-tau_DeepTauVsEle_WP     =   array.array('f', [-999.])#
-tau_DeepTauVsEle_raw    =   array.array('f', [-999.])#
-tau_DeepTauVsMu_WP      =   array.array('f', [-999.])#
-tau_DeepTauVsMu_raw     =   array.array('f', [-999.])#
-tau_DeepTauVsJet_WP     =   array.array('f', [-999.])#
-tau_DeepTauVsJet_raw    =   array.array('f', [-999.])#
+tau_isolation           =   array.array('f', [-999.])
+tau_DeepTauVsEle_WP     =   array.array('f', [-999.])
+tau_DeepTauVsEle_raw    =   array.array('f', [-999.])
+tau_DeepTauVsMu_WP      =   array.array('f', [-999.])
+tau_DeepTauVsMu_raw     =   array.array('f', [-999.])
+tau_DeepTauVsJet_WP     =   array.array('f', [-999.])
+tau_DeepTauVsJet_raw    =   array.array('f', [-999.])
+tau_TightRegion         =   array.array('f', [-999.])
+tau_LnTRegion           =   array.array('f', [-999.])
+tau_SFFake              =   array.array('f', [-999.])
 var_list.append(tau_isolation)
 var_list.append(tau_pt)
 var_list.append(tau_eta)
@@ -211,13 +216,13 @@ var_list.append(MET_phi)
 
 
 
-mjj                         =   array.array('f', [-999.])#
-m_leptau                    =   array.array('f', [-999.])#
+mjj                         =   array.array('f', [-999.])
+m_leptau                    =   array.array('f', [-999.])
 mT_lep_MET                  =   array.array('f', [-999.])
 mT_tau_MET                  =   array.array('f', [-999.])
 mT_leptau_MET               =   array.array('f', [-999.])
-var_list.append(mjj)#
-var_list.append(m_leptau)#
+var_list.append(mjj)
+var_list.append(m_leptau)
 var_list.append(mT_lep_MET)
 var_list.append(mT_tau_MET)
 var_list.append(mT_leptau_MET)
@@ -286,6 +291,10 @@ systTree.branchTreesSysts(trees, "all", "lepton_phi",           outTreeFile, lep
 systTree.branchTreesSysts(trees, "all", "lepton_mass",          outTreeFile, lepton_mass)
 systTree.branchTreesSysts(trees, "all", "lepton_pdgid",         outTreeFile, lepton_pdgid)
 systTree.branchTreesSysts(trees, "all", "lepton_pfRelIso04",    outTreeFile, lepton_pfRelIso04)
+systTree.branchTreesSysts(trees, "all", "lepton_TightRegion",   outTreeFile, lepton_TightRegion)
+systTree.branchTreesSysts(trees, "all", "lepton_LnTRegion",     outTreeFile, lepton_LnTRegion)
+systTree.branchTreesSysts(trees, "all", "lepton_SFFake",        outTreeFile, lepton_SFFake)
+
 #tau variables
 systTree.branchTreesSysts(trees, "all", "tau_pt",               outTreeFile, tau_pt)
 systTree.branchTreesSysts(trees, "all", "tau_eta",              outTreeFile, tau_eta)
@@ -298,7 +307,9 @@ systTree.branchTreesSysts(trees, "all", "tau_DeepTauVsEle_raw",     outTreeFile,
 systTree.branchTreesSysts(trees, "all", "tau_DeepTauVsMu_WP",       outTreeFile, tau_DeepTauVsMu_WP)#
 systTree.branchTreesSysts(trees, "all", "tau_DeepTauVsMu_raw",      outTreeFile, tau_DeepTauVsMu_raw)#
 systTree.branchTreesSysts(trees, "all", "tau_DeepTauVsJet_WP",      outTreeFile, tau_DeepTauVsJet_WP)#
-systTree.branchTreesSysts(trees, "all", "tau_DeepTauVsJet_raw",     outTreeFile, tau_DeepTauVsJet_raw)#
+systTree.branchTreesSysts(trees, "all", "tau_TightRegion",          outTreeFile, tau_TightRegion)#
+systTree.branchTreesSysts(trees, "all", "tau_LnTRegion",            outTreeFile, tau_LnTRegion)#
+systTree.branchTreesSysts(trees, "all", "tau_SFFake",               outTreeFile, tau_SFFake)#
 #jet variables
 systTree.branchTreesSysts(trees, "all", "leadjet_pt",           outTreeFile, leadjet_pt)
 systTree.branchTreesSysts(trees, "all", "leadjet_eta",          outTreeFile, leadjet_eta)
@@ -585,9 +596,14 @@ for i in range(tree.GetEntries()):
     MET_pt[0]   =   met.pt  
     MET_phi[0]  =   met.phi
 
-    indexGoodLep=SelectLepton(leptons, SingleMu)
+    indexGoodLep, lepton_TightRegion[0] = SelectLepton(leptons, SingleMu) 
+    
+    if lepton_TightRegion[0]==1:    lepton_LnTRegion[0] = 0
+    elif lepton_TightRegion[0]==0:  lepton_LnTRegion[0] = 1
+    else: lepton_LnTRegion[0] = -999
 
-    if indexGoodLep<0 or indexGoodLep>=len(leptons): 
+
+    if indexGoodLep<0 or indexGoodLep>=len(leptons) or lepton_TightRegion[0]<0: 
         systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
         systTree.fillTreesSysts(trees, "all")
         continue
@@ -599,7 +615,7 @@ for i in range(tree.GetEntries()):
     #if (SingleEle==1 or SingleMu==1) and pass_lepton_selection[0]==1: Cut_dict[2][1]+=1
 
     tightlep = copy.deepcopy(leptons[indexGoodLep])
-
+    
     lepton_pt[0]                =   tightlep.pt
     lepton_eta[0]               =   tightlep.eta
     lepton_phi[0]               =   tightlep.phi
@@ -613,6 +629,10 @@ for i in range(tree.GetEntries()):
     GoodLep=tightlep
     
     mT_lep_MET[0]=mTlepMet(met, tightlep.p4())
+     
+    lepton_SFFake[0] = 0 []#GetSFFromHisto
+    if not isMC:
+        lepton_SFFake[0] = 999 #GetSFFromHisto, how to?
 
     if isMC:
         tightlep_SF = tightlep.effSF
@@ -649,17 +669,26 @@ for i in range(tree.GetEntries()):
     #if (SingleEle or SingleMu) and pass_lepton_iso[0]==1 and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1: Cut_dict[3][1]+=1    
     
     #UseDeepTau=True
-    DeepTauVsEle = 1#
-    DeepTauVsMu = 1#
-    DeepTauVsJet = 16#
-    indexGoodTau = SelectTau(taus, GoodLep, DeepTauVsEle, DeepTauVsMu, DeepTauVsJet)#
+    DeepTauVsEle = ID_TAU_RECO_DEEPTAU_VSELE#
+    DeepTauVsMu = ID_TAU_RECO_DEEPTAU_VSMU#
+    DeepTauVsJet = ID_TAU_RECO_DEEPTAU_VSJET#
 
-    #indexGoodTau=SelectTau(taus, GoodLep)#, UseDeepTau)
+    indexGoodTau, tau_TightRegion[0] = SelectTau(taus, tightlep, DeepTauVsEle, DeepTauVsMu, DeepTauVsJet)
+    
+    if tau_TightRegion[0] == 1 : tau_LnTRegion[0] = 0
+    if tau_TightRegion[0] == 0 : tau_LnTRegion[0] = 1
+    else:
+        tau_LnTRegion[0] = -999
+
 
     if indexGoodTau<0:
         systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
         systTree.fillTreesSysts(trees, "all")
         continue      
+    
+    lepton_SFFake[0] = 0
+    if not isMC:
+        lepton_SFFake[0] = 999 #get from histo
 
     GoodTau=copy.deepcopy(taus[indexGoodTau])
     pass_tau_selection_ML[0]=1#
