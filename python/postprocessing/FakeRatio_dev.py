@@ -501,7 +501,7 @@ for i in range(tree.GetEntries()):
 
             Jet_numberSeparate[0] = 0
             for j in jets:
-                if deltaR(j.eta, j.phi, FakeLepton_eta[0], FakeLepton_phi[0])>0.4:
+                if j.pt>30 and deltaR(j.eta, j.phi, FakeLepton_eta[0], FakeLepton_phi[0])>0.4:
                     Jet_numberSeparate[0]+=1
 
             #print('nJets ', Jet_number[0], ' n sep jets: ', Jet_numberSeparate[0])
