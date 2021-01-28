@@ -127,6 +127,7 @@ lepton_eta              =   array.array('f', [-999.])
 lepton_phi              =   array.array('f', [-999.])
 lepton_mass             =   array.array('f', [-999.])
 lepton_pdgid            =   array.array('i', [-999])
+lepton_pfRelIso04       =   array.array('f', [-999.])
 lepton_TightRegion      =   array.array('f', [-999.])
 lepton_LnTRegion        =   array.array('f', [-999.])
 lepton_SFFake           =   array.array('f', [-999.])
@@ -136,12 +137,15 @@ var_list.append(lepton_phi)
 var_list.append(lepton_mass)
 var_list.append(lepton_pdgid)
 var_list.append(lepton_pfRelIso04)
+var_list.append(lepton_TightRegion)
+var_list.append(lepton_LnTRegion)
+var_list.append(lepton_SFFake)
 
 #tau#
 tau_pt                  =   array.array('f', [-999.])
 tau_eta                 =   array.array('f', [-999.])
 tau_phi                 =   array.array('f', [-999.])
-tau_charge              =   array.array('i', [-999.])
+tau_charge              =   array.array('i', [-999])
 tau_mass                =   array.array('f', [-999.])
 tau_DeepTau_WP          =   array.array('f', [-999.])
 tau_isolation           =   array.array('f', [-999.])
@@ -166,6 +170,9 @@ var_list.append(tau_DeepTauVsMu_WP)#
 var_list.append(tau_DeepTauVsMu_raw)#
 var_list.append(tau_DeepTauVsJet_WP)#
 var_list.append(tau_DeepTauVsJet_raw)#
+var_list.append(tau_TightRegion)#
+var_list.append(tau_LnTRegion)#
+var_list.append(tau_SFFake)#
 #tau leadTk                        #
 tauleadTk_ptOverTau     =   array.array('f', [-999.])#
 tauleadTk_deltaPhi      =   array.array('f', [-999.])#
@@ -589,8 +596,8 @@ for i in range(tree.GetEntries()):
     if SingleMu and dataEle:
         continue
 
-    #print("SingleEle:", SingleEle, "\tSingleMu:", SingleMu)
-    #print("lepton id:", leptons[0].pdgId)
+    print("SingleEle:", SingleEle, "\tSingleMu:", SingleMu)
+    print("lepton id:", leptons[0].pdgId)
     #if (SingleEle or SingleMu): Cut_dict[1][1]+=1
     
     MET_pt[0]   =   met.pt  
@@ -613,8 +620,7 @@ for i in range(tree.GetEntries()):
     
 
     #if (SingleEle==1 or SingleMu==1) and pass_lepton_selection[0]==1: Cut_dict[2][1]+=1
-
-    tightlep = copy.deepcopy(leptons[indexGoodLep])
+    tightlep = leptons[indexGoodLep]
     
     lepton_pt[0]                =   tightlep.pt
     lepton_eta[0]               =   tightlep.eta
@@ -630,7 +636,7 @@ for i in range(tree.GetEntries()):
     
     mT_lep_MET[0]=mTlepMet(met, tightlep.p4())
      
-    lepton_SFFake[0] = 0 []#GetSFFromHisto
+    lepton_SFFake[0] = 0#GetSFFromHisto
     if not isMC:
         lepton_SFFake[0] = 999 #GetSFFromHisto, how to?
 
@@ -660,10 +666,6 @@ for i in range(tree.GetEntries()):
     elif abs(lepton_pdgid[0])==13 and lepton_pfRelIso04[0]<ISO_CUT_MU:  pass_lepton_iso[0]=1
     else: pass_lepton_iso[0]=0
     
-    if pass_lepton_iso[0]==0:
-        if abs(lepton_pdgid[0])==11: SF_Fake[0]=SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0])
-        if abs(lepton_pdgid[0])==13: SF_Fake[0]=SFFakeRatio_mu_calc(lepton_pt[0], lepton_eta[0])
-
     pass_lepton_veto[0]=LepVeto(GoodLep, electrons, muons)
     
     #if (SingleEle or SingleMu) and pass_lepton_iso[0]==1 and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1: Cut_dict[3][1]+=1    
@@ -672,7 +674,10 @@ for i in range(tree.GetEntries()):
     DeepTauVsEle = ID_TAU_RECO_DEEPTAU_VSELE#
     DeepTauVsMu = ID_TAU_RECO_DEEPTAU_VSMU#
     DeepTauVsJet = ID_TAU_RECO_DEEPTAU_VSJET#
+   
 
+    print(taus[0].pt)
+    print(tightlep.pt)
     indexGoodTau, tau_TightRegion[0] = SelectTau(taus, tightlep, DeepTauVsEle, DeepTauVsMu, DeepTauVsJet)
     
     if tau_TightRegion[0] == 1 : tau_LnTRegion[0] = 0
