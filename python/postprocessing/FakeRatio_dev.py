@@ -195,6 +195,7 @@ FatJet_pt                  =   array.array('f', [-999.]*lenfatjet)
 FatJet_eta                 =   array.array('f', [-999.]*lenfatjet)
 FatJet_phi                 =   array.array('f', [-999.]*lenfatjet)
 FatJet_SDmass                 =   array.array('f', [-999.]*lenfatjet)
+FatJet_SDmass_PUPPI                 =   array.array('f', [-999.]*lenfatjet)
 FatJet_tau21                 =   array.array('f', [-999.]*lenfatjet)
 FatJet_tau32                 =   array.array('f', [-999.]*lenfatjet)
 FatJet_tau43                 =   array.array('f', [-999.]*lenfatjet)
@@ -211,6 +212,7 @@ var_list.append(FatJet_pt)
 var_list.append(FatJet_phi)
 var_list.append(FatJet_eta)
 var_list.append(FatJet_SDmass)
+var_list.append(FatJet_SDmass_PUPPI)
 var_list.append(FatJet_tau21)
 var_list.append(FatJet_tau32)
 var_list.append(FatJet_tau43)
@@ -309,6 +311,7 @@ systTree.branchTreesSysts(trees, "all", "FatJet_pt",                outTreeFile,
 systTree.branchTreesSysts(trees, "all", "FatJet_eta",               outTreeFile, FatJet_eta)
 systTree.branchTreesSysts(trees, "all", "FatJet_phi",               outTreeFile, FatJet_phi)
 systTree.branchTreesSysts(trees, "all", "FatJet_SDmass",            outTreeFile, FatJet_SDmass)
+systTree.branchTreesSysts(trees, "all", "FatJet_SDmass_PUPPI",            outTreeFile, FatJet_SDmass_PUPPI)
 systTree.branchTreesSysts(trees, "all", "FatJet_tau21",            outTreeFile, FatJet_tau21)
 systTree.branchTreesSysts(trees, "all", "FatJet_tau32",            outTreeFile, FatJet_tau32)
 systTree.branchTreesSysts(trees, "all", "FatJet_tau43",            outTreeFile, FatJet_tau43)
@@ -559,14 +562,16 @@ for i in range(tree.GetEntries()):
             if min(lenfatjet, len(fatjets))>0:
                 print("FatJet are here!")
             while countfj < min(lenfatjet, len(fatjets)):
-                fj = jets[countfj]
+                fj = fatjets[countfj]
                 if fj.pt>30 and deltaR(fj.eta, fj.phi, FakeLepton_eta[0], FakeLepton_phi[0])>0.8:
                     FatJet_numberSeparate[0]+=1
                 FatJet_number[0]+=1
+                print(fj.msoftdrop, fj.msoftdrop_PUPPI)
                 FatJet_pt[countfj] = copy.deepcopy(fj.pt)
                 FatJet_eta[countfj] = copy.deepcopy(fj.eta)
                 FatJet_phi[countfj] = copy.deepcopy(fj.phi)
                 FatJet_SDmass[countfj] = copy.deepcopy(fj.msoftdrop)
+                FatJet_SDmass_PUPPI[countfj] = copy.deepcopy(fj.msoftdrop_PUPPI)
                 FatJet_tau21[countfj] = copy.deepcopy(fj.tau2/fj.tau1)
                 FatJet_tau32[countfj] = copy.deepcopy(fj.tau3/fj.tau2)
                 FatJet_tau43[countfj] = copy.deepcopy(fj.tau4/fj.tau3)
