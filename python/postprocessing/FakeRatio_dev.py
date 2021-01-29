@@ -185,16 +185,37 @@ var_list.append(FakeTau_charge)
 var_list.append(FakeTau_mass)
 var_list.append(FakeTau_DeepTauWP)
 
-Jet_pt                  =   array.array('f', [-999., -999.])
-Jet_eta                 =   array.array('f', [-999., -999.])
-Jet_phi                 =   array.array('f', [-999., -999.])
-Jet_number              =   array.array('f', [-999., -999.])
-Jet_numberSeparate      =   array.array('f', [-999., -999.])
+lenjet = 25
+lenfatjet = 20
+
+Jet_pt                  =   array.array('f', [-999.]*lenjet)
+Jet_eta                 =   array.array('f', [-999.]*lenjet)
+Jet_phi                 =   array.array('f', [-999.]*lenjet)
+FatJet_pt                  =   array.array('f', [-999.]*lenfatjet)
+FatJet_eta                 =   array.array('f', [-999.]*lenfatjet)
+FatJet_phi                 =   array.array('f', [-999.]*lenfatjet)
+FatJet_SDmass                 =   array.array('f', [-999.]*lenfatjet)
+FatJet_tau21                 =   array.array('f', [-999.]*lenfatjet)
+FatJet_tau32                 =   array.array('f', [-999.]*lenfatjet)
+FatJet_tau43                 =   array.array('f', [-999.]*lenfatjet)
+Jet_number              =   array.array('f', [-999.])
+Jet_numberSeparate      =   array.array('f', [-999.])
+FatJet_number              =   array.array('f', [-999.])
+FatJet_numberSeparate      =   array.array('f', [-999.])
 var_list.append(Jet_pt)
 var_list.append(Jet_phi)
 var_list.append(Jet_eta)
 var_list.append(Jet_number)
 var_list.append(Jet_numberSeparate)
+var_list.append(FatJet_pt)
+var_list.append(FatJet_phi)
+var_list.append(FatJet_eta)
+var_list.append(FatJet_SDmass)
+var_list.append(FatJet_tau21)
+var_list.append(FatJet_tau32)
+var_list.append(FatJet_tau43)
+var_list.append(FatJet_number)
+var_list.append(FatJet_numberSeparate)
 
 #mT
 mT_eleMET                   =   array.array('f', [-999.])
@@ -276,11 +297,23 @@ systTree.branchTreesSysts(trees, "all", "FakeTau_phi",              outTreeFile,
 systTree.branchTreesSysts(trees, "all", "FakeTau_mass",             outTreeFile, FakeTau_mass)
 systTree.branchTreesSysts(trees, "all", "FakeTau_DeepTauWP",        outTreeFile, FakeTau_DeepTauWP)
 
+#jet ak4
 systTree.branchTreesSysts(trees, "all", "Jet_pt",                outTreeFile, Jet_pt)
 systTree.branchTreesSysts(trees, "all", "Jet_eta",               outTreeFile, Jet_eta)
 systTree.branchTreesSysts(trees, "all", "Jet_phi",               outTreeFile, Jet_phi)
 systTree.branchTreesSysts(trees, "all", "Jet_number",            outTreeFile, Jet_number)
 systTree.branchTreesSysts(trees, "all", "Jet_numberSeparate",    outTreeFile, Jet_numberSeparate)
+
+#jet ak8
+systTree.branchTreesSysts(trees, "all", "FatJet_pt",                outTreeFile, FatJet_pt)
+systTree.branchTreesSysts(trees, "all", "FatJet_eta",               outTreeFile, FatJet_eta)
+systTree.branchTreesSysts(trees, "all", "FatJet_phi",               outTreeFile, FatJet_phi)
+systTree.branchTreesSysts(trees, "all", "FatJet_SDmass",            outTreeFile, FatJet_SDmass)
+systTree.branchTreesSysts(trees, "all", "FatJet_tau21",            outTreeFile, FatJet_tau21)
+systTree.branchTreesSysts(trees, "all", "FatJet_tau32",            outTreeFile, FatJet_tau32)
+systTree.branchTreesSysts(trees, "all", "FatJet_tau43",            outTreeFile, FatJet_tau43)
+systTree.branchTreesSysts(trees, "all", "FatJet_number",            outTreeFile, FatJet_number)
+systTree.branchTreesSysts(trees, "all", "FatJet_numberSeparate",    outTreeFile, FatJet_numberSeparate)
 
 #Veto variables
 systTree.branchTreesSysts(trees, "all", "nLeps_LightLeptonsVL",      outTreeFile, nLeps_LightLeptonsVL)
@@ -352,7 +385,8 @@ print(sample.dataset)
 for i in range(tree.GetEntries()):
     #reinizializza tutte le variabili a 0, per sicurezza
     for j, var in enumerate(var_list):
-        var_list[j][0] = -999
+        for k in range(len(var_list[j])):
+            var_list[j][k] = -999
         
     w_nominal_all[0] = 1.
     #++++++++++++++++++++++++++++++++++
@@ -499,16 +533,43 @@ for i in range(tree.GetEntries()):
             FakeLepton_mass[0]  =   lepGood_p4.M()
             FakeLepton_pdgid[0] =   lepGood.pdgId
             
-            Jet_tmp_pt = [-999.] * len(jets)
+            #Jet_tmp_pt = [-999.] * len(jets)
+            Jet_number[0] = 0
             Jet_numberSeparate[0] = 0
-            count = 0
-            for j in jets:
-                Jet_tmp_pt[count] = j.pt
-                print(Jet_pt[count])
+            countj = 0
+
+            while countj < min(lenjet, len(jets)):
+                j = jets[countj]
                 if j.pt>30 and deltaR(j.eta, j.phi, FakeLepton_eta[0], FakeLepton_phi[0])>0.4:
                     Jet_numberSeparate[0]+=1
-            Jet_pt = copy.deepcopy(Jet_tmp_pt)
-            #print('nJets ', Jet_number[0], ' n sep jets: ', Jet_numberSeparate[0])
+                Jet_number[0]+=1
+                Jet_pt[countj] = copy.deepcopy(j.pt)
+                Jet_eta[countj] = copy.deepcopy(j.eta)
+                Jet_phi[countj] = copy.deepcopy(j.phi)
+
+                countj += 1
+
+            FatJet_number[0] = 0
+            FatJet_numberSeparate[0] = 0
+            countfj = 0
+
+            if min(lenfatjet, len(fatjets))>0:
+                print("FatJet are here!")
+            while countfj < min(lenfatjet, len(fatjets)):
+                fj = jets[countfj]
+                if fj.pt>30 and deltaR(fj.eta, fj.phi, FakeLepton_eta[0], FakeLepton_phi[0])>0.8:
+                    FatJet_numberSeparate[0]+=1
+                FatJet_number[0]+=1
+                FatJet_pt[countfj] = copy.deepcopy(fj.pt)
+                FatJet_eta[countfj] = copy.deepcopy(fj.eta)
+                FatJet_phi[countfj] = copy.deepcopy(fj.phi)
+                FatJet_SDmass[countfj] = copy.deepcopy(fj.msoftdrop)
+                FatJet_tau21[countfj] = copy.deepcopy(fj.tau2/fj.tau1)
+                FatJet_tau32[countfj] = copy.deepcopy(fj.tau3/fj.tau2)
+                FatJet_tau43[countfj] = copy.deepcopy(fj.tau4/fj.tau3)
+
+                countfj += 1
+
             if isEle:
                 FakeLepton_pfRelIso04[0]    =   lepGood.jetRelIso
                 FakeLepton_isTight[0]       =   lepGood.mvaFall17V2Iso_WP90
