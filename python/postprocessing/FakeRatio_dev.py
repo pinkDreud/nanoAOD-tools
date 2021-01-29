@@ -566,12 +566,12 @@ for i in range(tree.GetEntries()):
                 if fj.pt>30 and deltaR(fj.eta, fj.phi, FakeLepton_eta[0], FakeLepton_phi[0])>0.8:
                     FatJet_numberSeparate[0]+=1
                 FatJet_number[0]+=1
-                print(fj.msoftdrop, fj.msoftdrop_PUPPI)
+                print(fj.msoftdrop, fj.msoftdrop_corr_PUPPI)
                 FatJet_pt[countfj] = copy.deepcopy(fj.pt)
                 FatJet_eta[countfj] = copy.deepcopy(fj.eta)
                 FatJet_phi[countfj] = copy.deepcopy(fj.phi)
                 FatJet_SDmass[countfj] = copy.deepcopy(fj.msoftdrop)
-                FatJet_SDmass_PUPPI[countfj] = copy.deepcopy(fj.msoftdrop_PUPPI)
+                FatJet_SDmass_PUPPI[countfj] = copy.deepcopy(fj.msoftdrop_corr_PUPPI)
                 FatJet_tau21[countfj] = copy.deepcopy(fj.tau2/fj.tau1)
                 FatJet_tau32[countfj] = copy.deepcopy(fj.tau3/fj.tau2)
                 FatJet_tau43[countfj] = copy.deepcopy(fj.tau4/fj.tau3)
