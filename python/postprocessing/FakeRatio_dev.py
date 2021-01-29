@@ -221,13 +221,15 @@ var_list.append(FatJet_numberSeparate)
 
 #mT
 mT_eleMET                   =   array.array('f', [-999.])
-mT_muMET                   =   array.array('f', [-999.])
+mT_muMET                    =   array.array('f', [-999.])
 mT_tauMET                   =   array.array('f', [-999.])
 mT_lepMET                   =   array.array('f', [-999.])
+mT_leppuppiMET              =   array.array('f', [-999.])
 var_list.append(mT_muMET)
 var_list.append(mT_eleMET)
 var_list.append(mT_tauMET)
 var_list.append(mT_lepMET)
+var_list.append(mT_leppuppiMET)
 
 #Vetoes
 nLeps_LightLeptonsVL         =   array.array('f', [-999.])
@@ -255,10 +257,10 @@ MET_phi                     =   array.array('f', [-999.])
 var_list.append(MET_pt)
 var_list.append(MET_phi)
 
-PuppiMET_pt                      =   array.array('f', [-999.])
-PuppiMET_phi                     =   array.array('f', [-999.])
-var_list.append(PuppiMET_pt)
-var_list.append(PuppiMET_phi)
+puppiMET_pt                      =   array.array('f', [-999.])
+puppiMET_phi                     =   array.array('f', [-999.])
+var_list.append(puppiMET_pt)
+var_list.append(puppiMET_phi)
 
 
 w_PDF_all = array.array('f', [0.]*110) 
@@ -331,9 +333,10 @@ systTree.branchTreesSysts(trees, "all", "nLeps_LightLeptonsTight",   outTreeFile
 systTree.branchTreesSysts(trees, "all", "Veto_TauLeptons",          outTreeFile, Veto_TauLeptons)
 systTree.branchTreesSysts(trees, "all", "Veto_TauZMass",            outTreeFile, Veto_TauZMass)
 systTree.branchTreesSysts(trees, "all", "MET_pt",                   outTreeFile, MET_pt)
-systTree.branchTreesSysts(trees, "all", "PuppiMET_pt",              outTreeFile, PuppiMET_pt)
-systTree.branchTreesSysts(trees, "all", "PuppiMET_phi",              outTreeFile, PuppiMET_phi)
+systTree.branchTreesSysts(trees, "all", "puppiMET_pt",              outTreeFile, puppiMET_pt)
+systTree.branchTreesSysts(trees, "all", "puppiMET_phi",              outTreeFile, puppiMET_phi)
 systTree.branchTreesSysts(trees, "all", "mT_lepMET",                outTreeFile, mT_lepMET)
+systTree.branchTreesSysts(trees, "all", "mT_leppuppiMET",                outTreeFile, mT_leppuppiMET)
 systTree.branchTreesSysts(trees, "all", "mT_eleMET",                outTreeFile, mT_eleMET)
 systTree.branchTreesSysts(trees, "all", "mT_muMET",                 outTreeFile, mT_muMET)
 systTree.branchTreesSysts(trees, "all", "mT_tauMET",                outTreeFile, mT_tauMET)
@@ -542,6 +545,7 @@ for i in range(tree.GetEntries()):
                     
         if lepGood!=None:
             mT_lepMET[0]        =   mTlepMet(met, lepGood_p4)
+            mT_leppuppiMET[0]   =   mTlepMet(puppimet, lepGood_p4)
             
             if abs(lepGood.pdgId)==13:
                 FakeLepton_pt[0]    =   lepGood.corrected_pt
