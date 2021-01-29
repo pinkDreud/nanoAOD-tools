@@ -516,21 +516,24 @@ for i in range(tree.GetEntries()):
             for ele in leptons:
                 if ele.jetRelIso<1 and ele.mvaFall17V2Iso_WPL:
                     lepGood = ele
-                    lepGood_p4 = ele.p4()
+                    #lepGood_p4 = ele.p4()
                     break
         else:
             for mu in leptons:
                 if mu.pfRelIso04_all<1 and mu.looseId:
                     lepGood = mu
-                    lepGood_p4 = mu.p4()
+                    #lepGood_p4 = mu.p4()
                     break
                     
         if lepGood!=None:
             mT_lepMET[0]        =   mTlepMet(met, lepGood_p4)
-            FakeLepton_pt[0]    =   lepGood_p4.Pt()
-            FakeLepton_eta[0]   =   lepGood_p4.Eta()
-            FakeLepton_phi[0]   =   lepGood_p4.Phi()
-            FakeLepton_mass[0]  =   lepGood_p4.M()
+            if abs(lepGood.pdgId)==13:
+                FakeLepton_pt[0]    =   lepGood.corrected_pt
+            elif abs(lepGood.pdgId)==11:
+                FakeLepton_pt[0]    =   lepGood.pt
+            FakeLepton_eta[0]   =   lepGood.eta
+            FakeLepton_phi[0]   =   lepGood.phi
+            FakeLepton_mass[0]  =   lepGood.mass
             FakeLepton_pdgid[0] =   lepGood.pdgId
             
             #Jet_tmp_pt = [-999.] * len(jets)
