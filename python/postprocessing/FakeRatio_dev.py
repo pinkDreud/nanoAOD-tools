@@ -185,11 +185,11 @@ var_list.append(FakeTau_charge)
 var_list.append(FakeTau_mass)
 var_list.append(FakeTau_DeepTauWP)
 
-Jet_pt                  =   array.array('f', [-999.])
-Jet_eta                 =   array.array('f', [-999.])
-Jet_phi                 =   array.array('f', [-999.])
-Jet_number              =   array.array('f', [-999.])
-Jet_numberSeparate      =   array.array('f', [-999.])
+Jet_pt                  =   array.array('f', [-999., -999.])
+Jet_eta                 =   array.array('f', [-999., -999.])
+Jet_phi                 =   array.array('f', [-999., -999.])
+Jet_number              =   array.array('f', [-999., -999.])
+Jet_numberSeparate      =   array.array('f', [-999., -999.])
 var_list.append(Jet_pt)
 var_list.append(Jet_phi)
 var_list.append(Jet_eta)
@@ -498,12 +498,16 @@ for i in range(tree.GetEntries()):
             FakeLepton_phi[0]   =   lepGood_p4.Phi()
             FakeLepton_mass[0]  =   lepGood_p4.M()
             FakeLepton_pdgid[0] =   lepGood.pdgId
-
+            
+            Jet_tmp_pt = [-999.] * len(jets)
             Jet_numberSeparate[0] = 0
+            count = 0
             for j in jets:
-                if deltaR(j.eta, j.phi, FakeLepton_eta[0], FakeLepton_phi[0])>0.4:
+                Jet_tmp_pt[count] = j.pt
+                print(Jet_pt[count])
+                if j.pt>30 and deltaR(j.eta, j.phi, FakeLepton_eta[0], FakeLepton_phi[0])>0.4:
                     Jet_numberSeparate[0]+=1
-
+            Jet_pt = copy.deepcopy(Jet_tmp_pt)
             #print('nJets ', Jet_number[0], ' n sep jets: ', Jet_numberSeparate[0])
             if isEle:
                 FakeLepton_pfRelIso04[0]    =   lepGood.jetRelIso
