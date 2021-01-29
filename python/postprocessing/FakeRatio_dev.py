@@ -255,6 +255,12 @@ MET_phi                     =   array.array('f', [-999.])
 var_list.append(MET_pt)
 var_list.append(MET_phi)
 
+PuppiMET_pt                      =   array.array('f', [-999.])
+PuppiMET_phi                     =   array.array('f', [-999.])
+var_list.append(PuppiMET_pt)
+var_list.append(PuppiMET_phi)
+
+
 w_PDF_all = array.array('f', [0.]*110) 
 w_nominal_all = array.array('f', [0.])
 #++++++++++++++++++++++++++++++++++
@@ -325,6 +331,8 @@ systTree.branchTreesSysts(trees, "all", "nLeps_LightLeptonsTight",   outTreeFile
 systTree.branchTreesSysts(trees, "all", "Veto_TauLeptons",          outTreeFile, Veto_TauLeptons)
 systTree.branchTreesSysts(trees, "all", "Veto_TauZMass",            outTreeFile, Veto_TauZMass)
 systTree.branchTreesSysts(trees, "all", "MET_pt",                   outTreeFile, MET_pt)
+systTree.branchTreesSysts(trees, "all", "PuppiMET_pt",              outTreeFile, PuppiMET_pt)
+systTree.branchTreesSysts(trees, "all", "PuppiMET_phi",              outTreeFile, PuppiMET_phi)
 systTree.branchTreesSysts(trees, "all", "mT_lepMET",                outTreeFile, mT_lepMET)
 systTree.branchTreesSysts(trees, "all", "mT_eleMET",                outTreeFile, mT_eleMET)
 systTree.branchTreesSysts(trees, "all", "mT_muMET",                 outTreeFile, mT_muMET)
@@ -416,6 +424,7 @@ for i in range(tree.GetEntries()):
     HLT         = Object(event, "HLT")
     Flag        = Object(event, 'Flag')
     met         = Object(event, "MET")
+    puppimet    = Object(event, "PuppiMET")
     
     genpart = None
     
@@ -472,6 +481,9 @@ for i in range(tree.GetEntries()):
 
     MET_pt[0]=met.pt
     MET_phi[0]=met.phi
+    puppiMET_pt[0]=puppimet.pt
+    puppiMET_phi[0]=puppimet.phi
+    
 
     #Taus
 
@@ -519,17 +531,18 @@ for i in range(tree.GetEntries()):
             for ele in leptons:
                 if ele.jetRelIso<1 and ele.mvaFall17V2Iso_WPL:
                     lepGood = ele
-                    #lepGood_p4 = ele.p4()
+                    lepGood_p4 = ele.p4()
                     break
         else:
             for mu in leptons:
                 if mu.pfRelIso04_all<1 and mu.looseId:
                     lepGood = mu
-                    #lepGood_p4 = mu.p4()
+                    lepGood_p4 = mu.p4()
                     break
                     
         if lepGood!=None:
             mT_lepMET[0]        =   mTlepMet(met, lepGood_p4)
+            
             if abs(lepGood.pdgId)==13:
                 FakeLepton_pt[0]    =   lepGood.corrected_pt
             elif abs(lepGood.pdgId)==11:
