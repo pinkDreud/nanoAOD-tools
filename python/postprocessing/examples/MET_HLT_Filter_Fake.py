@@ -24,7 +24,7 @@ class MET_HLT_Filter_Fake(Module):
             good_HLT = (HLT.Ele27_WPTight_Gsf or HLT.Ele32_WPTight_Gsf or HLT.IsoMu24 or HLT.IsoTkMu24) and flag.globalSuperTightHalo2016Filter
         elif(self.year == 2017):
             if self.trig == "Lep":
-                good_HLT = HLT.Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30 or HLT.Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30 or HLT.Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30 or HLT.Mu8_TrkIsoVVL or HLT.Mu17_TrkIsoVVL
+                good_HLT = HLT.Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30 or HLT.Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30 or HLT.Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30 or HLT.Mu8_TrkIsoVVL or HLT.Mu17_TrkIsoVVL or HLT.Mu15_IsoVVVL_PFHT600
             elif self.trig == "Tau":
                 good_HLT = HLT.IsoMu20_eta2p1_LooseChargedIsoPFTau27_eta2p1_CrossL1 or HLT.Ele24_eta2p1_WPTight_Gsf_LooseChargedIsoPFTau30_eta2p1_CrossL1 or HLT.MediumChargedIsoPFTau50_Trk30_eta2p1_1pr
             elif self.trig == "HT":

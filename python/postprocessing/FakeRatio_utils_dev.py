@@ -576,7 +576,7 @@ def trig_map(HLT, PV, year, runPeriod):
             passHT = True
         if not(passMu or passEle) and not isGoodPV:
             noTrigger = True
-        if runPeriod != 'B' and (HLT.Mu8_TrkIsoVVL or HLT.Mu17_TrkIsoVVL):
+        if runPeriod != 'B' and (HLT.Mu8_TrkIsoVVL or HLT.Mu17_TrkIsoVVL or HLT.Mu15_IsoVVVL_PFHT600):
             passMuLoose = True
         if runPeriod != 'B' and (HLT.Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30 or HLT.Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30 or HLT.Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30):
             passEleLoose = True

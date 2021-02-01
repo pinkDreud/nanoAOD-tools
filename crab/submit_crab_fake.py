@@ -17,13 +17,19 @@ parser.add_option('-g', '--gout', dest = 'gout', default = False, action = 'stor
 
 print opt.dat
 
+if not (opt.trig == "Lep" or opt.trig == "Tau" or opt.trig == "HT"):
+    raise ValueError
+
+dirtag = "_Fake" + opt.trig
+
+
 def cfg_writer(sample, isMC, outdir):
     f = open("crab_cfg.py", "w")
     f.write("from WMCore.Configuration import Configuration\n")
     #f.write("from CRABClient.UserUtilities import config, getUsernameFromSiteDB\n")
     f.write("\nconfig = Configuration()\n")
     f.write("config.section_('General')\n")
-    f.write("config.General.requestName = '"+sample.label + "_Fake" +"'\n")
+    f.write("config.General.requestName = '"+sample.label + dirtag +"'\n")
     if not isMC:
         f.write("config.General.instance = 'preprod'\n") #needed to solve a bug with Oracle server... 
     f.write("config.General.transferLogs=True\n")
@@ -58,7 +64,7 @@ def cfg_writer(sample, isMC, outdir):
     #f.write("config.Data.totalUnits = 10\n")
     f.write("config.Data.outLFNDirBase = '/store/user/%s/%s' % ('"+str(os.environ.get('USER'))+"', '" +outdir+"')\n")
     f.write("config.Data.publication = False\n")
-    f.write("config.Data.outputDatasetTag = '"+sample.label + "_Fake" +"'\n")
+    f.write("config.Data.outputDatasetTag = '"+sample.label + dirtag +"'\n")
     f.write("config.section_('Site')\n")
     f.write("config.Site.storageSite = 'T2_IT_Pisa'\n")
     #f.write("config.Site.storageSite = "T2_CH_CERN"
@@ -153,13 +159,10 @@ resubmit = opt.resub
 getout = opt.gout
 #Writing the configuration file
 
-if not (opt.trig == "Lep" or opt.trig == "Tau" or opt.trig == "HT"):
-    raise ValueError
-
 for sample in samples:
     if ('DataEleB' in sample.label or 'DataMuB' in sample.label or 'DataHTB' in sample.label) and sample.year == 2017:
         continue
-    print 'Launching sample ' + sample.label + "_Fake" 
+    print 'Launching sample ' + sample.label + dirtag
     if submit:
         #Writing the script file 
         year = str(sample.year)
@@ -182,7 +185,7 @@ for sample in samples:
             elif year == '2017':# and sample.runP != 'B':
                 if 'DataHT' not in sample.label:
                     if 'DataTau' not in sample.label:
-                        presel += " && (HLT_Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30 || HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30 || HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30 || HLT_Mu8_TrkIsoVVL || HLT_Mu17_TrkIsoVVL)"
+                        presel += " && (HLT_Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30 || HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30 || HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30 || HLT_Mu8_TrkIsoVVL || HLT_Mu17_TrkIsoVVL || HLT_Mu15_IsoVVVL_PFHT600)"
                     else:
                         presel += " && (HLT_IsoMu20_eta2p1_LooseChargedIsoPFTau27_eta2p1_CrossL1 || HLT_Ele24_eta2p1_WPTight_Gsf_LooseChargedIsoPFTau30_eta2p1_CrossL1 || HLT_MediumChargedIsoPFTau50_Trk30_eta2p1_1pr)"
                 else:
@@ -217,22 +220,22 @@ for sample in samples:
 
     elif kill:
         print "Killing crab jobs..."
-        os.system("crab kill -d crab_" + sample.label + "_Fake" )
-        os.system("rm -rf crab_" + sample.label + "_Fake" )
+        os.system("crab kill -d crab_" + sample.label + dirtag )
+        os.system("rm -rf crab_" + sample.label + dirtag )
 
     elif resubmit:
         print "Resubmitting crab jobs..."
-        os.system("crab resubmit -d crab_" + sample.label + "_Fake" )
+        os.system("crab resubmit -d crab_" + sample.label + dirtag )
 
     elif status:
         print "Checking crab jobs status..."
         if verbose:
-            os.system("crab status --verboseErrors -d crab_" + sample.label + "_Fake" )
+            os.system("crab status --verboseErrors -d crab_" + sample.label + dirtag )
         else:
-            os.system("crab status --verboseErrors -d crab_" + sample.label + "_Fake" )
+            os.system("crab status --verboseErrors -d crab_" + sample.label + dirtag )
         
     elif getout:
-        print "crab getoutput -d crab_" + sample.label + "_Fake"  + " --xrootd > ./macros/files/" + sample.label + "_Fake"  + ".txt"
-        os.system("crab getoutput -d crab_" + sample.label + "_Fake"  + " --xrootd > ./macros/files/" + sample.label + "_Fake"  + ".txt")
+        print "crab getoutput -d crab_" + sample.label + dirtag  + " --xrootd > ./macros/files/Fake/" + opt.trig + "/" + sample.label + ".txt"
+        os.system("crab getoutput -d crab_" + sample.label + dirtag + " --xrootd > ./macros/files/Fake/" + opt.trig + "/" + sample.label + ".txt")
         #for i in xrange(1, 969):
         #os.system("crab getoutput -d crab_" + sample.label + " --outputpath=/eos/user/"+str(os.environ.get('USER')[0]) + "/"+str(os.environ.get('USER'))+"/Wprime/nosynch/" + sample.label + "/ --jobids="+str(i))

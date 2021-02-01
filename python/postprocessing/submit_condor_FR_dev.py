@@ -73,6 +73,14 @@ os.popen("cp /tmp/x509up_u" + str(uid) + " /afs/cern.ch/user/" + inituser + "/" 
 
 folder = opt.folder
 split = 50
+
+infold = opt.infold + "/" 
+
+if opt.trig == "Ele" or opt.trig == "Mu":
+    infold += "Lep"
+else:
+    infold += opt.trig
+
 #Writing the configuration file
 for sample in samples:
     isMC = True
@@ -80,7 +88,7 @@ for sample in samples:
         isMC = False
     if not os.path.exists("/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/" + sample.label):
         os.makedirs("/eos/home-" + inituser + "/" + username +"/VBS/nosynch/" + folder + "/" + sample.label)
-    f = open("../../crab/macros/files/" + opt.infold + "/" + sample.label + ".txt", "r")
+    f = open("../../crab/macros/files/" + infold + "/" + sample.label + ".txt", "r")
     files_list = f.read().splitlines()
     print(str(len(files_list)))
     if(isMC):

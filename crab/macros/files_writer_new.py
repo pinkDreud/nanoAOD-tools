@@ -7,9 +7,15 @@ usage = 'python files_writer.py -d sample_name --fake'
 parser = optparse.OptionParser(usage)
 parser.add_option('-d', '--dat', dest='dat', type=str, default = '', help='Please enter a dataset name')
 parser.add_option('--fake', dest = 'fake', default = False, action = 'store_true', help = 'Default runs analysis')
+parser.add_option('-t', '--trig', dest='trig', type=str, default = 'Lep', help='Please enter a trigger path')
 (opt, args) = parser.parse_args()
 
 print "Is Fake?", opt.fake
+
+if not (opt.trig == "Lep" or opt.trig == "Tau" or opt.trig == "HT"):
+    raise ValueError
+
+dirtag = "_Fake" + opt.trig + "/"
 
 if not(opt.dat in sample_dict.keys()):
     print sample_dict.keys()
@@ -30,8 +36,8 @@ for sample in samples:
     if opt.fake:
         if "DataEleB" in sample.label or "DataMuB" in sample.label:
             continue
-        dirpath = dirpath + "Fake/"
-        crabdir = crabdir + "_Fake/"
+        dirpath = dirpath + "Fake/" + opt.trig + "/"
+        crabdir = crabdir + dirtag
     else:
         crabdir = crabdir + "/"
 
