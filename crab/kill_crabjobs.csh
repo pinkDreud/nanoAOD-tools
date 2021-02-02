@@ -10,7 +10,7 @@ set year = '2017'
 #python submit_crab.py -d Other_$year -k
 #python submit_crab.py -d WpWpJJ_EWK_$year -k
 #python submit_crab.py -d WpWpJJ_QCD_$year -k
-#python submit_crab.py -d DataHT_$year -k
+python submit_crab.py -d DataHT_$year -k
 #python submit_crab.py -d DataEle_$year -k
 #python submit_crab.py -d DataMu_$year -k
 #python submit_crab.py -d QCD_$year -k
@@ -18,5 +18,5 @@ set year = '2017'
 #python submit_crab.py -d ZZZ_$year -k
 #python submit_crab.py -d VBFHToWWTo2L2Nu_$year -k
 #python submit_crab.py -d ttHToNonbb_$year -k
-python submit_crab.py -d WWW_4F_$year -k
-python submit_crab.py -d ZZtoLep_$year -k
+#python submit_crab.py -d WWW_4F_$year -k
+#python submit_crab.py -d ZZtoLep_$year -k

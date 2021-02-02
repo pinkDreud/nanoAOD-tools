@@ -1883,12 +1883,9 @@ class systWeights(object):
 ###############################################
 
 
-
-
-
 def SFFakeRatio_ele_calc(pT, eta):
-    inFile = ROOT.TFile.Open("TH2F_FakeRatio_ele.root" ,"READ")
-    histo=inFile.Get("h2FRele")
+    inFile = ROOT.TFile.Open("FR_th2_ele.root" ,"READ")
+    histo=inFile.Get("hFDataele")
     FR=0
     if(pT<=20):
         if(abs(eta)<1):         FR=histo.GetBinContent(1,1)
@@ -1919,7 +1916,7 @@ def SFFakeRatio_ele_calc(pT, eta):
     return FR/(1-FR)
 
 def SFFakeRatio_mu_calc(pT, eta):
-    inFile = ROOT.TFile.Open("TH2F_FakeRatio_mu.root" ,"READ")
+    inFile = ROOT.TFile.Open("FR_th2_mu.root" ,"READ")
     histo=inFile.Get("h2FRmu")
     FR=0
     if(pT<=20):
@@ -1949,7 +1946,4 @@ def SFFakeRatio_mu_calc(pT, eta):
         elif(abs(eta)<2.4):     FR=histo.GetBinContent(5,4)
     else: FR=0    
     return FR/(1-FR)
-
-
-
 
