@@ -131,6 +131,7 @@ lepton_pfRelIso04       =   array.array('f', [-999.])
 lepton_TightRegion      =   array.array('f', [-999.])
 lepton_LnTRegion        =   array.array('f', [-999.])
 lepton_SFFake           =   array.array('f', [-999.])
+lepton_isPrompt           =   array.array('i', [-999])
 var_list.append(lepton_pt)
 var_list.append(lepton_eta)
 var_list.append(lepton_phi)
@@ -140,6 +141,7 @@ var_list.append(lepton_pfRelIso04)
 var_list.append(lepton_TightRegion)
 var_list.append(lepton_LnTRegion)
 var_list.append(lepton_SFFake)
+var_list.append(lepton_isPrompt)
 
 #tau#
 tau_pt                  =   array.array('f', [-999.])
@@ -158,6 +160,7 @@ tau_DeepTauVsJet_raw    =   array.array('f', [-999.])
 tau_TightRegion         =   array.array('f', [-999.])
 tau_LnTRegion           =   array.array('f', [-999.])
 tau_SFFake              =   array.array('f', [-999.])
+tau_isPrompt           =   array.array('i', [-999])
 var_list.append(tau_isolation)
 var_list.append(tau_pt)
 var_list.append(tau_eta)
@@ -173,6 +176,7 @@ var_list.append(tau_DeepTauVsJet_raw)#
 var_list.append(tau_TightRegion)#
 var_list.append(tau_LnTRegion)#
 var_list.append(tau_SFFake)#
+var_list.append(tau_isPrompt)#
 #tau leadTk                        #
 tauleadTk_ptOverTau     =   array.array('f', [-999.])#
 tauleadTk_deltaPhi      =   array.array('f', [-999.])#
@@ -180,6 +184,10 @@ tauleadTk_deltaEta      =   array.array('f', [-999.])#
 var_list.append(tauleadTk_ptOverTau)#
 var_list.append(tauleadTk_deltaPhi)#
 var_list.append(tauleadTk_deltaEta)#
+
+#event SFFake
+event_SFFake              =   array.array('f', [-999.])
+var_list.append(event_SFFake)
 
 #jet#
 leadjet_pt                  =   array.array('f', [-999.])
@@ -301,6 +309,7 @@ systTree.branchTreesSysts(trees, "all", "lepton_pfRelIso04",    outTreeFile, lep
 systTree.branchTreesSysts(trees, "all", "lepton_TightRegion",   outTreeFile, lepton_TightRegion)
 systTree.branchTreesSysts(trees, "all", "lepton_LnTRegion",     outTreeFile, lepton_LnTRegion)
 systTree.branchTreesSysts(trees, "all", "lepton_SFFake",        outTreeFile, lepton_SFFake)
+systTree.branchTreesSysts(trees, "all", "lepton_isPrompt",        outTreeFile, lepton_isPrompt)
 
 #tau variables
 systTree.branchTreesSysts(trees, "all", "tau_pt",               outTreeFile, tau_pt)
@@ -317,6 +326,8 @@ systTree.branchTreesSysts(trees, "all", "tau_DeepTauVsJet_WP",      outTreeFile,
 systTree.branchTreesSysts(trees, "all", "tau_TightRegion",          outTreeFile, tau_TightRegion)#
 systTree.branchTreesSysts(trees, "all", "tau_LnTRegion",            outTreeFile, tau_LnTRegion)#
 systTree.branchTreesSysts(trees, "all", "tau_SFFake",               outTreeFile, tau_SFFake)#
+systTree.branchTreesSysts(trees, "all", "tau_isPrompt",               outTreeFile, tau_isPrompt)#
+systTree.branchTreesSysts(trees, "all", "event_SFFake",               outTreeFile, event_SFFake)#
 #jet variables
 systTree.branchTreesSysts(trees, "all", "leadjet_pt",           outTreeFile, leadjet_pt)
 systTree.branchTreesSysts(trees, "all", "leadjet_eta",          outTreeFile, leadjet_eta)
@@ -610,18 +621,18 @@ for i in range(tree.GetEntries()):
     else: lepton_LnTRegion[0] = -999
 
 
-    if indexGoodLep<0 or indexGoodLep>=len(leptons) or lepton_TightRegion[0]<0: 
+    if indexGoodLep<0 or indexGoodLep>=len(leptons) or (lepton_TightRegion[0]<0 and lepton_LnTRegion[0]<0): 
         systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
         systTree.fillTreesSysts(trees, "all")
         continue
     
 
     pass_lepton_selection[0] = 1
-    
 
     #if (SingleEle==1 or SingleMu==1) and pass_lepton_selection[0]==1: Cut_dict[2][1]+=1
     tightlep = leptons[indexGoodLep]
-    
+
+
     lepton_pt[0]                =   tightlep.pt
     lepton_eta[0]               =   tightlep.eta
     lepton_phi[0]               =   tightlep.phi
@@ -632,13 +643,15 @@ for i in range(tree.GetEntries()):
     elif SingleEle==1:
         lepton_pfRelIso04[0]        =   tightlep.jetRelIso
 
+    if not isMC:
+        lepton_SFFake[0] = SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0])
+    else:
+        lepton_isPrompt[0] = tightlep.genPartFlav
+
     GoodLep=tightlep
     
     mT_lep_MET[0]=mTlepMet(met, tightlep.p4())
-     
-    lepton_SFFake[0] = 0 #GetSFFromHisto
-    if not isMC:
-        lepton_SFFake[0] = 999 #GetSFFromHisto, how to?
+
 
     if isMC:
         tightlep_SF = tightlep.effSF
@@ -674,10 +687,8 @@ for i in range(tree.GetEntries()):
     DeepTauVsEle = ID_TAU_RECO_DEEPTAU_VSELE#
     DeepTauVsMu = ID_TAU_RECO_DEEPTAU_VSMU#
     DeepTauVsJet = ID_TAU_RECO_DEEPTAU_VSJET#
-   
 
-    print(taus[0].pt)
-    print(tightlep.pt)
+    print taus, tightlep, DeepTauVsEle, DeepTauVsMu, DeepTauVsJet
     indexGoodTau, tau_TightRegion[0] = SelectTau(taus, tightlep, DeepTauVsEle, DeepTauVsMu, DeepTauVsJet)
     
     if tau_TightRegion[0] == 1 : tau_LnTRegion[0] = 0
@@ -686,16 +697,13 @@ for i in range(tree.GetEntries()):
         tau_LnTRegion[0] = -999
 
 
-    if indexGoodTau<0:
+    if indexGoodTau<0 or indexGoodTau>=len(taus) or (tau_TightRegion[0]<0 and tau_LnTRegion[0]<0): 
         systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
         systTree.fillTreesSysts(trees, "all")
         continue      
     
-    lepton_SFFake[0] = 0
-    if not isMC:
-        lepton_SFFake[0] = 999 #get from histo
 
-    GoodTau=copy.deepcopy(taus[indexGoodTau])
+    GoodTau=taus[indexGoodTau]
     pass_tau_selection_ML[0]=1#
 
     if GoodTau.idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and GoodTau.idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and GoodTau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET:#
@@ -708,6 +716,12 @@ for i in range(tree.GetEntries()):
     tau_phi[0]              =   GoodTau.phi
     tau_mass[0]             =   GoodTau.mass
     tau_charge[0]           =   GoodTau.charge
+
+    if not isMC:
+        tau_SFFake[0] = SFFakeRatio_tau_calc(tau_pt[0], tau_eta[0])
+    else:
+        tau_isPrompt[0] = GoodTau.genPartFlav
+
     mT_tau_MET[0]=mTlepMet(met, GoodTau.p4())
     mT_leptau_MET[0]=mTlepMet(met, GoodTau.p4()+tightlep.p4())
     tau_DeepTau_WP[0] = GoodTau.idDeepTau2017v2p1VSjet*1000.**2. + GoodTau.idDeepTau2017v2p1VSmu*1000. + GoodTau.idDeepTau2017v2p1VSe
@@ -722,6 +736,16 @@ for i in range(tree.GetEntries()):
     tauleadTk_ptOverTau[0]  =   GoodTau.leadTkPtOverTauPt#
     tauleadTk_deltaPhi[0]   =   GoodTau.leadTkDeltaPhi#
     tauleadTk_deltaEta[0]   =   GoodTau.leadTkDeltaEta#
+
+    if not isMC:
+        if lepton_LnTRegion[0]==1 and tau_LnTRegion[0]==0:
+            event_SFFake[0] = lepton_SFFake[0]
+        elif lepton_LnTRegion[0]==0 and tau_LnTRegion[0]==1:
+            event_SFFake[0] = tau_SFFake[0]
+        elif lepton_LnTRegion[0]==1 and tau_LnTRegion[0]==1:
+            event_SFFake[0] = lepton_SFFake[0]*tau_SFFake[0]
+        elif lepton_LnTRegion[0]==0 and tau_LnTRegion[0]==0:
+            event_SFFake[0] == 0.
 
     #if GoodTau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET: pass_tau_vsJetWP[0]=1
     #else: pass_tau_vsJetWP[0]=0

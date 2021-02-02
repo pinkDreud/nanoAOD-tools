@@ -285,7 +285,7 @@ def SelectJet(jetCollection, GoodTau, GoodMu):
     if jetCollection[0].pt<PT_CUT_JET: return -999
     if jetCollection==None: return -999
     #select higher pT jet
-    GoodJet=copy.deepcopy(jetCollection[0])
+    GoodJet=jetCollection[0]
     #if the jet matches in dR one of the previously selected particles (e, tau), than it searches in the other jets
     if deltaR(GoodJet.eta, GoodJet.phi, GoodTau.eta, GoodTau.phi)<DR_OVERLAP_CONE_TAU or deltaR(GoodJet.eta, GoodJet.phi, GoodMu.eta, GoodMu.phi)<DR_OVERLAP_CONE_OTHER: 
         jetCollection.remove(GoodJet)
@@ -1884,8 +1884,10 @@ class systWeights(object):
 
 
 def SFFakeRatio_ele_calc(pT, eta):
-    inFile = ROOT.TFile.Open("FR_th2_ele.root" ,"READ")
-    histo=inFile.Get("hFDataele")
+    inFile = ROOT.TFile.Open("FR_th2_ele.root")
+    print inFile.ls()
+    histo=ROOT.TH2F(inFile.Get("hFRDataele"))
+
     FR=0
     if(pT<=20):
         if(abs(eta)<1):         FR=histo.GetBinContent(1,1)
@@ -1912,12 +1914,13 @@ def SFFakeRatio_ele_calc(pT, eta):
         elif(abs(eta)<1.5):     FR=histo.GetBinContent(5,2)
         elif(abs(eta)<2):       FR=histo.GetBinContent(5,3)
         elif(abs(eta)<2.4):     FR=histo.GetBinContent(5,4)
-    else: FR=0    
+    else: FR=0
     return FR/(1-FR)
 
 def SFFakeRatio_tau_calc(pT, eta):
-    inFile = ROOT.TFile.Open("FR_th2_tau.root" ,"READ")
-    histo=inFile.Get("h2FRele")
+    histo = ROOT.TH2F()
+    inFile = ROOT.TFile.Open("FR_th2_tau.root")
+    histo=(ROOT.TH2F)(inFile.Get("h2FRele"))
     FR=0
     if(pT<=20):
         if(abs(eta)<1):         FR=histo.GetBinContent(1,1)
@@ -1947,12 +1950,10 @@ def SFFakeRatio_tau_calc(pT, eta):
     else: FR=0    
     return FR/(1-FR)
 
-
-
-
 def SFFakeRatio_mu_calc(pT, eta):
-    inFile = ROOT.TFile.Open("FR_th2_mu.root" ,"READ")
-    histo=inFile.Get("h2FRmu")
+    histo = ROOT.TH2F()
+    inFile = ROOT.TFile.Open("FR_th2_mu.root")
+    histo=(ROOT.TH2F)(inFile.Get("h2FRmu"))
     FR=0
     if(pT<=20):
         if(abs(eta)<1):         FR=histo.GetBinContent(1,1)
