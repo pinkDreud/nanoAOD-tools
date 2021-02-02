@@ -128,8 +128,8 @@ lepton_phi              =   array.array('f', [-999.])
 lepton_mass             =   array.array('f', [-999.])
 lepton_pdgid            =   array.array('i', [-999])
 lepton_pfRelIso04       =   array.array('f', [-999.])
-lepton_TightRegion      =   array.array('f', [-999.])
-lepton_LnTRegion        =   array.array('f', [-999.])
+lepton_TightRegion      =   array.array('i', [-999])
+lepton_LnTRegion        =   array.array('i', [-999])
 lepton_SFFake           =   array.array('f', [-999.])
 lepton_isPrompt           =   array.array('i', [-999])
 var_list.append(lepton_pt)
@@ -157,8 +157,8 @@ tau_DeepTauVsMu_WP      =   array.array('f', [-999.])
 tau_DeepTauVsMu_raw     =   array.array('f', [-999.])
 tau_DeepTauVsJet_WP     =   array.array('f', [-999.])
 tau_DeepTauVsJet_raw    =   array.array('f', [-999.])
-tau_TightRegion         =   array.array('f', [-999.])
-tau_LnTRegion           =   array.array('f', [-999.])
+tau_TightRegion         =   array.array('i', [-999])
+tau_LnTRegion           =   array.array('i', [-999])
 tau_SFFake              =   array.array('f', [-999.])
 tau_isPrompt           =   array.array('i', [-999])
 var_list.append(tau_isolation)
@@ -607,8 +607,8 @@ for i in range(tree.GetEntries()):
     if SingleMu and dataEle:
         continue
 
-    print("SingleEle:", SingleEle, "\tSingleMu:", SingleMu)
-    print("lepton id:", leptons[0].pdgId)
+    #print("SingleEle:", SingleEle, "\tSingleMu:", SingleMu)
+    #print("lepton id:", leptons[0].pdgId)
     #if (SingleEle or SingleMu): Cut_dict[1][1]+=1
     
     MET_pt[0]   =   met.pt  
@@ -687,12 +687,10 @@ for i in range(tree.GetEntries()):
     DeepTauVsEle = ID_TAU_RECO_DEEPTAU_VSELE#
     DeepTauVsMu = ID_TAU_RECO_DEEPTAU_VSMU#
     DeepTauVsJet = ID_TAU_RECO_DEEPTAU_VSJET#
-
-    print taus, tightlep, DeepTauVsEle, DeepTauVsMu, DeepTauVsJet
-    indexGoodTau, tau_TightRegion[0] = SelectTau(taus, tightlep, DeepTauVsEle, DeepTauVsMu, DeepTauVsJet)
     
+    indexGoodTau, tau_TightRegion[0] = SelectTau(list(taus), tightlep, DeepTauVsEle, DeepTauVsMu, DeepTauVsJet)
     if tau_TightRegion[0] == 1 : tau_LnTRegion[0] = 0
-    if tau_TightRegion[0] == 0 : tau_LnTRegion[0] = 1
+    elif tau_TightRegion[0] == 0 : tau_LnTRegion[0] = 1
     else:
         tau_LnTRegion[0] = -999
 

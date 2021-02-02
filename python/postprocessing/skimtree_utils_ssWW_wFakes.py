@@ -219,8 +219,9 @@ def SelectTau(tauCollection, GoodMuon):
     return -1
 '''
 def SelectTau(tauCollection, GoodMuon, vsEleWP, vsMuWP, vsJetWP):
-    if len(tauCollection)<1: return -1
-    print('len taucollection : ', len(tauCollection))
+    #print('len taucollection : ', len(tauCollection))
+    if len(tauCollection)<1:
+        return -1, -999
     for i in range(len(tauCollection)):
         if deltaR(tauCollection[i].eta, tauCollection[i].phi, GoodMuon.eta, GoodMuon.phi)<DR_OVERLAP_CONE_TAU: continue
         if not (tauCollection[i].idDeepTau2017v2p1VSe>=vsEleWP and tauCollection[i].idDeepTau2017v2p1VSmu>=vsMuWP and tauCollection[i].idDeepTau2017v2p1VSjet>=vsJetWP and tauCollection[i].idDecayModeNewDMs):   continue
@@ -281,7 +282,8 @@ def LepVeto(GoodLepton, ElectronCollection, MuonCollection):
 
 #semplifica la macro
 def SelectJet(jetCollection, GoodTau, GoodMu):
-    if len(jetCollection)<2: return -999
+    if len(jetCollection)<2:
+        return -999
     if jetCollection[0].pt<PT_CUT_JET: return -999
     if jetCollection==None: return -999
     #select higher pT jet
@@ -1885,9 +1887,7 @@ class systWeights(object):
 
 def SFFakeRatio_ele_calc(pT, eta):
     inFile = ROOT.TFile.Open("FR_th2_ele.root")
-    print inFile.ls()
     histo=ROOT.TH2F(inFile.Get("hFRDataele"))
-
     FR=0
     if(pT<=20):
         if(abs(eta)<1):         FR=histo.GetBinContent(1,1)
