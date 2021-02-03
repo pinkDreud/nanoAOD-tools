@@ -105,7 +105,7 @@ if opt.fold == '':
 else:
     folder = opt.fold
 
-path = "/eos/user/" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/"
+path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/"
 #print folder, path
 
 if not os.path.exists(path):
