@@ -3,7 +3,7 @@ from PhysicsTools.NanoAODTools.postprocessing.samples.samples import *
 import os
 import optparse
 
-usage = 'python files_writer.py -d sample_name --fake'
+usage = 'python files_writer.py -d sample_name --fake -t trig_tag'
 parser = optparse.OptionParser(usage)
 parser.add_option('-d', '--dat', dest='dat', type=str, default = '', help='Please enter a dataset name')
 parser.add_option('--fake', dest = 'fake', default = False, action = 'store_true', help = 'Default runs analysis')
@@ -37,7 +37,7 @@ for sample in samples:
         if "DataEleB" in sample.label or "DataMuB" in sample.label:
             continue
         dirpath = dirpath + "Fake/" + opt.trig + "/"
-        crabdir = crabdir + dirtag
+        crabdir = crabdir + dirtag + "/"
     else:
         crabdir = crabdir + "/"
 
