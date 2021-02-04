@@ -599,7 +599,7 @@ for year in years:
           wzero = 'w_nominal*PFSF*puSF'#*lepSF'
           cut = cut_dict[lep]
 
-          '''
+
           variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cut+')', 20, -5., 5.))
           variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cut+')', 14, -3.50, 3.50))
           bin_lepton_pt = array("f", [0., 100., 200., 300., 400., 600., 800., 1000., 1500.])
@@ -615,13 +615,13 @@ for year in years:
           variables.append(variabile('tau_pt',  '#tau p_{T} [GeV]',  wzero+'*('+cut+')', nbin_taupt, bin_taupt))
           variables.append(variabile('tau_eta', '#tau #eta',  wzero+'*('+cut+')', 20, -5, 5))
           variables.append(variabile('tau_phi', '#tau #Phi',  wzero+'*('+cut+')',  14, -3.50, 3.50))
-          '''
+
           '''                                                                                                                                                                                                                                               
           variables.append(variabile('TMath::Log2(tau_DeepTauVsEle_WP+1)', 'log_2(#tau DeepTauVsEle WP)',  wzero+'*('+cut+')'+'*(tau_DeepTauVsEle_WP>0)',  8, -0.5, 7.5))                                                                                   
           variables.append(variabile('TMath::Log2(tau_DeepTauVsMu_WP+1)', 'log_2(#tau DeepTauVsMu WP)',  wzero+'*('+cut+')'+'*(tau_DeepTauVsMu_WP>0)',  4, -0.5, 3.5))                                                                                      
           variables.append(variabile('TMath::Log2(tau_DeepTauVsJet_WP+1)', 'log_2(#tau DeepTauVsJet WP)',  wzero+'*('+cut+')'+'*(tau_DeepTauVsJet_WP>0)',  8, -0.5, 7.5))                                                                                   
           '''
-          '''
+
           variables.append(variabile('tau_DeepTauVsEle_raw', '#tau DeepTauVsEle raw',  wzero+'*('+cut+')',  20, 0.35, 1.35))
           variables.append(variabile('tau_DeepTauVsMu_raw', '#tau DeepTauVsMu raw',  wzero+'*('+cut+')',  20, 0.2, 1.2))
           variables.append(variabile('tau_DeepTauVsJet_raw', '#tau DeepTauVsJet raw',  wzero+'*('+cut+')',  20, 0.35, 1.35))
@@ -657,18 +657,18 @@ for year in years:
           variables.append(variabile('mT_lep_MET', 'M_{T}(lep, MET) [GeV]',  wzero+'*('+cut+')', nbin_mTs, bin_mTs))
           variables.append(variabile('mT_tau_MET', 'M_{T}(#tau, MET) [GeV]',  wzero+'*('+cut+')', nbin_mTs, bin_mTs))
           variables.append(variabile('mT_leptau_MET', 'M_{T}(lep, #tau, MET) [GeV]',  wzero+'*('+cut+')', nbin_mTs, bin_mTs))
-          '''
+
           bin_deltaeta_jj = array("f", [0., 0.5, 1., 1.5, 2., 2.5, 3., 3.5, 4., 4.5, 5., 5.5, 6., 6.5, 7., 8., 9., 10.])
           nbin_deltaeta_jj = len(bin_deltaeta_jj) - 1
           variables.append(variabile('deltaEta_jj', '#Delta #eta_{jj}',  wzero+'*('+cut+')', nbin_deltaeta_jj, bin_deltaeta_jj))#20, 0, 10))
-          '''
+
           variables.append(variabile('deltaPhi_jj', '#Delta #phi_{jj}',  wzero+'*('+cut+')',  16, -4., 4.))
           variables.append(variabile('deltaPhi_taulep', '#Delta #phi_{#tau l}',  wzero+'*('+cut+')',  16, -4., 4.))
           variables.append(variabile('deltaPhi_tauj1', '#Delta #phi_{#tau j_{1}}',  wzero+'*('+cut+')',  16, -4., 4.))
           variables.append(variabile('deltaPhi_tauj2', '#Delta #phi_{#tau j_{2}}',  wzero+'*('+cut+')',  16, -4., 4.))
           variables.append(variabile('deltaPhi_lepj1', '#Delta #phi_{l j_{1}}',  wzero+'*('+cut+')', 16, -4., 4.))
           variables.append(variabile('deltaPhi_lepj2', '#Delta #phi_{l j_{2}}',  wzero+'*('+cut+')', 16, -4., 4.))
-          '''
+
 
           for sample in dataset_new:
                if 'DataHT' in sample.label or 'DataMET' in sample.label:
