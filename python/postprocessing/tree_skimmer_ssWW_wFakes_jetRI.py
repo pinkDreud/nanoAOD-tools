@@ -646,7 +646,8 @@ for i in range(tree.GetEntries()):
     #if not isMC:
     lepton_SFFake[0] = SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0])
     #else:
-    lepton_isPrompt[0] = tightlep.genPartFlav
+    if isMC:
+        lepton_isPrompt[0] = tightlep.genPartFlav
 
     GoodLep=tightlep
     
@@ -719,7 +720,8 @@ for i in range(tree.GetEntries()):
     #if not isMC:
     tau_SFFake[0] = SFFakeRatio_tau_calc(tau_pt[0], tau_eta[0])
     #else:
-    tau_isPrompt[0] = GoodTau.genPartFlav
+    if isMC:
+        tau_isPrompt[0] = GoodTau.genPartFlav
 
     mT_tau_MET[0]=mTlepMet(met, GoodTau.p4())
     mT_leptau_MET[0]=mTlepMet(met, GoodTau.p4()+tightlep.p4())
