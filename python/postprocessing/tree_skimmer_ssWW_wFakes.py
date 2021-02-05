@@ -620,13 +620,11 @@ for i in range(tree.GetEntries()):
     elif lepton_TightRegion[0]==0:  lepton_LnTRegion[0] = 1
     else: lepton_LnTRegion[0] = -999
 
-
     if indexGoodLep<0 or indexGoodLep>=len(leptons) or (lepton_TightRegion[0]<0 and lepton_LnTRegion[0]<0): 
         systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
         systTree.fillTreesSysts(trees, "all")
         continue
     
-
     pass_lepton_selection[0] = 1
 
     #if (SingleEle==1 or SingleMu==1) and pass_lepton_selection[0]==1: Cut_dict[2][1]+=1

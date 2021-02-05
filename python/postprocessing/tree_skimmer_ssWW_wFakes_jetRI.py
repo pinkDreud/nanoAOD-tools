@@ -599,7 +599,6 @@ for i in range(tree.GetEntries()):
         if isMC: HLT_effLumi[0] = lumiFinder("Mu", vTrigMu)
         leptons = muons
     
-    
     elif not (SingleMu or SingleEle):
         continue
     if SingleEle and dataMu:
@@ -622,16 +621,17 @@ for i in range(tree.GetEntries()):
 
 
     if indexGoodLep<0 or indexGoodLep>=len(leptons) or (lepton_TightRegion[0]<0 and lepton_LnTRegion[0]<0): 
-        systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
-        systTree.fillTreesSysts(trees, "all")
+        #systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
+        #systTree.fillTreesSysts(trees, "all")
         continue
-    
 
-    pass_lepton_selection[0] = 1
+    if lepton_TightRegion[0]==1:
+        pass_lepton_selection[0] = 1
+    elif lepton_LnTRegion[0]==1:
+        pass_lepton_selection[0] = 0
 
     #if (SingleEle==1 or SingleMu==1) and pass_lepton_selection[0]==1: Cut_dict[2][1]+=1
     tightlep = leptons[indexGoodLep]
-
 
     lepton_pt[0]                =   tightlep.pt
     lepton_eta[0]               =   tightlep.eta
@@ -643,15 +643,14 @@ for i in range(tree.GetEntries()):
     elif SingleEle==1:
         lepton_pfRelIso04[0]        =   tightlep.jetRelIso
 
-    if not isMC:
-        lepton_SFFake[0] = SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0])
-    else:
-        lepton_isPrompt[0] = tightlep.genPartFlav
+    #if not isMC:
+    lepton_SFFake[0] = SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0])
+    #else:
+    lepton_isPrompt[0] = tightlep.genPartFlav
 
     GoodLep=tightlep
     
     mT_lep_MET[0]=mTlepMet(met, tightlep.p4())
-
 
     if isMC:
         tightlep_SF = tightlep.effSF
@@ -696,16 +695,18 @@ for i in range(tree.GetEntries()):
 
 
     if indexGoodTau<0 or indexGoodTau>=len(taus) or (tau_TightRegion[0]<0 and tau_LnTRegion[0]<0): 
-        systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
-        systTree.fillTreesSysts(trees, "all")
+        #systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
+        #systTree.fillTreesSysts(trees, "all")
         continue      
     
 
     GoodTau=taus[indexGoodTau]
     pass_tau_selection_ML[0]=1#
 
-    if GoodTau.idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and GoodTau.idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and GoodTau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET:#
+    if tau_TightRegion[0]==1:#GoodTau.idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and GoodTau.idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and GoodTau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET:#
         pass_tau_selection[0] = 1#
+    elif tau_LnTRegion[0]==1:
+        pass_tau_selection[0] = 0
     
     #if (SingleEle or SingleMu) and pass_lepton_iso[0]==1 and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1: Cut_dict[4][1]+=1
 
@@ -715,19 +716,19 @@ for i in range(tree.GetEntries()):
     tau_mass[0]             =   GoodTau.mass
     tau_charge[0]           =   GoodTau.charge
 
-    if not isMC:
-        tau_SFFake[0] = SFFakeRatio_tau_calc(tau_pt[0], tau_eta[0])
-    else:
-        tau_isPrompt[0] = GoodTau.genPartFlav
+    #if not isMC:
+    tau_SFFake[0] = SFFakeRatio_tau_calc(tau_pt[0], tau_eta[0])
+    #else:
+    tau_isPrompt[0] = GoodTau.genPartFlav
 
     mT_tau_MET[0]=mTlepMet(met, GoodTau.p4())
     mT_leptau_MET[0]=mTlepMet(met, GoodTau.p4()+tightlep.p4())
     tau_DeepTau_WP[0] = GoodTau.idDeepTau2017v2p1VSjet*1000.**2. + GoodTau.idDeepTau2017v2p1VSmu*1000. + GoodTau.idDeepTau2017v2p1VSe
-    tau_DeepTauVsEle_WP[0]  =   GoodTau.idDeepTau2017v2p1VSe#
+    tau_DeepTauVsEle_WP[0]  =   math.log(GoodTau.idDeepTau2017v2p1VSe, 2)#
     tau_DeepTauVsEle_raw[0] =   GoodTau.rawDeepTau2017v2p1VSe#
-    tau_DeepTauVsMu_WP[0]   =   GoodTau.idDeepTau2017v2p1VSmu#
+    tau_DeepTauVsMu_WP[0]   =   math.log(GoodTau.idDeepTau2017v2p1VSmu, 2)#
     tau_DeepTauVsMu_raw[0]  =   GoodTau.rawDeepTau2017v2p1VSmu#
-    tau_DeepTauVsJet_WP[0]  =   GoodTau.idDeepTau2017v2p1VSjet#
+    tau_DeepTauVsJet_WP[0]  =   math.log(GoodTau.idDeepTau2017v2p1VSjet, 2)#
     tau_DeepTauVsJet_raw[0] =   GoodTau.rawDeepTau2017v2p1VSjet#
     tau_isolation[0]=   GoodTau.neutralIso
     m_leptau=(GoodTau.p4() + tightlep.p4()).M()

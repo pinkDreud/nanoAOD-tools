@@ -160,7 +160,7 @@ getout = opt.gout
 #Writing the configuration file
 
 for sample in samples:
-    if ('DataEleB' in sample.label or 'DataMuB' in sample.label or 'DataHTB' in sample.label) and sample.year == 2017:
+    if ('DataEleB' in sample.label or 'DataMuB' in sample.label or ('DataHTB' in sample.label and opt.trig=="Lep") and sample.year == 2017):
         continue
     print 'Launching sample ' + sample.label + dirtag
     if submit:
