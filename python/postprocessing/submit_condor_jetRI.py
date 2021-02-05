@@ -38,9 +38,9 @@ def sub_writer(sample, n, files, folder):
     f.write("executable              = tree_skimmer_ssWW_wFakes_jetRI.py\n")
     f.write("arguments               = " + sample.label + " " + str(n) + " " + str(files) + " remote" + "\n")
     #f.write("input                   = input.txt\n")
-    f.write("output                  = condor/output/"+ sample.label + "_" + opt.wp + "_part" + str(n) + ".out\n")
-    f.write("error                   = condor/error/"+ sample.label + "_" + opt.wp +  "_part" + str(n) + ".err\n")
-    f.write("log                     = condor/log/"+ sample.label + "_" + opt.wp +  "_part" + str(n) + ".log\n")
+    f.write("output                  = condor_jetRI/output/"+ sample.label + "_" + opt.wp + "_part" + str(n) + ".out\n")
+    f.write("error                   = condor_jetRI/error/"+ sample.label + "_" + opt.wp +  "_part" + str(n) + ".err\n")
+    f.write("log                     = condor_jetRI/log/"+ sample.label + "_" + opt.wp +  "_part" + str(n) + ".log\n")
 
     f.write("queue\n")
 
@@ -55,12 +55,12 @@ else:
     print "You are launching a single sample and not an entire bunch of samples"
     samples.append(dataset)
 
-if not os.path.exists("condor/output"):
-    os.makedirs("condor/output")
-if not os.path.exists("condor/error"):
-    os.makedirs("condor/error")
-if not os.path.exists("condor/log"):
-    os.makedirs("condor/log")
+if not os.path.exists("condor_jetRI/output"):
+    os.makedirs("condor_jetRI/output")
+if not os.path.exists("condor_jetRI/error"):
+    os.makedirs("condor_jetRI/error")
+if not os.path.exists("condor_jetRI/log"):
+    os.makedirs("condor_jetRI/log")
 
 if(uid == 0):
     print("Please insert your uid")
