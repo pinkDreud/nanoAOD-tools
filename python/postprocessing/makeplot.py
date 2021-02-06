@@ -143,7 +143,7 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
           h1 = ROOT.TH1F(histoname, variable._name + "_" + reg, variable._nbins, variable._xmin)
      h1.Sumw2()
 
-     cut = variable._taglio
+     cut = variable._taglio + "*(lepton_TightRegion==1&&tau_TightRegion==1)"
 
      if 'MC' in variable._name:
           cut = cut + "*(" + str(variable._name) + "!=-100.)"

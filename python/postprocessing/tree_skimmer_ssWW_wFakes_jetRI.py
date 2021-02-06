@@ -625,9 +625,9 @@ for i in range(tree.GetEntries()):
         #systTree.fillTreesSysts(trees, "all")
         continue
 
-    if lepton_TightRegion[0]==1:
+    if lepton_TightRegion[0]==1 or lepton_LnTRegion[0]==1:
         pass_lepton_selection[0] = 1
-    elif lepton_LnTRegion[0]==1:
+    else:
         pass_lepton_selection[0] = 0
 
     #if (SingleEle==1 or SingleMu==1) and pass_lepton_selection[0]==1: Cut_dict[2][1]+=1
@@ -704,9 +704,9 @@ for i in range(tree.GetEntries()):
     GoodTau=taus[indexGoodTau]
     pass_tau_selection_ML[0]=1#
 
-    if tau_TightRegion[0]==1:#GoodTau.idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and GoodTau.idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and GoodTau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET:#
+    if tau_TightRegion[0]==1 or tau_LnTRegion[0]==1:#GoodTau.idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and GoodTau.idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and GoodTau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET:#
         pass_tau_selection[0] = 1#
-    elif tau_LnTRegion[0]==1:
+    else:
         pass_tau_selection[0] = 0
     
     #if (SingleEle or SingleMu) and pass_lepton_iso[0]==1 and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1: Cut_dict[4][1]+=1
