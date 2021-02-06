@@ -147,8 +147,8 @@ for prname, proc in class_dict.items():
                     print sample.label, "not completely condored"
                 else:
                     if os.path.exists(path+sample.label):
-                        print "Removing existing condored files..."
-                        os.system("rm -r "+ path + sample.label + "/*")
+                        print "Setting jobs for missing condored files..."
+                        #os.system("rm -r "+ path + sample.label + "/*")
                     print "Writing " + sample.label + " in csh..."  
                     f.write("python submit_condor_jetRI.py -d " + sample.label+ " " + optstring)
             else:
@@ -165,8 +165,8 @@ for prname, proc in class_dict.items():
                 print proc.label, "not completely condored"
             else:
                 if os.path.exists(path+proc.label):
-                    print "Removing existing condored files..."
-                    os.system("rm -f "+ path + proc.label + "/*")
+                    print "Setting jobs for missing condored files..."
+                    #os.system("rm -f "+ path + proc.label + "/*")
                 print "Writing " + proc.label + " in csh..."  
                 f.write("python submit_condor_jetRI.py -d " + proc.label+ " " + optstring)
         else:

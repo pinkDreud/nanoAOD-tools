@@ -74,17 +74,20 @@ split = 50
 #Writing the configuration file
 for sample in samples:
     isMC = True
+    opath = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/" + sample.label + "/"
     if('Data' in sample.label):
         isMC = False
-    if not os.path.exists("/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/" + sample.label):
-        os.makedirs("/eos/home-" + inituser + "/" + username +"/VBS/nosynch/" + folder + "/" + sample.label)
+    if not os.path.exists(opath):
+        os.makedirs(opath)
     f = open("../../crab/macros/files/" + sample.label + ".txt", "r")
     files_list = f.read().splitlines()
     print(str(len(files_list)))
     if(isMC):
         for i, files in enumerate(files_list):
             if opt.maxj > 0:
-                if i > 9: break
+                if i > opt.maxj: break
+            if os.path.exists(opath + sample.label + "_part" + str(i) + ".root"):
+                continue
             sub_writer(sample, i, files, folder)
             os.popen('condor_submit condor.sub')
             print('condor_submit condor.sub')
@@ -92,6 +95,8 @@ for sample in samples:
             print("python tree_skimmer_ssWW_wFakes_jetRI.py " + sample.label + " " + str(i) + " " + str(files) + " remote")
     else:
         for i in range(len(files_list)/split+1):
+            if os.path.exists(opath + sample.label + "_part" + str(i) + ".root"):
+                continue
             extmax = int(min([split*(i+1), len(files_list)]))
             sub_writer(sample, i,  ",".join( e for e in files_list[split*i:extmax]), folder)
             print('condor_submit condor.sub')
