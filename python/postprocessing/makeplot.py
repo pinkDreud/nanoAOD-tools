@@ -4,6 +4,7 @@ import optparse
 import ROOT
 import math
 from variabile import variabile
+import copy as copy
 from CMS_lumi import CMS_lumi
 from PhysicsTools.NanoAODTools.postprocessing.samples.samples import *
 from array import array
@@ -32,6 +33,7 @@ parser.add_option('-f', '--folder', dest='folder', type='string', default = 'v7'
 parser.add_option('-d', '--dat', dest='dat', type='string', default = 'all', help="")
 parser.add_option('--user', dest='user', type='string', default=str(os.environ.get('USER')), help='User')
 parser.add_option('--ttbar', dest='ttbar', default = False, action='store_true', help='Enable ttbar CR, default disabled')
+parser.add_option('--wfake', dest='wfake', default = False, action='store_true', help='Enable stackplots with data-driven fake leptons, default disabled')
 parser.add_option('--wjets', dest='wjets', default = False, action='store_true', help='Enable WJets CR, default disabled')
 
 (opt, args) = parser.parse_args()
@@ -133,26 +135,38 @@ def cutToTag(cut):
 def plot(lep, reg, variable, sample, cut_tag, syst=""):
      print "plotting ", variable._name, " for sample ", sample.label, " with cut ", cut_tag, " ", syst,
      ROOT.TH1.SetDefaultSumw2()
-     f1 = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + ".root")
+     cutbase = variable._taglio
+     cut = ''
+
+     if str(sample.label).startswith('Fake'):
+          f1 = ROOT.TFile.Open(filerepo + sample.components[0].label + "/"  + sample.components[0].label + ".root")
+          cut = cutbase + "*(lepton_LnTRegion==1||tau_LnTRegion==1)*(event_SFFake)*(event_SFFake>-1.)"        
+     else:
+          f1 = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + ".root")
+          cut = cutbase + "*(lepton_TightRegion==1&&tau_TightRegion==1)"
 
      nbins = variable._nbins
      histoname = "h_" + reg + "_" + variable._name + "_" + cut_tag
+
+     print variable._iscustom
      if not variable._iscustom:
           h1 = ROOT.TH1F(histoname, variable._name + "_" + reg, variable._nbins, variable._xmin, variable._xmax)
      else:
           h1 = ROOT.TH1F(histoname, variable._name + "_" + reg, variable._nbins, variable._xmin)
+
      h1.Sumw2()
-
-     cut = variable._taglio + "*(lepton_TightRegion==1&&tau_TightRegion==1)"
-
-     if 'MC' in variable._name:
-          cut = cut + "*(" + str(variable._name) + "!=-100.)"
      
+     if 'MC' in variable._name:
+          cut = cut + "*(" + str(variable._name) + "!-100.)"
+     else:
+          cut = cut + "*(" + str(variable._name) + ">-10.)"
+          
      if "WpWpJJ_EWK" in sample.label:
-         cut = cut + "*10."
+          cut = cut + "*10."
 
      print str(cut)
      foutput = plotrepo + lepstr + "/" + sample.label + "_" + lep+".root"
+
      '''
      else:
           if(syst==""):
@@ -167,17 +181,24 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
      '''
      #print treename
      #TODO: remove events_all which is hardcoded
+
      f1.Get("events_all").Project(histoname,variable._name,cut)
+
+     #ftree = copy.deepcopy(f1.events_all)
      #if not 'Data' in sample.label:
      #     h1.Scale((7.5)/35.89)
+     #ftree.Project(histoname,variable._name,cut)
+
      h1.SetBinContent(1, h1.GetBinContent(0) + h1.GetBinContent(1))
      h1.SetBinError(1, math.sqrt(pow(h1.GetBinError(0),2) + pow(h1.GetBinError(1),2)))
      h1.SetBinContent(nbins, h1.GetBinContent(nbins) + h1.GetBinContent(nbins+1))
      h1.SetBinError(nbins, math.sqrt(pow(h1.GetBinError(nbins),2) + pow(h1.GetBinError(nbins+1),2)))
+     print h1.Integral()
      for i in range(0, nbins+1):
           content = h1.GetBinContent(i)
           if(content<0.):
                h1.SetBinContent(i, 0.)
+
      fout = ROOT.TFile.Open(foutput, "UPDATE")
      fout.cd()
      h1.Write()
@@ -220,8 +241,15 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
 
      print samples_
      for s in samples_:
+          if opt.wfake:
+               if s.label.startswith('WJets') or s.label.startswith('QCD'):
+                    continue
+          else:
+               if s.label.startswith('Fake'):
+                    continue
           if('WpWpJJ_EWK' in s.label):
                signal = True
+          print s.label
           if(syst_ == ""):
                outfile = plotrepo + "stack_" + str(lep_).strip('[]') + ".root"
                infile[s.label] = ROOT.TFile.Open(plotrepo + lepstr + "/" + s.label + "_" + lep + ".root")
@@ -231,6 +259,12 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      i = 0
 
      for s in samples_:
+          if opt.wfake:
+               if s.label.startswith('WJets') or s.label.startswith('QCD'):
+                    continue
+          else:
+               if s.label.startswith('Fake'):
+                    continue
           infile[s.label].cd()
           print "opening file: ", infile[s.label].GetName()
           if('Data' in s.label):
@@ -476,15 +510,18 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      del pad2
      c1.Delete()
      del c1
-     for s in samples_:
-          infile[s.label].Close()
-          infile[s.label].Delete()
+     for kf in infile.keys():
+          #infile[s.label].Close()
+          infile[kf].Close()
+          #infile[s.label].Delete()
+          infile[kf].Delete()
      os.system('set LD_PRELOAD=libtcmalloc.so')
 
 #dataset_dict = {'2016':[],'2017':[],'2018':[]}
 dataset_dict = {'2017':[],'2018':[]}
 
 if(opt.dat != 'all'):
+     print opt.dat
      if not(opt.dat in sample_dict.keys()):
           print "dataset not found!"
           print sample_dict.keys()
@@ -530,25 +567,25 @@ leptons = map(str,opt.lep.split(','))
 cut = opt.cut #default cut must be obvious, for example lepton_eta>-10.
 
 if opt.bveto:
-     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&(" + cut + ")", 
-                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&(" + cut + ")", 
-                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&(" + cut + ")", 
+     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&(" + cut + ")", 
+                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&(" + cut + ")", 
+                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&(" + cut + ")", 
           }
      cut_tag = 'selection_upto_bveto'
      if opt.cut != "lepton_eta>-10.":
           cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut) 
 elif opt.ttbar:
-     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==0&&pass_b_veto==0&&(" + cut + ")", 
-                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==0&&pass_b_veto==0&&(" + cut + ")", 
-                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==0&&pass_b_veto==0&&(" + cut + ")", 
+     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&(" + cut + ")", 
+                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&(" + cut + ")", 
+                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&(" + cut + ")", 
           }
      cut_tag = 'ttbar_CR'
      if opt.cut != "lepton_eta>-10.":
           cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut)           
 elif opt.wjets:
-     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&MET_pt>=20.&&(" + cut + ")", 
-                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&MET_pt>=20.&&(" + cut + ")",
-                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&MET_pt>=20.(" + cut + ")",
+     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&MET_pt>=20.&&(" + cut + ")", 
+                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&MET_pt>=20.&&(" + cut + ")",
+                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&MET_pt>=20.(" + cut + ")",
           }
      cut_tag = 'wjets_CR'
      if opt.cut != "lepton_eta>-10.":
@@ -592,82 +629,78 @@ for year in years:
           #dataset_new.remove(sample_dict['DataMET_'+str(year)])
           if lep == 'muon' and sample_dict['DataEle_'+str(year)] in dataset_new:
                dataset_new.remove(sample_dict['DataEle_'+str(year)])
+               dataset_new.remove(sample_dict['FakeEle_'+str(year)])
           elif lep == 'electron' and sample_dict['DataMu_'+str(year)] in dataset_new:
                dataset_new.remove(sample_dict['DataMu_'+str(year)])
+               dataset_new.remove(sample_dict['FakeMu_'+str(year)])
 
           variables = []
           wzero = 'w_nominal*PFSF*puSF'#*lepSF'
-          cut = cut_dict[lep]
+          cutbase = cut_dict[lep]
+          
+          variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cutbase+')', 20, -5., 5.))
+          variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cutbase+')', 14, -3.50, 3.50))
+          
 
-
-          variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cut+')', 20, -5., 5.))
-          variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cut+')', 14, -3.50, 3.50))
-          bin_lepton_pt = array("f", [0., 100., 200., 300., 400., 600., 800., 1000., 1500.])
+          bin_lepton_pt = array("f", [0., 100., 200., 300., 400., 600., 1000., 1600.])
           nbin_lepton_pt = len(bin_lepton_pt)-1
-          variables.append(variabile('lepton_pt',  'Lepton p_{T} [GeV]',  wzero+'*('+cut+')', nbin_lepton_pt, bin_lepton_pt))#30, 1500))
+          variables.append(variabile('lepton_pt',  'Lepton p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_lepton_pt, bin_lepton_pt))#30, 1500))
 
+          variables.append(variabile('lepton_pdgid', 'lepton pdgid',  wzero+'*('+cutbase+')', 31, -15.5, 15.5))
+          variables.append(variabile('lepton_pfRelIso04', 'lepton rel iso',  wzero+'*('+cutbase+')', 15, 0, 0.15))
 
-          variables.append(variabile('lepton_pdgid', 'lepton pdgid',  wzero+'*('+cut+')', 31, -15.5, 15.5))
-          variables.append(variabile('lepton_pfRelIso04', 'lepton rel iso',  wzero+'*('+cut+')', 15, 0, 0.15))
-
-          bin_taupt = array("f", [0., 100., 200., 300., 400., 600., 800., 1000., 1500.])
+          bin_taupt = array("f", [0., 100., 200., 300., 400., 800.])
           nbin_taupt = len(bin_taupt) - 1
-          variables.append(variabile('tau_pt',  '#tau p_{T} [GeV]',  wzero+'*('+cut+')', nbin_taupt, bin_taupt))
-          variables.append(variabile('tau_eta', '#tau #eta',  wzero+'*('+cut+')', 20, -5, 5))
-          variables.append(variabile('tau_phi', '#tau #Phi',  wzero+'*('+cut+')',  14, -3.50, 3.50))
+          variables.append(variabile('tau_pt',  '#tau p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_taupt, bin_taupt))
+          variables.append(variabile('tau_eta', '#tau #eta',  wzero+'*('+cutbase+')', 20, -5, 5))
+          variables.append(variabile('tau_phi', '#tau #Phi',  wzero+'*('+cutbase+')',  14, -3.50, 3.50))
 
-          '''                                                                                                                                                                                                                                               
-          variables.append(variabile('TMath::Log2(tau_DeepTauVsEle_WP+1)', 'log_2(#tau DeepTauVsEle WP)',  wzero+'*('+cut+')'+'*(tau_DeepTauVsEle_WP>0)',  8, -0.5, 7.5))                                                                                   
-          variables.append(variabile('TMath::Log2(tau_DeepTauVsMu_WP+1)', 'log_2(#tau DeepTauVsMu WP)',  wzero+'*('+cut+')'+'*(tau_DeepTauVsMu_WP>0)',  4, -0.5, 3.5))                                                                                      
-          variables.append(variabile('TMath::Log2(tau_DeepTauVsJet_WP+1)', 'log_2(#tau DeepTauVsJet WP)',  wzero+'*('+cut+')'+'*(tau_DeepTauVsJet_WP>0)',  8, -0.5, 7.5))                                                                                   
-          '''
+          variables.append(variabile('tau_DeepTauVsEle_raw', '#tau DeepTauVsEle raw',  wzero+'*('+cutbase+')',  20, 0.35, 1.35))
+          variables.append(variabile('tau_DeepTauVsMu_raw', '#tau DeepTauVsMu raw',  wzero+'*('+cutbase+')',  20, 0.2, 1.2))
+          variables.append(variabile('tau_DeepTauVsJet_raw', '#tau DeepTauVsJet raw',  wzero+'*('+cutbase+')',  20, 0.35, 1.35))
 
-          variables.append(variabile('tau_DeepTauVsEle_raw', '#tau DeepTauVsEle raw',  wzero+'*('+cut+')',  20, 0.35, 1.35))
-          variables.append(variabile('tau_DeepTauVsMu_raw', '#tau DeepTauVsMu raw',  wzero+'*('+cut+')',  20, 0.2, 1.2))
-          variables.append(variabile('tau_DeepTauVsJet_raw', '#tau DeepTauVsJet raw',  wzero+'*('+cut+')',  20, 0.35, 1.35))
-
-          bin_leadjet_pt = array("f", [0., 100., 200., 300., 400., 600., 800., 1000., 1500.])
+          bin_leadjet_pt = array("f", [0., 100., 200., 300., 400., 600., 1000., 1600.])
           nbin_leadjet_pt = len(bin_leadjet_pt)-1
-          variables.append(variabile('leadjet_pt',  'Lead jet p_{T} [GeV]',  wzero+'*('+cut+')', nbin_leadjet_pt, bin_leadjet_pt))#30, 1500))
+          variables.append(variabile('leadjet_pt',  'Lead jet p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_leadjet_pt, bin_leadjet_pt))#30, 1500))
 
-          variables.append(variabile('leadjet_eta', 'Lead jet #eta',  wzero+'*('+cut+')', 20, -5., 5.))
-          variables.append(variabile('leadjet_phi', 'Lead jet #Phi',  wzero+'*('+cut+')',  14, -3.50, 3.50))
+          variables.append(variabile('leadjet_eta', 'Lead jet #eta',  wzero+'*('+cutbase+')', 20, -5., 5.))
+          variables.append(variabile('leadjet_phi', 'Lead jet #Phi',  wzero+'*('+cutbase+')',  14, -3.50, 3.50))
 
 
-          bin_subleadjet_pt = array("f", [0., 50., 100., 150., 200., 300., 400., 600., 1000.])
+          bin_subleadjet_pt = array("f", [0., 75., 150., 250., 400., 800.])
           nbin_subleadjet_pt = len(bin_subleadjet_pt) - 1
-          variables.append(variabile('subleadjet_pt',  'Sublead jet p_{T} [GeV]',  wzero+'*('+cut+')', nbin_subleadjet_pt, bin_subleadjet_pt))#40, 30, 1000))
-          variables.append(variabile('subleadjet_eta', 'Sublead jet #eta',  wzero+'*('+cut+')', 20, -5., 5.))
-          variables.append(variabile('subleadjet_phi', 'Sublead jet #Phi',  wzero+'*('+cut+')',  14, -3.50, 3.50))
+          variables.append(variabile('subleadjet_pt',  'Sublead jet p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_subleadjet_pt, bin_subleadjet_pt))#40, 30, 1000))
+          variables.append(variabile('subleadjet_eta', 'Sublead jet #eta',  wzero+'*('+cutbase+')', 20, -5., 5.))
+          variables.append(variabile('subleadjet_phi', 'Sublead jet #Phi',  wzero+'*('+cutbase+')',  14, -3.50, 3.50))
 
-          variables.append(variabile('nJets', 'n jets',  wzero+'*('+cut+')',  11, -0.5, 10.5))
-          variables.append(variabile('nBJets', 'n bjets (DeepJet M)',  wzero+'*('+cut+')',  6, -0.5, 5.5))
+          variables.append(variabile('nJets', 'n jets',  wzero+'*('+cutbase+')',  11, -0.5, 10.5))
+          variables.append(variabile('nBJets', 'n bjets (DeepJet M)',  wzero+'*('+cutbase+')',  6, -0.5, 5.5))
 
-          bin_metpt = array("f", [0., 25., 50., 75., 100., 125., 150., 175., 200., 250., 300., 350., 400., 500., 600.])
+          bin_metpt = array("f", [0., 50., 100., 150., 200., 300., 400., 600., 800.])
           nbin_metpt = len(bin_metpt) - 1
-          variables.append(variabile('MET_pt', 'p_{T}^{miss} [GeV]',  wzero+'*('+cut+')', nbin_metpt, bin_metpt))#30, 40, 500))
+          variables.append(variabile('MET_pt', 'p_{T}^{miss} [GeV]',  wzero+'*('+cutbase+')', nbin_metpt, bin_metpt))#30, 40, 500))
 
           bin_mjj = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 900., 1000., 1100., 1200., 1350., 1500., 1650., 1800., 2000., 2200.])
           nbin_mjj = len(bin_mjj) - 1 
-          variables.append(variabile('mjj', 'M_{jj} [GeV]',  wzero+'*('+cut+')', nbin_mjj, bin_mjj))# 20, 500, 2000))
+          variables.append(variabile('mjj', 'M_{jj} [GeV]',  wzero+'*('+cutbase+')', nbin_mjj, bin_mjj))# 20, 500, 2000))
 
           bin_mTs = array("f", [0., 25., 50., 75., 100., 125., 150., 200., 250., 300., 400., 500.])
           nbin_mTs = len(bin_mTs) - 1
 
-          variables.append(variabile('mT_lep_MET', 'M_{T}(lep, MET) [GeV]',  wzero+'*('+cut+')', nbin_mTs, bin_mTs))
-          variables.append(variabile('mT_tau_MET', 'M_{T}(#tau, MET) [GeV]',  wzero+'*('+cut+')', nbin_mTs, bin_mTs))
-          variables.append(variabile('mT_leptau_MET', 'M_{T}(lep, #tau, MET) [GeV]',  wzero+'*('+cut+')', nbin_mTs, bin_mTs))
+          variables.append(variabile('mT_lep_MET', 'M_{T}(lep, MET) [GeV]',  wzero+'*('+cutbase+')', nbin_mTs, bin_mTs))
+          variables.append(variabile('mT_tau_MET', 'M_{T}(#tau, MET) [GeV]',  wzero+'*('+cutbase+')', nbin_mTs, bin_mTs))
+          variables.append(variabile('mT_leptau_MET', 'M_{T}(lep, #tau, MET) [GeV]',  wzero+'*('+cutbase+')', nbin_mTs, bin_mTs))
 
           bin_deltaeta_jj = array("f", [0., 0.5, 1., 1.5, 2., 2.5, 3., 3.5, 4., 4.5, 5., 5.5, 6., 6.5, 7., 8., 9., 10.])
           nbin_deltaeta_jj = len(bin_deltaeta_jj) - 1
-          variables.append(variabile('deltaEta_jj', '#Delta #eta_{jj}',  wzero+'*('+cut+')', nbin_deltaeta_jj, bin_deltaeta_jj))#20, 0, 10))
+          variables.append(variabile('deltaEta_jj', '#Delta #eta_{jj}',  wzero+'*('+cutbase+')', nbin_deltaeta_jj, bin_deltaeta_jj))#20, 0, 10))
 
-          variables.append(variabile('deltaPhi_jj', '#Delta #phi_{jj}',  wzero+'*('+cut+')',  16, -4., 4.))
-          variables.append(variabile('deltaPhi_taulep', '#Delta #phi_{#tau l}',  wzero+'*('+cut+')',  16, -4., 4.))
-          variables.append(variabile('deltaPhi_tauj1', '#Delta #phi_{#tau j_{1}}',  wzero+'*('+cut+')',  16, -4., 4.))
-          variables.append(variabile('deltaPhi_tauj2', '#Delta #phi_{#tau j_{2}}',  wzero+'*('+cut+')',  16, -4., 4.))
-          variables.append(variabile('deltaPhi_lepj1', '#Delta #phi_{l j_{1}}',  wzero+'*('+cut+')', 16, -4., 4.))
-          variables.append(variabile('deltaPhi_lepj2', '#Delta #phi_{l j_{2}}',  wzero+'*('+cut+')', 16, -4., 4.))
+          variables.append(variabile('deltaPhi_jj', '#Delta #phi_{jj}',  wzero+'*('+cutbase+')',  16, -4., 4.))
+          variables.append(variabile('deltaPhi_taulep', '#Delta #phi_{#tau l}',  wzero+'*('+cutbase+')',  16, -4., 4.))
+          variables.append(variabile('deltaPhi_tauj1', '#Delta #phi_{#tau j_{1}}',  wzero+'*('+cutbase+')',  16, -4., 4.))
+          variables.append(variabile('deltaPhi_tauj2', '#Delta #phi_{#tau j_{2}}',  wzero+'*('+cutbase+')',  16, -4., 4.))
+          variables.append(variabile('deltaPhi_lepj1', '#Delta #phi_{l j_{1}}',  wzero+'*('+cutbase+')', 16, -4., 4.))
+          variables.append(variabile('deltaPhi_lepj2', '#Delta #phi_{l j_{2}}',  wzero+'*('+cutbase+')', 16, -4., 4.))
 
 
           for sample in dataset_new:
