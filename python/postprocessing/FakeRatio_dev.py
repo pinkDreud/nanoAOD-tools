@@ -602,9 +602,9 @@ for i in range(tree.GetEntries()):
                 FatJet_phi[countfj] = copy.deepcopy(fj.phi)
                 FatJet_SDmass[countfj] = copy.deepcopy(fj.msoftdrop)
                 FatJet_SDmass_PUPPI[countfj] = copy.deepcopy(fj.msoftdrop_corr_PUPPI)
-                FatJet_tau21[countfj] = copy.deepcopy(fj.tau2/fj.tau1)
-                FatJet_tau32[countfj] = copy.deepcopy(fj.tau3/fj.tau2)
-                FatJet_tau43[countfj] = copy.deepcopy(fj.tau4/fj.tau3)
+                if fj.tau1!=0: FatJet_tau21[countfj] = copy.deepcopy(fj.tau2/fj.tau1)
+                if fj.tau2!=0: FatJet_tau32[countfj] = copy.deepcopy(fj.tau3/fj.tau2)
+                if fj.tau3!=0: FatJet_tau43[countfj] = copy.deepcopy(fj.tau4/fj.tau3)
 
                 countfj += 1
 
