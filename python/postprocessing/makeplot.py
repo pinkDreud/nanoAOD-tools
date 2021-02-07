@@ -642,7 +642,7 @@ for year in years:
           variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cutbase+')', 14, -3.50, 3.50))
           
 
-          bin_lepton_pt = array("f", [0., 100., 200., 300., 400., 600., 1000., 1600.])
+          bin_lepton_pt = array("f", [0., 100., 200., 300., 400., 600., 1000.])
           nbin_lepton_pt = len(bin_lepton_pt)-1
           variables.append(variabile('lepton_pt',  'Lepton p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_lepton_pt, bin_lepton_pt))#30, 1500))
 
@@ -655,9 +655,9 @@ for year in years:
           variables.append(variabile('tau_eta', '#tau #eta',  wzero+'*('+cutbase+')', 20, -5, 5))
           variables.append(variabile('tau_phi', '#tau #Phi',  wzero+'*('+cutbase+')',  14, -3.50, 3.50))
 
-          variables.append(variabile('tau_DeepTauVsEle_raw', '#tau DeepTauVsEle raw',  wzero+'*('+cutbase+')',  20, 0.35, 1.35))
-          variables.append(variabile('tau_DeepTauVsMu_raw', '#tau DeepTauVsMu raw',  wzero+'*('+cutbase+')',  20, 0.2, 1.2))
-          variables.append(variabile('tau_DeepTauVsJet_raw', '#tau DeepTauVsJet raw',  wzero+'*('+cutbase+')',  20, 0.35, 1.35))
+          variables.append(variabile('tau_DeepTauVsEle_raw', '#tau DeepTauVsEle raw',  wzero+'*('+cutbase+')',  10, 0.35, 1.35))
+          variables.append(variabile('tau_DeepTauVsMu_raw', '#tau DeepTauVsMu raw',  wzero+'*('+cutbase+')',  10, 0.2, 1.2))
+          variables.append(variabile('tau_DeepTauVsJet_raw', '#tau DeepTauVsJet raw',  wzero+'*('+cutbase+')',  10, 0., 1.))
 
           bin_leadjet_pt = array("f", [0., 100., 200., 300., 400., 600., 1000., 1600.])
           nbin_leadjet_pt = len(bin_leadjet_pt)-1
@@ -676,11 +676,11 @@ for year in years:
           variables.append(variabile('nJets', 'n jets',  wzero+'*('+cutbase+')',  11, -0.5, 10.5))
           variables.append(variabile('nBJets', 'n bjets (DeepJet M)',  wzero+'*('+cutbase+')',  6, -0.5, 5.5))
 
-          bin_metpt = array("f", [0., 50., 100., 150., 200., 300., 400., 600., 800.])
+          bin_metpt = array("f", [0., 50., 100., 150., 200., 300., 500., 800.])
           nbin_metpt = len(bin_metpt) - 1
           variables.append(variabile('MET_pt', 'p_{T}^{miss} [GeV]',  wzero+'*('+cutbase+')', nbin_metpt, bin_metpt))#30, 40, 500))
 
-          bin_mjj = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 900., 1000., 1100., 1200., 1350., 1500., 1650., 1800., 2000., 2200.])
+          bin_mjj = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 900., 1000., 1100., 1200., 1400., 1600., 2000., 2500.])
           nbin_mjj = len(bin_mjj) - 1 
           variables.append(variabile('mjj', 'M_{jj} [GeV]',  wzero+'*('+cutbase+')', nbin_mjj, bin_mjj))# 20, 500, 2000))
 

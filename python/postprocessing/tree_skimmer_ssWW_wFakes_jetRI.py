@@ -726,12 +726,24 @@ for i in range(tree.GetEntries()):
     mT_tau_MET[0]=mTlepMet(met, GoodTau.p4())
     mT_leptau_MET[0]=mTlepMet(met, GoodTau.p4()+tightlep.p4())
     tau_DeepTau_WP[0] = GoodTau.idDeepTau2017v2p1VSjet*1000.**2. + GoodTau.idDeepTau2017v2p1VSmu*1000. + GoodTau.idDeepTau2017v2p1VSe
-    tau_DeepTauVsEle_WP[0]  =   math.log(GoodTau.idDeepTau2017v2p1VSe, 2)#
+    if GoodTau.idDeepTau2017v2p1VSe+1 > 0.:
+        tau_DeepTauVsEle_WP[0]  =   math.log(GoodTau.idDeepTau2017v2p1VSe+1, 2)#
+    else:
+        tau_DeepTauVsEle_WP[0]  =  0.
     tau_DeepTauVsEle_raw[0] =   GoodTau.rawDeepTau2017v2p1VSe#
-    tau_DeepTauVsMu_WP[0]   =   math.log(GoodTau.idDeepTau2017v2p1VSmu, 2)#
+
+    if GoodTau.idDeepTau2017v2p1VSmu+1 > 0.:
+        tau_DeepTauVsMu_WP[0]   =   math.log(GoodTau.idDeepTau2017v2p1VSmu+1, 2)#
+    else:
+        tau_DeepTauVsMu_WP[0]   =   0.
     tau_DeepTauVsMu_raw[0]  =   GoodTau.rawDeepTau2017v2p1VSmu#
-    tau_DeepTauVsJet_WP[0]  =   math.log(GoodTau.idDeepTau2017v2p1VSjet, 2)#
+
+    if GoodTau.idDeepTau2017v2p1VSjet+1 > 0.:
+        tau_DeepTauVsJet_WP[0]  =   math.log(GoodTau.idDeepTau2017v2p1VSjet+1, 2)#
+    else:
+        tau_DeepTauVsJet_WP[0]  =   0.
     tau_DeepTauVsJet_raw[0] =   GoodTau.rawDeepTau2017v2p1VSjet#
+
     tau_isolation[0]=   GoodTau.neutralIso
     m_leptau=(GoodTau.p4() + tightlep.p4()).M()
     tauleadTk_ptOverTau[0]  =   GoodTau.leadTkPtOverTauPt#
