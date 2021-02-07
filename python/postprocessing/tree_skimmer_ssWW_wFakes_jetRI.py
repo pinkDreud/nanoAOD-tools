@@ -276,14 +276,14 @@ pass_b_veto                 =   array.array('i', [0])
 pass_mjj_cut                =   array.array('i', [0])
 pass_MET_cut                =   array.array('i', [0])
 pass_upToBVeto              =   array.array('i', [0])
-pass_upToBVeto_ML           =   array.array('i', [0])#
-pass_tau_selection_ML       =   array.array('i', [0])#
+#pass_upToBVeto_ML           =   array.array('i', [0])#
+#pass_tau_selection_ML       =   array.array('i', [0])#
 pass_everyCut               =   array.array('i', [0])
 var_list.append(pass_lepton_selection)
 var_list.append(pass_lepton_veto)
 var_list.append(pass_lepton_iso)
 var_list.append(pass_tau_selection)
-var_list.append(pass_tau_selection_ML)#
+#var_list.append(pass_tau_selection_ML)#
 var_list.append(pass_tau_vsJetWP)
 var_list.append(pass_charge_selection)
 var_list.append(pass_jet_selection)
@@ -291,7 +291,7 @@ var_list.append(pass_b_veto)
 var_list.append(pass_mjj_cut)
 var_list.append(pass_MET_cut)
 var_list.append(pass_upToBVeto)
-var_list.append(pass_upToBVeto_ML)#
+#var_list.append(pass_upToBVeto_ML)#
 var_list.append(pass_everyCut)
 
 #wieghts#
@@ -370,7 +370,7 @@ systTree.branchTreesSysts(trees, "all", "pass_lepton_selection",    outTreeFile,
 systTree.branchTreesSysts(trees, "all", "pass_lepton_iso",          outTreeFile, pass_lepton_iso)
 systTree.branchTreesSysts(trees, "all", "pass_lepton_veto",         outTreeFile, pass_lepton_veto)
 systTree.branchTreesSysts(trees, "all", "pass_tau_selection",       outTreeFile, pass_tau_selection)
-systTree.branchTreesSysts(trees, "all", "pass_tau_selection_ML",       outTreeFile, pass_tau_selection_ML)#
+#systTree.branchTreesSysts(trees, "all", "pass_tau_selection_ML",       outTreeFile, pass_tau_selection_ML)#
 systTree.branchTreesSysts(trees, "all", "pass_tau_vsJetWP",         outTreeFile, pass_tau_vsJetWP)
 systTree.branchTreesSysts(trees, "all", "pass_charge_selection",    outTreeFile, pass_charge_selection)
 systTree.branchTreesSysts(trees, "all", "pass_jet_selection",       outTreeFile, pass_jet_selection)
@@ -378,7 +378,7 @@ systTree.branchTreesSysts(trees, "all", "pass_b_veto",              outTreeFile,
 systTree.branchTreesSysts(trees, "all", "pass_mjj_cut",             outTreeFile, pass_mjj_cut)
 systTree.branchTreesSysts(trees, "all", "pass_MET_cut",             outTreeFile, pass_MET_cut)
 systTree.branchTreesSysts(trees, "all", "pass_upToBVeto",           outTreeFile, pass_upToBVeto)
-systTree.branchTreesSysts(trees, "all", "pass_upToBVeto_ML",           outTreeFile, pass_upToBVeto_ML)#
+#systTree.branchTreesSysts(trees, "all", "pass_upToBVeto_ML",           outTreeFile, pass_upToBVeto_ML)#
 systTree.branchTreesSysts(trees, "all", "pass_everyCut",            outTreeFile, pass_everyCut)
 
 
@@ -702,7 +702,7 @@ for i in range(tree.GetEntries()):
     
 
     GoodTau=taus[indexGoodTau]
-    pass_tau_selection_ML[0]=1#
+    #pass_tau_selection_ML[0]=1#
 
     if tau_TightRegion[0]==1 or tau_LnTRegion[0]==1:#GoodTau.idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and GoodTau.idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and GoodTau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET:#
         pass_tau_selection[0] = 1#
@@ -809,7 +809,7 @@ for i in range(tree.GetEntries()):
     #if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_iso[0]==1 and pass_tau_vsJetWP[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1:
     #Cut_dict[7][1]+=1
 
-    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection_ML[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1:  pass_upToBVeto_ML[0]=1#
+    #if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection_ML[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1:  pass_upToBVeto_ML[0]=1#
 
     if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1: pass_upToBVeto[0]=1#
 

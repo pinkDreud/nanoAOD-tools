@@ -276,14 +276,14 @@ pass_b_veto                 =   array.array('i', [0])
 pass_mjj_cut                =   array.array('i', [0])
 pass_MET_cut                =   array.array('i', [0])
 pass_upToBVeto              =   array.array('i', [0])
-pass_upToBVeto_ML           =   array.array('i', [0])#
-pass_tau_selection_ML       =   array.array('i', [0])#
+#pass_upToBVeto_ML           =   array.array('i', [0])#
+#pass_tau_selection_ML       =   array.array('i', [0])#
 pass_everyCut               =   array.array('i', [0])
 var_list.append(pass_lepton_selection)
 var_list.append(pass_lepton_veto)
 var_list.append(pass_lepton_iso)
 var_list.append(pass_tau_selection)
-var_list.append(pass_tau_selection_ML)#
+#var_list.append(pass_tau_selection_ML)#
 var_list.append(pass_tau_vsJetWP)
 var_list.append(pass_charge_selection)
 var_list.append(pass_jet_selection)
@@ -291,7 +291,7 @@ var_list.append(pass_b_veto)
 var_list.append(pass_mjj_cut)
 var_list.append(pass_MET_cut)
 var_list.append(pass_upToBVeto)
-var_list.append(pass_upToBVeto_ML)#
+#var_list.append(pass_upToBVeto_ML)#
 var_list.append(pass_everyCut)
 
 #wieghts#
@@ -370,7 +370,7 @@ systTree.branchTreesSysts(trees, "all", "pass_lepton_selection",    outTreeFile,
 systTree.branchTreesSysts(trees, "all", "pass_lepton_iso",          outTreeFile, pass_lepton_iso)
 systTree.branchTreesSysts(trees, "all", "pass_lepton_veto",         outTreeFile, pass_lepton_veto)
 systTree.branchTreesSysts(trees, "all", "pass_tau_selection",       outTreeFile, pass_tau_selection)
-systTree.branchTreesSysts(trees, "all", "pass_tau_selection_ML",       outTreeFile, pass_tau_selection_ML)#
+#systTree.branchTreesSysts(trees, "all", "pass_tau_selection_ML",       outTreeFile, pass_tau_selection_ML)#
 systTree.branchTreesSysts(trees, "all", "pass_tau_vsJetWP",         outTreeFile, pass_tau_vsJetWP)
 systTree.branchTreesSysts(trees, "all", "pass_charge_selection",    outTreeFile, pass_charge_selection)
 systTree.branchTreesSysts(trees, "all", "pass_jet_selection",       outTreeFile, pass_jet_selection)
@@ -378,7 +378,7 @@ systTree.branchTreesSysts(trees, "all", "pass_b_veto",              outTreeFile,
 systTree.branchTreesSysts(trees, "all", "pass_mjj_cut",             outTreeFile, pass_mjj_cut)
 systTree.branchTreesSysts(trees, "all", "pass_MET_cut",             outTreeFile, pass_MET_cut)
 systTree.branchTreesSysts(trees, "all", "pass_upToBVeto",           outTreeFile, pass_upToBVeto)
-systTree.branchTreesSysts(trees, "all", "pass_upToBVeto_ML",           outTreeFile, pass_upToBVeto_ML)#
+#systTree.branchTreesSysts(trees, "all", "pass_upToBVeto_ML",           outTreeFile, pass_upToBVeto_ML)#
 systTree.branchTreesSysts(trees, "all", "pass_everyCut",            outTreeFile, pass_everyCut)
 
 
@@ -599,7 +599,6 @@ for i in range(tree.GetEntries()):
         if isMC: HLT_effLumi[0] = lumiFinder("Mu", vTrigMu)
         leptons = muons
     
-    
     elif not (SingleMu or SingleEle):
         continue
     if SingleEle and dataMu:
@@ -620,16 +619,19 @@ for i in range(tree.GetEntries()):
     elif lepton_TightRegion[0]==0:  lepton_LnTRegion[0] = 1
     else: lepton_LnTRegion[0] = -999
 
+
     if indexGoodLep<0 or indexGoodLep>=len(leptons) or (lepton_TightRegion[0]<0 and lepton_LnTRegion[0]<0): 
-        systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
-        systTree.fillTreesSysts(trees, "all")
+        #systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
+        #systTree.fillTreesSysts(trees, "all")
         continue
-    
-    pass_lepton_selection[0] = 1
+
+    if lepton_TightRegion[0]==1 or lepton_LnTRegion[0]==1:
+        pass_lepton_selection[0] = 1
+    else:
+        pass_lepton_selection[0] = 0
 
     #if (SingleEle==1 or SingleMu==1) and pass_lepton_selection[0]==1: Cut_dict[2][1]+=1
     tightlep = leptons[indexGoodLep]
-
 
     lepton_pt[0]                =   tightlep.pt
     lepton_eta[0]               =   tightlep.eta
@@ -641,15 +643,15 @@ for i in range(tree.GetEntries()):
     elif SingleEle==1:
         lepton_pfRelIso04[0]        =   tightlep.jetRelIso
 
-    if not isMC:
-        lepton_SFFake[0] = SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0])
-    else:
+    #if not isMC:
+    lepton_SFFake[0] = SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0])
+    #else:
+    if isMC:
         lepton_isPrompt[0] = tightlep.genPartFlav
 
     GoodLep=tightlep
     
     mT_lep_MET[0]=mTlepMet(met, tightlep.p4())
-
 
     if isMC:
         tightlep_SF = tightlep.effSF
@@ -694,16 +696,18 @@ for i in range(tree.GetEntries()):
 
 
     if indexGoodTau<0 or indexGoodTau>=len(taus) or (tau_TightRegion[0]<0 and tau_LnTRegion[0]<0): 
-        systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
-        systTree.fillTreesSysts(trees, "all")
+        #systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
+        #systTree.fillTreesSysts(trees, "all")
         continue      
     
 
     GoodTau=taus[indexGoodTau]
-    pass_tau_selection_ML[0]=1#
+    #pass_tau_selection_ML[0]=1#
 
-    if GoodTau.idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and GoodTau.idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and GoodTau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET:#
+    if tau_TightRegion[0]==1 or tau_LnTRegion[0]==1:#GoodTau.idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and GoodTau.idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and GoodTau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET:#
         pass_tau_selection[0] = 1#
+    else:
+        pass_tau_selection[0] = 0
     
     #if (SingleEle or SingleMu) and pass_lepton_iso[0]==1 and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1: Cut_dict[4][1]+=1
 
@@ -713,20 +717,33 @@ for i in range(tree.GetEntries()):
     tau_mass[0]             =   GoodTau.mass
     tau_charge[0]           =   GoodTau.charge
 
-    if not isMC:
-        tau_SFFake[0] = SFFakeRatio_tau_calc(tau_pt[0], tau_eta[0])
-    else:
+    #if not isMC:
+    tau_SFFake[0] = SFFakeRatio_tau_calc(tau_pt[0], tau_eta[0])
+    #else:
+    if isMC:
         tau_isPrompt[0] = GoodTau.genPartFlav
 
     mT_tau_MET[0]=mTlepMet(met, GoodTau.p4())
     mT_leptau_MET[0]=mTlepMet(met, GoodTau.p4()+tightlep.p4())
     tau_DeepTau_WP[0] = GoodTau.idDeepTau2017v2p1VSjet*1000.**2. + GoodTau.idDeepTau2017v2p1VSmu*1000. + GoodTau.idDeepTau2017v2p1VSe
-    tau_DeepTauVsEle_WP[0]  =   GoodTau.idDeepTau2017v2p1VSe#
+    if GoodTau.idDeepTau2017v2p1VSe+1 > 0.:
+        tau_DeepTauVsEle_WP[0]  =   math.log(GoodTau.idDeepTau2017v2p1VSe+1, 2)#
+    else:
+        tau_DeepTauVsEle_WP[0]  =  0.
     tau_DeepTauVsEle_raw[0] =   GoodTau.rawDeepTau2017v2p1VSe#
-    tau_DeepTauVsMu_WP[0]   =   GoodTau.idDeepTau2017v2p1VSmu#
+
+    if GoodTau.idDeepTau2017v2p1VSmu+1 > 0.:
+        tau_DeepTauVsMu_WP[0]   =   math.log(GoodTau.idDeepTau2017v2p1VSmu+1, 2)#
+    else:
+        tau_DeepTauVsMu_WP[0]   =   0.
     tau_DeepTauVsMu_raw[0]  =   GoodTau.rawDeepTau2017v2p1VSmu#
-    tau_DeepTauVsJet_WP[0]  =   GoodTau.idDeepTau2017v2p1VSjet#
+
+    if GoodTau.idDeepTau2017v2p1VSjet+1 > 0.:
+        tau_DeepTauVsJet_WP[0]  =   math.log(GoodTau.idDeepTau2017v2p1VSjet+1, 2)#
+    else:
+        tau_DeepTauVsJet_WP[0]  =   0.
     tau_DeepTauVsJet_raw[0] =   GoodTau.rawDeepTau2017v2p1VSjet#
+
     tau_isolation[0]=   GoodTau.neutralIso
     m_leptau=(GoodTau.p4() + tightlep.p4()).M()
     tauleadTk_ptOverTau[0]  =   GoodTau.leadTkPtOverTauPt#
@@ -792,7 +809,7 @@ for i in range(tree.GetEntries()):
     #if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_iso[0]==1 and pass_tau_vsJetWP[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1:
     #Cut_dict[7][1]+=1
 
-    if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection_ML[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1:  pass_upToBVeto_ML[0]=1#
+    #if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection_ML[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1:  pass_upToBVeto_ML[0]=1#
 
     if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1: pass_upToBVeto[0]=1#
 
