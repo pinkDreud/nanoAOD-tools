@@ -1,4 +1,4 @@
-65;6003;1cimport ROOT
+import ROOT
 import ROOT.TMath as TMath
 import math
 import cmath
