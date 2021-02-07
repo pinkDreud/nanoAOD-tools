@@ -475,7 +475,7 @@ for i in range(tree.GetEntries()):
         continue
 
     if isMC:
-        vTrigEle, vTrigMu, vTrigHT = trig_finder(HLT, sample.year)
+        vTrigEle, vTrigMu, vTrigHT = trig_finder(HLT, sample.year, sample.label)
         if chosenTrigger == "Ele": HLT_effLumi[0] = lumiFinder(chosenTrigger, vTrigEle)
         if chosenTrigger == "Mu":  HLT_effLumi[0] = lumiFinder(chosenTrigger, vTrigMu)
         if chosenTrigger == "HT":  HLT_effLumi[0] = lumiFinder(chosenTrigger, vTrigHT)
@@ -494,7 +494,7 @@ for i in range(tree.GetEntries()):
 
     if len(taus) > 0 and len(idx_list_tau)>0:
         idx_tau = idx_list_tau[0]
-        Veto_TauZMass[0]    =   Veto_Tau_ZMass(idx_tau, taus, electrons, muons)      #1 if there's another lepton in the Z mass range, 0 if not
+        #Veto_TauZMass[0]    =   Veto_Tau_ZMass(idx_tau, taus, electrons, muons)      #1 if there's another lepton in the Z mass range, 0 if not
         mT_tauMET[0]                    =   mTlepMet(met, taus[idx_tau].p4())
         FakeTau_pt[0]                   =   taus[idx_tau].pt
         FakeTau_eta[0]                  =   taus[idx_tau].eta
@@ -513,25 +513,28 @@ for i in range(tree.GetEntries()):
     isEle = None
 
     #if nLeps_LightLeptonsVL[0] == 1 or nLeps_LightLeptons[0] == 1 or nLeps_LightLeptonsTight[0] == 1:
-    if nLeps_LightLeptons[0] == 1:
-        print "e:", len(idx_list_e), "mu:", len(idx_list_m)
-        if len(idx_list_e) == 0:
+    if nLeps_LightLeptons[0] > 0:
+        #print "e:", len(idx_list_e), "mu:", len(idx_list_m)
+        if len(idx_list_e) == 0 and len(idx_list_m) > 0:
             isEle = False
-        elif len(idx_list_m) == 0:
-            isEle == True
-        #elif muons[0].pt> electrons[0].pt:
-            #isEle = False
-        #else:
-            #isEle = True
+        elif len(idx_list_m) == 0 and len(idx_list_e) > 0:
+            isEle = True
+        elif len(idx_list_m) > 0 and len(idx_list_e) > 0:
+            if muons[idx_list_m[0]].pt > electrons[idx_list_e[0]].pt:
+                isEle = False
+            elif muons[idx_list_m[0]].pt < electrons[idx_list_e[0]].pt:
+                isEle = True
 
-    if isEle:
-        leptons = electrons
-        idx_lep = idx_list_e[0]
-    else:
-        leptons = muons
-        idx_lep = idx_list_m[0]
-    
-    if len(leptons)>0 and isEle != None:
+    if isEle != None:
+        #print "after check:", idx_list_e, idx_list_m, isEle
+        if isEle:
+            leptons = electrons
+            idx_lep = idx_list_e[0]
+        else:
+            leptons = muons
+            idx_lep = idx_list_m[0]
+        #print leptons[idx_lep].pdgId
+        #if len(leptons)>0 and isEle != None:
 
         lepGood=None
         lepGood_p4 = ROOT.TLorentzVector()
@@ -547,7 +550,7 @@ for i in range(tree.GetEntries()):
                     break
         else:
             for mu in leptons:
-                if mu.pfRelIso04_all<1 and mu.looseId:
+                if mu.jetRelIso<1 and mu.looseId:
                     lepGood = mu
                     lepGood_p4 = mu.p4()
                     break
@@ -609,7 +612,7 @@ for i in range(tree.GetEntries()):
                 FakeLepton_pfRelIso04[0]    =   lepGood.jetRelIso
                 FakeLepton_isTight[0]       =   lepGood.mvaFall17V2Iso_WP90
             else:
-                FakeLepton_pfRelIso04[0]    =   lepGood.pfRelIso04_all
+                FakeLepton_pfRelIso04[0]    =   lepGood.jetRelIso
                 FakeLepton_isTight[0]       =   lepGood.tightId
             if isMC:
                 FakeLepton_isPrompt[0]      =   lepGood.genPartFlav

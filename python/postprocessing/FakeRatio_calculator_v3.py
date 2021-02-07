@@ -224,7 +224,7 @@ def FakeCalc(sample, isData, nev):
             if abs(FakeLepton.pdgid) != 11: 
                 continue
             
-            if veto.LightLeptons==1:
+            if nleps.LightLeptons > 1:
                 continue
             
             if jets.numberSeparate <1: 
