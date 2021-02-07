@@ -47,6 +47,7 @@ effLumi_2017 = {
             "Mu50"                          : 41.54,
             "Mu8_TrkIsoVVL"                 : 0.0027,
             "Mu17_TrkIsoVVL"                : 0.0658,
+            "Mu15_IsoVVVL_PFHT600"          : 0.0012,    
             },
         }
 
@@ -121,8 +122,9 @@ def trig_finder(HLT, year, samplename):
     vTrigEle = []
     vTrigMu = []
     vTrigHT = []
-
-    if (year == 2017):
+    
+    if (year == 2017)
+        if HLT.Mu15_IsoVVVL_PFHT600:                    vTrigMu.append("Mu15_IsoVVVL_PFHT600")
         if HLT.IsoMu27:                                 vTrigMu.append("IsoMu27")
         if HLT.Mu50:                                    vTrigMu.append("Mu50")
         if HLT.Mu8_TrkIsoVVL:                           vTrigMu.append("Mu8_TrkIsoVVL")
