@@ -18,7 +18,7 @@ import math
 import datetime
 import copy
 from array import array
-from FakeRatio_utils_jetRI import *
+from FakeRatio_utils_dev import *
 
 usage = "python FakeRatio_apc.py [nome_del_sample_in_samples.py] 0 [file_in_input] [local_or_remote] [chosen_trigger]"
 
@@ -490,46 +490,55 @@ for i in range(tree.GetEntries()):
 
     #Taus
 
-    Veto_TauLeptons[0]  =   Veto_Tau_Leptons(taus, electrons, muons)    #1 if there's another lepton, 0 if not
-    Veto_TauZMass[0]    =   Veto_Tau_ZMass(taus, electrons, muons)      #1 if there's another lepton in the Z mass range, 0 if not
+    Veto_TauLeptons[0], idx_list_tau  =   Veto_Tau_Leptons(taus, electrons, muons)    #1 if there's another lepton, 0 if not
 
-    if len(taus) > 0:
-        mT_tauMET[0]                    =   mTlepMet(met, taus[0].p4())
-        FakeTau_pt[0]                   =   taus[0].pt
-        FakeTau_eta[0]                  =   taus[0].eta
-        FakeTau_phi[0]                  =   taus[0].phi
-        FakeTau_mass[0]                 =   taus[0].mass
-        FakeTau_charge[0]               =   taus[0].charge
-        FakeTau_DeepTauWP[0]            =   taus[0].idDeepTau2017v2p1VSjet
+    if len(taus) > 0 and len(idx_list_tau)>0:
+        idx_tau = idx_list_tau[0]
+        Veto_TauZMass[0]    =   Veto_Tau_ZMass(idx_tau, taus, electrons, muons)      #1 if there's another lepton in the Z mass range, 0 if not
+        mT_tauMET[0]                    =   mTlepMet(met, taus[idx_tau].p4())
+        FakeTau_pt[0]                   =   taus[idx_tau].pt
+        FakeTau_eta[0]                  =   taus[idx_tau].eta
+        FakeTau_phi[0]                  =   taus[idx_tau].phi
+        FakeTau_mass[0]                 =   taus[idx_tau].mass
+        FakeTau_charge[0]               =   taus[idx_tau].charge
+        FakeTau_DeepTauWP[0]            =   taus[idx_tau].idDeepTau2017v2p1VSjet
         if isMC: 
-            FakeTau_isPrompt[0]         =   taus[0].genPartFlav
+            FakeTau_isPrompt[0]         =   taus[idx_tau].genPartFlav
 
     #light leptons
-    nLeps_LightLeptonsVL[0]      = Veto_Light_Leptons_VL(list(electrons), list(muons))
-    nLeps_LightLeptons[0]        = Veto_Light_Leptons(list(electrons), list(muons))
-    nLeps_LightLeptonsTight[0]   = Veto_Light_Leptons_tight(list(electrons), list(muons))
+    #nLeps_LightLeptonsVL[0]      = Veto_Light_Leptons_VL(list(electrons), list(muons))
+    nLeps_LightLeptons[0], idx_list_e, idx_list_m  = Veto_Light_Leptons(list(electrons), list(muons))
+    #nLeps_LightLeptonsTight[0]   = Veto_Light_Leptons_tight(list(electrons), list(muons))
 
     isEle = None
 
-    if nLeps_LightLeptonsVL[0] == 1 or nLeps_LightLeptons[0] == 1 or nLeps_LightLeptonsTight[0] == 1:
-        if len(electrons) == 0:
+    #if nLeps_LightLeptonsVL[0] == 1 or nLeps_LightLeptons[0] == 1 or nLeps_LightLeptonsTight[0] == 1:
+    if nLeps_LightLeptons[0] == 1:
+        print "e:", len(idx_list_e), "mu:", len(idx_list_m)
+        if len(idx_list_e) == 0:
             isEle = False
-        elif len(muons) == 0:
+        elif len(idx_list_m) == 0:
             isEle == True
-        elif muons[0].pt> electrons[0].pt:
-            isEle = False
-        else:
-            isEle = True
+        #elif muons[0].pt> electrons[0].pt:
+            #isEle = False
+        #else:
+            #isEle = True
 
     if isEle:
         leptons = electrons
+        idx_lep = idx_list_e[0]
     else:
         leptons = muons
+        idx_lep = idx_list_m[0]
     
     if len(leptons)>0 and isEle != None:
 
         lepGood=None
         lepGood_p4 = ROOT.TLorentzVector()
+        lepGood = leptons[idx_lep]
+        lepGood_p4 = leptons[idx_lep].p4()
+
+        '''
         if isEle:
             for ele in leptons:
                 if ele.jetRelIso<1 and ele.mvaFall17V2Iso_WPL:
@@ -538,11 +547,12 @@ for i in range(tree.GetEntries()):
                     break
         else:
             for mu in leptons:
-                if mu.jetRelIso<1 and mu.looseId:
+                if mu.pfRelIso04_all<1 and mu.looseId:
                     lepGood = mu
                     lepGood_p4 = mu.p4()
                     break
-                    
+        '''
+
         if lepGood!=None:
             mT_lepMET[0]        =   mTlepMet(met, lepGood_p4)
             mT_leppuppiMET[0]   =   mTlepMet(puppimet, lepGood_p4)
@@ -599,7 +609,7 @@ for i in range(tree.GetEntries()):
                 FakeLepton_pfRelIso04[0]    =   lepGood.jetRelIso
                 FakeLepton_isTight[0]       =   lepGood.mvaFall17V2Iso_WP90
             else:
-                FakeLepton_pfRelIso04[0]    =   lepGood.jetRelIso
+                FakeLepton_pfRelIso04[0]    =   lepGood.pfRelIso04_all
                 FakeLepton_isTight[0]       =   lepGood.tightId
             if isMC:
                 FakeLepton_isPrompt[0]      =   lepGood.genPartFlav
