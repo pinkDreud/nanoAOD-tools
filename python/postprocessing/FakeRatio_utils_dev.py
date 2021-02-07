@@ -123,7 +123,7 @@ def trig_finder(HLT, year, samplename):
     vTrigMu = []
     vTrigHT = []
     
-    if (year == 2017)
+    if (year == 2017):
         if HLT.Mu15_IsoVVVL_PFHT600:                    vTrigMu.append("Mu15_IsoVVVL_PFHT600")
         if HLT.IsoMu27:                                 vTrigMu.append("IsoMu27")
         if HLT.Mu50:                                    vTrigMu.append("Mu50")
