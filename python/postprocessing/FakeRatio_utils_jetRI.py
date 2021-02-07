@@ -350,7 +350,7 @@ def Veto_Tau_ZMass(i, taus, ele, mu): #return 0 if the event is okay, 1 if there
 
         for electron in ele:
             #print('Electrion')
-            if not (electron.jetRelIso<1 and electron.mvaFall17V2Iso_WP90): continue
+            if not (electron.jetRelIso<1 and electron.mvaFall17V2Iso_WPL): continue
             if deltaR(electron.eta, electron.phi, tau1.Eta(), tau1.Phi())<0.5: continue
             eleV=ROOT.TLorentzVector(0,0,0,0)
             eleV.SetPtEtaPhiM(electron.pt, electron.eta, electron.phi, electron.mass)
@@ -384,7 +384,7 @@ def Veto_Tau_Leptons(taus, ele, mu):
 
     for i in idxl:
         for electron in ele:
-            if deltaR(taus[i].eta, taus[i].phi, electron.eta, electron.pt)>0.5 and electron.jetRelIso<1 and electron.mvaFall17V2Iso_WP90:
+            if deltaR(taus[i].eta, taus[i].phi, electron.eta, electron.pt)>0.5 and electron.jetRelIso<1 and electron.mvaFall17V2Iso_WPL:
                 #print len(taus), idxl
                 return 1, idxl
         for muon in mu:
@@ -421,7 +421,7 @@ def Veto_Light_Leptons(ele, mu):
     idxl_e = []
     idxl_m = []
     for i, electron in enumerate(ele):
-        if electron.jetRelIso<1 and electron.mvaFall17V2Iso_WP90:
+        if electron.jetRelIso<1 and electron.mvaFall17V2Iso_WPL:
             nEle+=1
             idxl_e.append(i)
     for i, muon in enumerate(mu):

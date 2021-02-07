@@ -1,4 +1,4 @@
-import ROOT
+65;6003;1cimport ROOT
 import ROOT.TMath as TMath
 import math
 import cmath
@@ -170,7 +170,7 @@ def SelectLepton(lepCollection, isMu): #isMu==True -> muons else Ele
     
     for i in range(len(lepCollection)):
         if abs(lepCollection[i].pdgId) == 13:
-            if not (lepCollection[i].pfRelIso04_all>=ISO_CUT_MU and lepCollection[i].pfRelIso04_all<1):
+            if not (lepCollection[i].pfRelIso04_all>=ISO_CUT_MU and lepCollection[i].pfRelIso04_all<1 and not lepCollection[i].tightId and lepCollection[i].looseId):
                 continue
             if lepCollection[i].pt<PT_CUT_MU: continue
             if abs(lepCollection[i].eta)>ETA_CUT_MU: continue 
@@ -198,7 +198,7 @@ def SelectLooseLepton(lepCollection, isMu): #isMu==True -> muons else Ele
         if isMu:
           if not (lepCollection[i].looseId and not(lepCollection[i].tightId) and lepCollection[i].pfRelIso04_all<1 and lepCollection[i].pfRelIso04_all>=ISO_CUT_MU): continue
         else:
-          if not (lepCollection[i].mvaFall17V2Iso_WPL and lepCollection[i].jetRelIso>=ISO_CUT_ELE and lepCollection[i].jetRelIso<1 and not(lepCollection[i].mvaFall17V2Iso_WP90)): continue    
+          if not (lepCollection[i].mvaFall17V2Iso_WPL and lepCollection[i].jetRelIso>=ISO_CUT_ELE and lepCollection[i].jetRelIso<1 and not(lepCollection[i].mvaFall17V2Iso_WPL)): continue    
         if lepCollection[i].pt<pT_cut: continue
         if abs(lepCollection[i].eta)>eta_cut: continue 
         if not isMu and(abs(lepCollection[i].eta)>1.4442 and abs(lepCollection[i].eta)<1.566): continue
@@ -230,7 +230,7 @@ def SelectTau(tauCollection, GoodMuon, vsEleWP, vsMuWP, vsJetWP):
         return i, 1
     for i in range(len(tauCollection)):
         if deltaR(tauCollection[i].eta, tauCollection[i].phi, GoodMuon.eta, GoodMuon.phi)<DR_OVERLAP_CONE_TAU: continue
-        if not (tauCollection[i].idDeepTau2017v2p1VSe>=vsEleWP and tauCollection[i].idDeepTau2017v2p1VSmu>=vsMuWP and tauCollection[i].idDeepTau2017v2p1VSjet>=4 and tauCollection[i].idDecayModeNewDMs):   continue
+        if not (tauCollection[i].idDeepTau2017v2p1VSe>=vsEleWP and tauCollection[i].idDeepTau2017v2p1VSmu>=vsMuWP and tauCollection[i].idDeepTau2017v2p1VSjet>=4 and not tauCollection[i].idDeepTau2017v2p1VSjet<vsJetWP and tauCollection[i].idDecayModeNewDMs):   continue
         if tauCollection[i].pt<PT_CUT_TAU: continue
         if abs(tauCollection[i].eta)>ETA_CUT_TAU: continue
         return i, 0
