@@ -56,7 +56,7 @@ def AreAllCondored(samplename):
     else:
         return True
         
-usage = 'python SetAndLaunchCondorRun.py -y year -j wp_jet -m wp_mu -e wp_ele -f folder --max max_jobs -c -d dataset'
+usage = 'python SetAndLaunchCondorRun_jetRI.py -y year -j wp_jet -m wp_mu -e wp_ele -f folder --max max_jobs -c -d dataset'
 parser = optparse.OptionParser(usage)
 parser.add_option('-y', dest='year', type=str, default = '2017', help='Please enter a year, default is 2017')
 parser.add_option('-j', dest='jetwp', type=str, default = 'VT', help='Please enter a TauID WP for vsJet')
@@ -186,12 +186,12 @@ if not opt.check:
     
     t.write("PT_CUT_ELE=  35\n")
     t.write("ETA_CUT_ELE= 2.4\n")
-    t.write("ISO_CUT_ELE= 0.1\n\n")
+    t.write("ISO_CUT_ELE= 0.08\n\n")
     
-    t.write("REL_ISO_CUT_LEP_VETO_ELE=   0.1\n")
+    t.write("REL_ISO_CUT_LEP_VETO_ELE=   0.08\n")
     t.write("PT_CUT_LEP_VETO_ELE=        15\n")
     t.write("ETA_CUT_LEP_VETO_ELE=       2.4\n")
-    t.write("REL_ISO_CUT_LEP_VETO_MU=    0.25\n")
+    t.write("REL_ISO_CUT_LEP_VETO_MU=    0.15\n")
     t.write("PT_CUT_LEP_VETO_MU=         10\n")
     t.write("ETA_CUT_LEP_VETO_MU=        2.4\n\n")
     

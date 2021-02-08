@@ -73,7 +73,10 @@ for sample in samples:
                 curl = os.popen('crab getoutput --xrootd --jobids=' + str(crabgo) + ' -d ' + path + crabdir).readlines()
                 
                 for cu in curl:
-                    idx = int(cu.split("hadd_")[-1].split(".")[0])
+                    try:
+                        idx = int(cu.split("hadd_")[-1].split(".")[0])
+                    except:
+                        continue
                     url_dict[idx] = cu
                     
                     #f.write(cu)
