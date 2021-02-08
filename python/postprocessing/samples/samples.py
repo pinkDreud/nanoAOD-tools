@@ -1052,6 +1052,10 @@ DataHTF_2017.dataset = '/JetHT/Run2017F-'+tag_data + '-v1/NANOAOD'
 DataHT_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataHT_2017")
 DataHT_2017.year = 2017
 DataHT_2017.components = [DataHTB_2017, DataHTC_2017, DataHTD_2017, DataHTE_2017, DataHTF_2017]
+DataHTnoB_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataHT_2017")
+DataHTnoB_2017.year = 2017
+DataHTnoB_2017.components = [DataHTC_2017, DataHTD_2017, DataHTE_2017, DataHTF_2017]
+
 
 
 SampleHTFake_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "SampleHTFake_2017")
@@ -1173,7 +1177,7 @@ sample_dict={
     'FakeEle_2017':FakeEle_2017,
     'DataEle_2017':DataEle_2017, 'DataEleB_2017':DataEleB_2017, 'DataEleC_2017':DataEleC_2017, 'DataEleD_2017':DataEleD_2017, 'DataEleE_2017':DataEleE_2017, 'DataEleF_2017':DataEleF_2017, 'DataEleFake_2017': DataEleFake_2017, 'MCFake_2017': MCFake_2017,
     'DataTau_2017':DataTau_2017, 'DataTauB_2017':DataTauB_2017, 'DataTauC_2017':DataTauC_2017, 'DataTauD_2017':DataTauD_2017, 'DataTauE_2017':DataTauE_2017, 'DataTauF_2017':DataTauF_2017, 'DataTauFake_2017': DataTauFake_2017,
-    'DataHT_2017':DataHT_2017, 'DataHTB_2017':DataHTB_2017, 'DataHTC_2017':DataHTC_2017, 'DataHTD_2017':DataHTD_2017, 'DataHTE_2017':DataHTE_2017, 'DataHTF_2017':DataHTF_2017,
+    'DataHT_2017':DataHT_2017, 'DataHTnoB_2017':DataHTnoB_2017, 'DataHTB_2017':DataHTB_2017, 'DataHTC_2017':DataHTC_2017, 'DataHTD_2017':DataHTD_2017, 'DataHTE_2017':DataHTE_2017, 'DataHTF_2017':DataHTF_2017,
     'DataMET_2017':DataMET_2017, 'DataMETB_2017':DataMETB_2017, 'DataMETC_2017':DataMETC_2017, 'DataMETD_2017':DataMETD_2017, 'DataMETE_2017':DataMETE_2017, 'DataMETF_2017':DataMETF_2017,
 
     'SampleEleFake_2017': SampleEleFake_2017, 'SampleMuFake_2017': SampleMuFake_2017, 'SampleHTFake_2017': SampleHTFake_2017,
