@@ -230,7 +230,7 @@ def SelectTau(tauCollection, GoodMuon, vsEleWP, vsMuWP, vsJetWP):
         return i, 1
     for i in range(len(tauCollection)):
         if deltaR(tauCollection[i].eta, tauCollection[i].phi, GoodMuon.eta, GoodMuon.phi)<DR_OVERLAP_CONE_TAU: continue
-        if not (tauCollection[i].idDeepTau2017v2p1VSe>=vsEleWP and tauCollection[i].idDeepTau2017v2p1VSmu>=vsMuWP and tauCollection[i].idDeepTau2017v2p1VSjet>=4 and not tauCollection[i].idDeepTau2017v2p1VSjet<vsJetWP and tauCollection[i].idDecayModeNewDMs):   continue
+        if not (tauCollection[i].idDeepTau2017v2p1VSe>=vsEleWP and tauCollection[i].idDeepTau2017v2p1VSmu>=vsMuWP and tauCollection[i].idDeepTau2017v2p1VSjet>=1 and not tauCollection[i].idDeepTau2017v2p1VSjet<vsJetWP and tauCollection[i].idDecayModeNewDMs):   continue
         if tauCollection[i].pt<PT_CUT_TAU: continue
         if abs(tauCollection[i].eta)>ETA_CUT_TAU: continue
         return i, 0
