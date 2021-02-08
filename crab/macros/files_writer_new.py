@@ -37,25 +37,25 @@ for sample in samples:
         if "DataEleB" in sample.label or "DataMuB" in sample.label:
             continue
         dirpath = dirpath + "Fake/" + opt.trig + "/"
-        crabdir = crabdir + dirtag + "/"
+        crabdir = crabdir + dirtag
     else:
         crabdir = crabdir + "/"
 
-    #print dirpath, crabdir
+    print "Saving txts in ", dirpath, "\t CrabDir:", crabdir
 
     if not os.path.exists(dirpath):
         os.makedirs(dirpath)
 
     f = open(dirpath+str(sample.label)+".txt", "w")
     url = os.popen('crab getoutput --xrootd --quantity="all" -d ' + path + crabdir).readlines()
-    #print len(url)
 
     print("Printing out crabbed files for "+str(sample.label))
 
     url_dict = {}
     for u in url:
         if 'root' not in u:
-            print u.split("for ")[-1].split(" ")[0]
+            print "Let's split requests to make crab getoutput happy..."
+            #print u.split("for ")[-1].split(" ")[0]
             try:
                 npaths = int(u.split("for ")[-1].split(" ")[0])
             except:
@@ -65,21 +65,31 @@ for sample in samples:
             rang = 500
             t = 0
             while not finished:
-                #for key, value in url_dict.items():
-                #print type(key), key, value
                 intmin = int(t*500+1)
                 intmax = int(min((t+1)*500, npaths))
                 crabgo = str(intmin)+'-'+str(intmax)
+                print 'Finding rootfile produced by jobs', str(crabgo), "..."
                 curl = os.popen('crab getoutput --xrootd --jobids=' + str(crabgo) + ' -d ' + path + crabdir).readlines()
                 
-                for cu in curl:
-                    try:
-                        idx = int(cu.split("hadd_")[-1].split(".")[0])
-                    except:
+                cidx = 0
+                while cidx < len(curl):
+                    cu = curl[cidx]
+                    if cu.startswith('The job with id '):
+                        cu_err = int(cu.split('The job with id ')[-1].split(' is not')[0])
+                        print cu_err, " is missing, retrying without considering it..."
+                        crabgo_err = str(intmin) + "-" + str(cu_err-1) + "," + str(cu_err+1) + "-" + str(intmax)
+                        print 'Finding rootfile produced by jobs', str(crabgo_err), "..."
+                        curl = os.popen('crab getoutput --xrootd --jobids=' + str(crabgo_err) + ' -d ' + path + crabdir).readlines()
                         continue
-                    url_dict[idx] = cu
-                    
-                    #f.write(cu)
+                    else:
+                        if 'hadd_' in cu:
+                            idx = int(cu.split("hadd_")[-1].split(".")[0])
+                        else:
+                            continue
+
+                        url_dict[idx] = cu
+                        cidx += 1
+
                 if intmax == npaths:
                     finished = True
                 t+=1
