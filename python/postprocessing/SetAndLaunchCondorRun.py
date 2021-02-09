@@ -188,10 +188,10 @@ if not opt.check:
     t.write("ETA_CUT_ELE= 2.4\n")
     t.write("ISO_CUT_ELE= 0.08\n\n")
     
-    t.write("REL_ISO_CUT_LEP_VETO_ELE=   0.08\n")
+    t.write("REL_ISO_CUT_LEP_VETO_ELE=   0.1")
     t.write("PT_CUT_LEP_VETO_ELE=        15\n")
     t.write("ETA_CUT_LEP_VETO_ELE=       2.4\n")
-    t.write("REL_ISO_CUT_LEP_VETO_MU=    0.15\n")
+    t.write("REL_ISO_CUT_LEP_VETO_MU=    0.25\n")
     t.write("PT_CUT_LEP_VETO_MU=         10\n")
     t.write("ETA_CUT_LEP_VETO_MU=        2.4\n\n")
     

@@ -160,9 +160,9 @@ def SelectLepton(lepCollection, isMu): #isMu==True -> muons else Ele
         eta_cut=ETA_CUT_ELE
     for i in range(len(lepCollection)):
         if isMu:
-            if not (lepCollection[i].tightId and lepCollection[i].pfRelIso04_all<ISO_CUT_MU and lepCollection[i].pfRelIso04_all>0.): continue
+            if not (lepCollection[i].tightId and (lepCollection[i].pfRelIso04_all<ISO_CUT_MU and lepCollection[i].pfRelIso04_all>=0.)): continue
         else:
-            if not (lepCollection[i].mvaFall17V2Iso_WP90 and lepCollection[i].jetRelIso<ISO_CUT_ELE and lepCollection[i].jetRelIso>0.): continue    
+            if not (lepCollection[i].mvaFall17V2Iso_WP90 and (lepCollection[i].jetRelIso<ISO_CUT_ELE and lepCollection[i].jetRelIso>=0.)): continue    
         if lepCollection[i].pt<pT_cut: continue
         if abs(lepCollection[i].eta)>eta_cut: continue 
         if not isMu and(abs(lepCollection[i].eta)>1.4442 and abs(lepCollection[i].eta)<1.566): continue
@@ -170,13 +170,13 @@ def SelectLepton(lepCollection, isMu): #isMu==True -> muons else Ele
     
     for i in range(len(lepCollection)):
         if abs(lepCollection[i].pdgId) == 13:
-            if not (lepCollection[i].pfRelIso04_all>=ISO_CUT_MU and lepCollection[i].pfRelIso04_all<1 and not lepCollection[i].tightId and lepCollection[i].looseId):
+            if not (lepCollection[i].pfRelIso04_all>=ISO_CUT_MU and lepCollection[i].pfRelIso04_all<=1. and (not lepCollection[i].tightId and lepCollection[i].looseId)):
                 continue
             if lepCollection[i].pt<PT_CUT_MU: continue
             if abs(lepCollection[i].eta)>ETA_CUT_MU: continue 
             return i, 0
         elif abs(lepCollection[i].pdgId) == 11:
-            if not (lepCollection[i].mvaFall17V2Iso_WPL and not(lepCollection[i].mvaFall17V2Iso_WP90) and  lepCollection[i].jetRelIso>=ISO_CUT_ELE and lepCollection[i].jetRelIso<1):
+            if not (lepCollection[i].mvaFall17V2Iso_WPL and not(lepCollection[i].mvaFall17V2Iso_WP90) and lepCollection[i].jetRelIso>=ISO_CUT_ELE and lepCollection[i].jetRelIso<=1.):
                 continue
             if (abs(lepCollection[i].eta)>1.4442 and abs(lepCollection[i].eta)<1.566): continue
             if lepCollection[i].pt<PT_CUT_MU: continue
@@ -198,7 +198,7 @@ def SelectLooseLepton(lepCollection, isMu): #isMu==True -> muons else Ele
         if isMu:
           if not (lepCollection[i].looseId and not(lepCollection[i].tightId) and lepCollection[i].pfRelIso04_all<1 and lepCollection[i].pfRelIso04_all>=ISO_CUT_MU): continue
         else:
-          if not (lepCollection[i].mvaFall17V2Iso_WPL and lepCollection[i].jetRelIso>=ISO_CUT_ELE and lepCollection[i].jetRelIso<1 and not(lepCollection[i].mvaFall17V2Iso_WPL)): continue    
+          if not (lepCollection[i].mvaFall17V2Iso_WPL and lepCollection[i].jetRelIso>=ISO_CUT_ELE and lepCollection[i].jetRelIso<1): continue    
         if lepCollection[i].pt<pT_cut: continue
         if abs(lepCollection[i].eta)>eta_cut: continue 
         if not isMu and(abs(lepCollection[i].eta)>1.4442 and abs(lepCollection[i].eta)<1.566): continue
@@ -269,9 +269,9 @@ def LepVetoOneCollection(GoodLepton, collection, relIsoCut, ptCut, etaCut, isMu)
         lep=collection[i]
         if IsNotTheSameObject(GoodLepton, lep): 
             if isMu:
-              if lep.pfRelIso04_all>relIsoCut: continue
+              if lep.pfRelIso04_all>=relIsoCut: continue
             else:
-              if lep.jetRelIso>relIsoCut: continue
+              if lep.jetRelIso>=relIsoCut: continue
             if lep.pt<ptCut: continue
             if abs(lep.eta)>etaCut: continue
             return False
