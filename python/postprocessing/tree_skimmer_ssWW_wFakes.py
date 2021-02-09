@@ -641,7 +641,7 @@ for i in range(tree.GetEntries()):
     if SingleMu==1:
         lepton_pfRelIso04[0]        =   tightlep.pfRelIso04_all
     elif SingleEle==1:
-        lepton_pfRelIso04[0]        =   tightlep.pfRelIso03_all
+        lepton_pfRelIso04[0]        =   tightlep.jetRelIso
 
     #if not isMC:
     lepton_SFFake[0] = SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0])
