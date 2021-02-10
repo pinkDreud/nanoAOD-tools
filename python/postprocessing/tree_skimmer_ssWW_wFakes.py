@@ -750,15 +750,15 @@ for i in range(tree.GetEntries()):
     tauleadTk_deltaPhi[0]   =   GoodTau.leadTkDeltaPhi#
     tauleadTk_deltaEta[0]   =   GoodTau.leadTkDeltaEta#
 
-    if not isMC:
-        if lepton_LnTRegion[0]==1 and tau_LnTRegion[0]==0:
-            event_SFFake[0] = lepton_SFFake[0]
-        elif lepton_LnTRegion[0]==0 and tau_LnTRegion[0]==1:
-            event_SFFake[0] = tau_SFFake[0]
-        elif lepton_LnTRegion[0]==1 and tau_LnTRegion[0]==1:
-            event_SFFake[0] = lepton_SFFake[0]*tau_SFFake[0]
-        elif lepton_LnTRegion[0]==0 and tau_LnTRegion[0]==0:
-            event_SFFake[0] = 0.
+    #if not isMC:
+    if lepton_LnTRegion[0]==1 and tau_LnTRegion[0]==0:
+        event_SFFake[0] = lepton_SFFake[0]
+    elif lepton_LnTRegion[0]==0 and tau_LnTRegion[0]==1:
+        event_SFFake[0] = tau_SFFake[0]
+    elif lepton_LnTRegion[0]==1 and tau_LnTRegion[0]==1:
+        event_SFFake[0] = lepton_SFFake[0]*tau_SFFake[0]
+    elif lepton_LnTRegion[0]==0 and tau_LnTRegion[0]==0:
+        event_SFFake[0] = 0.
 
     #if GoodTau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET: pass_tau_vsJetWP[0]=1
     #else: pass_tau_vsJetWP[0]=0
