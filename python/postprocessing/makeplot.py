@@ -233,6 +233,9 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           histoname = "h_"+reg_+"_"+variabile_._name+"_"+cut_tag_
           stackname = "stack_"+reg_+"_"+variabile_._name+"_"+cut_tag_
           canvasname = "stack_"+reg_+"_"+variabile_._name+"_"+cut_tag_+"_"+lep_ + "_" + str(samples_[0].year)
+     if opt.wfake:
+          stackname += "_wFakes"
+          canvasname += "_wFakes"
      if("selection_AND_best_Wpjet_isbtag_AND_best_topjet_isbtag" in cut_tag_ ) or ("selection_AND_best_topjet_isbtag_AND_best_Wpjet_isbtag" in cut_tag_ ):
           blind = True
      stack = ROOT.THStack(stackname, variabile_._name)
@@ -242,7 +245,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      print samples_
      for s in samples_:
           if opt.wfake:
-               if s.label.startswith('WJets') or s.label.startswith('QCD'):
+               if s.label.startswith('WJets') or s.label.startswith('QCD') or s.label.startswith('DY') or s.label.startswith('TT_'):
                     continue
           else:
                if s.label.startswith('Fake'):
@@ -260,7 +263,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
 
      for s in samples_:
           if opt.wfake:
-               if s.label.startswith('WJets') or s.label.startswith('QCD'):
+               if s.label.startswith('WJets') or s.label.startswith('QCD') or s.label.startswith('DY') or s.label.startswith('TT_'):
                     continue
           else:
                if s.label.startswith('Fake'):

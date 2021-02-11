@@ -1899,7 +1899,7 @@ class systWeights(object):
 
 
 def SFFakeRatio_ele_calc(pT, eta):
-    inFile = ROOT.TFile.Open("FR_th2_ele.root")
+    inFile = ROOT.TFile.Open("FR_vsjet4.root")
     histo=ROOT.TH2F(inFile.Get("hFRDataele"))
     FR=0
     if(pT<=20):
@@ -1932,8 +1932,8 @@ def SFFakeRatio_ele_calc(pT, eta):
 
 def SFFakeRatio_tau_calc(pT, eta):
     histo = ROOT.TH2F()
-    inFile = ROOT.TFile.Open("FR_th2_tau.root")
-    histo=(ROOT.TH2F)(inFile.Get("h2FRele"))
+    inFile = ROOT.TFile.Open("FR_vsjet4.root")
+    histo=(ROOT.TH2F)(inFile.Get("hFRDatatau"))
     FR=0
     if(pT<=20):
         if(abs(eta)<1):         FR=histo.GetBinContent(1,1)
@@ -1965,8 +1965,8 @@ def SFFakeRatio_tau_calc(pT, eta):
 
 def SFFakeRatio_mu_calc(pT, eta):
     histo = ROOT.TH2F()
-    inFile = ROOT.TFile.Open("FR_th2_mu.root")
-    histo=(ROOT.TH2F)(inFile.Get("h2FRmu"))
+    inFile = ROOT.TFile.Open("FR_vsjet4.root")
+    histo=(ROOT.TH2F)(inFile.Get("hFRDatamu"))
     FR=0
     if(pT<=20):
         if(abs(eta)<1):         FR=histo.GetBinContent(1,1)
