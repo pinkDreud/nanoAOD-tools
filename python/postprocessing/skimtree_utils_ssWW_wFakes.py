@@ -315,10 +315,12 @@ def metCut(met):
 def mTlepMet(MET, lepton):
         return math.sqrt(2*lepton.Pt()*MET.pt*(1-math.cos(lepton.Phi()-MET.phi)))
 
-def Zeppenfeld(etas):
-    zepp_lepjj = etas[0] - 0.5*(etas[2]+etas[3])
-    zepp_taujj = etas[1] - 0.5*(etas[2]+etas[3])
+def Zeppenfeld(lep_eta, tau_eta, ljet_eta, sljet_eta):
+    print lep_eta, tau_eta, ljet_eta, sljet_eta
+    zepp_lepjj = lep_eta - 0.5*(ljet_eta+sljet_eta)
+    zepp_taujj = tau_eta - 0.5*(ljet_eta+sljet_eta)
     zepp_event = 0.5*abs(zepp_lepjj+zepp_taujj)
+    print zepp_lepjj, zepp_taujj, zepp_event
     return zepp_lepjj, zepp_taujj, zepp_event
 
 def closest(obj,collection,presel=lambda x,y: True):

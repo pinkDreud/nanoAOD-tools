@@ -381,8 +381,8 @@ systTree.branchTreesSysts(trees, "all", "HLT_effLumi",              outTreeFile,
 #zeppenfeld
 systTree.branchTreesSysts(trees, "all", "lepton_Zeppenfeld",              outTreeFile, lepton_Zeppenfeld)#
 systTree.branchTreesSysts(trees, "all", "lepton_Zeppenfeld_over_deltaEta_jj",              outTreeFile, lepton_Zeppenfeld_over_deltaEta_jj)#
-systTree.branchTreesSysts(trees, "all", "tau_Zeppenfeld",              outTreeFile, lepton_Zeppenfeld)#
-systTree.branchTreesSysts(trees, "all", "tau_Zeppenfeld_over_deltaEta_jj",              outTreeFile, lepton_Zeppenfeld_over_deltaEta_jj)#
+systTree.branchTreesSysts(trees, "all", "tau_Zeppenfeld",              outTreeFile, tau_Zeppenfeld)#
+systTree.branchTreesSysts(trees, "all", "tau_Zeppenfeld_over_deltaEta_jj",              outTreeFile, tau_Zeppenfeld_over_deltaEta_jj)#
 systTree.branchTreesSysts(trees, "all", "event_Zeppenfeld",              outTreeFile, event_Zeppenfeld)#
 systTree.branchTreesSysts(trees, "all", "event_Zeppenfeld_over_deltaEta_jj",              outTreeFile, event_Zeppenfeld_over_deltaEta_jj)#
 #cut variables
@@ -458,7 +458,7 @@ contagood=0
 for i in range(tree.GetEntries()):
     #reinizializza tutte le variabili a 0, per sicurezza
     for j, var in enumerate(var_list):
-        if j<len(var_list)-14:#
+        if j<len(var_list)-12:#
             var_list[j][0] = -999
         else:
             var_list[j][0] = 0
@@ -827,8 +827,9 @@ for i in range(tree.GetEntries()):
     deltaPhi_lepj1[0]   =   deltaPhi(GoodLep, jet1)#
     deltaPhi_lepj2[0]   =   deltaPhi(GoodLep, jet2)#
 
-    lepton_Zeppenfeld[0], tau_Zeppenfeld[0], event_Zeppenfeld[0] = Zeppenfeld([GoodLep.eta, GoodTau.eta, jet1.eta, jet2.eta])
-
+    lepton_Zeppenfeld[0], tau_Zeppenfeld[0], event_Zeppenfeld[0] = Zeppenfeld(lepton_eta[0], tau_eta[0], leadjet_eta[0], subleadjet_eta[0])
+    print Zeppenfeld(lepton_eta[0], tau_eta[0], leadjet_eta[0], subleadjet_eta[0])
+    print lepton_Zeppenfeld[0], tau_Zeppenfeld[0], event_Zeppenfeld[0]
     if not BVeto(jets): pass_b_veto[0]=1
 
     #if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_iso[0]==1 and pass_tau_vsJetWP[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1:
