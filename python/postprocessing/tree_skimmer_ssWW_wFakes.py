@@ -132,6 +132,8 @@ lepton_TightRegion      =   array.array('i', [-999])
 lepton_LnTRegion        =   array.array('i', [-999])
 lepton_SFFake           =   array.array('f', [-999.])
 lepton_isPrompt           =   array.array('i', [-999])
+lepton_Zeppenfeld           =   array.array('f', [-999])
+lepton_Zeppenfeld_over_deltaEta_jj           =   array.array('f', [-999])
 var_list.append(lepton_pt)
 var_list.append(lepton_eta)
 var_list.append(lepton_phi)
@@ -142,7 +144,8 @@ var_list.append(lepton_TightRegion)
 var_list.append(lepton_LnTRegion)
 var_list.append(lepton_SFFake)
 var_list.append(lepton_isPrompt)
-
+var_list.append(lepton_Zeppenfeld)
+var_list.append(lepton_Zeppenfeld_over_deltaEta_jj)
 #tau#
 tau_pt                  =   array.array('f', [-999.])
 tau_eta                 =   array.array('f', [-999.])
@@ -161,6 +164,8 @@ tau_TightRegion         =   array.array('i', [-999])
 tau_LnTRegion           =   array.array('i', [-999])
 tau_SFFake              =   array.array('f', [-999.])
 tau_isPrompt           =   array.array('i', [-999])
+tau_Zeppenfeld           =   array.array('f', [-999])
+tau_Zeppenfeld_over_deltaEta_jj           =   array.array('f', [-999])
 var_list.append(tau_isolation)
 var_list.append(tau_pt)
 var_list.append(tau_eta)
@@ -177,6 +182,14 @@ var_list.append(tau_TightRegion)#
 var_list.append(tau_LnTRegion)#
 var_list.append(tau_SFFake)#
 var_list.append(tau_isPrompt)#
+var_list.append(tau_Zeppenfeld)
+var_list.append(tau_Zeppenfeld_over_deltaEta_jj)
+
+event_Zeppenfeld           =   array.array('f', [-999])
+event_Zeppenfeld_over_deltaEta_jj           =   array.array('f', [-999])
+var_list.append(event_Zeppenfeld)
+var_list.append(event_Zeppenfeld_over_deltaEta_jj)
+
 #tau leadTk                        #
 tauleadTk_ptOverTau     =   array.array('f', [-999.])#
 tauleadTk_deltaPhi      =   array.array('f', [-999.])#
@@ -365,6 +378,13 @@ systTree.branchTreesSysts(trees, "all", "deltaPhi_lepj2",           outTreeFile,
 systTree.branchTreesSysts(trees, "all", "deltaEta_jj",              outTreeFile, deltaEta_jj)#
 systTree.branchTreesSysts(trees, "all", "SF_Fake",                  outTreeFile, SF_Fake)#
 systTree.branchTreesSysts(trees, "all", "HLT_effLumi",              outTreeFile, HLT_effLumi)#
+#zeppenfeld
+systTree.branchTreesSysts(trees, "all", "lepton_Zeppenfeld",              outTreeFile, lepton_Zeppenfeld)#
+systTree.branchTreesSysts(trees, "all", "lepton_Zeppenfeld_over_deltaEta_jj",              outTreeFile, lepton_Zeppenfeld_over_deltaEta_jj)#
+systTree.branchTreesSysts(trees, "all", "tau_Zeppenfeld",              outTreeFile, lepton_Zeppenfeld)#
+systTree.branchTreesSysts(trees, "all", "tau_Zeppenfeld_over_deltaEta_jj",              outTreeFile, lepton_Zeppenfeld_over_deltaEta_jj)#
+systTree.branchTreesSysts(trees, "all", "event_Zeppenfeld",              outTreeFile, event_Zeppenfeld)#
+systTree.branchTreesSysts(trees, "all", "event_Zeppenfeld_over_deltaEta_jj",              outTreeFile, event_Zeppenfeld_over_deltaEta_jj)#
 #cut variables
 systTree.branchTreesSysts(trees, "all", "pass_lepton_selection",    outTreeFile, pass_lepton_selection)
 systTree.branchTreesSysts(trees, "all", "pass_lepton_iso",          outTreeFile, pass_lepton_iso)
@@ -760,21 +780,24 @@ for i in range(tree.GetEntries()):
     elif lepton_LnTRegion[0]==0 and tau_LnTRegion[0]==0:
         event_SFFake[0] = 0.
 
-    #if GoodTau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET: pass_tau_vsJetWP[0]=1
-    #else: pass_tau_vsJetWP[0]=0
+    if isMC and event_SSFake[0]>0.:
+        if abs(lepton_isPrompt[0])==1 or abs(tau_isPrompt[0]==5):
+            event_SSFake[0] = -1.*event_SFFake[0]
+        else:
+            event_SFFake[0] = 0.
+        
+
     if GoodTau.charge==GoodLep.charge:
         pass_charge_selection[0]=1
 
-    #if (SingleEle or SingleMu) and pass_lepton_iso[0]==1 and pass_tau_vsJetWP[0]==1 and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1: Cut_dict[5][1]+=1
-    
     nJets[0] = len(jets)
     nBJets[0] = CountBJets(jets)#
 
     outputJetSel=SelectJet(list(jets), GoodTau, GoodLep)
     
     if outputJetSel==-999:
-        systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
-        systTree.fillTreesSysts(trees, "all")
+        #systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
+        #systTree.fillTreesSysts(trees, "all")
         continue  
 
     jet1, jet2 = outputJetSel
@@ -804,6 +827,8 @@ for i in range(tree.GetEntries()):
     deltaPhi_lepj1[0]   =   deltaPhi(GoodLep, jet1)#
     deltaPhi_lepj2[0]   =   deltaPhi(GoodLep, jet2)#
 
+    lepton_Zeppenfeld[0], tau_Zeppenfeld[0], event_Zeppenfeld[0] = Zeppenfeld([GoodLep.eta, GoodTau.eta, jet1.eta, jet2.eta])
+
     if not BVeto(jets): pass_b_veto[0]=1
 
     #if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_iso[0]==1 and pass_tau_vsJetWP[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1:
@@ -822,7 +847,9 @@ for i in range(tree.GetEntries()):
 
     mjj[0]=(leadJet+subleadJet).M()
     deltaEta_jj[0]=abs(leadJet.Eta()-subleadJet.Eta())
-
+    lepton_Zeppenfeld_over_deltaEta_jj[0] = lepton_Zeppenfeld[0]/deltaEta_jj[0]
+    tau_Zeppenfeld_over_deltaEta_jj[0] = tau_Zeppenfeld[0]/deltaEta_jj[0]
+    lepton_Zeppenfeld_over_deltaEta_jj[0] = event_Zeppenfeld[0]/deltaEta_jj[0]
 
     #if (SingleEle or SingleMu) and pass_lepton_iso[0]==1 and pass_tau_vsJetWP[0]==1 and  pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1 and pass_mjj_cut[0]==1: Cut_dict[8][1]+=1
 

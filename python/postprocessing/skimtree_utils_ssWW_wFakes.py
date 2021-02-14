@@ -8,7 +8,6 @@ import array
 import types
 from CutsAndValues_bu import *
 
-
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 WP_btagger = {
@@ -210,19 +209,6 @@ def SelectLooseLepton(lepCollection, isMu): #isMu==True -> muons else Ele
         return i
     return -1
 
-
-
-'''
-def SelectTau(tauCollection, GoodMuon):
-    if len(tauCollection)<1: return -1
-    for i in range(len(tauCollection)):
-        if deltaR(tauCollection[i].eta, tauCollection[i].phi, GoodMuon.eta, GoodMuon.phi)<DR_OVERLAP_CONE_TAU: continue
-        if not (tauCollection[i].idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and tauCollection[i].idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and tauCollection[i].idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET and tauCollection[i].idDecayModeNewDMs):   continue
-        if tauCollection[i].pt<PT_CUT_TAU: continue
-        if abs(tauCollection[i].eta)>ETA_CUT_TAU: continue
-        return i
-    return -1
-'''
 def SelectTau(tauCollection, GoodMuon, vsEleWP, vsMuWP, vsJetWP):
     #print('len taucollection : ', len(tauCollection))
     if len(tauCollection)<1:
@@ -329,6 +315,12 @@ def metCut(met):
 def mTlepMet(MET, lepton):
         return math.sqrt(2*lepton.Pt()*MET.pt*(1-math.cos(lepton.Phi()-MET.phi)))
 
+def Zeppenfeld(etas):
+    zepp_lepjj = etas[0] - 0.5*(etas[2]+etas[3])
+    zepp_taujj = etas[1] - 0.5*(etas[2]+etas[3])
+    zepp_event = 0.5*abs(zepp_lepjj+zepp_taujj)
+    return zepp_lepjj, zepp_taujj, zepp_event
+
 def closest(obj,collection,presel=lambda x,y: True):
     ret = None; drMin = 999
     for x in collection:
@@ -337,143 +329,6 @@ def closest(obj,collection,presel=lambda x,y: True):
         if dr < drMin: 
             ret = x; drMin = dr
     return (ret,drMin)
-
-def add_to_hemisphere(selobj, obj, pos, neg):
-    px_obj = obj.pt*ROOT.TMath.Cos(obj.phi)
-    py_obj = obj.pt*ROOT.TMath.Sin(obj.phi)
-    if obj == selobj:
-        pos.append([copy.deepcopy(px_obj), copy.deepcopy(py_obj)])
-        neg.append([copy.deepcopy(px_obj), copy.deepcopy(py_obj)])
-    elif 0. < deltaPhi(selobj, obj) < math.pi:
-        pos.append([copy.deepcopy(px_obj), copy.deepcopy(py_obj)])
-    elif -math.pi < deltaPhi(selobj, obj) < 0.:
-        neg.append([copy.deepcopy(px_obj), copy.deepcopy(py_obj)])
-
-def hemisphere_pt(objs):
-    thrust_px = 0.
-    thrust_py = 0.
-    num = 0.
-    den = 0.
-    for obj in objs:
-        obj_px = copy.deepcopy(obj[0])
-        thrust_px += obj_px
-        obj_py = copy.deepcopy(obj[1])
-        thrust_py += obj_py
-    #den = copy.deepcopy(total_pt)
-    mod = math.hypot(thrust_px, thrust_py)
-    return thrust_px, thrust_py, mod
-    '''
-    thrust_px = thrust_px / mod
-    thrust_py = thrust_py / mod
-    for obj in objs:
-        num += math.fabs(thrust_px*obj[0] + thrust_py*obj[1])
-    #print("num: ", num)
-    thrust = * num / den
-    #print( "thrust: ", thrust)
-    return thrust
-    '''
-
-def event_thrust(lep, jets, met):
-    ovr_thrust = 0.
-    had_thrust = 0.
-    ovr_pt = 0.
-    had_pt = 0.
-    for jet in jets:
-        had_pt += math.fabs(jet.pt)
-
-    ovr_pt = copy.deepcopy(had_pt)
-    ovr_pt += math.fabs(lep.pt) + math.fabs(met.pt)
-
-    had_max_hempt = 0.
-    had_thrust_ax_x = 0.
-    had_thrust_ax_y = 0.
-    ovr_max_hempt = 0.
-    ovr_thrust_ax_x = 0.
-    ovr_thrust_ax_y = 0.
-    for i, seljet in enumerate(jets): #build hemispheres for every jet
-        neg_ovr = []
-        neg_had = []
-        pos_ovr = []
-        pos_had = []
-        neg_ovr_res = []
-        neg_had_res = []
-        pos_ovr_res = []
-        pos_had_res = []
-        for j, jet in enumerate(jets):
-            add_to_hemisphere(seljet, jet, pos_had, neg_had)
-        pos_ovr = copy.deepcopy(pos_had)
-        neg_ovr = copy.deepcopy(neg_had)
-        add_to_hemisphere(seljet, lep, pos_ovr, neg_ovr)
-        add_to_hemisphere(seljet, met, pos_ovr, neg_ovr)
-
-        pos_had_res = list(hemisphere_pt(pos_had))
-        neg_had_res = list(hemisphere_pt(neg_had))
-
-        if had_max_hempt < pos_had_res[2]:
-            had_max_hempt = copy.deepcopy(pos_had_res[2])
-            had_thrust_ax_x = copy.deepcopy(pos_had_res[0]/pos_had_res[2])
-            had_thrust_ax_y = copy.deepcopy(pos_had_res[1]/pos_had_res[2])        
-        if had_max_hempt < neg_had_res[2]:
-            had_max_hempt = copy.deepcopy(neg_had_res[2])
-            had_thrust_ax_x = copy.deepcopy(neg_had_res[0]/neg_had_res[2])
-            had_thrust_ax_y = copy.deepcopy(neg_had_res[1]/neg_had_res[2])        
-
-        pos_ovr_res = list(hemisphere_pt(pos_ovr))
-        neg_ovr_res = list(hemisphere_pt(neg_ovr))
-
-        if ovr_max_hempt < pos_ovr_res[2]:
-            ovr_max_hempt = copy.deepcopy(pos_ovr_res[2])
-            ovr_thrust_ax_x = copy.deepcopy(pos_ovr_res[0]/pos_ovr_res[2])
-            ovr_thrust_ax_y = copy.deepcopy(pos_ovr_res[1]/pos_ovr_res[2])        
-        if ovr_max_hempt < neg_ovr_res[2]:
-            ovr_max_hempt = copy.deepcopy(neg_ovr_res[2])
-            ovr_thrust_ax_x = copy.deepcopy(neg_ovr_res[0]/neg_ovr_res[2])
-            ovr_thrust_ax_y = copy.deepcopy(neg_ovr_res[1]/neg_ovr_res[2])
-  
-    for jet in jets:
-        jpx = jet.pt*ROOT.TMath.Cos(jet.phi)
-        jpy = jet.pt*ROOT.TMath.Sin(jet.phi)
-        had_thrust += math.fabs(jpx*had_thrust_ax_x + jpy*had_thrust_ax_y)
-        ovr_thrust += math.fabs(jpx*ovr_thrust_ax_x + jpy*ovr_thrust_ax_y)
-    ovr_thrust += math.fabs(lep.pt*(ROOT.TMath.Cos(lep.phi)*ovr_thrust_ax_x + ROOT.TMath.Sin(lep.phi)*ovr_thrust_ax_y))
-    ovr_thrust += math.fabs(met.pt*(ROOT.TMath.Cos(met.phi)*ovr_thrust_ax_x + ROOT.TMath.Sin(met.phi)*ovr_thrust_ax_y))
-    had_thrust = had_thrust / had_pt
-    ovr_thrust = ovr_thrust / ovr_pt
-    
-    return round(ovr_thrust, 5), round(had_thrust, 5)
-
-'''
-def event_thrust(lep, jets, met):
-    ovr_thrust = []
-    had_thrust = []
-    ovr_pt = 0.
-    had_pt = 0.
-    for jet in jets:
-        had_pt += math.fabs(jet.pt)
-    #print( "had_pt: ", had_pt)
-    ovr_pt = copy.deepcopy(had_pt)
-    ovr_pt += math.fabs(lep.pt) + math.fabs(met.pt)
-    #print( "ovr_pt: ", ovr_pt)
-    for i, seljet in enumerate(jets): #build hemispheres for every jet
-        neg_ovr = []
-        neg_had = []
-        pos_ovr = []
-        pos_had = []
-        for j, jet in enumerate(jets):
-            add_to_hemisphere(seljet, jet, pos_had, neg_had)
-        pos_ovr = copy.deepcopy(pos_had)
-        neg_ovr = copy.deepcopy(neg_had)
-        add_to_hemisphere(seljet, lep, pos_ovr, neg_ovr)
-        add_to_hemisphere(seljet, met, pos_ovr, neg_ovr)
-        ovr_thrust.append(copy.deepcopy(hemisphere_thrust(pos_ovr, ovr_pt)))
-        ovr_thrust.append(copy.deepcopy(hemisphere_thrust(neg_ovr, ovr_pt)))
-        had_thrust.append(copy.deepcopy(hemisphere_thrust(pos_had, had_pt)))
-        had_thrust.append(copy.deepcopy(hemisphere_thrust(neg_had, had_pt)))
-
-    ovr_thrust.sort(reverse = True)
-    had_thrust.sort(reverse = True)
-    return round(ovr_thrust[0], 5), round(had_thrust[0], 5)
-'''
 
 def matchObjectCollection(objs,collection,dRmax=0.4,presel=lambda x,y: True):
     pairs = {}
@@ -505,21 +360,6 @@ def matchObjectCollectionMultiple(objs,collection,dRmax=0.4,presel=lambda x,y: T
 
 def pass_MET(flag): #returns the True if the event pass the MET Filter requiriments otherwise False
     return flag.goodVertices and flag.globalSuperTightHalo2016Filter and flag.HBHENoiseFilter and flag.HBHENoiseIsoFilter and flag.EcalDeadCellTriggerPrimitiveFilter and flag.BadPFMuonFilter
-
-def get_Mu(muons): #returns a collection of muons that pass the selection performed by the filter function
-    return list(filter(lambda x : x.tightId and abs(x.eta) < 2.4 and x.miniPFRelIso_all < 0.1, muons))
-
-def get_LooseMu(muons): #returns a collection of muons that pass the selection performed by the filter function
-    return list(filter(lambda x : x.looseId and not x.tightId and x.pt > 35 and x.miniPFRelIso_all < 0.4 and abs(x.eta) < 2.4, muons))
-
-def get_Ele(electrons): #returns a collection of electrons that pass the selection performed by the filter function
-    return list(filter(lambda x : x.mvaFall17V2noIso_WP90 and x.miniPFRelIso_all < 0.1 and ((abs(x.eta) < 1.4442) or (abs(x.eta) > 1.566 and abs(x.eta) < 2.5)), electrons))
-
-def get_LooseEle(electrons): #returns a collection of electrons that pass the selection performed by the filter function
-    return list(filter(lambda x : x.mvaFall17V2noIso_WPL and not x.mvaFall17V2noIso_WP90 and x.miniPFRelIso_all < 0.4 and x.pt > 35 and ((abs(x.eta) < 1.4442) or (abs(x.eta) > 1.566 and abs(x.eta)< 2.5)), electrons))
-
-def get_Jet(jets, pt): #returns a collection of jets that pass the selection performed by the filter function
-    return list(filter(lambda x : x.jetId >= 2 and abs(x.eta) < 2.4 and x.pt > pt, jets))
 
 def bjet_filter(jets, tagger, WP): #returns collections of b jets and no b jets (discriminated with btaggers)
     # b-tag working points: mistagging efficiency tight = 0.1%, medium 1% and loose = 10% 
@@ -629,23 +469,7 @@ def trig_map_all(HLT, PV, year, runPeriod):
 def get_ptrel(lepton, jet):
     ptrel = ((jet.p4()-lepton.p4()).Vect().Cross(lepton.p4().Vect())).Mag()/(jet.p4().Vect().Mag())
     return ptrel
- 
-def presel(PV, muons, electrons, jets): #returns three booleans: goodEvent assure the presence of at least a good lepton vetoing the presence of additional loose leptons, goodMuEvt is for good muon event, goodEleEvt is for good muon event   
-    isGoodPV = (PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
-    VetoMu = get_LooseMu(muons)
-    goodMu = get_Mu(muons)
-    VetoEle = get_LooseEle(electrons)
-    goodEle = get_Ele(electrons)
-    goodJet = get_Jet(jets, 25)
 
-    isGoodEvent = ((((len(goodMu) >= 1) and (len(goodEle) == 0)) or ((len(goodMu) == 0) and (len(goodEle) >= 1))) and len(VetoMu) == 0 and len(VetoEle) == 0 and len(goodJet) >= 2)
-    isMuon = (len(goodMu) >= 1) and (len(goodEle) == 0) and len(VetoMu) == 0 and len(VetoEle) == 0 and len(goodJet) >= 2
-    isElectron = (len(goodMu) == 0) and (len(goodEle) >= 1) and len(VetoMu) == 0 and len(VetoEle) == 0 and len(goodJet) >= 2
-    goodEvent = isGoodPV and isGoodEvent
-    goodMuEvt = isGoodPV and isMuon
-    goodEleEvt = isGoodPV and isElectron
-    return goodEvent, goodMuEvt, goodEleEvt
- 
 def print_hist(infile, plotpath, hist, option = "HIST", log = False, stack = False, title = ""):
     if not(isinstance(hist, list)):
         c1 = ROOT.TCanvas(infile + "_" + hist.GetName(), "c1", 50,50,700,600)
