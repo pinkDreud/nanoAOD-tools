@@ -680,8 +680,6 @@ for i in range(tree.GetEntries()):
     if isMC:
         tau_isPrompt[0] = GoodTau.genPartFlav
 
-    mT_tau_MET[0]=mTlepMet(met, GoodTau.p4())
-    mT_leptau_MET[0]=mTlepMet(met, GoodTau.p4()+tightlep.p4())
     tau_DeepTau_WP[0] = GoodTau.idDeepTau2017v2p1VSjet*1000.**2. + GoodTau.idDeepTau2017v2p1VSmu*1000. + GoodTau.idDeepTau2017v2p1VSe
     if GoodTau.idDeepTau2017v2p1VSe+1 > 0.:
         tau_DeepTauVsEle_WP[0]  =   math.log(GoodTau.idDeepTau2017v2p1VSe+1, 2)#
@@ -744,7 +742,7 @@ for i in range(tree.GetEntries()):
     #calculating deltaPhi                                                                                                      
     deltaPhi_jj[0]      =   deltaPhi(jet1, jet2)#
 
-    lepton_Zeppenfeld[0], tau_Zeppenfeld[0], event_Zeppenfeld[0] = Zeppenfeld([GoodLep.eta, GoodTau.eta, jet1.eta, jet2.eta])
+    lepton_Zeppenfeld[0], tau_Zeppenfeld[0], event_Zeppenfeld[0] = Zeppenfeld(lepton_eta[0], tau_eta[0], leadjet_eta[0], subleadjet_eta[0])
 
     if not BVeto(jets): pass_b_veto[0]=1
 

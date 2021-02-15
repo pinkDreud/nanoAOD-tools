@@ -36,8 +36,7 @@ def DoesSampleExist(samplename):
 
 def AreAllCondored(samplename):
     storelist = [line for line in open("../../crab/macros/files/"+samplename+".txt")]
-    #print storelist
-    print path+samplename
+
     try:
         condoredlist = os.listdir(path+samplename)
     except:
@@ -51,7 +50,10 @@ def AreAllCondored(samplename):
     lenstore = len(storelist)
 
     if 'Data' in samplename:
+        remainder = lenstore%split
         lenstore = lenstore/split
+        if remainder > 0:
+            lenstore += 1
 
     if len(condoredlist) < lenstore:
         print "condored: ", len(condoredlist), "\tlenstore: ", lenstore
@@ -76,7 +78,7 @@ for k, v in class_dict.items():
     if k.startswith('Fake'):
         mergable = False
         for c in v.components:
-            if os.path.exists(path + c.label + "/" c.label + ".root"):
+            if os.path.exists(path + c.label + "/" + c.label + ".root"):
                 mergable = True
             else:
                 mergable = False
@@ -86,7 +88,8 @@ for k, v in class_dict.items():
                 print "python makeplot.py -y ", opt.year, " --mertree -d " + k + " --folder ", opt.folder
             else:
                 os.system("python makeplot.py -y " + opt.year + " --mertree -d " + k + " --folder " + opt.folder)
-
+        else:
+            print k, "not mergable"
         continue
 
     if hasattr(v, 'components'):
@@ -103,7 +106,7 @@ for k, v in class_dict.items():
             #if not os.path.exists(cpath):
                 print c.label + " not condorly produced yet"
                 continue
-   
+
             doesexist.append(True)
             if not os.path.exists(cpath+c.label+".root"):
                 if os.path.exists(cpath+c.label+"_merged.root"):

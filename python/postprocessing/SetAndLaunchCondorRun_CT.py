@@ -35,18 +35,6 @@ def AreAllCondored(samplename):
             lenstore += 1
         #print lenstore, remainder
 
-    '''
-    sorted_condoredlist=[]
-    if len(condoredlist) > 0:
-        for k in range(len(storelist)):
-            for n in condoredlist:
-                if "_part"+str(k)+".root" in n:
-                    sorted_condoredlist.append(n)
-                    break
-                else:
-                    continue
-    '''
-
     if len(condoredlist) < lenstore:
         print "condored: ", len(condoredlist), "\tlenstore: ", lenstore
         return False
