@@ -780,9 +780,9 @@ for i in range(tree.GetEntries()):
     elif lepton_LnTRegion[0]==0 and tau_LnTRegion[0]==0:
         event_SFFake[0] = 0.
 
-    if isMC and event_SSFake[0]>0.:
+    if isMC and event_SFFake[0]>0.:
         if abs(lepton_isPrompt[0])==1 or abs(tau_isPrompt[0]==5):
-            event_SSFake[0] = -1.*event_SFFake[0]
+            event_SFFake[0] = -1.*event_SFFake[0]
         else:
             event_SFFake[0] = 0.
         
@@ -828,8 +828,7 @@ for i in range(tree.GetEntries()):
     deltaPhi_lepj2[0]   =   deltaPhi(GoodLep, jet2)#
 
     lepton_Zeppenfeld[0], tau_Zeppenfeld[0], event_Zeppenfeld[0] = Zeppenfeld(lepton_eta[0], tau_eta[0], leadjet_eta[0], subleadjet_eta[0])
-    print Zeppenfeld(lepton_eta[0], tau_eta[0], leadjet_eta[0], subleadjet_eta[0])
-    print lepton_Zeppenfeld[0], tau_Zeppenfeld[0], event_Zeppenfeld[0]
+
     if not BVeto(jets): pass_b_veto[0]=1
 
     #if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_iso[0]==1 and pass_tau_vsJetWP[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1:
