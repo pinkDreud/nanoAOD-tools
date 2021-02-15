@@ -27,25 +27,10 @@ def AreAllCondored(samplename):
     lenstore = len(storelist)
 
     if 'Data' in samplename:
-        #print "lenstore:", lenstore
-        #print "lenstore/split:", lenstore/split, "\tlenstore%split:", lenstore%split
         remainder = lenstore%split
         lenstore = lenstore/split
         if remainder > 0:
             lenstore += 1
-        #print lenstore, remainder
-
-    '''
-    sorted_condoredlist=[]
-    if len(condoredlist) > 0:
-        for k in range(len(storelist)):
-            for n in condoredlist:
-                if "_part"+str(k)+".root" in n:
-                    sorted_condoredlist.append(n)
-                    break
-                else:
-                    continue
-    '''
 
     if len(condoredlist) < lenstore:
         print "condored: ", len(condoredlist), "\tlenstore: ", lenstore
@@ -66,6 +51,7 @@ parser.add_option('-f', dest='fold', type=str, default = 'v30', help='Please ent
 parser.add_option('--max', dest='maxj', type=int, default = 0, help='Please enter a maximum for number of condor jobs')
 parser.add_option('-c', dest='check', default = False, action='store_true', help='Default executes condorrun')
 parser.add_option('-d', dest='dat', type=str, default = 'all', help='Default is all')
+parser.add_option('--wop', dest='wop', default = False, action='store_true', help='Default executes with FR without prompt substraction')
 
 (opt, args) = parser.parse_args()
 
@@ -111,7 +97,7 @@ path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/"
 if not os.path.exists(path):
     os.makedirs(path)
 
-optstring = " -f " + folder + " --wp " + str(opt.jetwp + opt.muwp + opt.elewp)
+optstring = " -f " + folder + " --wp " + str(opt.jetwp + opt.muwp + opt.elewp) + " --wop"
 if opt.maxj > 0:
     optstring = optstring + " --max " + str(opt.maxj)
 optstring = optstring + "\n"

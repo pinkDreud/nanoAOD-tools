@@ -20,7 +20,7 @@ import copy
 from array import array
 from skimtree_utils_ssWW_wFakes import *
 
-usage = "python tree_skimmer_ssWW_wFakes.py [nome_del_sample_in_samples.py] 0 [file_in_input] local"
+usage = "python tree_skimmer_ssWW_wFakes.py [nome_del_sample_in_samples.py] 0 [file_in_input] local [prompt]"
 
 if sys.argv[4] == 'remote':
     from samples import *
@@ -32,6 +32,13 @@ sample = sample_dict[sys.argv[1]]
 part_idx = sys.argv[2]
 file_list = list(map(str, sys.argv[3].strip('[]').split(',')))
 print(file_list)
+
+if sys.argv[5] == 'prompt':
+    fakewithprompt = True
+elif sys.argv[5] == 'noprompt':
+    fakewithprompt = False
+
+print(fakewithprompt)
 
 MCReco = True
 startTime = datetime.datetime.now()
@@ -664,7 +671,7 @@ for i in range(tree.GetEntries()):
         lepton_pfRelIso04[0]        =   tightlep.jetRelIso
 
     #if not isMC:
-    lepton_SFFake[0] = SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0])
+    lepton_SFFake[0] = SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0], fakewithprompt)
     #else:
     if isMC:
         lepton_isPrompt[0] = tightlep.genPartFlav
@@ -738,7 +745,7 @@ for i in range(tree.GetEntries()):
     tau_charge[0]           =   GoodTau.charge
 
     #if not isMC:
-    tau_SFFake[0] = SFFakeRatio_tau_calc(tau_pt[0], tau_eta[0])
+    tau_SFFake[0] = SFFakeRatio_tau_calc(tau_pt[0], tau_eta[0], fakewithprompt)
     #else:
     if isMC:
         tau_isPrompt[0] = GoodTau.genPartFlav

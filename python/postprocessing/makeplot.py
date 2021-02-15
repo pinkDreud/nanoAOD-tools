@@ -480,7 +480,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      ratio.GetYaxis().SetLabelSize(0.15)
      ratio.GetXaxis().SetTitleSize(0.16)
      ratio.GetYaxis().SetTitleSize(0.16)
-     ratio.GetYaxis().SetRangeUser(-3.0,3.0)
+     ratio.GetYaxis().SetRangeUser(0,1.5)
      ratio.GetXaxis().SetTitle(variabile_._title)
      ratio.GetXaxis().SetLabelOffset(0.04)
      ratio.GetYaxis().SetLabelOffset(0.02)
@@ -651,11 +651,14 @@ for year in years:
 
           variables.append(variabile('lepton_pdgid', 'lepton pdgid',  wzero+'*('+cutbase+')', 31, -15.5, 15.5))
           variables.append(variabile('lepton_pfRelIso04', 'lepton rel iso',  wzero+'*('+cutbase+')', 15, 0, 0.15))
+          variables.append(variabile('lepton_Zeppenfeld', 'lepton Zeppenfeld',  wzero+'*('+cutbase+')', 20, -5, 5))
+          variables.append(variabile('event_Zeppenfeld', 'event Zeppenfeld',  wzero+'*('+cutbase+')', 20, -5, 5))
 
           bin_taupt = array("f", [0., 100., 200., 300., 400., 800.])
           nbin_taupt = len(bin_taupt) - 1
           variables.append(variabile('tau_pt',  '#tau p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_taupt, bin_taupt))
           variables.append(variabile('tau_eta', '#tau #eta',  wzero+'*('+cutbase+')', 20, -5, 5))
+          variables.append(variabile('tau_Zeppenfeld', '#tau Zeppenfeld',  wzero+'*('+cutbase+')', 20, -5, 5))
           variables.append(variabile('tau_phi', '#tau #Phi',  wzero+'*('+cutbase+')',  14, -3.50, 3.50))
 
           #variables.append(variabile('tau_DeepTauVsEle_raw', '#tau DeepTauVsEle raw',  wzero+'*('+cutbase+')',  10, 0.35, 1.35))

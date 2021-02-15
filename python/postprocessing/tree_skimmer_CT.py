@@ -20,6 +20,11 @@ part_idx = sys.argv[2]
 file_list = list(map(str, sys.argv[3].strip('[]').split(',')))
 print(file_list)
 
+if sys.argv[6] == 'prompt':
+    fakewithprompt = True
+elif sys.argv[6] == 'noprompt':
+    fakewithprompt = False
+
 MCReco = True
 startTime = datetime.datetime.now()
 print("Starting running at " + str(startTime))
@@ -607,7 +612,7 @@ for i in range(tree.GetEntries()):
         lepton_pfRelIso04[0]        =   tightlep.jetRelIso
 
 
-    lepton_SFFake[0] = SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0])
+    lepton_SFFake[0] = SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0], fakewithprompt)
 
     if isMC:
         lepton_isPrompt[0] = tightlep.genPartFlav
@@ -675,7 +680,7 @@ for i in range(tree.GetEntries()):
     tau_mass[0]             =   GoodTau.mass
     tau_charge[0]           =   GoodTau.charge
 
-    tau_SFFake[0] = SFFakeRatio_tau_calc(tau_pt[0], tau_eta[0])
+    tau_SFFake[0] = SFFakeRatio_tau_calc(tau_pt[0], tau_eta[0], fakewithprompt)
 
     if isMC:
         tau_isPrompt[0] = GoodTau.genPartFlav

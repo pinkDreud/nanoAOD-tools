@@ -1723,9 +1723,12 @@ class systWeights(object):
 ###############################################
 
 
-def SFFakeRatio_ele_calc(pT, eta):
+def SFFakeRatio_ele_calc(pT, eta, prompt=True):
     inFile = ROOT.TFile.Open("FR_vsjet4.root")
-    histo=ROOT.TH2F(inFile.Get("hFRDataele"))
+    if prompt:
+        histo=ROOT.TH2F(inFile.Get("hFRDataeledif"))
+    else:
+        histo=ROOT.TH2F(inFile.Get("hFRDataele"))
     FR=0
     if(pT<=20):
         if(abs(eta)<1):         FR=histo.GetBinContent(1,1)
@@ -1755,10 +1758,14 @@ def SFFakeRatio_ele_calc(pT, eta):
     else: FR=0
     return FR/(1-FR)
 
-def SFFakeRatio_tau_calc(pT, eta):
+def SFFakeRatio_tau_calc(pT, eta, prompt=True):
     histo = ROOT.TH2F()
     inFile = ROOT.TFile.Open("FR_vsjet4.root")
-    histo=(ROOT.TH2F)(inFile.Get("hFRDatatau"))
+    if prompt:
+        histo=(ROOT.TH2F)(inFile.Get("hFRDatataudif"))
+    else:
+        histo=(ROOT.TH2F)(inFile.Get("hFRDatatau"))
+
     FR=0
     if(pT<=20):
         if(abs(eta)<1):         FR=histo.GetBinContent(1,1)
@@ -1788,10 +1795,13 @@ def SFFakeRatio_tau_calc(pT, eta):
     else: FR=0    
     return FR/(1-FR)
 
-def SFFakeRatio_mu_calc(pT, eta):
+def SFFakeRatio_mu_calc(pT, eta, prompt=True):
     histo = ROOT.TH2F()
     inFile = ROOT.TFile.Open("FR_vsjet4.root")
-    histo=(ROOT.TH2F)(inFile.Get("hFRDatamu"))
+    if prompt:
+        histo=(ROOT.TH2F)(inFile.Get("hFRDatamudif"))
+    else:
+        histo=(ROOT.TH2F)(inFile.Get("hFRDatamu"))
     FR=0
     if(pT<=20):
         if(abs(eta)<1):         FR=histo.GetBinContent(1,1)

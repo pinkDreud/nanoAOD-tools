@@ -11,6 +11,7 @@ parser.add_option('-f', '--folder', dest='folder', type=str, default = '', help=
 parser.add_option('--wp', dest='wp', type=str, default = '', help='Please enter working point!')
 parser.add_option('--max', dest='maxj', type=int, default = 0, help='Please enter working point!')
 parser.add_option('-t', '--trig', dest='trig', type='string', default = '', help="Specify which CT do you want to run")
+parser.add_option('--wop', dest='wop', default = False, action='store_true', help='Default executes with FR without prompt substraction')
 (opt, args) = parser.parse_args()
 #Insert here your uid... you can see it typing echo $uid
 
@@ -22,6 +23,12 @@ elif username == 'apiccine':
     uid = 124949
 elif username == 'ttedesch':
     uid = 103343
+
+wopstring = ''
+if opt.wop:
+    wopstring = 'prompt'
+else:
+    wopstring = 'noprompt'
 
 def sub_writer(sample, n, files, folder):
     f = open("condor_CT"+opt.trig+".sub", "w")
@@ -36,7 +43,7 @@ def sub_writer(sample, n, files, folder):
     f.write("transfer_output_remaps  = \""+ sample.label + "_part" + str(n) + ".root=/eos/home-"+inituser + "/" + username+"/VBS/nosynch/" + folder + "/" + sample.label +"/"+ sample.label + "_part" + str(n) + ".root\"\n")
     f.write("+JobFlavour             = \"workday\"\n") # options are espresso = 20 minutes, microcentury = 1 hour, longlunch = 2 hours, workday = 8 hours, tomorrow = 1 day, testmatch = 3 days, nextweek     = 1 week
     f.write("executable              = tree_skimmer_CT.py\n")
-    f.write("arguments               = " + sample.label + " " + str(n) + " " + str(files) + " remote " + opt.trig + "\n")
+    f.write("arguments               = " + sample.label + " " + str(n) + " " + str(files) + " remote " + opt.trig + " " + wopstring + "\n")
     #f.write("input                   = input.txt\n")
     f.write("output                  = condor_CT"+opt.trig+"/output/"+ sample.label + "_" + opt.wp + "_part" + str(n) + ".out\n")
     f.write("error                   = condor_CT"+opt.trig+"/error/"+ sample.label + "_" + opt.wp +  "_part" + str(n) + ".err\n")
