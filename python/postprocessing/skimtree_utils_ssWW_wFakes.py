@@ -237,6 +237,7 @@ def SelectTau(tauCollection, GoodMuon, vsEleWP, vsMuWP, vsJetWP):
         if abs(tauCollection[i].eta)>ETA_CUT_TAU:
             continue
         return i, 1
+
     for i in range(len(tauCollection)):
         if deltaR(tauCollection[i].eta, tauCollection[i].phi, GoodMuon.eta, GoodMuon.phi)<DR_OVERLAP_CONE_TAU:
             continue

@@ -51,11 +51,11 @@ effLumi_2017 = {
             },
         }
 
-orderList= ['1A', '1B', '1C', '1D',
-            '2A', '2B', '2C', '2D',
-            '3A', '3B', '3C', '3D',
-            '4A', '4B', '4C', '4D',
-            '5A', '5B', '5C', '5D']
+orderList= ['11', '12', '13', '14',
+            '21', '22', '23', '24',
+            '31', '32', '33', '34',
+            '41', '42', '43', '44',
+            '51', '52', '53', '54']
 
 
 def dict_print(dict):
@@ -377,7 +377,7 @@ def Veto_Tau_Leptons(taus, ele, mu):
     if len(taus)==0: 
         return 1, idxl
     for i, tau in enumerate(taus):
-        if tau.idDeepTau2017v2p1VSjet>=4: 
+        if tau.idDeepTau2017v2p1VSjet>=2 and tau.idDeepTau2017v2p1VSe>=4  and tau.idDeepTau2017v2p1VSmu>=2 and tau.idDecayModeNewDMs: 
             nTau+=1
             idxl.append(i)
     if nTau!=1:

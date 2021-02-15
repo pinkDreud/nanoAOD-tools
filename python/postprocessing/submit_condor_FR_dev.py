@@ -40,9 +40,9 @@ def sub_writer(sample, n, files, folder):
     f.write("executable              = FakeRatio_dev.py\n")
     f.write("arguments               = " + sample.label + " " + str(n) + " " + str(files) + " remote " + str(opt.trig) + "\n")
     #f.write("input                   = input.txt\n")
-    f.write("output                  = condor_FRMu/output/"+ sample.label + "_part" + str(n) + ".out\n")
-    f.write("error                   = condor_FRMu/error/"+ sample.label +  "_part" + str(n) + ".err\n")
-    f.write("log                     = condor_FRMu/log/"+ sample.label + "_part" + str(n) + ".log\n")
+    f.write("output                  = condor_FRTau2/output/"+ sample.label + "_part" + str(n) + ".out\n")
+    f.write("error                   = condor_FRTau2/error/"+ sample.label +  "_part" + str(n) + ".err\n")
+    f.write("log                     = condor_FRTau2/log/"+ sample.label + "_part" + str(n) + ".log\n")
 
     f.write("queue\n")
 
@@ -57,12 +57,12 @@ else:
     print "You are launching a single sample and not an entire bunch of samples"
     samples.append(dataset)
 
-if not os.path.exists("condor_FRMu/output"):
-    os.makedirs("condor_FRMu/output")
-if not os.path.exists("condor_FRMu/error"):
-    os.makedirs("condor_FRMu/error")
-if not os.path.exists("condor_FRMu/log"):
-    os.makedirs("condor_FRMu/log")
+if not os.path.exists("condor_FRTau2/output"):
+    os.makedirs("condor_FRTau2/output")
+if not os.path.exists("condor_FRTau2/error"):
+    os.makedirs("condor_FRTau2/error")
+if not os.path.exists("condor_FRTau2/log"):
+    os.makedirs("condor_FRTau2/log")
 
 if(uid == 0):
     print("Please insert your uid")
