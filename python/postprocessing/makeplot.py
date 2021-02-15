@@ -711,7 +711,7 @@ for year in years:
 
 
           for sample in dataset_new:
-               if 'DataHT' in sample.label or 'DataMET' in sample.label:
+               if 'DataHT' in sample.label or 'DataMET' in sample.label or "WJets" in sample.label:
                     continue
                if(opt.plot):
                     for var in variables:

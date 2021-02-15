@@ -980,7 +980,7 @@ DataMuFake_2017.year = 2017
 DataMuFake_2017.components = [DataMuC_2017, DataMuD_2017, DataMuE_2017, DataMuF_2017]
 FakeMu_2017 = sample(ROOT.kGray, 1, 1001, "Fake Leptons", "FakeMu_2017")
 FakeMu_2017.year = 2017
-FakeMu_2017.components = [DataMu_2017]
+FakeMu_2017.components = [DataMu_2017, WJets_2017, DYJetsToLL_2017]
 
 
 DataEleB_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataEleB_2017")
@@ -1008,7 +1008,7 @@ DataEle_2017.year = 2017
 DataEle_2017.components = [DataEleB_2017, DataEleC_2017, DataEleD_2017, DataEleE_2017, DataEleF_2017]
 FakeEle_2017 = sample(ROOT.kGray, 1, 1001, "Fake Leptons", "FakeEle_2017")
 FakeEle_2017.year = 2017
-FakeEle_2017.components = [DataEle_2017]
+FakeEle_2017.components = [DataEle_2017, WJets_2017, DYJetsToLL_2017]
 
 DataEleFake_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataEleFake_2017")
 DataEleFake_2017.year = 2017
@@ -1206,6 +1206,8 @@ class_dict={
     'DataEle_2017':DataEle_2017,
     'DataHT_2017':DataHT_2017,
     'DataMET_2017':DataMET_2017,
+    'FakeEle_2017': FakeEle_2017,
+    'FakeMu_2017': FakeMu_2017,
 }
 
 class_list=[

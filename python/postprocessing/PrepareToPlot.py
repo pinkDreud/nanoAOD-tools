@@ -10,6 +10,7 @@ parser.add_option('-f', dest='folder', type=str, default = 'v20', help='Please e
 parser.add_option('-c', dest='check', default = False, action = 'store_true', help='Default runs makeplot')
 parser.add_option('-d', dest='dat', type=str, default = 'all', help='Default is all')
 parser.add_option('--fake', dest='isfake', default = False, action = 'store_true', help='Default runs for analysis, true for fake ratio')
+parser.add_option('--ct', dest='ct', type=str, default = '', help='Default is analysis, otherwise specified CT')
 
 (opt, args) = parser.parse_args()
 
@@ -71,6 +72,22 @@ for k, v in class_dict.items():
     merging = []
 
     kpath = path+k+"/"
+
+    if k.startswith('Fake'):
+        mergable = False
+        for c in v.components:
+            if os.path.exists(path + c.label + "/" c.label + ".root"):
+                mergable = True
+            else:
+                mergable = False
+        
+        if mergable:
+            if Debug:
+                print "python makeplot.py -y ", opt.year, " --mertree -d " + k + " --folder ", opt.folder
+            else:
+                os.system("python makeplot.py -y " + opt.year + " --mertree -d " + k + " --folder " + opt.folder)
+
+        continue
 
     if hasattr(v, 'components'):
         for c in v.components:
