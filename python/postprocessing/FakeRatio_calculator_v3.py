@@ -5,8 +5,8 @@ import ROOT
 import math
 import copy
 import datetime
-
-from FakeRatio_utils import *
+import time
+from FakeRatio_utils_dev import *
 from PhysicsTools.NanoAODTools.postprocessing.samples.samples import *
 
 
@@ -162,7 +162,8 @@ def FakeCalc(sample, isData, nev):
     print('workin on sample: ' + sample)
     print('is data?        : ', isData)
     print('workin on events: ', nev)
-
+    
+    print(sample)
     if not os.path.exists(sample):
         raise NameError('sample do not exists')
     
@@ -180,7 +181,7 @@ def FakeCalc(sample, isData, nev):
     isMC = not isData
     
     if isMC:
-        looseList = looseMCList
+        looseList = looseMClist
         tightlist = tightMClist
     
     if isData and opt.onlybkg:
@@ -197,9 +198,14 @@ def FakeCalc(sample, isData, nev):
     nLooseMu  = 0
     nLooseTau = 0
     nTightEle = 0
+    
+    perc = 0
+
     for i in range(maxEvents):
-        
-        if i%100000==0: print('Processing event: ', i)
+            
+        if i*1.0/maxEvents*100 > perc: 
+            print('Processing at: ', perc, '%')
+            perc +=1
         event       = Event(tree, i)
         FakeLepton  = Object(event, "FakeLepton")
         FakeTau     = Object(event, "FakeTau")
@@ -209,8 +215,8 @@ def FakeCalc(sample, isData, nev):
         w           = Object(event, "w")
         nleps       = Object(event, "nLeps")
         jets        = Object(event, "Jet")
+        veto        = Object(event, "Veto")
         #if i%1000==0: print('event ---- ', i, '\n', FakeLepton.pt, ' ', FakeLepton.eta)
-        
         SF = 1
         if isMC:
             SF = w.nominal*sign*event.PFSF*event.puSF
@@ -220,62 +226,38 @@ def FakeCalc(sample, isData, nev):
 
         #print('Checking met ', met.pt, 'checking mT: ', mT.lepMET)
 
-        if opt.trig == 'Ele' or opt.trig == 'all':
-            if abs(FakeLepton.pdgid) != 11: 
-                continue
-            
-            if nleps.LightLeptons > 1:
-                continue
-            
-            if jets.numberSeparate <1: 
-                continue
-
-            if abs(FakeLepton.eta)<2.4 and not(abs(FakeLepton.eta)>1.4442 and abs(FakeLepton.eta)<1.566) and FakeLepton.pt>0:
+        if opt.trig == 'Ele' or opt.trig == 'all' and abs(FakeLepton.pdgid) == 11 and nleps.LightLeptons < 2 and jets.numberSeparate >0 and  abs(FakeLepton.eta)<2.4 and not(abs(FakeLepton.eta)>1.4442 and abs(FakeLepton.eta)<1.566) and FakeLepton.pt>0 and FakeLepton.jetRelIso>=0:
+            if isMC and (FakeLepton.isPrompt!=1): 
+                SF = 0
                 
-                if isMC and (FakeLepton.isPrompt!=1): 
-                    SF = 0
-                
-                ptBin  = pTCalculator(FakeLepton.pt)
-                etaBin = etaCalculator(FakeLepton.eta)
-                
-                dictPos = str(ptBin) +str(etaBin)
-                Fake_dicti_ele[dictPos][1] += SF
+            ptBin  = pTCalculator(FakeLepton.pt)
+            etaBin = etaCalculator(FakeLepton.eta)
+            dictPos = str(ptBin) +str(etaBin[1])
+            Fake_dicti_ele[dictPos][1] += SF
                
-                looseList['Ele'].Fill(FakeLepton.pt, abs(FakeLepton.eta), SF) 
+            looseList['Ele'].Fill(FakeLepton.pt, abs(FakeLepton.eta), SF) 
 
-                if FakeLepton.pfRelIso04<0.08 and FakeLepton.isTight:
-                    Fake_dicti_ele[dictPos][2] += SF
-                    tightList['Ele'].Fill(FakeLepton.pt, abs(FakeLepton.eta), SF) 
+            if FakeLepton.pfRelIso04<0.08 and FakeLepton.isTight:
+                Fake_dicti_ele[dictPos][2] += SF
+                tightList['Ele'].Fill(FakeLepton.pt, abs(FakeLepton.eta), SF) 
         
-        if opt.trig == 'Mu' or opt.trig == 'all':
-            if abs(FakeLepton.pdgid) != 13: 
-                continue
-            
-            if nleps.LightLeptons > 1:
-                continue
-            
-            if jets.numberSeparate < 1: 
-                continue
-
-
-            if abs(FakeLepton.eta)<2.4 and FakeLepton.pt>0 and FakeLepton.pfRelIso04>=0:
-              
-                if isMC and (FakeLepton.isPrompt!=1): 
-                    SF = 0
+        elif opt.trig == 'Mu' or opt.trig == 'all' and abs(FakeLepton.pdgid) == 13 and nleps.LightLeptons < 2 and jets.numberSeparate > 0 and  abs(FakeLepton.eta)<2.4 and FakeLepton.pt>0 and FakeLepton.pfRelIso04>=0:
+            if isMC and (FakeLepton.isPrompt!=1):
+                SF = 0
                   
-                ptBin  = pTCalculator(FakeLepton.pt)
-                etaBin = etaCalculator(FakeLepton.eta)
+            ptBin  = pTCalculator(FakeLepton.pt)
+            etaBin = etaCalculator(FakeLepton.eta)
                 
-                dictPos = str(ptBin) +str(etaBin)
-                Fake_dicti_mu[dictPos][1] += SF
+            dictPos = str(ptBin) +str(etaBin[1])
+            Fake_dicti_mu[dictPos][1] += SF
                 
-                looseList['Mu'].Fill(FakeLepton.pt, abs(FakeLepton.eta), SF) 
+            looseList['Mu'].Fill(FakeLepton.pt, abs(FakeLepton.eta), SF) 
                 
                 #print(FakeLepton.pfRelIso04, FakeLepton.isTight)
 
-                if abs(FakeLepton.pfRelIso04)<0.15 and FakeLepton.isTight:
-                    Fake_dicti_mu[dictPos][2] += SF
-                    tightList['Mu'].Fill(FakeLepton.pt, abs(FakeLepton.eta), SF) 
+            if abs(FakeLepton.pfRelIso04)<0.15 and FakeLepton.isTight:
+                Fake_dicti_mu[dictPos][2] += SF
+                tightList['Mu'].Fill(FakeLepton.pt, abs(FakeLepton.eta), SF) 
         
         if opt.trig == 'HT' or opt.trig == 'all':
             
@@ -290,7 +272,7 @@ def FakeCalc(sample, isData, nev):
                 ptBin  = pTCalculator(FakeTau.pt)
                 etaBin = etaCalculator(FakeTau.eta)
                 
-                dictPos = str(ptBin) +str(etaBin)
+                dictPos = str(ptBin) +str(etaBin[1])
                 Fake_dicti_tau[dictPos][1] += SF
                 
                 looseList['Tau'].Fill(FakeTau.pt, abs(FakeTau.eta), SF) 
@@ -316,6 +298,18 @@ def FakeCalc(sample, isData, nev):
                 dict_print(Fake_dicti_tau)
                 dict_save(Fake_dicti_ele, Fake_dicti_mu, Fake_dicti_tau, outdir+filename)
  
+ 
+    for k in Fake_dicti_tau:
+        if Fake_dicti_tau[k][2] == 0: Fake_dicti_tau[k][2]=3.0000001
+ 
+    for k in Fake_dicti_ele:
+        if Fake_dicti_ele[k][2] == 0: Fake_dicti_ele[k][2]=3.0000001
+ 
+    for k in Fake_dicti_mu:
+        if Fake_dicti_mu[k][2] == 0: Fake_dicti_mu[k][2]=3.0000001
+
+
+
 
     if opt.trig == 'Ele' or opt.trig == 'all':
         print('Electrons')
@@ -333,8 +327,10 @@ def FakeCalc(sample, isData, nev):
         dict_save(Fake_dicti_ele, Fake_dicti_mu, Fake_dicti_tau, outdir+filename)
     
 
-
+    
     hTotList = [looseDatalist, tightDatalist, looseMClist, tightMClist]
+   
+    print('\n')
 
     for l in hTotList:
         for h in l:
@@ -343,6 +339,8 @@ def FakeCalc(sample, isData, nev):
     for i in looseDatalist:
         print i
         j=1
+        
+
         while j<5:
             looseDatalist[i].SetBinContent(5, j, looseDatalist[i].GetBinContent(5,j)+looseDatalist[i].GetBinContent(6,j))
             looseDatalist[i].SetBinError(5, j, math.sqrt(pow(looseDatalist[i].GetBinError(5,j),2) + pow(looseDatalist[i].GetBinError(6,j),2)))
@@ -363,11 +361,34 @@ def FakeCalc(sample, isData, nev):
         hFRData.Divide(looseDatalist[i])
         print(hFRData.GetName())
         '''
+        nX = 1
+        nY = 1
+        
+        
+        print("PARAPAAAAA",  tightDatalist[i].GetNbinsX())
+        for nX in range(1,tightDatalist[i].GetNbinsX() + 1):
+            for nY in range(1, tightDatalist[i].GetNbinsY() + 1):
+                if (tightDatalist[i].GetBinContent(nX, nY) == 0):
+                    tightDatalist[i].SetBinContent(nX, nY, 3.001)
+                    tightDatalist[i].SetBinError(nX, nY, math.sqrt(3.001))
+                    #print(tightDatalist[i].GetBinContent(nX, nY))
+
+        
         hFRData = tightDatalist[i].Clone(FRDatatitle[i])
         hFRData.SetName(FRDataname[i])
         hFRData.SetTitle(FRDatatitle[i])
-        hFRData.Divide(looseDatalist[i])
         
+        for nX in range(1, hFRData.GetNbinsX() + 1):
+            for nY in range(1, hFRData.GetNbinsY() + 1):
+                if (hFRData.GetBinContent(nX, nY) == 0):
+                    hFRData.SetBinContent(nX, nY, 3.001)
+                    hFRData.SetBinError(nX, nY, math.sqrt(3.001))
+                    #print(tightDatalist[i].GetBinContent(nX, nY))
+
+                print nX, nY, hFRData.GetBinContent(nX, nY)
+         
+        hFRData.Divide(looseDatalist[i])
+         
         if opt.bkg:
             hFRMC = tightMClist[i].Clone(FRMCtitle[i])
             hFRMC.SetName(FRMCname[i])
@@ -391,7 +412,8 @@ def FakeCalc(sample, isData, nev):
 DataDict = {
         'Ele' : "DataEleFake_2017/DataEleFake_2017.root",
         'Mu'  : "DataMuFake_2017/DataMuFake_2017.root",
-        'Tau' : "DataHT/DataHT_2017.root",
+        'Tau' : "DataHT_2017/DataHT_2017.root",
+        'all' : "DataHT_2017/DataHT_2017.root",
         }
 
 bkg_files = {
@@ -405,12 +427,17 @@ if opt.debug:
     print('\n')
     print('debug mode')
     FakeCalc(file, True, 100000)
-    print('Electrons - onlyData')
     dict_print(Fake_dicti_ele)
-    
+    dict_print(Fake_dicti_ele)
+    print('Muons onlyData')
+    dict_print(Fake_dicti_mu)
+    print('Tau onlyData')
+    dict_print(Fake_dicti_tau)
+ 
 
 
-elif not opt.trig == 'all':
+
+else:
     file = input_folder + DataDict[opt.trig]
     FakeCalc(file, True, 'all')
     print('Electrons - onlyData')
@@ -421,7 +448,7 @@ elif not opt.trig == 'all':
     dict_print(Fake_dicti_tau)
     for pos in bkg_files:
         if not opt.bkg: continue
-        bkg = input_folder + pos
+        bkg = input_folder + bkg_files[pos]
         FakeCalc(bkg, False, 'all')
         print('Electrons - wo ', pos)
         dict_print(Fake_dicti_ele)

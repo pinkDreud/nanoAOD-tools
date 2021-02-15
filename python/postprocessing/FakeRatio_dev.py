@@ -121,6 +121,9 @@ FakeLepton_phi              =   array.array('f', [-999.])
 FakeLepton_mass             =   array.array('f', [-999.])
 FakeLepton_pdgid            =   array.array('i', [-999])
 FakeLepton_pfRelIso04       =   array.array('f', [-999.])
+FakeLepton_jetRelIso        =   array.array('f', [-999.])
+FakeLepton_miniPFRelIso     =   array.array('f', [-999.])
+FakeLepton_tkRelIso         =   array.array('f', [-999.])
 FakeLepton_isPrompt         =   array.array('f', [-999.])
 FakeLepton_isTight          =   array.array('f', [-999.])
 var_list.append(FakeLepton_pt)
@@ -130,6 +133,9 @@ var_list.append(FakeLepton_phi)
 var_list.append(FakeLepton_mass)
 var_list.append(FakeLepton_pdgid)
 var_list.append(FakeLepton_pfRelIso04)
+var_list.append(FakeLepton_jetRelIso)
+var_list.append(FakeLepton_miniPFRelIso)
+var_list.append(FakeLepton_tkRelIso)
 var_list.append(FakeLepton_isTight)
 
 FakeElectron_pt             =   array.array('f', [-999.])
@@ -276,6 +282,9 @@ systTree.branchTreesSysts(trees, "all", "FakeLepton_phi",           outTreeFile,
 systTree.branchTreesSysts(trees, "all", "FakeLepton_mass",          outTreeFile, FakeLepton_mass)
 systTree.branchTreesSysts(trees, "all", "FakeLepton_pdgid",         outTreeFile, FakeLepton_pdgid)
 systTree.branchTreesSysts(trees, "all", "FakeLepton_pfRelIso04",    outTreeFile, FakeLepton_pfRelIso04)
+systTree.branchTreesSysts(trees, "all", "FakeLepton_jetRelIso",     outTreeFile, FakeLepton_jetRelIso)
+systTree.branchTreesSysts(trees, "all", "FakeLepton_miniPFRelIso",  outTreeFile, FakeLepton_miniPFRelIso)
+systTree.branchTreesSysts(trees, "all", "FakeLepton_tkRelIso",      outTreeFile, FakeLepton_tkRelIso)
 systTree.branchTreesSysts(trees, "all", "FakeLepton_isTight",       outTreeFile, FakeLepton_isTight)
 
 systTree.branchTreesSysts(trees, "all", "FakeElectron_pt",          outTreeFile, FakeElectron_pt)
@@ -608,11 +617,18 @@ for i in range(tree.GetEntries()):
 
                 countfj += 1
 
-            if isEle:
-                FakeLepton_pfRelIso04[0]    =   lepGood.jetRelIso
+            if abs(lepGood.pdgId)==11:
+                FakeLepton_pfRelIso04[0]    =   lepGood.pfRelIso03_all
+                FakeLepton_jetRelIso[0]     =   lepGood.jetRelIso
+                FakeLepton_miniPFRelIso[0]  =   lepGood.miniPFRelIso_all
+                FakeLepton_tkRelIso[0]      =   -999.
                 FakeLepton_isTight[0]       =   lepGood.mvaFall17V2Iso_WP90
-            else:
+            elif abs(lepGood.pdgId)==13:
                 FakeLepton_pfRelIso04[0]    =   lepGood.pfRelIso04_all
+                FakeLepton_jetRelIso[0]     =   lepGood.jetRelIso
+                FakeLepton_miniPFRelIso[0]  =   lepGood.miniPFRelIso_all
+                FakeLepton_tkRelIso[0]      =   lepGood.tkRelIso
+
                 FakeLepton_isTight[0]       =   lepGood.tightId
             if isMC:
                 FakeLepton_isPrompt[0]      =   lepGood.genPartFlav
