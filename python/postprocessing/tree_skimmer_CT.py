@@ -393,7 +393,7 @@ contagood=0
 for i in range(tree.GetEntries()):
     #reinizializza tutte le variabili a 0, per sicurezza
     for j, var in enumerate(var_list):
-        if j<len(var_list)-14:#
+        if j<len(var_list)-12:#
             var_list[j][0] = -999
         else:
             var_list[j][0] = 0
