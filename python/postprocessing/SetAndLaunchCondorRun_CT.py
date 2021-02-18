@@ -55,7 +55,7 @@ parser.add_option('--max', dest='maxj', type=int, default = 0, help='Please ente
 parser.add_option('-c', dest='check', default = False, action='store_true', help='Default executes condorrun')
 parser.add_option('-d', dest='dat', type=str, default = 'all', help='Default is all')
 parser.add_option('-t', dest='trig', type=str, default = '', help='Specify which CT runs')
-parser.add_option('--wop', dest='wop', default = False, action='store_true', help='Default executes with FR without prompt substraction')
+#parser.add_option('--wop', dest='wop', default = False, action='store_true', help='Default executes with FR without prompt substraction')
 
 (opt, args) = parser.parse_args()
 
@@ -88,9 +88,9 @@ vsEle_dict = {"VVVL": '1',
 username = str(os.environ.get('USER'))
 inituser = str(os.environ.get('USER')[0])
 
-if opt.trig = '':
+if opt.trig == '':
     print 'Specify which CT runs!'
-    return ValueError
+    raise ValueError
 
 print username
 
@@ -105,7 +105,7 @@ path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/"
 if not os.path.exists(path):
     os.makedirs(path)
 
-optstring = " -f " + folder + " --wp " + str(opt.jetwp + opt.muwp + opt.elewp) + " -t " + str(opt.trig) + " --wop "
+optstring = " -f " + folder + " --wp " + str(opt.jetwp + opt.muwp + opt.elewp) + " -t " + str(opt.trig)# + " --wop "
 if opt.maxj > 0:
     optstring = optstring + " --max " + str(opt.maxj)
 optstring = optstring + "\n"

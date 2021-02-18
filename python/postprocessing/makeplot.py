@@ -193,6 +193,12 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
      h1.SetBinError(1, math.sqrt(pow(h1.GetBinError(0),2) + pow(h1.GetBinError(1),2)))
      h1.SetBinContent(nbins, h1.GetBinContent(nbins) + h1.GetBinContent(nbins+1))
      h1.SetBinError(nbins, math.sqrt(pow(h1.GetBinError(nbins),2) + pow(h1.GetBinError(nbins+1),2)))
+
+     if str(sample.label).startswith('Fake'):
+          for bidx in range(nbins):
+               bidx_l = bidx + 1
+               h1.SetBinError(bidx_l, 0.3*h1.GetBinContent(bidx_l))
+
      print h1.Integral()
      for i in range(0, nbins+1):
           content = h1.GetBinContent(i)
@@ -302,6 +308,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
                tmp.SetTitle("")
                if opt.tostack:
                     tmp.SetFillColor(s.color)
+                    tmp.SetLineColor(s.color)
                else:
                     tmp.SetLineColor(s.color)
                histo.append(tmp.Clone(""))
@@ -586,9 +593,9 @@ elif opt.ttbar:
      if opt.cut != "lepton_eta>-10.":
           cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut)           
 elif opt.wjets:
-     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&MET_pt>=20.&&(" + cut + ")", 
-                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&MET_pt>=20.&&(" + cut + ")",
-                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&MET_pt>=20.(" + cut + ")",
+     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&MET_pt<=50.&&(" + cut + ")", 
+                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&MET_pt<=50.&&(" + cut + ")",
+                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&MET_pt<=50.(" + cut + ")",
           }
      cut_tag = 'wjets_CR'
      if opt.cut != "lepton_eta>-10.":
@@ -651,8 +658,8 @@ for year in years:
 
           variables.append(variabile('lepton_pdgid', 'lepton pdgid',  wzero+'*('+cutbase+')', 31, -15.5, 15.5))
           variables.append(variabile('lepton_pfRelIso04', 'lepton rel iso',  wzero+'*('+cutbase+')', 15, 0, 0.15))
-          variables.append(variabile('lepton_Zeppenfeld', 'lepton Zeppenfeld',  wzero+'*('+cutbase+')', 20, -5, 5))
-          variables.append(variabile('event_Zeppenfeld', 'event Zeppenfeld',  wzero+'*('+cutbase+')', 20, -5, 5))
+          variables.append(variabile('lepton_Zeppenfeld', 'lepton Zeppenfeld',  wzero+'*('+cutbase+')', 24, -6, 6))
+          variables.append(variabile('event_Zeppenfeld', 'event Zeppenfeld',  wzero+'*('+cutbase+')', 12, 0., 6))
 
           bin_taupt = array("f", [0., 100., 200., 300., 400., 800.])
           nbin_taupt = len(bin_taupt) - 1

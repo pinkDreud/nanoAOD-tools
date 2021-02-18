@@ -1,13 +1,26 @@
+#!/bin/env python3
 import os
+##print(os.environ)
+##print("**********************************************************************")
+##print("**********************************************************************")
+##print("**********************************************************************")
+##print(str(os.environ.get('PYTHONPATH')))
+##print(str(os.environ.get('PYTHON3PATH')))
 import sys
+##print("*************** This is system version info ***************************")
+##print(sys.version_info)
+#import platform
+##print("*************** This is python version info ***************************")
+##print(platform.python_version())
 import ROOT
+##print("Succesfully imported ROOT")
 import math
 import datetime
 import copy
 from array import array
 from skimtree_utils_ssWW_wFakes import *
 
-usage = "python tree_skimmer_CT.py [nome_del_sample_in_samples.py] 0 [file_in_input] local [chosen_trigger]"
+usage = "python tree_skimmer_ssWW_wFakes.py [nome_del_sample_in_samples.py] 0 [file_in_input] local "#[prompt]"
 
 if sys.argv[4] == 'remote':
     from samples import *
@@ -20,10 +33,16 @@ part_idx = sys.argv[2]
 file_list = list(map(str, sys.argv[3].strip('[]').split(',')))
 print(file_list)
 
-if sys.argv[6] == 'prompt':
+'''
+if sys.argv[5] == 'prompt':
     fakewithprompt = True
-elif sys.argv[6] == 'noprompt':
+elif sys.argv[5] == 'noprompt':
     fakewithprompt = False
+
+print(fakewithprompt)
+'''
+
+trigtype = sys.argv[5]
 
 MCReco = True
 startTime = datetime.datetime.now()
@@ -38,7 +57,6 @@ for infile in file_list:
     chain.Add(infile)
 
 
-
 print(chain)
 
 print("Number of events in chain " + str(chain.GetEntries()))
@@ -50,6 +68,27 @@ if ('Data' in sample.label):
 
 MCReco = MCReco * isMC
 
+if not isMC:
+    if 'DataEle' in sample.label or 'DataMu' in sample.label:
+        trigtype = 'Lep'
+    elif 'DataHT' in sample.label:
+        trigtype = 'HT'
+
+
+#Cut_dict = {}
+
+#if Debug:
+#Cut_dict = {1: ['Trigger             ', 0, 0.0, 0.0, 0.0, 0.0],
+#2: ['Lepton selection    ', 0, 0.0, 0.0, 0.0, 0.0],
+#            3: ['Lepton Veto         ', 0, 0.0, 0.0, 0.0, 0.0],
+#            4: ['Tau selection       ', 0, 0.0, 0.0, 0.0, 0.0],
+#            5: ['Same charge tau lep ', 0, 0.0, 0.0, 0.0, 0.0],
+#            6: ['Jet Selection       ', 0, 0.0, 0.0, 0.0, 0.0],
+#            7: ['BVeto               ', 0, 0.0, 0.0, 0.0, 0.0],
+#            8: ['M_jj>500 GeV        ', 0, 0.0, 0.0, 0.0, 0.0],
+#            9: ['MET>40 GeV          ', 0, 0.0, 0.0, 0.0, 0.0],
+#}
+
 #++++++++++++++++++++++++++++++++++
 #++   branching the new trees    ++
 #++++++++++++++++++++++++++++++++++
@@ -59,6 +98,8 @@ outTreeFile = ROOT.TFile(sample.label+"_part"+str(part_idx)+".root", "RECREATE")
 trees = []
 for i in range(10):
     trees.append(None)
+#systZero = systWeights()
+# defining the operations to be done with the systWeights class
 maxSysts = 0
 addPDF = True
 addQ2 = False
@@ -201,6 +242,8 @@ MET_phi                     =   array.array('f', [-999.])
 var_list.append(MET_pt)
 var_list.append(MET_phi)
 
+
+
 mjj                         =   array.array('f', [-999.])
 m_leptau                    =   array.array('f', [-999.])
 mT_lep_MET                  =   array.array('f', [-999.])
@@ -232,14 +275,11 @@ pass_b_veto                 =   array.array('i', [0])
 pass_mjj_cut                =   array.array('i', [0])
 pass_MET_cut                =   array.array('i', [0])
 pass_upToBVeto              =   array.array('i', [0])
-#pass_upToBVeto_ML           =   array.array('i', [0])#
-#pass_tau_selection_ML       =   array.array('i', [0])#
 pass_everyCut               =   array.array('i', [0])
 var_list.append(pass_lepton_selection)
 var_list.append(pass_lepton_veto)
 var_list.append(pass_lepton_iso)
 var_list.append(pass_tau_selection)
-#var_list.append(pass_tau_selection_ML)#
 var_list.append(pass_tau_vsJetWP)
 var_list.append(pass_charge_selection)
 var_list.append(pass_jet_selection)
@@ -247,7 +287,6 @@ var_list.append(pass_b_veto)
 var_list.append(pass_mjj_cut)
 var_list.append(pass_MET_cut)
 var_list.append(pass_upToBVeto)
-#var_list.append(pass_upToBVeto_ML)#
 var_list.append(pass_everyCut)
 
 #wieghts#
@@ -295,6 +334,7 @@ systTree.branchTreesSysts(trees, "all", "subleadjet_eta",          outTreeFile, 
 systTree.branchTreesSysts(trees, "all", "subleadjet_phi",          outTreeFile, subleadjet_phi)
 systTree.branchTreesSysts(trees, "all", "subleadjet_mass",         outTreeFile, subleadjet_mass)
 systTree.branchTreesSysts(trees, "all", "subleadjet_DeepFlv_b",    outTreeFile, subleadjet_DeepFlv_b)
+
 systTree.branchTreesSysts(trees, "all", "nJets",  outTreeFile, nJets)
 systTree.branchTreesSysts(trees, "all", "nBJets", outTreeFile, nBJets)#
 #MET
@@ -303,6 +343,7 @@ systTree.branchTreesSysts(trees, "all", "MET_phi",              outTreeFile, MET
 #masses#
 systTree.branchTreesSysts(trees, "all", "mjj",                  outTreeFile, mjj)
 systTree.branchTreesSysts(trees, "all", "mT_lep_MET",                  outTreeFile, mT_lep_MET)
+systTree.branchTreesSysts(trees, "all", "m_leptau",                  outTreeFile, m_leptau)
 #deltaPhi#
 systTree.branchTreesSysts(trees, "all", "deltaPhi_jj",              outTreeFile, deltaPhi_jj)#
 #other                                                                                    
@@ -321,7 +362,6 @@ systTree.branchTreesSysts(trees, "all", "pass_lepton_selection",    outTreeFile,
 systTree.branchTreesSysts(trees, "all", "pass_lepton_iso",          outTreeFile, pass_lepton_iso)
 systTree.branchTreesSysts(trees, "all", "pass_lepton_veto",         outTreeFile, pass_lepton_veto)
 systTree.branchTreesSysts(trees, "all", "pass_tau_selection",       outTreeFile, pass_tau_selection)
-#systTree.branchTreesSysts(trees, "all", "pass_tau_selection_ML",       outTreeFile, pass_tau_selection_ML)#
 systTree.branchTreesSysts(trees, "all", "pass_tau_vsJetWP",         outTreeFile, pass_tau_vsJetWP)
 systTree.branchTreesSysts(trees, "all", "pass_charge_selection",    outTreeFile, pass_charge_selection)
 systTree.branchTreesSysts(trees, "all", "pass_jet_selection",       outTreeFile, pass_jet_selection)
@@ -329,7 +369,6 @@ systTree.branchTreesSysts(trees, "all", "pass_b_veto",              outTreeFile,
 systTree.branchTreesSysts(trees, "all", "pass_mjj_cut",             outTreeFile, pass_mjj_cut)
 systTree.branchTreesSysts(trees, "all", "pass_MET_cut",             outTreeFile, pass_MET_cut)
 systTree.branchTreesSysts(trees, "all", "pass_upToBVeto",           outTreeFile, pass_upToBVeto)
-#systTree.branchTreesSysts(trees, "all", "pass_upToBVeto_ML",           outTreeFile, pass_upToBVeto_ML)#
 systTree.branchTreesSysts(trees, "all", "pass_everyCut",            outTreeFile, pass_everyCut)
 
 
@@ -382,15 +421,6 @@ nbinseff = 10
 h_eff_mu = ROOT.TH1D("h_eff_mu", "h_eff_mu", nbinseff, 0, nbinseff)
 h_eff_ele = ROOT.TH1D("h_eff_ele", "h_eff_ele", nbinseff, 0, nbinseff)
 '''
-
-trigtype = sys.argv[5]
-
-if not isMC:
-    if 'DataEle' in sample.label or 'DataMu' in sample.label:
-        trigtype = 'Lep'
-    elif 'DataHT' in sample.label:
-        trigtype = 'HT'
-
 contagood=0
 #++++++++++++++++++++++++++++++++++
 #++   looping over the events    ++
@@ -501,6 +531,10 @@ for i in range(tree.GetEntries()):
     HighestLepPt=-999.
     LeadLepFamily="not selected"
     
+    #if passEle and not HLT.Ele32_WPTight_Gsf_L1DoubleEG:
+    #print("Errore")#Questo ora non dovrebbe succedere
+
+    #print("n ele:", len(electrons), "n mu:", len(muons)) 
     if trigtype == 'Lep':
         if passEle and not passMu:
             if len(electrons)>0:  
@@ -550,12 +584,14 @@ for i in range(tree.GetEntries()):
                 SingleEle = True
                 SingleMu = False
                 break
-
+    #print("HighestLepPt:", HighestLepPt)
+    #print("passEle:", passEle, "\tpassMu:", passMu)
+   
     leptons = None
 
+    #if SingleEle==False and HighestLepPt>0: SingleMu=True
     vTrigEle, vTrigMu, vTrigHT = trig_finder(HLT, sample.year, sample.label)
-
-
+    
     if SingleEle==True:
         if isMC:
             if trigtype == 'Lep':
@@ -578,7 +614,10 @@ for i in range(tree.GetEntries()):
         continue
     if SingleMu and dataEle:
         continue
- 
+    #print("SingleEle:", SingleEle, "\tSingleMu:", SingleMu)
+    #print("lepton id:", leptons[0].pdgId)
+    #if (SingleEle or SingleMu): Cut_dict[1][1]+=1
+    
     MET_pt[0]   =   met.pt  
     MET_phi[0]  =   met.phi
 
@@ -599,6 +638,7 @@ for i in range(tree.GetEntries()):
     else:
         pass_lepton_selection[0] = 0
 
+    #if (SingleEle==1 or SingleMu==1) and pass_lepton_selection[0]==1: Cut_dict[2][1]+=1
     tightlep = leptons[indexGoodLep]
 
     lepton_pt[0]                =   tightlep.pt
@@ -611,9 +651,9 @@ for i in range(tree.GetEntries()):
     elif SingleEle==1:
         lepton_pfRelIso04[0]        =   tightlep.jetRelIso
 
-
-    lepton_SFFake[0] = SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0], fakewithprompt)
-
+    #if not isMC:
+    lepton_SFFake[0] = SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0])#, fakewithprompt)
+    #else:
     if isMC:
         lepton_isPrompt[0] = tightlep.genPartFlav
 
@@ -649,6 +689,9 @@ for i in range(tree.GetEntries()):
     
     pass_lepton_veto[0]=LepVeto(GoodLep, electrons, muons)
     
+    #if (SingleEle or SingleMu) and pass_lepton_iso[0]==1 and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1: Cut_dict[3][1]+=1    
+    
+    #UseDeepTau=True
     DeepTauVsEle = ID_TAU_RECO_DEEPTAU_VSELE#
     DeepTauVsMu = ID_TAU_RECO_DEEPTAU_VSMU#
     DeepTauVsJet = ID_TAU_RECO_DEEPTAU_VSJET#
@@ -680,8 +723,9 @@ for i in range(tree.GetEntries()):
     tau_mass[0]             =   GoodTau.mass
     tau_charge[0]           =   GoodTau.charge
 
-    tau_SFFake[0] = SFFakeRatio_tau_calc(tau_pt[0], tau_eta[0], fakewithprompt)
-
+    #if not isMC:
+    tau_SFFake[0] = SFFakeRatio_tau_calc(tau_pt[0], tau_eta[0])#, fakewithprompt)
+    #else:
     if isMC:
         tau_isPrompt[0] = GoodTau.genPartFlav
 
@@ -707,6 +751,7 @@ for i in range(tree.GetEntries()):
     tau_isolation[0]=   GoodTau.neutralIso
     m_leptau=(GoodTau.p4() + tightlep.p4()).M()
 
+    #if not isMC:
     if lepton_LnTRegion[0]==1 and tau_LnTRegion[0]==0:
         event_SFFake[0] = lepton_SFFake[0]
     elif lepton_LnTRegion[0]==0 and tau_LnTRegion[0]==1:
@@ -715,6 +760,13 @@ for i in range(tree.GetEntries()):
         event_SFFake[0] = lepton_SFFake[0]*tau_SFFake[0]
     elif lepton_LnTRegion[0]==0 and tau_LnTRegion[0]==0:
         event_SFFake[0] = 0.
+
+    if isMC and event_SFFake[0]>0.:
+        if abs(lepton_isPrompt[0])==1 or abs(tau_isPrompt[0]==5):
+            event_SFFake[0] = -1.*event_SFFake[0]
+        else:
+            event_SFFake[0] = 0.
+        
 
     if GoodTau.charge==GoodLep.charge:
         pass_charge_selection[0]=1
@@ -740,8 +792,8 @@ for i in range(tree.GetEntries()):
     subleadjet_eta[0]           =   jet2.eta
     subleadjet_phi[0]           =   jet2.phi
     subleadjet_mass[0]          =   jet2.mass
-    subleadjet_DeepFlv_b[0]     =   jet2.btagDeepFlavB
-    
+    subleadjet_DeepFlv_b[0]     =   jet2.btagDeepFlavB    
+
     pass_jet_selection[0]=1
 
     #calculating deltaPhi                                                                                                      
@@ -766,10 +818,13 @@ for i in range(tree.GetEntries()):
     tau_Zeppenfeld_over_deltaEta_jj[0] = tau_Zeppenfeld[0]/deltaEta_jj[0]
     lepton_Zeppenfeld_over_deltaEta_jj[0] = event_Zeppenfeld[0]/deltaEta_jj[0]
 
+
     if not metCut(met): pass_MET_cut[0]=1
+
 
     if (SingleEle or SingleMu) and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1 and pass_mjj_cut[0]==1 and pass_MET_cut[0]==1:
         pass_everyCut[0]=1
+
 
     #######################################
     ## Removing events with HEM problem  ##
@@ -781,15 +836,60 @@ for i in range(tree.GetEntries()):
         elif(isMC):
             w_nominal_all[0] *= 0.354
 
+    '''
+    if len(goodMu) == 1:
+        h_eff_mu.Fill('Good Mu', 1)
+        if len(goodEle) == 0:
+            h_eff_mu.Fill('Good Ele', 1)
+        if len(VetoMu) == 0:
+            h_eff_mu.Fill('Veto Mu', 1)
+        if len(VetoEle) == 0:
+            h_eff_mu.Fill('Veto Ele', 1)
+    if len(goodEle) == 1:
+        h_eff_ele.Fill('Good Ele', 1)
+        if len(goodMu) == 0:
+            h_eff_ele.Fill('Good Mu', 1)
+        if len(VetoMu) == 0:
+            h_eff_ele.Fill('Veto Mu', 1)
+        if len(VetoEle) == 0:
+            h_eff_ele.Fill('Veto Ele', 1)
+    '''
     systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
     systTree.fillTreesSysts(trees, "all")
 
-
+#trees[0].Print()
 outTreeFile.cd()
 if(isMC):
+    #print("h_genweight first bin content is %f and h_PDFweight has %f bins" %(h_genweight.GetBinContent(1), h_PDFweight.GetNbinsX()))
     h_genweight.Write()
     if isthere_pdf:
         h_PDFweight.Write()
+    #h_eff_mu.Write()
+    #h_eff_ele.Write()
+'''
+if Debug:
+    for i in range(1,10):
+        if i==1:
+            Cut_dict[i][2]=Cut_dict[i][1]*1.0/nEntriesTotal
+            Cut_dict[i][3]=Cut_dict[i][1]*1.0/nEntriesTotal
+            Cut_dict[i][4]=math.sqrt(Cut_dict[i][2]*(1-Cut_dict[i][2])/nEntriesTotal)
+            Cut_dict[i][5]=math.sqrt(Cut_dict[i][3]*(1-Cut_dict[i][2])/nEntriesTotal)
+        else:
+            if Cut_dict[i-1][1]<=0 or Cut_dict[i][1]==0:
+                Cut_dict[i][2]=-999
+                Cut_dict[i][3]=Cut_dict[i][1]*1.0/nEntriesTotal
+                Cut_dict[i][4]=-999
+                Cut_dict[i][5]=-999
+            else:
+                Cut_dict[i][2]=Cut_dict[i][1]*1.0/Cut_dict[i-1][1]
+                Cut_dict[i][3]=Cut_dict[i][1]*1.0/nEntriesTotal
+                Cut_dict[i][4]=math.sqrt(Cut_dict[i][2]*(1-Cut_dict[i][2])/Cut_dict[i][1]*1.0)
+                Cut_dict[i][5]=math.sqrt(Cut_dict[i][3]*(1-Cut_dict[i][2])/nEntriesTotal)
+
+if Debug:
+    for cutname, counts in Cut_dict.items():
+        print(counts[0], round(counts[1], 4))
+'''
 
 systTree.writeTreesSysts(trees, outTreeFile)
 print("Number of events in output tree " + str(trees[0].GetEntries()))

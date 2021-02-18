@@ -51,7 +51,7 @@ parser.add_option('-f', dest='fold', type=str, default = 'v30', help='Please ent
 parser.add_option('--max', dest='maxj', type=int, default = 0, help='Please enter a maximum for number of condor jobs')
 parser.add_option('-c', dest='check', default = False, action='store_true', help='Default executes condorrun')
 parser.add_option('-d', dest='dat', type=str, default = 'all', help='Default is all')
-parser.add_option('--wop', dest='wop', default = False, action='store_true', help='Default executes with FR without prompt substraction')
+#parser.add_option('--wop', dest='wop', default = False, action='store_true', help='Default executes with FR without prompt substraction')
 
 (opt, args) = parser.parse_args()
 
@@ -97,7 +97,7 @@ path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/"
 if not os.path.exists(path):
     os.makedirs(path)
 
-optstring = " -f " + folder + " --wp " + str(opt.jetwp + opt.muwp + opt.elewp) + " --wop"
+optstring = " -f " + folder + " --wp " + str(opt.jetwp + opt.muwp + opt.elewp)# + " --wop"
 if opt.maxj > 0:
     optstring = optstring + " --max " + str(opt.maxj)
 optstring = optstring + "\n"
