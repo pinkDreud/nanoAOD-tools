@@ -188,7 +188,7 @@ QCDHT_2000toInf_2017.year = 2017
 QCDHT_2000toInf_2017.dataset = "/QCD_HT2000toInf_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
 QCDHT_2000toInf_2017.sigma = 20.23 #pb                                                     
 
-QCD_2017 = sample(ROOT.kGray+2, 1, 1001, "QCD", "QCD_2017")
+QCD_2017 = sample(ROOT.kGray, 1, 1001, "QCD", "QCD_2017")
 QCD_2017.year = 2017
 QCD_2017.components = [QCDHT_100to200_2017, QCDHT_200to300_2017, QCDHT_300to500_2017, QCDHT_500to700_2017, QCDHT_700to1000_2017, QCDHT_1000to1500_2017, QCDHT_1500to2000_2017, QCDHT_2000toInf_2017]
 

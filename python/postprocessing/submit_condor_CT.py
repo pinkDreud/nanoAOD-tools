@@ -43,7 +43,7 @@ def sub_writer(sample, n, files, folder):
     f.write("when_to_transfer_output = ON_EXIT\n")
     f.write("transfer_input_files    = $(Proxy_path), samples/samples.py, skimtree_utils_ssWW_wFakes.py, CutsAndValues_bu.py, FR_vsjet4.root, __init__.py\n")
     f.write("transfer_output_remaps  = \""+ sample.label + "_part" + str(n) + ".root=/eos/home-"+inituser + "/" + username+"/VBS/nosynch/" + folder + "/" + sample.label +"/"+ sample.label + "_part" + str(n) + ".root\"\n")
-    f.write("+JobFlavour             = \"workday\"\n") # options are espresso = 20 minutes, microcentury = 1 hour, longlunch = 2 hours, workday = 8 hours, tomorrow = 1 day, testmatch = 3 days, nextweek     = 1 week
+    f.write("+JobFlavour             = \"testmatch\"\n") # options are espresso = 20 minutes, microcentury = 1 hour, longlunch = 2 hours, workday = 8 hours, tomorrow = 1 day, testmatch = 3 days, nextweek     = 1 week
     f.write("executable              = tree_skimmer_ssWW_wFakes_CT.py\n")
     f.write("arguments               = " + sample.label + " " + str(n) + " " + str(files) + " remote " + opt.trig + "\n")#+ " " + wopstring + "\n")
     #f.write("input                   = input.txt\n")
@@ -98,8 +98,8 @@ for sample in samples:
             if os.path.exists(opath + sample.label + "_part" + str(i) + ".root"):
                 continue
             sub_writer(sample, i, files, folder)
-            os.popen('condor_submit condor_CT.sub')
-            print('condor_submit condor_CT.sub')
+            os.popen('condor_submit condor_CT' +opt.trig+'.sub')
+            print('condor_submit condor_CT' +opt.trig+'.sub')
             #os.popen("python tree_skimmer_ssWW.py " " + sample.label + " " + str(i) + " " + str(files))
             print("python tree_skimmer_CT.py " + sample.label + " " + str(i) + " " + str(files) + " remote")
     else:
@@ -108,7 +108,7 @@ for sample in samples:
                 continue
             extmax = int(min([split*(i+1), len(files_list)]))
             sub_writer(sample, i,  ",".join( e for e in files_list[split*i:extmax]), folder)
-            print('condor_submit condor_CT.sub')
-            os.popen('condor_submit condor_CT.sub')
+            print('condor_submit condor_CT' +opt.trig+'.sub')
+            os.popen('condor_submit condor_CT' +opt.trig+'.sub')
             #os.popen("python tree_skimmer_ssWW.py " + sample.label + " " + str(i) + " " + ",".join( e for e in files_list[split*i:split*(i+1)]))
             print("python tree_skimmer_CT.py " + sample.label + " " + str(i) + " " + ",".join( e for e in files_list[split*i:extmax]) + " remote")

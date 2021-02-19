@@ -805,8 +805,8 @@ for i in range(tree.GetEntries()):
     outputJetSel=SelectJet(list(jets), GoodTau, GoodLep)
     
     if outputJetSel==-999:
-        #systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
-        #systTree.fillTreesSysts(trees, "all")
+        systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
+        systTree.fillTreesSysts(trees, "all")
         continue  
 
     jet1, jet2 = outputJetSel

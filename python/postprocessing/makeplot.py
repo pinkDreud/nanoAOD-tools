@@ -262,6 +262,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           if(syst_ == ""):
                outfile = plotrepo + "stack_" + str(lep_).strip('[]') + ".root"
                infile[s.label] = ROOT.TFile.Open(plotrepo + lepstr + "/" + s.label + "_" + lep + ".root")
+
           else:
                outfile = plotrepo + "stack_"+syst_+"_"+str(lep_).strip('[]')+".root"
                infile[s.label] = ROOT.TFile.Open(plotrepo + lepstr + "/" + s.label + "_" + lep + "_" + syst_ + ".root")
@@ -272,8 +273,9 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
                if s.label.startswith('WJets') or s.label.startswith('QCD') or s.label.startswith('DY') or s.label.startswith('TT_'):
                     continue
           else:
-               if s.label.startswith('Fake'):
+               if s.label.startswith('Fake'):# or s.label.startswith('QCD'):
                     continue
+          
           infile[s.label].cd()
           print "opening file: ", infile[s.label].GetName()
           if('Data' in s.label):
@@ -303,6 +305,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
                tmp.SetMarkerSize(0.)
                tmp.SetMarkerColor(s.color)
                h_sig.append(ROOT.TH1F(tmp.Clone("")))
+               tmp.SetOption("HIST SAME")
           else:
                tmp.SetOption("HIST SAME")
                tmp.SetTitle("")
@@ -394,7 +397,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      if(signal):
           for hsig in h_sig:
                #hsig.Scale(1000)
-               hsig.Draw("same")
+               hsig.Draw("hist same")
                leg_stack.AddEntry(hsig, hsig.GetName(), "l")
      h_err = stack.GetStack().Last().Clone("h_err")
      h_err.SetLineWidth(100)
@@ -541,6 +544,7 @@ if(opt.dat != 'all'):
      elif 'DataHT' in str(opt.dat) and (opt.plot or opt.stack):
           raise Exception("Not interesting dataset")
      dataset_names = map(str, opt.dat.strip('[]').split(','))
+     print dataset_names
      samples = []
      [samples.append(sample_dict[dataset_name]) for dataset_name in dataset_names]
      [dataset_dict[str(sample.year)].append(sample) for sample in samples]
@@ -585,17 +589,17 @@ if opt.bveto:
      if opt.cut != "lepton_eta>-10.":
           cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut) 
 elif opt.ttbar:
-     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&(" + cut + ")", 
-                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&(" + cut + ")", 
-                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&(" + cut + ")", 
+     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.&&(" + cut + ")", 
+                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.&&(" + cut + ")", 
+                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.&&(" + cut + ")", 
           }
      cut_tag = 'ttbar_CR'
      if opt.cut != "lepton_eta>-10.":
           cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut)           
 elif opt.wjets:
-     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&MET_pt<=50.&&(" + cut + ")", 
-                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&MET_pt<=50.&&(" + cut + ")",
-                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_veto==1&&pass_charge_selection==1&&((tau_DeepTau_WP/1000000)>=1)&&(((tau_DeepTau_WP%1000000)/1000)>=1)&&((tau_DeepTau_WP%1000)>=1)&&pass_b_veto==1&&MET_pt<=50.(" + cut + ")",
+     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&MET_pt<=50.&&mT_lep_MET>50.&&(" + cut + ")", 
+                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&MET_pt<=50.&&mT_lep_MET>50.&&(" + cut + ")",
+                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&MET_pt<=50.&&mT_lep_MET>50.&&(" + cut + ")",
           }
      cut_tag = 'wjets_CR'
      if opt.cut != "lepton_eta>-10.":
@@ -659,7 +663,7 @@ for year in years:
           variables.append(variabile('lepton_pdgid', 'lepton pdgid',  wzero+'*('+cutbase+')', 31, -15.5, 15.5))
           variables.append(variabile('lepton_pfRelIso04', 'lepton rel iso',  wzero+'*('+cutbase+')', 15, 0, 0.15))
           variables.append(variabile('lepton_Zeppenfeld', 'lepton Zeppenfeld',  wzero+'*('+cutbase+')', 24, -6, 6))
-          variables.append(variabile('event_Zeppenfeld', 'event Zeppenfeld',  wzero+'*('+cutbase+')', 12, 0., 6))
+          variables.append(variabile('event_Zeppenfeld', 'event Zeppenfeld',  wzero+'*('+cutbase+')', 24, -6, 6))
 
           bin_taupt = array("f", [0., 100., 200., 300., 400., 800.])
           nbin_taupt = len(bin_taupt) - 1
@@ -697,7 +701,7 @@ for year in years:
           nbin_metpt = len(bin_metpt) - 1
           variables.append(variabile('MET_pt', 'p_{T}^{miss} [GeV]',  wzero+'*('+cutbase+')', nbin_metpt, bin_metpt))#30, 40, 500))
 
-          bin_mjj = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 900., 1000., 1100., 1200., 1400., 1600., 2000., 2500.])
+          bin_mjj = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 900., 1000., 1100., 1200., 1400., 1600., 2000., 2500., 3500., 4000., 4500.])
           nbin_mjj = len(bin_mjj) - 1 
           variables.append(variabile('mjj', 'M_{jj} [GeV]',  wzero+'*('+cutbase+')', nbin_mjj, bin_mjj))# 20, 500, 2000))
 
@@ -721,7 +725,7 @@ for year in years:
 
 
           for sample in dataset_new:
-               if 'DataHT' in sample.label or 'DataMET' in sample.label or "WJets" in sample.label:
+               if 'DataHT' in sample.label or 'DataMET' in sample.label:# or "WJets" in sample.label:
                     continue
                if(opt.plot):
                     for var in variables:
