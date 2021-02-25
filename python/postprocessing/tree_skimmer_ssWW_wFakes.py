@@ -221,6 +221,15 @@ leadjet_DeepFlv_b           =   array.array('f', [-999.])
 leadjet_DeepCSVv2_b         =   array.array('f', [-999.])
 nJets                       =   array.array('f', [-999.])#
 nBJets                      =   array.array('f', [-999.])#
+AK8leadjet_pt                  =   array.array('f', [-999.])
+AK8leadjet_eta                 =   array.array('f', [-999.])
+AK8leadjet_phi                 =   array.array('f', [-999.])
+AK8leadjet_mass                =   array.array('f', [-999.])
+AK8leadjet_tau21               =   array.array('f', [-999.])
+AK8leadjet_tau32               =   array.array('f', [-999.])
+AK8leadjet_tau43               =   array.array('f', [-999.])
+leadjet_dRAK48               =   array.array('f', [-999.])
+
 var_list.append(leadjet_pt)
 var_list.append(leadjet_eta)
 var_list.append(leadjet_phi)
@@ -230,6 +239,15 @@ var_list.append(leadjet_DeepFlv_b)
 var_list.append(leadjet_DeepCSVv2_b)
 var_list.append(nJets)#
 var_list.append(nBJets)#
+var_list.append(AK8leadjet_pt)
+var_list.append(AK8leadjet_eta)
+var_list.append(AK8leadjet_phi)
+var_list.append(AK8leadjet_mass)
+var_list.append(AK8leadjet_tau21)
+var_list.append(AK8leadjet_tau32)
+var_list.append(AK8leadjet_tau43)
+var_list.append(leadjet_dRAK48)
+
 subleadjet_pt               =   array.array('f', [-999.])
 subleadjet_eta              =   array.array('f', [-999.])
 subleadjet_phi              =   array.array('f', [-999.])
@@ -237,6 +255,15 @@ subleadjet_mass             =   array.array('f', [-999.])
 subleadjet_CSVv2_b          =   array.array('f', [-999.])
 subleadjet_DeepFlv_b        =   array.array('f', [-999.])
 subleadjet_DeepCSVv2_b      =   array.array('f', [-999.])
+AK8subleadjet_pt                  =   array.array('f', [-999.])
+AK8subleadjet_eta                 =   array.array('f', [-999.])
+AK8subleadjet_phi                 =   array.array('f', [-999.])
+AK8subleadjet_mass                =   array.array('f', [-999.])
+AK8subleadjet_tau21               =   array.array('f', [-999.])
+AK8subleadjet_tau32               =   array.array('f', [-999.])
+AK8subleadjet_tau43               =   array.array('f', [-999.])
+subleadjet_dRAK48               =   array.array('f', [-999.])
+
 var_list.append(subleadjet_pt)
 var_list.append(subleadjet_eta)
 var_list.append(subleadjet_phi)
@@ -244,6 +271,14 @@ var_list.append(subleadjet_mass)
 var_list.append(subleadjet_CSVv2_b)
 var_list.append(subleadjet_DeepFlv_b)
 var_list.append(subleadjet_DeepCSVv2_b)
+var_list.append(AK8subleadjet_pt)
+var_list.append(AK8subleadjet_eta)
+var_list.append(AK8subleadjet_phi)
+var_list.append(AK8subleadjet_mass)
+var_list.append(AK8subleadjet_tau21)
+var_list.append(AK8subleadjet_tau32)
+var_list.append(AK8subleadjet_tau43)
+var_list.append(subleadjet_dRAK48)
 
 #MET
 MET_pt                      =   array.array('f', [-999.])
@@ -358,6 +393,14 @@ systTree.branchTreesSysts(trees, "all", "leadjet_mass",         outTreeFile, lea
 systTree.branchTreesSysts(trees, "all", "leadjet_CSVv2_b",      outTreeFile, leadjet_CSVv2_b)
 systTree.branchTreesSysts(trees, "all", "leadjet_DeepFlv_b",    outTreeFile, leadjet_DeepFlv_b)
 systTree.branchTreesSysts(trees, "all", "leadjet_DeepCSVv2_b",  outTreeFile, leadjet_DeepCSVv2_b)
+systTree.branchTreesSysts(trees, "all", "AK8leadjet_pt",           outTreeFile, AK8leadjet_pt)
+systTree.branchTreesSysts(trees, "all", "AK8leadjet_eta",          outTreeFile, AK8leadjet_eta)
+systTree.branchTreesSysts(trees, "all", "AK8leadjet_phi",          outTreeFile, AK8leadjet_phi)
+systTree.branchTreesSysts(trees, "all", "AK8leadjet_mass",         outTreeFile, AK8leadjet_mass)
+systTree.branchTreesSysts(trees, "all", "AK8leadjet_tau21",         outTreeFile, AK8leadjet_tau21)
+systTree.branchTreesSysts(trees, "all", "AK8leadjet_tau32",         outTreeFile, AK8leadjet_tau32)
+systTree.branchTreesSysts(trees, "all", "AK8leadjet_tau43",         outTreeFile, AK8leadjet_tau43)
+systTree.branchTreesSysts(trees, "all", "leadjet_dRAK48",         outTreeFile, leadjet_dRAK48)
 systTree.branchTreesSysts(trees, "all", "subleadjet_pt",           outTreeFile, subleadjet_pt)
 systTree.branchTreesSysts(trees, "all", "subleadjet_eta",          outTreeFile, subleadjet_eta)
 systTree.branchTreesSysts(trees, "all", "subleadjet_phi",          outTreeFile, subleadjet_phi)
@@ -365,6 +408,15 @@ systTree.branchTreesSysts(trees, "all", "subleadjet_mass",         outTreeFile, 
 systTree.branchTreesSysts(trees, "all", "subleadjet_CSVv2_b",      outTreeFile, subleadjet_CSVv2_b)
 systTree.branchTreesSysts(trees, "all", "subleadjet_DeepFlv_b",    outTreeFile, subleadjet_DeepFlv_b)
 systTree.branchTreesSysts(trees, "all", "subleadjet_DeepCSVv2_b",  outTreeFile, subleadjet_DeepCSVv2_b)
+systTree.branchTreesSysts(trees, "all", "AK8subleadjet_pt",           outTreeFile, AK8subleadjet_pt)
+systTree.branchTreesSysts(trees, "all", "AK8subleadjet_eta",          outTreeFile, AK8subleadjet_eta)
+systTree.branchTreesSysts(trees, "all", "AK8subleadjet_phi",          outTreeFile, AK8subleadjet_phi)
+systTree.branchTreesSysts(trees, "all", "AK8subleadjet_mass",         outTreeFile, AK8subleadjet_mass)
+systTree.branchTreesSysts(trees, "all", "AK8subleadjet_tau21",         outTreeFile, AK8subleadjet_tau21)
+systTree.branchTreesSysts(trees, "all", "AK8subleadjet_tau32",         outTreeFile, AK8subleadjet_tau32)
+systTree.branchTreesSysts(trees, "all", "AK8subleadjet_tau43",         outTreeFile, AK8subleadjet_tau43)
+systTree.branchTreesSysts(trees, "all", "subleadjet_dRAK48",         outTreeFile, subleadjet_dRAK48)
+
 systTree.branchTreesSysts(trees, "all", "nJets",  outTreeFile, nJets)
 systTree.branchTreesSysts(trees, "all", "nBJets", outTreeFile, nBJets)#
 #MET
@@ -837,6 +889,32 @@ for i in range(tree.GetEntries()):
     deltaPhi_lepj2[0]   =   deltaPhi(GoodLep, jet2)#
 
     lepton_Zeppenfeld[0], tau_Zeppenfeld[0], event_Zeppenfeld[0] = Zeppenfeld(lepton_eta[0], tau_eta[0], leadjet_eta[0], subleadjet_eta[0])
+
+    AK8jet1, dR_jet1AK48 = closest(jet1, fatjets)
+    AK8jet2, dR_jet2AK48 = closest(jet1, fatjets)
+    
+    if dR_jet1AK48 < 0.8:
+        AK8leadjet_pt[0]               =   AK8jet1.pt
+        AK8leadjet_eta[0]              =   AK8jet1.eta
+        AK8leadjet_phi[0]              =   AK8jet1.phi
+        AK8leadjet_mass[0]             =   AK8jet1.mass
+    
+        AK8leadjet_tau21[0]             =   AK8jet1.tau2/((AK8jet1.tau1==0.)*1 + (AK8jet1.tau1!=0.)*AK8jet1.tau1)
+        AK8leadjet_tau32[0]             =   AK8jet1.tau3/((AK8jet1.tau2==0.)*1 + (AK8jet1.tau2!=0.)*AK8jet1.tau2)
+        AK8leadjet_tau43[0]             =   AK8jet1.tau4/((AK8jet1.tau3==0.)*1 + (AK8jet1.tau3!=0.)*AK8jet1.tau3)
+        leadjet_dRAK48[0] = copy.deepcopy(dR_jet1AK48)
+
+    if dR_jet2AK48 < 0.8:
+        AK8subleadjet_pt[0]               =   AK8jet2.pt
+        AK8subleadjet_eta[0]              =   AK8jet2.eta
+        AK8subleadjet_phi[0]              =   AK8jet2.phi
+        AK8subleadjet_mass[0]             =   AK8jet2.mass
+        
+        AK8subleadjet_tau21[0]             =   AK8jet2.tau2/((AK8jet2.tau1==0.)*1 + (AK8jet2.tau1!=0.)*AK8jet2.tau1)
+        AK8subleadjet_tau32[0]             =   AK8jet2.tau3/((AK8jet2.tau2==0.)*1 + (AK8jet2.tau2!=0.)*AK8jet2.tau2)
+        AK8subleadjet_tau43[0]             =   AK8jet2.tau4/((AK8jet2.tau3==0.)*1 + (AK8jet2.tau3!=0.)*AK8jet2.tau3)
+        subleadjet_dRAK48[0] = copy.deepcopy(dR_jet2AK48)
+
 
     if not BVeto(jets): pass_b_veto[0]=1
 

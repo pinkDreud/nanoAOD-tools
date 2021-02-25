@@ -35,6 +35,7 @@ parser.add_option('--user', dest='user', type='string', default=str(os.environ.g
 parser.add_option('--ttbar', dest='ttbar', default = False, action='store_true', help='Enable ttbar CR, default disabled')
 parser.add_option('--wfake', dest='wfake', default = False, action='store_true', help='Enable stackplots with data-driven fake leptons, default disabled')
 parser.add_option('--wjets', dest='wjets', default = False, action='store_true', help='Enable WJets CR, default disabled')
+parser.add_option('--blinded', dest='blinded', default = False, action='store_true', help='Activate blinding')
 
 (opt, args) = parser.parse_args()
 print("cavallotti")
@@ -189,11 +190,12 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
      #     h1.Scale((7.5)/35.89)
      #ftree.Project(histoname,variable._name,cut)
 
-     h1.SetBinContent(1, h1.GetBinContent(0) + h1.GetBinContent(1))
-     h1.SetBinError(1, math.sqrt(pow(h1.GetBinError(0),2) + pow(h1.GetBinError(1),2)))
-     h1.SetBinContent(nbins, h1.GetBinContent(nbins) + h1.GetBinContent(nbins+1))
-     h1.SetBinError(nbins, math.sqrt(pow(h1.GetBinError(nbins),2) + pow(h1.GetBinError(nbins+1),2)))
-
+     if not (opt.blinded and (variable._name == 'MET_pt' or variable._name == 'mjj')):
+          h1.SetBinContent(1, h1.GetBinContent(0) + h1.GetBinContent(1))
+          h1.SetBinError(1, math.sqrt(pow(h1.GetBinError(0),2) + pow(h1.GetBinError(1),2)))
+          h1.SetBinContent(nbins, h1.GetBinContent(nbins) + h1.GetBinContent(nbins+1))
+          h1.SetBinError(nbins, math.sqrt(pow(h1.GetBinError(nbins),2) + pow(h1.GetBinError(nbins+1),2)))
+          
      if str(sample.label).startswith('Fake'):
           for bidx in range(nbins):
                bidx_l = bidx + 1
@@ -652,6 +654,7 @@ for year in years:
           wzero = 'w_nominal*PFSF*puSF'#*lepSF'
           cutbase = cut_dict[lep]
           
+
           variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cutbase+')', 20, -5., 5.))
           variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cutbase+')', 14, -3.50, 3.50))
           
@@ -697,11 +700,17 @@ for year in years:
           variables.append(variabile('nJets', 'n jets',  wzero+'*('+cutbase+')',  11, -0.5, 10.5))
           variables.append(variabile('nBJets', 'n bjets (DeepJet M)',  wzero+'*('+cutbase+')',  6, -0.5, 5.5))
 
-          bin_metpt = array("f", [0., 50., 100., 150., 200., 300., 500., 800.])
+          if opt.blinded:
+               bin_metpt = array("f", [0., 10., 20., 30., 40.])#50., 100., 150., 200., 300., 500., 800.])
+          else:
+               bin_metpt = array("f", [0., 20., 50., 100., 150., 200., 300., 500., 800.])
           nbin_metpt = len(bin_metpt) - 1
           variables.append(variabile('MET_pt', 'p_{T}^{miss} [GeV]',  wzero+'*('+cutbase+')', nbin_metpt, bin_metpt))#30, 40, 500))
 
-          bin_mjj = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 900., 1000., 1100., 1200., 1400., 1600., 2000., 2500., 3500., 4000., 4500.])
+          if opt.blinded:
+               bin_mjj = array("f", [0., 100., 200., 300., 400., 500.])#, 600., 700., 800., 900., 1000., 1100., 1200., 1400., 1600., 2000., 2500., 3500., 4500.])
+          else:
+               bin_mjj = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 900., 1000., 1100., 1200., 1400., 1600., 2000., 2500., 3500., 4500.])
           nbin_mjj = len(bin_mjj) - 1 
           variables.append(variabile('mjj', 'M_{jj} [GeV]',  wzero+'*('+cutbase+')', nbin_mjj, bin_mjj))# 20, 500, 2000))
 
