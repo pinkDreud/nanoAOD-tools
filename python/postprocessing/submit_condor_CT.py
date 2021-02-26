@@ -88,7 +88,17 @@ for sample in samples:
         isMC = False
     if not os.path.exists(opath):#"/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/" + sample.label):
         os.makedirs(opath)#"/eos/home-" + inituser + "/" + username +"/VBS/nosynch/" + folder + "/" + sample.label)
-    f = open("../../crab/macros/files/" + sample.label + ".txt", "r")
+
+    fname = ""
+    print opt.trig
+    if not opt.trig == 'HT':
+        fname = "../../crab/macros/files/"
+    else:
+        fname = "../../crab/macros/files/Fake/HT/"
+    fname +=  sample.label + ".txt"
+
+    print fname
+    f = open(fname, "r")
     files_list = f.read().splitlines()
     print(str(len(files_list)))
     if(isMC):
