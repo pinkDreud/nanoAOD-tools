@@ -89,6 +89,9 @@ for sample in samples:
     if not os.path.exists(opath):#"/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/" + sample.label):
         os.makedirs(opath)#"/eos/home-" + inituser + "/" + username +"/VBS/nosynch/" + folder + "/" + sample.label)
 
+    if opt.trig == "HT" and ('DataEle' in sample.label or 'DataMu' in sample.label):
+        continue
+
     fname = ""
     print opt.trig
     if not opt.trig == 'HT':
@@ -97,15 +100,20 @@ for sample in samples:
         fname = "../../crab/macros/files/Fake/HT/"
     fname +=  sample.label + ".txt"
 
-    print fname
+    #print fname
     f = open(fname, "r")
     files_list = f.read().splitlines()
-    print(str(len(files_list)))
+    #print(str(len(files_list)))
+
+    print sample.label
+    print files_list
     if(isMC):
         for i, files in enumerate(files_list):
+            #print i
             if opt.maxj > 0:
                 if i > opt.maxj: break
             if os.path.exists(opath + sample.label + "_part" + str(i) + ".root"):
+                print i, "exists"
                 continue
             sub_writer(sample, i, files, folder)
             os.popen('condor_submit condor_CT' +opt.trig+'.sub')

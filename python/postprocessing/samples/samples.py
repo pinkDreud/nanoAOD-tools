@@ -1206,8 +1206,8 @@ class_dict={
     'DataEle_2017':DataEle_2017,
     'DataHT_2017':DataHT_2017,
     'DataMET_2017':DataMET_2017,
-    'FakeEle_2017': FakeEle_2017,
-    'FakeMu_2017': FakeMu_2017,
+    #'FakeEle_2017': FakeEle_2017,
+    #'FakeMu_2017': FakeMu_2017,
 }
 
 class_list=[

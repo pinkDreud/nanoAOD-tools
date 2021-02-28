@@ -70,7 +70,7 @@ def trig_finder(HLT, year, samplename):
         if HLT.Mu17_TrkIsoVVL:                          vTrigMu.append("Mu17_TrkIsoVVL")
         if HLT.Ele35_WPTight_Gsf:                       vTrigEle.append("Ele35_WPTight_Gsf")
         if HLT.Ele32_WPTight_Gsf_L1DoubleEG:            vTrigEle.append("Ele32_WPTight_Gsf_L1DoubleEG")
-        if not ('DataMuB' in samplename or 'DataEleB' in samplename):
+        if not ('DataMuB' in samplename or 'DataEleB' in samplename or 'DataHTB' in samplename):
             if HLT.Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30:     vTrigEle.append("Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30")
             if HLT.Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30:    vTrigEle.append("Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30")
             if HLT.Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30:    vTrigEle.append("Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30")

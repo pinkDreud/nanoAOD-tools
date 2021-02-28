@@ -897,7 +897,7 @@ for i in range(tree.GetEntries()):
         AK8leadjet_pt[0]               =   AK8jet1.pt
         AK8leadjet_eta[0]              =   AK8jet1.eta
         AK8leadjet_phi[0]              =   AK8jet1.phi
-        AK8leadjet_mass[0]             =   AK8jet1.mass
+        AK8leadjet_mass[0]             =   AK8jet1.msoftdrop
     
         AK8leadjet_tau21[0]             =   AK8jet1.tau2/((AK8jet1.tau1==0.)*1 + (AK8jet1.tau1!=0.)*AK8jet1.tau1)
         AK8leadjet_tau32[0]             =   AK8jet1.tau3/((AK8jet1.tau2==0.)*1 + (AK8jet1.tau2!=0.)*AK8jet1.tau2)
@@ -908,7 +908,7 @@ for i in range(tree.GetEntries()):
         AK8subleadjet_pt[0]               =   AK8jet2.pt
         AK8subleadjet_eta[0]              =   AK8jet2.eta
         AK8subleadjet_phi[0]              =   AK8jet2.phi
-        AK8subleadjet_mass[0]             =   AK8jet2.mass
+        AK8subleadjet_mass[0]             =   AK8jet2.msoftdrop
         
         AK8subleadjet_tau21[0]             =   AK8jet2.tau2/((AK8jet2.tau1==0.)*1 + (AK8jet2.tau1!=0.)*AK8jet2.tau1)
         AK8subleadjet_tau32[0]             =   AK8jet2.tau3/((AK8jet2.tau2==0.)*1 + (AK8jet2.tau2!=0.)*AK8jet2.tau2)

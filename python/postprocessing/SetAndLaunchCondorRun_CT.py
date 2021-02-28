@@ -7,13 +7,13 @@ cshname = "condorrun_CT.csh"
 split = 50
 
 def DoesSampleExist(samplename):
-    if samplename+".txt" not in os.listdir("../../crab/macros/files/"):
+    if samplename+".txt" not in os.listdir(crabpath):
         return False
     else:
         return True
                 
 def AreAllCondored(samplename):
-    storelist = [line for line in open("../../crab/macros/files/"+samplename+".txt")]
+    storelist = [line for line in open(crabpath+samplename+".txt")]
     try:
         condoredlist = os.listdir(path+samplename)
     except:
@@ -87,6 +87,12 @@ vsEle_dict = {"VVVL": '1',
 
 username = str(os.environ.get('USER'))
 inituser = str(os.environ.get('USER')[0])
+
+crabpath = ''
+if opt.trig == 'HT':
+    crabpath = "../../crab/macros/files/Fake/HT/"
+else:
+    crabpath = "../../crab/macros/files/"
 
 if opt.trig == '':
     print 'Specify which CT runs!'
