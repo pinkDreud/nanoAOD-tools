@@ -690,33 +690,33 @@ for year in years:
           variables.append(variabile('leadjet_eta', 'Lead jet #eta',  wzero+'*('+cutbase+')', 20, -5., 5.))
           variables.append(variabile('leadjet_phi', 'Lead jet #Phi',  wzero+'*('+cutbase+')',  14, -3.50, 3.50))
 
-          bin_ak8leadjet_pt = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 1000., 1200., 1400., 1600., 2000.])
+          bin_ak8leadjet_pt = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 1200., 1600.])
           nbin_ak8leadjet_pt = len(bin_ak8leadjet_pt)-1
           variables.append(variabile('AK8leadjet_pt',  'AK8 Lead jet p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_ak8leadjet_pt, bin_ak8leadjet_pt))#30, 1500))
 
-          bin_ak8leadjet_mass = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 1000., 1200., 1400., 1600., 2000.])
+          bin_ak8leadjet_mass = array("f", [0., 50., 100., 150., 200., 250., 300., 400.])#, 800., 1000., 1200., 1400., 1600., 2000.])
           nbin_ak8leadjet_mass = len(bin_ak8leadjet_mass)-1
           variables.append(variabile('AK8leadjet_mass',  'AK8 Lead jet mass [GeV]',  wzero+'*('+cutbase+')', nbin_ak8leadjet_mass, bin_ak8leadjet_mass))#30, 1500))
 
           variables.append(variabile('AK8leadjet_eta', 'AK8 Lead jet #eta',  wzero+'*('+cutbase+')', 20, -5., 5.))
           variables.append(variabile('AK8leadjet_phi', 'AK8 Lead jet #Phi',  wzero+'*('+cutbase+')',  14, -3.50, 3.50))
-          variables.append(variabile('AK8leadjet_tau21', 'AK8 Lead jet #tau_{21}',  wzero+'*('+cutbase+')',  30, 0., 1.5))
-          variables.append(variabile('AK8leadjet_tau32', 'AK8 Lead jet #tau_{32}',  wzero+'*('+cutbase+')',  30, 0., 1.5))
-          variables.append(variabile('AK8leadjet_tau32', 'AK8 Lead jet #tau_{43}',  wzero+'*('+cutbase+')',  30, 0., 1.5))
+          variables.append(variabile('AK8leadjet_tau21', 'AK8 Lead jet #tau_{21}',  wzero+'*('+cutbase+')',  20, 0., 1.))
+          variables.append(variabile('AK8leadjet_tau32', 'AK8 Lead jet #tau_{32}',  wzero+'*('+cutbase+')',  20, 0., 1.))
+          variables.append(variabile('AK8leadjet_tau43', 'AK8 Lead jet #tau_{43}',  wzero+'*('+cutbase+')',  20, 0., 1.))
 
-          bin_ak8subleadjet_pt = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 1000., 1200., 1400., 1600., 2000.])
+          bin_ak8subleadjet_pt = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 1200., 1600.])
           nbin_ak8subleadjet_pt = len(bin_ak8subleadjet_pt)-1
           variables.append(variabile('AK8subleadjet_pt',  'AK8 Sublead jet p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_ak8subleadjet_pt, bin_ak8subleadjet_pt))#30, 1500))
 
-          bin_ak8subleadjet_mass = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 1000., 1200., 1400., 1600., 2000.])
+          bin_ak8subleadjet_mass = array("f", [0., 50., 100., 150., 200., 250., 300., 400.])#, 500., 600., 700., 800., 1000., 1200., 1400., 1600., 2000.])
           nbin_ak8subleadjet_mass = len(bin_ak8subleadjet_mass)-1
           variables.append(variabile('AK8subleadjet_mass',  'AK8 Sublead jet mass [GeV]',  wzero+'*('+cutbase+')', nbin_ak8subleadjet_mass, bin_ak8subleadjet_mass))#30, 1500))
 
           variables.append(variabile('AK8subleadjet_eta', 'AK8 Sublead jet #eta',  wzero+'*('+cutbase+')', 20, -5., 5.))
           variables.append(variabile('AK8subleadjet_phi', 'AK8 Sublead jet #Phi',  wzero+'*('+cutbase+')',  14, -3.50, 3.50))
-          variables.append(variabile('AK8subleadjet_tau21', 'AK8 Sublead jet #tau_{21}',  wzero+'*('+cutbase+')',  30, 0., 1.5))
-          variables.append(variabile('AK8subleadjet_tau32', 'AK8 Sublead jet #tau_{32}',  wzero+'*('+cutbase+')',  30, 0., 1.5))
-          variables.append(variabile('AK8subleadjet_tau32', 'AK8 Sublead jet #tau_{43}',  wzero+'*('+cutbase+')',  30, 0., 1.5))
+          variables.append(variabile('AK8subleadjet_tau21', 'AK8 Sublead jet #tau_{21}',  wzero+'*('+cutbase+')',  20, 0., 1.))
+          variables.append(variabile('AK8subleadjet_tau32', 'AK8 Sublead jet #tau_{32}',  wzero+'*('+cutbase+')',  20, 0., 1.))
+          variables.append(variabile('AK8subleadjet_tau43', 'AK8 Sublead jet #tau_{43}',  wzero+'*('+cutbase+')',  20, 0., 1.))
 
 
           bin_subleadjet_pt = array("f", [0., 75., 150., 250., 400., 800.])
@@ -762,7 +762,9 @@ for year in years:
 
 
           for sample in dataset_new:
-               if 'DataHT' in sample.label or 'DataMET' in sample.label:# or "WJets" in sample.label:
+               if ('DataHT' in sample.label or 'DataMET' in sample.label) and not opt.folder.startswith("CTHT"):# or "WJets" in sample.label:
+                    continue
+               elif ('DataMu' in sample.label or 'DataEle' in sample.label or 'DataMET' in sample.label) and opt.folder.startswith("CTHT"):
                     continue
                if(opt.plot):
                     for var in variables:
