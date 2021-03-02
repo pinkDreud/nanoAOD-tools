@@ -29,10 +29,10 @@ parser.add_option('-S', '--syst', dest='syst', type='string', default = 'all', h
 parser.add_option('-C', '--cut', dest='cut', type='string', default = 'lepton_eta>-10.', help='Default no cut')
 parser.add_option('-y', '--year', dest='year', type='string', default = '2017', help='Default 2016, 2017 and 2018 are included')
 parser.add_option('-f', '--folder', dest='folder', type='string', default = 'v7', help='Default folder is v0')
-#parser.add_option('-T', '--topol', dest='topol', type='string', default = 'all', help='Default all njmt')
 parser.add_option('-d', '--dat', dest='dat', type='string', default = 'all', help="")
 parser.add_option('--user', dest='user', type='string', default=str(os.environ.get('USER')), help='User')
 parser.add_option('--ttbar', dest='ttbar', default = False, action='store_true', help='Enable ttbar CR, default disabled')
+parser.add_option('--HT', dest='HT', default = False, action='store_true', help='Enable CTHT')
 parser.add_option('--wfake', dest='wfake', default = False, action='store_true', help='Enable stackplots with data-driven fake leptons, default disabled')
 parser.add_option('--wjets', dest='wjets', default = False, action='store_true', help='Enable WJets CR, default disabled')
 parser.add_option('--blinded', dest='blinded', default = False, action='store_true', help='Activate blinding')
@@ -134,13 +134,16 @@ def cutToTag(cut):
     return newstring
 
 def plot(lep, reg, variable, sample, cut_tag, syst=""):
-     print "plotting ", variable._name, " for sample ", sample.label, " with cut ", cut_tag, " ", syst,
+     print "plotting ", variable._name, " for sample ", sample.label, " with cut ", cut_tag#, " ", syst,
      ROOT.TH1.SetDefaultSumw2()
      cutbase = variable._taglio
      cut = ''
 
      if str(sample.label).startswith('Fake'):
-          f1 = ROOT.TFile.Open(filerepo + sample.components[0].label + "/"  + sample.components[0].label + ".root")
+          if not opt.folder.startswith('CTHT'):
+               f1 = ROOT.TFile.Open(filerepo + sample.components[0].label + "/"  + sample.components[0].label + ".root")
+          else:
+               f1 = ROOT.TFile.Open(filerepo + sample.components[1].label + "/"  + sample.components[1].label + ".root")
           cut = cutbase + "*(lepton_LnTRegion==1||tau_LnTRegion==1)*(event_SFFake)*(event_SFFake>-1.)"        
      else:
           f1 = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + ".root")
@@ -532,6 +535,8 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           infile[kf].Delete()
      os.system('set LD_PRELOAD=libtcmalloc.so')
 
+leptons = map(str,opt.lep.split(',')) 
+
 #dataset_dict = {'2016':[],'2017':[],'2018':[]}
 dataset_dict = {'2017':[],'2018':[]}
 
@@ -543,7 +548,7 @@ if(opt.dat != 'all'):
      print opt.dat
      if 'DataMET' in str(opt.dat):
           raise Exception("Not interesting dataset")
-     elif 'DataHT' in str(opt.dat) and (opt.plot or opt.stack):
+     elif not opt.folder.startswith('CTHT') and 'DataHT' in str(opt.dat) and (opt.plot or opt.stack):
           raise Exception("Not interesting dataset")
      dataset_names = map(str, opt.dat.strip('[]').split(','))
      print dataset_names
@@ -552,7 +557,15 @@ if(opt.dat != 'all'):
      [dataset_dict[str(sample.year)].append(sample) for sample in samples]
 else:
      for v in class_list:
-          if 'DataHT' in v.label or 'DataMET' in v.label:
+          if 'DataMET' in v.label:
+               continue
+          elif ('DataHT' in v.label and not opt.folder.startswith('CTHT')):
+               continue
+          elif (opt.folder.startswith('CTHT') and ('DataEle' in v.label or 'DataMu' in v.label)):
+               continue
+          elif 'electron' in leptons and ('DataMu' in v.label or 'FakeMu' in v.label):
+               continue
+          elif 'muon' in leptons and ('DataEle' in v.label or 'FakeEle' in v.label):
                continue
           dataset_dict[str(v.year)].append(v)
      '''
@@ -577,8 +590,6 @@ if(opt.year!='all'):
 else:
      years = ['2016','2017','2018']
 print(years)
-
-leptons = map(str,opt.lep.split(',')) 
 
 cut = opt.cut #default cut must be obvious, for example lepton_eta>-10.
 

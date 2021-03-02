@@ -714,7 +714,10 @@ for i in range(tree.GetEntries()):
     #if (SingleEle==1 or SingleMu==1) and pass_lepton_selection[0]==1: Cut_dict[2][1]+=1
     tightlep = leptons[indexGoodLep]
 
-    lepton_pt[0]                =   tightlep.pt
+    if abs(tightlep.pdgId)==13:
+        lepton_pt[0]                =   tightlep.corrected_pt
+    elif abs(tightlep.pdgId)==11:
+        lepton_pt[0]                =   tightlep.pt
     lepton_eta[0]               =   tightlep.eta
     lepton_phi[0]               =   tightlep.phi
     lepton_mass[0]              =   tightlep.mass
