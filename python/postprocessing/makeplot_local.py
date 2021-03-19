@@ -4,12 +4,14 @@ import optparse
 import ROOT
 import math
 from variabile import variabile
+import copy as copy
 from CMS_lumi import CMS_lumi
-from PhysicsTools.NanoAODTools.postprocessing.samples.samplesLocal import *
+from PhysicsTools.NanoAODTools.postprocessing.samples.samples import *
 from array import array
 
 #print TT_2017
 
+print("cavalletti")
 usage = 'python makeplot.py'# -y year --lep lepton -d dataset --merpart --lumi --mertree --sel --cut cut_string -p -s'
 usageToCopyPaste= "python makeplot.py -y 2017 --lep muon --bveto --user apiccine -f v4 -p"
 
@@ -25,14 +27,18 @@ parser.add_option('-N', '--notstacked', dest='tostack', default = True, action='
 parser.add_option('-L', '--lep', dest='lep', type='string', default = 'incl', help='Default make incl analysis')
 parser.add_option('-S', '--syst', dest='syst', type='string', default = 'all', help='Default all systematics added')
 parser.add_option('-C', '--cut', dest='cut', type='string', default = 'lepton_eta>-10.', help='Default no cut')
-parser.add_option('-y', '--year', dest='year', type='string', default = '2015', help='Default 2016, 2017 and 2018 are included')
-parser.add_option('-f', '--folder', dest='folder', type='string', default = 'v5', help='Default folder is v0')
-#parser.add_option('-T', '--topol', dest='topol', type='string', default = 'all', help='Default all njmt')
+parser.add_option('-y', '--year', dest='year', type='string', default = '2017', help='Default 2016, 2017 and 2018 are included')
+parser.add_option('-f', '--folder', dest='folder', type='string', default = 'v7', help='Default folder is v0')
 parser.add_option('-d', '--dat', dest='dat', type='string', default = 'all', help="")
 parser.add_option('--user', dest='user', type='string', default=str(os.environ.get('USER')), help='User')
+parser.add_option('--ttbar', dest='ttbar', default = False, action='store_true', help='Enable ttbar CR, default disabled')
+parser.add_option('--HT', dest='HT', default = False, action='store_true', help='Enable CTHT')
+parser.add_option('--wfake', dest='wfake', default = False, action='store_true', help='Enable stackplots with data-driven fake leptons, default disabled')
+parser.add_option('--wjets', dest='wjets', default = False, action='store_true', help='Enable WJets CR, default disabled')
+parser.add_option('--blinded', dest='blinded', default = False, action='store_true', help='Activate blinding')
 
 (opt, args) = parser.parse_args()
-
+print("cavallotti")
 #print (opt, args)
 
 folder = opt.folder
@@ -112,7 +118,7 @@ def lumi_writer(dataset, lumi):
                     if event%10000==1:
                          #print("Processing event %s     complete %s percent" %(event, 100*event/tree.GetEntries()))
                          sys.stdout.write("\rProcessing event {}     complete {} percent".format(event, 100*event/tree.GetEntries()))
-                    w_nom[0] = tree.w_nominal * sample.sigma * lumi * 1000./float(h_genw_tmp.GetBinContent(1))
+                    w_nom[0] = tree.w_nominal * sample.sigma * tree.HLT_effLumi * 1000./float(h_genw_tmp.GetBinContent(1))
                     if isthere_pdf: #not ("WZ" in sample.label):
                          for i in xrange(1, nbins):
                               w_PDF[i] = h_pdfw_tmp.GetBinContent(i+1)/h_genw_tmp.GetBinContent(2) 
@@ -128,25 +134,50 @@ def cutToTag(cut):
     return newstring
 
 def plot(lep, reg, variable, sample, cut_tag, syst=""):
-     print "plotting ", variable._name, " for sample ", sample.label, " with cut ", cut_tag, " ", syst,
+     print "plotting ", variable._name, " for sample ", sample.label, " with cut ", cut_tag#, " ", syst,
      ROOT.TH1.SetDefaultSumw2()
-     f1 = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + ".root")
+     cutbase = variable._taglio
+     cut = ''
+
+     if str(sample.label).startswith('Fake'):
+          if not opt.folder.startswith('CTHT'):
+               f1 = ROOT.TFile.Open(filerepo + sample.components[0].label + "/"  + sample.components[0].label + ".root")
+          else:
+               f1 = ROOT.TFile.Open(filerepo + sample.components[1].label + "/"  + sample.components[1].label + ".root")
+          cut = cutbase + "*(lepton_LnTRegion==1||tau_LnTRegion==1)*(event_SFFake)*(event_SFFake>-1.)"        
+     else:
+          f1 = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + ".root")
+          cut = cutbase + "*(lepton_TightRegion==1&&tau_TightRegion==1)"
 
      nbins = variable._nbins
-     histoname = "h_" + reg + "_" + variable._name + "_" + cut_tag
-     h1 = ROOT.TH1F(histoname, variable._name + "_" + reg, variable._nbins, variable._xmin, variable._xmax)
+     namevar = variable._name
+     if '(' in namevar or ')' in namevar:
+        print 'NINOOOOO', namevar 
+        namevar = namevar.replace('(', '_')
+        namevar = namevar.replace(')', '_')
+        print 'WAAAAA', namevar
+     histoname = "h_" + reg + "_" + namevar + "_" + cut_tag
+    
+     print variable._iscustom
+     print histoname
+     if not variable._iscustom:
+          h1 = ROOT.TH1F(histoname, variable._name + "_" + reg, variable._nbins, variable._xmin, variable._xmax)
+     else:
+          h1 = ROOT.TH1F(histoname, variable._name + "_" + reg, variable._nbins, variable._xmin)
+
      h1.Sumw2()
-
-     cut = variable._taglio
-
-     if 'MC' in variable._name:
-          cut = cut + "*(" + str(variable._name) + "!=-100.)"
      
+     if 'MC' in variable._name:
+          cut = cut + "*(" + str(variable._name) + "!-100.)"
+     else:
+          cut = cut + "*(" + str(variable._name) + ">-10.)"
+          
      if "WpWpJJ_EWK" in sample.label:
-         cut = cut + "*10."
+          cut = cut + "*10."
 
      print str(cut)
      foutput = plotrepo + lepstr + "/" + sample.label + "_" + lep+".root"
+
      '''
      else:
           if(syst==""):
@@ -161,17 +192,31 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
      '''
      #print treename
      #TODO: remove events_all which is hardcoded
+
      f1.Get("events_all").Project(histoname,variable._name,cut)
+
+     #ftree = copy.deepcopy(f1.events_all)
      #if not 'Data' in sample.label:
      #     h1.Scale((7.5)/35.89)
-     h1.SetBinContent(1, h1.GetBinContent(0) + h1.GetBinContent(1))
-     h1.SetBinError(1, math.sqrt(pow(h1.GetBinError(0),2) + pow(h1.GetBinError(1),2)))
-     h1.SetBinContent(nbins, h1.GetBinContent(nbins) + h1.GetBinContent(nbins+1))
-     h1.SetBinError(nbins, math.sqrt(pow(h1.GetBinError(nbins),2) + pow(h1.GetBinError(nbins+1),2)))
+     #ftree.Project(histoname,variable._name,cut)
+
+     if not (opt.blinded and (variable._name == 'MET_pt' or variable._name == 'mjj')):
+          h1.SetBinContent(1, h1.GetBinContent(0) + h1.GetBinContent(1))
+          h1.SetBinError(1, math.sqrt(pow(h1.GetBinError(0),2) + pow(h1.GetBinError(1),2)))
+          h1.SetBinContent(nbins, h1.GetBinContent(nbins) + h1.GetBinContent(nbins+1))
+          h1.SetBinError(nbins, math.sqrt(pow(h1.GetBinError(nbins),2) + pow(h1.GetBinError(nbins+1),2)))
+          
+     if str(sample.label).startswith('Fake'):
+          for bidx in range(nbins):
+               bidx_l = bidx + 1
+               h1.SetBinError(bidx_l, 0.3*h1.GetBinContent(bidx_l))
+
+     print h1.Integral()
      for i in range(0, nbins+1):
           content = h1.GetBinContent(i)
           if(content<0.):
                h1.SetBinContent(i, 0.)
+
      fout = ROOT.TFile.Open(foutput, "UPDATE")
      fout.cd()
      h1.Write()
@@ -186,7 +231,10 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      histo = []
      tmp = ROOT.TH1F()
      h = ROOT.TH1F()
-     hdata = ROOT.TH1F('h','h', variabile_._nbins, variabile_._xmin, variabile_._xmax)
+     if not variabile_._iscustom:
+          hdata = ROOT.TH1F('h','h', variabile_._nbins, variabile_._xmin, variabile_._xmax)
+     else:
+          hdata = ROOT.TH1F('h','h', variabile_._nbins, variabile_._xmin)
      h_sig = []
      h_err = ROOT.TH1F()
      h_bkg_err = ROOT.TH1F()
@@ -203,6 +251,9 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           histoname = "h_"+reg_+"_"+variabile_._name+"_"+cut_tag_
           stackname = "stack_"+reg_+"_"+variabile_._name+"_"+cut_tag_
           canvasname = "stack_"+reg_+"_"+variabile_._name+"_"+cut_tag_+"_"+lep_ + "_" + str(samples_[0].year)
+     if opt.wfake:
+          stackname += "_wFakes"
+          canvasname += "_wFakes"
      if("selection_AND_best_Wpjet_isbtag_AND_best_topjet_isbtag" in cut_tag_ ) or ("selection_AND_best_topjet_isbtag_AND_best_Wpjet_isbtag" in cut_tag_ ):
           blind = True
      stack = ROOT.THStack(stackname, variabile_._name)
@@ -211,17 +262,32 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
 
      print samples_
      for s in samples_:
+          if opt.wfake:
+               if s.label.startswith('WJets') or s.label.startswith('QCD') or s.label.startswith('DY') or s.label.startswith('TT_'):
+                    continue
+          else:
+               if s.label.startswith('Fake'):
+                    continue
           if('WpWpJJ_EWK' in s.label):
                signal = True
+          print s.label
           if(syst_ == ""):
                outfile = plotrepo + "stack_" + str(lep_).strip('[]') + ".root"
                infile[s.label] = ROOT.TFile.Open(plotrepo + lepstr + "/" + s.label + "_" + lep + ".root")
+
           else:
                outfile = plotrepo + "stack_"+syst_+"_"+str(lep_).strip('[]')+".root"
                infile[s.label] = ROOT.TFile.Open(plotrepo + lepstr + "/" + s.label + "_" + lep + "_" + syst_ + ".root")
      i = 0
 
      for s in samples_:
+          if opt.wfake:
+               if s.label.startswith('WJets') or s.label.startswith('QCD') or s.label.startswith('DY') or s.label.startswith('TT_'):
+                    continue
+          else:
+               if s.label.startswith('Fake'):# or s.label.startswith('QCD'):
+                    continue
+          
           infile[s.label].cd()
           print "opening file: ", infile[s.label].GetName()
           if('Data' in s.label):
@@ -251,11 +317,13 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
                tmp.SetMarkerSize(0.)
                tmp.SetMarkerColor(s.color)
                h_sig.append(ROOT.TH1F(tmp.Clone("")))
+               tmp.SetOption("HIST SAME")
           else:
                tmp.SetOption("HIST SAME")
                tmp.SetTitle("")
                if opt.tostack:
                     tmp.SetFillColor(s.color)
+                    tmp.SetLineColor(s.color)
                else:
                     tmp.SetLineColor(s.color)
                histo.append(tmp.Clone(""))
@@ -310,18 +378,26 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           stack.Draw("HIST")
      else:
           stack.Draw("HIST NOSTACK")
-     step = float(variabile_._xmax - variabile_._xmin)/float(variabile_._nbins)
-     print str(step)
-     if "GeV" in variabile_._title:
-          if step.is_integer():
-               ytitle = "Events / %.0f GeV" %step
+     if not variabile_._iscustom:
+          step = float(variabile_._xmax - variabile_._xmin)/float(variabile_._nbins)
+          print str(step)
+          if "GeV" in variabile_._title:
+               if step.is_integer():
+                    ytitle = "Events"#/ %.0f GeV" %step
+               else:
+                    ytitle = "Events"# / %.2f GeV" %step
           else:
-               ytitle = "Events / %.2f GeV" %step
+               if step.is_integer():
+                    ytitle = "Events"# / %.0f units" %step
+               else:
+                    ytitle = "Events"# / %.2f units" %step
      else:
-          if step.is_integer():
-               ytitle = "Events / %.0f units" %step
+          if "GeV" in variabile_._title:
+               ytitle = "Events"# / GeV"
           else:
-               ytitle = "Events / %.2f units" %step
+               ytitle = "Events"# / a.u"
+     
+     print stack
      stack.GetYaxis().SetTitle(ytitle)
      stack.GetYaxis().SetTitleFont(42)
      stack.GetXaxis().SetLabelOffset(1.8)
@@ -333,7 +409,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      if(signal):
           for hsig in h_sig:
                #hsig.Scale(1000)
-               hsig.Draw("same")
+               hsig.Draw("hist same")
                leg_stack.AddEntry(hsig, hsig.GetName(), "l")
      h_err = stack.GetStack().Last().Clone("h_err")
      h_err.SetLineWidth(100)
@@ -405,7 +481,11 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      h_bkg_err.SetFillColor(ROOT.kGray+1)
      h_bkg_err.Draw("e20same")
      
-     f1 = ROOT.TLine(variabile_._xmin, 1., variabile_._xmax,1.)
+     if not variabile_._iscustom:
+          xmin = variabile_._xmin
+     else:
+          xmin = variabile_._xmin[0]
+     f1 = ROOT.TLine(xmin, 1., variabile_._xmax,1.)
      f1.SetLineColor(ROOT.kBlack)
      f1.SetLineStyle(ROOT.kDashed)
      f1.Draw("same")
@@ -422,7 +502,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      ratio.GetYaxis().SetLabelSize(0.15)
      ratio.GetXaxis().SetTitleSize(0.16)
      ratio.GetYaxis().SetTitleSize(0.16)
-     ratio.GetYaxis().SetRangeUser(0.,6.0)
+     ratio.GetYaxis().SetRangeUser(0,1.5)
      ratio.GetXaxis().SetTitle(variabile_._title)
      ratio.GetXaxis().SetLabelOffset(0.04)
      ratio.GetYaxis().SetLabelOffset(0.02)
@@ -455,30 +535,44 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      del pad2
      c1.Delete()
      del c1
-     for s in samples_:
-          infile[s.label].Close()
-          infile[s.label].Delete()
+     for kf in infile.keys():
+          #infile[s.label].Close()
+          infile[kf].Close()
+          #infile[s.label].Delete()
+          infile[kf].Delete()
      os.system('set LD_PRELOAD=libtcmalloc.so')
+
+leptons = map(str,opt.lep.split(',')) 
 
 #dataset_dict = {'2016':[],'2017':[],'2018':[]}
 dataset_dict = {'2017':[],'2018':[]}
 
 if(opt.dat != 'all'):
+     print opt.dat
      if not(opt.dat in sample_dict.keys()):
           print "dataset not found!"
           print sample_dict.keys()
      print opt.dat
      if 'DataMET' in str(opt.dat):
           raise Exception("Not interesting dataset")
-     elif 'DataHT' in str(opt.dat) and (opt.plot or opt.stack):
+     elif not opt.folder.startswith('CTHT') and 'DataHT' in str(opt.dat) and (opt.plot or opt.stack):
           raise Exception("Not interesting dataset")
      dataset_names = map(str, opt.dat.strip('[]').split(','))
+     print dataset_names
      samples = []
      [samples.append(sample_dict[dataset_name]) for dataset_name in dataset_names]
      [dataset_dict[str(sample.year)].append(sample) for sample in samples]
 else:
      for v in class_list:
-          if 'DataHT' in v.label or 'DataMET' in v.label:
+          if 'DataMET' in v.label:
+               continue
+          elif ('DataHT' in v.label and not opt.folder.startswith('CTHT')):
+               continue
+          elif (opt.folder.startswith('CTHT') and ('DataEle' in v.label or 'DataMu' in v.label)):
+               continue
+          elif 'electron' in leptons and ('DataMu' in v.label or 'FakeMu' in v.label):
+               continue
+          elif 'muon' in leptons and ('DataEle' in v.label or 'FakeEle' in v.label):
                continue
           dataset_dict[str(v.year)].append(v)
      '''
@@ -504,19 +598,32 @@ else:
      years = ['2016','2017','2018']
 print(years)
 
-leptons = map(str,opt.lep.split(',')) 
-
 cut = opt.cut #default cut must be obvious, for example lepton_eta>-10.
 
 if opt.bveto:
-     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&(" + cut + ")", 
-                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&(" + cut + ")", 
-                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&(" + cut + ")", 
+     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&(" + cut + ")", 
+                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&(" + cut + ")", 
+                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&(" + cut + ")", 
           }
      cut_tag = 'selection_upto_bveto'
      if opt.cut != "lepton_eta>-10.":
           cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut) 
-          
+elif opt.ttbar:
+     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.&&(" + cut + ")", 
+                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.&&(" + cut + ")", 
+                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.&&(" + cut + ")", 
+          }
+     cut_tag = 'ttbar_CR'
+     if opt.cut != "lepton_eta>-10.":
+          cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut)           
+elif opt.wjets:
+     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&MET_pt<=50.&&mT_lep_MET>50.&&(" + cut + ")", 
+                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&MET_pt<=50.&&mT_lep_MET>50.&&(" + cut + ")",
+                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&MET_pt<=50.&&mT_lep_MET>50.&&(" + cut + ")",
+          }
+     cut_tag = 'wjets_CR'
+     if opt.cut != "lepton_eta>-10.":
+          cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut)           
 elif opt.sel:
      cut_dict = {'muon':"abs(lepton_pdgid)==13&&(" + cut + ")&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1", 
                  'electron':"abs(lepton_pdgid)==11&&(" + cut + ")&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1", 
@@ -535,7 +642,7 @@ else:
 
 lumi = {'2016': 35.9, "2017": 41.53, "2018": 59.7}
 
-print cut_dict, cut_tag
+print cut_tag
 
 for year in years:
     for sample in dataset_dict[year]:
@@ -556,35 +663,33 @@ for year in years:
           #dataset_new.remove(sample_dict['DataMET_'+str(year)])
           if lep == 'muon' and sample_dict['DataEle_'+str(year)] in dataset_new:
                dataset_new.remove(sample_dict['DataEle_'+str(year)])
+               dataset_new.remove(sample_dict['FakeEle_'+str(year)])
           elif lep == 'electron' and sample_dict['DataMu_'+str(year)] in dataset_new:
                dataset_new.remove(sample_dict['DataMu_'+str(year)])
+               dataset_new.remove(sample_dict['FakeMu_'+str(year)])
 
           variables = []
           wzero = 'w_nominal*PFSF*puSF'#*lepSF'
-          cut = cut_dict[lep]
-                    
-          variables.append(variabile('lepton_pt', 'lepton p_{T} [GeV]', wzero+'*('+cut+')', 40, 35, 1000))
-          variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cut+')', 24, -2.4, 2.4))
-          variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cut+')', 20, -3.14, 3.14))
-          variables.append(variabile('lepton_pdgid', 'lepton pdgid',  wzero+'*('+cut+')', 31, -15.5, 15.5))
-          variables.append(variabile('lepton_pfRelIso03', 'lepton rel iso',  wzero+'*('+cut+')', 25, 0, 0.15))
-          variables.append(variabile('tau_pt',  '#tau_{p_{T}} [GeV]',  wzero+'*('+cut+')', 40, 30, 1000))
-          variables.append(variabile('tau_eta', '#tau #eta',  wzero+'*('+cut+')', 24, -2.4, 2.4))
-          variables.append(variabile('tau_phi', '#tau #Phi',  wzero+'*('+cut+')',  20, -3.14, 3.14))
-          variables.append(variabile('Leadjet_pt',  'Lead jet_{p_{T}} [GeV]',  wzero+'*('+cut+')', 40, 30, 1500))
-          variables.append(variabile('Leadjet_eta', 'Lead jet #eta',  wzero+'*('+cut+')', 24, -5, 5))
-          variables.append(variabile('Leadjet_phi', 'Lead jet #Phi',  wzero+'*('+cut+')',  20, -3.14, 3.14))
-
-          variables.append(variabile('Subleadjet_pt',  'Sublead jet_{p_{T}} [GeV]',  wzero+'*('+cut+')', 40, 30, 1000))
-          variables.append(variabile('Subleadjet_eta', 'Sublead jet #eta',  wzero+'*('+cut+')', 24, -5, 5))
-          variables.append(variabile('Subleadjet_phi', 'Sublead jet #Phi',  wzero+'*('+cut+')',  20, -3.14, 3.14))
+          cutbase = cut_dict[lep]
           
-          variables.append(variabile('MET_pt', 'p_{T}^{miss} [GeV]',  wzero+'*('+cut+')',  30, 40, 500))
-          variables.append(variabile('Mjj', 'M_{jj} [GeV]',  wzero+'*('+cut+')',  40, 500, 2000))
-          variables.append(variabile('DeltaEta_jj', '#Delta #eta_{jj}',  wzero+'*('+cut+')',  20, 0, 10))
+
+          bin_lepton_pt = array("f", [0., 100., 200., 300., 400., 600., 1000.])
+          nbin_lepton_pt = len(bin_lepton_pt)-1
+          
+          variables.append(variabile('lepton_Zeppenfeld', 'lepton Zeppenfeld',  wzero+'*('+cutbase+')', 120, -6, 6))
+          variables.append(variabile('abs(lepton_Zeppenfeld)', 'abs lepton Zeppenfeld',  wzero+'*('+cutbase+')', 60, 0, 6))
+          variables.append(variabile('event_Zeppenfeld', 'event Zeppenfeld',  wzero+'*('+cutbase+')', 120, -6, 6))
+          variables.append(variabile('abs(event_Zeppenfeld)', 'abs event Zeppenfeld',  wzero+'*('+cutbase+')', 60, 0, 6))
+
+          bin_taupt = array("f", [0., 100., 200., 300., 400., 800.])
+          nbin_taupt = len(bin_taupt) - 1
+          variables.append(variabile('tau_Zeppenfeld', '#tau Zeppenfeld',  wzero+'*('+cutbase+')', 120, -6, 6))
+          variables.append(variabile('abs(tau_Zeppenfeld)', 'abs #tau Zeppenfeld',  wzero+'*('+cutbase+')', 60, 0, 6))
 
           for sample in dataset_new:
-               if 'DataHT' in sample.label or 'DataMET' in sample.label:
+               if ('DataHT' in sample.label or 'DataMET' in sample.label) and not opt.folder.startswith("CTHT"):# or "WJets" in sample.label:
+                    continue
+               elif ('DataMu' in sample.label or 'DataEle' in sample.label or 'DataMET' in sample.label) and opt.folder.startswith("CTHT"):
                     continue
                if(opt.plot):
                     for var in variables:
@@ -594,6 +699,7 @@ for year in years:
 
           if(opt.stack):
                for var in variables:
+                    print var._xmax
                     os.system('set LD_PRELOAD=libtcmalloc.so')
                     makestack(lep, 'jets', var, dataset_new, cut_tag, "", lumi[str(year)])
                     os.system('set LD_PRELOAD=libtcmalloc.so')
