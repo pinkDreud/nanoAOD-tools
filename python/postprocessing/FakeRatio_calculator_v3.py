@@ -25,6 +25,7 @@ parser.add_option('--inf', dest='infolder', type=str, default = '', help='Please
 
 
 input_folder = '/eos/user/m/mmagheri/VBS/nosynch/' + opt.infolder + '/'
+print(input_folder)
 
 if not os.path.isdir(input_folder): raise NameError('ERROR, directory not found')
 
@@ -61,42 +62,88 @@ FRMCtitle = {
         'Tau' : "Tau MC fake ratio",
         }
 
-
 Fake_dicti_ele = {
-            '11': ['|n|<1,     pT<20    ',  0,  0, 0.0],
-            '12': ['1<|n|<1.5, pT<20    ',  0,  0, 0.0],
-            '13': ['1.5<|n|<2, pT<20    ',  0,  0, 0.0],
-            '14': ['2<|n|<2.4, pT<20    ',  0,  0, 0.0],
-            '21': ['|n|<1,     20<pT<30 ',  0,  0, 0.0],
-            '22': ['1<|n|<1.5, 20<pT<30 ',  0,  0, 0.0],
-            '23': ['1.5<|n|<2, 20<pT<30 ',  0,  0, 0.0],
-            '24': ['2<|n|<2.4, 20<pT<30 ',  0,  0, 0.0],
-            '31': ['|n|<1,     30<pT<40 ',  0,  0, 0.0],
-            '32': ['1<|n|<1.5, 30<pT<40 ',  0,  0, 0.0],
-            '33': ['1.5<|n|<2, 30<pT<40 ',  0,  0, 0.0],
-            '34': ['2<|n|<2.4, 30<pT<40 ',  0,  0, 0.0],
-            '41': ['|n|<1,     40<pT<50 ',  0,  0, 0.0],
-            '42': ['1<|n|<1.5, 40<pT<50 ',  0,  0, 0.0],
-            '43': ['1.5<|n|<2, 40<pT<50 ',  0,  0, 0.0],
-            '44': ['2<|n|<2.4, 40<pT<50 ',  0,  0, 0.0],
-            '51': ['|n|<1,     pT>50    ',  0,  0, 0.0],
-            '52': ['1<|n|<1.5, pT>50    ',  0,  0, 0.0],
-            '53': ['1.5<|n|<2, pT>50    ',  0,  0, 0.0],
-            '54': ['2<|n|<2.4, pT>50    ',  0,  0, 0.0],
+            '-11': ['-1<n<0,     pT<30    ',  0,  0, 0.0],
+            '-12': ['-1>n>-1.5, pT<30    ',  0,  0, 0.0],
+            '-13': ['-1.5>n>-2, pT<30    ',  0,  0, 0.0],
+            '-14': ['-2>n>-2.4, pT<30    ',  0,  0, 0.0],
+            '-21': ['-1<n<0,      30<pT<45 ',  0,  0, 0.0],
+            '-22': ['-1>|n|>-1.5, 30<pT<45 ',  0,  0, 0.0],
+            '-23': ['-1.5>|n|>-2, 3<pT<45 ',  0,  0, 0.0],
+            '-24': ['-2>|n|>-2.4, 30<pT<45 ',  0,  0, 0.0],
+            '-31': ['-1<n<0,     45<pT<60 ',  0,  0, 0.0],
+            '-32': ['-1>n>-1.5, 45<pT<60 ',  0,  0, 0.0],
+            '-33': ['-1.5>n>-2, 45<pT<60 ',  0,  0, 0.0],
+            '-34': ['-2>n>-2.4, 45<pT<60 ',  0,  0, 0.0],
+            '-41': ['-1<n|<0,     60<pT<80 ',  0,  0, 0.0],
+            '-42': ['-1>|n|>-1.5, 60<pT<80 ',  0,  0, 0.0],
+            '-43': ['-1.5>n>-2, 60<pT<80 ',  0,  0, 0.0],
+            '-44': ['-2>n>-2.4, 60<pT<80 ',  0,  0, 0.0],
+            '-51': ['-1<n<0,     pT>80    ',  0,  0, 0.0],
+            '-52': ['-1>n>-1.5, pT>80    ',  0,  0, 0.0],
+            '-53': ['-1.5>n|>-2, pT>80    ',  0,  0, 0.0],
+            '-54': ['-2>n>-2.4, pT>80    ',  0,  0, 0.0],
+ 
+            '11': ['|n|<1,     pT<30    ',  0,  0, 0.0],
+            '12': ['1<|n|<1.5, pT<30    ',  0,  0, 0.0],
+            '13': ['1.5<|n|<2, pT<30    ',  0,  0, 0.0],
+            '14': ['2<|n|<2.4, pT<30    ',  0,  0, 0.0],
+            '21': ['|n|<1,     30<pT<45 ',  0,  0, 0.0],
+            '22': ['1<|n|<1.5, 30<pT<45 ',  0,  0, 0.0],
+            '23': ['1.5<|n|<2, 30<pT<45 ',  0,  0, 0.0],
+            '24': ['2<|n|<2.4, 30<pT<45 ',  0,  0, 0.0],
+            '31': ['|n|<1,     45<pT<60 ',  0,  0, 0.0],
+            '32': ['1<|n|<1.5, 45<pT<60 ',  0,  0, 0.0],
+            '33': ['1.5<|n|<2, 45<pT<60 ',  0,  0, 0.0],
+            '34': ['2<|n|<2.4, 45<pT<60 ',  0,  0, 0.0],
+            '41': ['|n|<1,     60<pT<80 ',  0,  0, 0.0],
+            '42': ['1<|n|<1.5, 60<pT<80 ',  0,  0, 0.0],
+            '43': ['1.5<|n|<2, 60<pT<80 ',  0,  0, 0.0],
+            '44': ['2<|n|<2.4, 60<pT<80 ',  0,  0, 0.0],
+            '51': ['|n|<1,     pT>80    ',  0,  0, 0.0],
+            '52': ['1<|n|<1.5, pT>80    ',  0,  0, 0.0],
+            '53': ['1.5<|n|<2, pT>80    ',  0,  0, 0.0],
+            '54': ['2<|n|<2.4, pT>80    ',  0,  0, 0.0],
 }
 
-Fake_dicti_mu = copy.deepcopy(Fake_dicti_ele)
-Fake_dicti_tau = copy.deepcopy(Fake_dicti_ele)
 
-lower_pt = [0, 20, 30, 40, 50, 60]
+
+Fake_dicti_patate = {
+            '11': ['|n|<1,     pT<30    ',  0,  0, 0.0],
+            '12': ['1<|n|<1.5, pT<30    ',  0,  0, 0.0],
+            '13': ['1.5<|n|<2, pT<30    ',  0,  0, 0.0],
+            '14': ['2<|n|<2.4, pT<30    ',  0,  0, 0.0],
+            '21': ['|n|<1,     30<pT<45 ',  0,  0, 0.0],
+            '22': ['1<|n|<1.5, 30<pT<45 ',  0,  0, 0.0],
+            '23': ['1.5<|n|<2, 30<pT<45 ',  0,  0, 0.0],
+            '24': ['2<|n|<2.4, 30<pT<45 ',  0,  0, 0.0],
+            '31': ['|n|<1,     45<pT<60 ',  0,  0, 0.0],
+            '32': ['1<|n|<1.5, 45<pT<60 ',  0,  0, 0.0],
+            '33': ['1.5<|n|<2, 45<pT<60 ',  0,  0, 0.0],
+            '34': ['2<|n|<2.4, 45<pT<60 ',  0,  0, 0.0],
+            '41': ['|n|<1,     60<pT<80 ',  0,  0, 0.0],
+            '42': ['1<|n|<1.5, 40<pT<80 ',  0,  0, 0.0],
+            '43': ['1.5<|n|<2, 40<pT<80 ',  0,  0, 0.0],
+            '44': ['2<|n|<2.4, 40<pT<80 ',  0,  0, 0.0],
+            '51': ['|n|<1,     pT>80    ',  0,  0, 0.0],
+            '52': ['1<|n|<1.5, pT>80    ',  0,  0, 0.0],
+            '53': ['1.5<|n|<2, pT>80    ',  0,  0, 0.0],
+            '54': ['2<|n|<2.4, pT>80    ',  0,  0, 0.0],
+}
+
+Fake_dicti_mu = copy.deepcopy(Fake_dicti_patate)
+Fake_dicti_tau = copy.deepcopy(Fake_dicti_patate)
+
+lower_pt = [0, 30, 45, 60, 80, 100]
 lower_eta = [0, 1, 1.4, 2, 2.4]
+lower_eta_ele = [-2.4, -2, -1.4, -1, 0, 1, 1.4, 2, 2.4]
 
 today = datetime.date.today()
 time  = datetime.datetime.now()
 
 print('Today is :' + str(today) + ' and the time is: '+ str(time))
 
-outdir = 'FakeRatio_calcs/' + opt.infolder + '/'
+outdir = 'FakeRatio_calcs_19Mar/' + opt.infolder + '/'
 
 if not os.path.isdir(outdir):
     try:
@@ -118,7 +165,7 @@ f = ROOT.TFile(outdir+filename+".root", "RECREATE")
 
 filename += '.txt'
 
-hNLooseEle_Data = ROOT.TH2F("h2NLooseEle_data", "Electron #loose events", 5, array.array('d', lower_pt), 4, array.array('d', lower_eta))
+hNLooseEle_Data = ROOT.TH2F("h2NLooseEle_data", "Electron #loose events", 5, array.array('d', lower_pt), 8, array.array('d', lower_eta_ele))
 hNLooseMu_Data  = ROOT.TH2F("h2NLooseMu_data",  "Muon #loose events",     5, array.array('d', lower_pt), 4, array.array('d', lower_eta))
 hNLooseTau_Data = ROOT.TH2F("h2NLooseTau_data", "Tau #loose events",      5, array.array('d', lower_pt), 4, array.array('d', lower_eta))
 
@@ -128,7 +175,7 @@ looseDatalist = {
         'Tau' : hNLooseTau_Data,
         }
 
-hNTightEle_Data = ROOT.TH2F("h2NTightEle_data", "Electron #tight events", 5, array.array('d', lower_pt), 4, array.array('d', lower_eta))
+hNTightEle_Data = ROOT.TH2F("h2NTightEle_data", "Electron #tight events", 5, array.array('d', lower_pt), 8, array.array('d', lower_eta_ele))
 hNTightMu_Data  = ROOT.TH2F("h2NTightMu_data",  "Muon #tight events",     5, array.array('d', lower_pt), 4, array.array('d', lower_eta))
 hNTightTau_Data = ROOT.TH2F("h2NTightTau_data", "Tau #tight events",      5, array.array('d', lower_pt), 4, array.array('d', lower_eta))
 
@@ -138,7 +185,7 @@ tightDatalist = {
         'Tau' : hNTightTau_Data,
         }
 
-hNLooseEle_MC = ROOT.TH2F("h2NLooseEle_MC", "Electron #loose events", 5, array.array('d', lower_pt), 4, array.array('d', lower_eta))
+hNLooseEle_MC = ROOT.TH2F("h2NLooseEle_MC", "Electron #loose events", 5, array.array('d', lower_pt), 8, array.array('d', lower_eta_ele))
 hNLooseMu_MC  = ROOT.TH2F("h2NLooseMu_MC",  "Muon #loose events",     5, array.array('d', lower_pt), 4, array.array('d', lower_eta))
 hNLooseTau_MC = ROOT.TH2F("h2NLooseTau_MC", "Tau #loose events",      5, array.array('d', lower_pt), 4, array.array('d', lower_eta))
 
@@ -148,7 +195,7 @@ looseMClist = {
         'Tau' : hNLooseTau_MC,
         }
 
-hNTightEle_MC = ROOT.TH2F("h2NTightEle_MC", "Electron #tight events", 5, array.array('d', lower_pt), 4, array.array('d', lower_eta))
+hNTightEle_MC = ROOT.TH2F("h2NTightEle_MC", "Electron #tight events", 5, array.array('d', lower_pt), 8, array.array('d', lower_eta_ele))
 hNTightMu_MC  = ROOT.TH2F("h2NTightMu_MC",  "Muon #tight events",     5, array.array('d', lower_pt), 4, array.array('d', lower_eta))
 hNTightTau_MC = ROOT.TH2F("h2NTightTau_MC", "Tau #tight events",      5, array.array('d', lower_pt), 4, array.array('d', lower_eta))
 
@@ -229,17 +276,22 @@ def FakeCalc(sample, isData, nev):
         if opt.trig == 'Ele' or opt.trig == 'all' and abs(FakeLepton.pdgid) == 11 and nleps.LightLeptons < 2 and jets.numberSeparate >0 and  abs(FakeLepton.eta)<2.4 and not(abs(FakeLepton.eta)>1.4442 and abs(FakeLepton.eta)<1.566) and FakeLepton.pt>0 and FakeLepton.jetRelIso>=0:
             if isMC and (FakeLepton.isPrompt!=1): 
                 SF = 0
-                
-            ptBin  = pTCalculator(FakeLepton.pt)
-            etaBin = etaCalculator(FakeLepton.eta)
-            dictPos = str(ptBin) +str(etaBin[1])
-            Fake_dicti_ele[dictPos][1] += SF
+            
+            if not (FakeLepton.eta<-2.4 or FakeLepton.eta>2.4):
+                ptBin  = pTCalculator(FakeLepton.pt)
+                etaBin = etaCalculator(FakeLepton.eta)
+                dictPos=None
+                if FakeLepton.eta>=0:
+                    dictPos = str(ptBin) +str(etaBin[1])
+                else:
+                    dictPos = '-'+str(ptBin) +str(etaBin[1])
+                Fake_dicti_ele[dictPos][1] += SF
                
-            looseList['Ele'].Fill(FakeLepton.pt, abs(FakeLepton.eta), SF) 
+                looseList['Ele'].Fill(FakeLepton.pt, FakeLepton.eta, SF) 
 
-            if FakeLepton.pfRelIso04<0.08 and FakeLepton.isTight:
-                Fake_dicti_ele[dictPos][2] += SF
-                tightList['Ele'].Fill(FakeLepton.pt, abs(FakeLepton.eta), SF) 
+                if FakeLepton.pfRelIso04<0.08 and FakeLepton.isTight:
+                    Fake_dicti_ele[dictPos][2] += SF
+                    tightList['Ele'].Fill(FakeLepton.pt, FakeLepton.eta, SF) 
         
         elif opt.trig == 'Mu' or opt.trig == 'all' and abs(FakeLepton.pdgid) == 13 and nleps.LightLeptons < 2 and jets.numberSeparate > 0 and  abs(FakeLepton.eta)<2.4 and FakeLepton.pt>0 and FakeLepton.pfRelIso04>=0:
             if isMC and (FakeLepton.isPrompt!=1):
@@ -415,6 +467,14 @@ DataDict = {
         'Tau' : "DataHT_2017/DataHT_2017.root",
         'all' : "DataHT_2017/DataHT_2017.root",
         }
+
+DataDict = {
+        'Ele' : "DataHT_2017/DataHT_2017.root",
+        'Mu'  : "DataMuFake_2017/DataMuFake_2017.root",
+        'Tau' : "DataHT_2017/DataHT_2017.root",
+        'all' : "DataHT_2017/DataHT_2017.root",
+        }
+
 
 bkg_files = {
         'DYJetsToLL' : "DYJetsToLL_2017/DYJetsToLL_2017.root", 
