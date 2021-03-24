@@ -32,14 +32,17 @@ parser.add_option('-f', '--folder', dest='folder', type='string', default = 'v7'
 parser.add_option('-d', '--dat', dest='dat', type='string', default = 'all', help="")
 parser.add_option('--user', dest='user', type='string', default=str(os.environ.get('USER')), help='User')
 parser.add_option('--ttbar', dest='ttbar', default = False, action='store_true', help='Enable ttbar CR, default disabled')
+parser.add_option('--count', dest='count', default = False, action='store_true', help='Enable countings')
 parser.add_option('--HT', dest='HT', default = False, action='store_true', help='Enable CTHT')
 parser.add_option('--wfake', dest='wfake', default = False, action='store_true', help='Enable stackplots with data-driven fake leptons, default disabled')
 parser.add_option('--wjets', dest='wjets', default = False, action='store_true', help='Enable WJets CR, default disabled')
 parser.add_option('--blinded', dest='blinded', default = False, action='store_true', help='Activate blinding')
+parser.add_option('--signal', dest='signal', default = False, action='store_true', help='Activate only signal')
 
 (opt, args) = parser.parse_args()
 print("cavallotti")
 #print (opt, args)
+print "to stack?", opt.tostack
 
 folder = opt.folder
 
@@ -51,6 +54,7 @@ if opt.lep != 'incl':
      lepstr = 'plot/' + opt.lep
 else:
      lepstr = 'plot'
+
 if opt.plot:
      if not os.path.exists(plotrepo + lepstr):
           os.makedirs(plotrepo + lepstr)
@@ -139,6 +143,12 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
      cutbase = variable._taglio
      cut = ''
 
+     print "count? ", opt.count
+     if opt.count:
+          countf = open(plotrepo + lepstr + '/countings/' + cut_tag + "/" + variable._name + ".txt", "a")
+          countf.write(sample.label)
+          countf.write("\nBin\tContent\tError")
+
      if str(sample.label).startswith('Fake'):
           if not opt.folder.startswith('CTHT'):
                f1 = ROOT.TFile.Open(filerepo + sample.components[0].label + "/"  + sample.components[0].label + ".root")
@@ -165,8 +175,8 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
      else:
           cut = cut + "*(" + str(variable._name) + ">-10.)"
           
-     if "WpWpJJ_EWK" in sample.label:
-          cut = cut + "*10."
+     #if "WpWpJJ_EWK" in sample.label or 'VBS_SSWW' in sample.label:
+          #cut = cut + "*10."
 
      print str(cut)
      foutput = plotrepo + lepstr + "/" + sample.label + "_" + lep+".root"
@@ -198,23 +208,37 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
           h1.SetBinError(1, math.sqrt(pow(h1.GetBinError(0),2) + pow(h1.GetBinError(1),2)))
           h1.SetBinContent(nbins, h1.GetBinContent(nbins) + h1.GetBinContent(nbins+1))
           h1.SetBinError(nbins, math.sqrt(pow(h1.GetBinError(nbins),2) + pow(h1.GetBinError(nbins+1),2)))
-          
-     if str(sample.label).startswith('Fake'):
-          for bidx in range(nbins):
-               bidx_l = bidx + 1
+
+     for bidx in range(nbins):          
+          bidx_l = bidx + 1
+          if str(sample.label).startswith('Fake'):
                h1.SetBinError(bidx_l, 0.3*h1.GetBinContent(bidx_l))
+
+          if not opt.count:
+               continue
+
+          minedge = str(round(h1.GetBinLowEdge(bidx_l), 3))
+          maxedge = str(round(h1.GetBinLowEdge(bidx_l) + h1.GetBinWidth(bidx_l), 3))
+          bincont = str(round(h1.GetBinContent(bidx_l), 3))
+          binerrcont = str(round(h1.GetBinError(bidx_l), 3))
+
+          countf.write("\n[" + minedge + ", " + maxedge +")\t" + bincont + "\t" + binerrcont)
 
      print h1.Integral()
      for i in range(0, nbins+1):
           content = h1.GetBinContent(i)
           if(content<0.):
                h1.SetBinContent(i, 0.)
-
+     
      fout = ROOT.TFile.Open(foutput, "UPDATE")
      fout.cd()
      h1.Write()
      fout.Close()
      f1.Close()
+
+     if opt.count:
+          countf.write("\n\n")
+          countf.close()
 
 def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      os.system('set LD_PRELOAD=libtcmalloc.so')
@@ -261,7 +285,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           else:
                if s.label.startswith('Fake'):
                     continue
-          if('WpWpJJ_EWK' in s.label):
+          if('WpWpJJ_EWK' in s.label or 'VBS_SSWW' in s.label) and not opt.signal:
                signal = True
           print s.label
           if(syst_ == ""):
@@ -300,12 +324,14 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
                if(i == 0 and not blind): # trick to add Data flag to legend only once
                     leg_stack.AddEntry(hdata, "Data", "ep")
                i += 1
-          elif('WpWpJJ_EWK' in s.label):
+          elif('WpWpJJ_EWK' in s.label or 'VBS_SSWW' in s.label) and not opt.signal:
                #tmp.SetLineStyle(9)
                if opt.tostack:
                     tmp.SetLineColor(s.color)
+                    tmp.SetLineWidth(2)
                else:
                     tmp.SetLineColor(s.color)
+                    tmp.SetLineWidth(2)
                #tmp.SetLineWidth(3)
                tmp.SetMarkerSize(0.)
                tmp.SetMarkerColor(s.color)
@@ -332,7 +358,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      leg_stack.SetFillStyle(0)
      leg_stack.SetTextFont(42)
      leg_stack.SetBorderSize(0)
-     leg_stack.SetTextSize(0.05)
+     leg_stack.SetTextSize(0.035)
      c1 = ROOT.TCanvas(canvasname,"c1",50,50,700,600)
      c1.SetFillColor(0)
      c1.SetBorderMode(0)
@@ -409,8 +435,9 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      h_err.SetFillStyle(3154)
      h_err.SetMarkerSize(0)
      h_err.SetFillColor(ROOT.kGray+2)
-     h_err.Draw("e2same0")
-     leg_stack.AddEntry(h_err, "Stat. Unc.", "f")
+     if not opt.tostack:
+          h_err.Draw("e2same0")
+          leg_stack.AddEntry(h_err, "Stat. Unc.", "f")
      if not blind: 
           print(hdata.Integral())
           hdata.Draw("eSAMEpx0")
@@ -472,7 +499,8 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
 
      h_bkg_err.SetMarkerSize(0)
      h_bkg_err.SetFillColor(ROOT.kGray+1)
-     h_bkg_err.Draw("e20same")
+     if not opt.tostack:
+          h_bkg_err.Draw("e20same")
      
      if not variabile_._iscustom:
           xmin = variabile_._xmin
@@ -557,12 +585,16 @@ if(opt.dat != 'all'):
      [dataset_dict[str(sample.year)].append(sample) for sample in samples]
 else:
      for v in class_list:
+          if opt.signal and not ('WpWpJJ_EWK' in v.label or 'VBS_SSWW' in v.label):
+               continue
           if 'DataMET' in v.label:
                continue
           elif ('DataHT' in v.label and not opt.folder.startswith('CTHT')):
                continue
-          elif (opt.folder.startswith('CTHT') and ('DataEle' in v.label or 'DataMu' in v.label)):
+          elif (opt.folder.startswith('CTHT') and ('DataEle' in v.label or 'DataMu' in v.label or 'QCD' in v.label)):
                continue
+          #elif 'VBS_SSWW' in v.label:
+               #continue
           elif 'electron' in leptons and ('DataMu' in v.label or 'FakeMu' in v.label):
                continue
           elif 'muon' in leptons and ('DataEle' in v.label or 'FakeEle' in v.label):
@@ -662,15 +694,14 @@ for year in years:
                dataset_new.remove(sample_dict['FakeMu_'+str(year)])
 
           variables = []
-          wzero = 'w_nominal*PFSF*puSF'#*lepSF'
+
+          wzero = 'w_nominal*PFSF*puSF*lepSF'
           cutbase = cut_dict[lep]
           
-
           variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cutbase+')', 20, -5., 5.))
           variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cutbase+')', 14, -3.50, 3.50))
           
-
-          bin_lepton_pt = array("f", [0., 100., 200., 300., 400., 600., 1000.])
+          bin_lepton_pt = array("f", [0., 30., 45., 60., 80., 100., 200., 300., 400., 600., 1000.])
           nbin_lepton_pt = len(bin_lepton_pt)-1
           variables.append(variabile('lepton_pt',  'Lepton p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_lepton_pt, bin_lepton_pt))#30, 1500))
 
@@ -679,7 +710,7 @@ for year in years:
           variables.append(variabile('lepton_Zeppenfeld', 'lepton Zeppenfeld',  wzero+'*('+cutbase+')', 24, -6, 6))
           variables.append(variabile('event_Zeppenfeld', 'event Zeppenfeld',  wzero+'*('+cutbase+')', 24, -6, 6))
 
-          bin_taupt = array("f", [0., 100., 200., 300., 400., 800.])
+          bin_taupt = array("f", [0., 30., 45., 60., 80., 100., 200., 300., 400., 800.])
           nbin_taupt = len(bin_taupt) - 1
           variables.append(variabile('tau_pt',  '#tau p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_taupt, bin_taupt))
           variables.append(variabile('tau_eta', '#tau #eta',  wzero+'*('+cutbase+')', 20, -5, 5))
@@ -771,14 +802,22 @@ for year in years:
           variables.append(variabile('deltaPhi_lepj1', '#Delta #phi_{l j_{1}}',  wzero+'*('+cutbase+')', 16, -4., 4.))
           variables.append(variabile('deltaPhi_lepj2', '#Delta #phi_{l j_{2}}',  wzero+'*('+cutbase+')', 16, -4., 4.))
 
-
           for sample in dataset_new:
                if ('DataHT' in sample.label or 'DataMET' in sample.label) and not opt.folder.startswith("CTHT"):# or "WJets" in sample.label:
                     continue
-               elif ('DataMu' in sample.label or 'DataEle' in sample.label or 'DataMET' in sample.label) and opt.folder.startswith("CTHT"):
+               elif ('DataMu' in sample.label or 'DataEle' in sample.label or 'DataMET' in sample.label or 'QCD' in sample.label) and opt.folder.startswith("CTHT"):
                     continue
+                    
                if(opt.plot):
                     for var in variables:
+                         if opt.count:
+                              if not os.path.exists(plotrepo + lepstr + '/countings/'):
+                                   os.makedirs(plotrepo + lepstr + '/countings/')
+                              if not os.path.exists(plotrepo + lepstr + '/countings/' + cut_tag):
+                                   os.makedirs(plotrepo + lepstr + '/countings/' + cut_tag)
+                              if not os.path.exists(plotrepo + lepstr + '/countings/' + cut_tag + "/" + var._name + ".txt"):
+                                   tmp_f = open(plotrepo + lepstr + '/countings/' + cut_tag + "/" + var._name + ".txt", "w")
+                                   tmp_f.close()
                          if (("GenPart" in var._name) or ("MC_" in var._name)) and "Data" in sample.label:
                               continue
                          plot(lep, 'jets', var, sample, cut_tag, "")

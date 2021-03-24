@@ -109,11 +109,13 @@ dirlist = [dirs for dirs in os.listdir(path) if os.path.isdir(path+dirs)]
 
 
 for prname, proc in class_dict.items():
+    if opt.year not in prname:
+        continue
     if "Fake" in prname:
         continue
-    if "DataHT" in prname or 'DataMET' in prname:
+    elif "DataHT" in prname or 'DataMET' in prname:
         continue
-    if opt.year not in prname:
+    elif '_BSM_INT_' in prname:
         continue
 
     toLaunch = True

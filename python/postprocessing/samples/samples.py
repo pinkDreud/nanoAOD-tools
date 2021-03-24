@@ -317,7 +317,7 @@ tZq_ll_4f_2017.sigma = 0.07358
 tZq_ll_4f_2017.year = 2017
 tZq_ll_4f_2017.dataset = "/tZq_ll_4f_ckm_NLO_TuneCP5_PSweights_13TeV-amcatnlo-pythia8/"+tag2_2017+"-v1/NANOAODSIM"
 
-TVX_2017 = sample(ROOT.kRed-2, 1, 1001, "tVX", "TVX_2017")
+TVX_2017 = sample(ROOT.kCyan-7, 1, 1001, "tVX", "TVX_2017")
 TVX_2017.year = 2017
 TVX_2017.components = [TTGJets_2017, TTZToQQ_2017, TTZToLLNuNu_2017, TTWJetsToQQ_2017, TTWJetsToLNu_2017, tZq_ll_4f_2017]
 
@@ -675,7 +675,7 @@ DYJetsM_2017.year = 2017
 DYJetsM_2017.components = [DYJetsToLLM5to50_2017, DYJetsToLLM50_2017]
 
 ################################ ssWW EWK ################################
-WpWpJJ_EWK_2017 = sample(ROOT.kRed, 1, 1001, "EW ssWW (#times10)", "WpWpJJ_EWK_2017")
+WpWpJJ_EWK_2017 = sample(ROOT.kRed, 1, 1001, "EW ssWW", "WpWpJJ_EWK_2017")
 WpWpJJ_EWK_2017.sigma = 0.02064
 WpWpJJ_EWK_2017.year = 2017
 WpWpJJ_EWK_2017.dataset = "/WpWpJJ_EWK_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
@@ -684,6 +684,66 @@ WpWpJJ_QCD_2017 = sample(ROOT.kPink+1, 1, 1001, "QCD ssWW", "WpWpJJ_QCD_2017")
 WpWpJJ_QCD_2017.sigma = 0.01538
 WpWpJJ_QCD_2017.year = 2017
 WpWpJJ_QCD_2017.dataset = "/WpWpJJ_QCD_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+
+VBS_SSWW_LL_SM_2017 = sample(ROOT.kBlack, 1, 1001, "VBS ssWW LL", "VBS_SSWW_LL_SM_2017")
+VBS_SSWW_LL_SM_2017.sigma = 0.002014
+VBS_SSWW_LL_SM_2017.year = 2017
+VBS_SSWW_LL_SM_2017.dataset = "/VBS_SSWW_LL_polarization_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+
+VBS_SSWW_TL_SM_2017 = sample(ROOT.kBlack, 1, 1001, "VBS ssWW TL", "VBS_SSWW_TL_SM_2017")
+VBS_SSWW_TL_SM_2017.sigma = 0.01036
+VBS_SSWW_TL_SM_2017.year = 2017
+VBS_SSWW_TL_SM_2017.dataset = "/VBS_SSWW_TL_polarization_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+
+VBS_SSWW_TT_SM_2017 = sample(ROOT.kBlack, 1, 1001, "VBS ssWW TT", "VBS_SSWW_TT_SM_2017")
+VBS_SSWW_TT_SM_2017.sigma = 0.01595
+VBS_SSWW_TT_SM_2017.year = 2017
+VBS_SSWW_TT_SM_2017.dataset = "/VBS_SSWW_TT_polarization_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+
+VBS_SSWW_SM_2017 = sample(ROOT.kRed+2, 1, 1001, "VBS ssWW", "VBS_SSWW_SM_2017")
+VBS_SSWW_SM_2017.year = 2017
+VBS_SSWW_SM_2017.components = [VBS_SSWW_LL_SM_2017, VBS_SSWW_TL_SM_2017, VBS_SSWW_TT_SM_2017]
+
+VBS_SSWW_cHW_BSM_2017 = sample(ROOT.kGreen+3, 1, 1001, "VBS ssWW c_{HW} (only BSM)", "VBS_SSWW_cHW_BSM_2017")
+VBS_SSWW_cHW_BSM_2017.sigma = 0.002014
+VBS_SSWW_cHW_BSM_2017.year = 2017
+VBS_SSWW_cHW_BSM_2017.dataset = "/VBS_SSWW_cHW_BSM_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+
+VBS_SSWW_cHW_INT_2017 = sample(ROOT.kGreen+3, 1, 1001, "VBS ssWW c_{HW} (only INT)", "VBS_SSWW_cHW_INT_2017")
+VBS_SSWW_cHW_INT_2017.sigma = 0.002014
+VBS_SSWW_cHW_INT_2017.year = 2017
+VBS_SSWW_cHW_INT_2017.dataset = "/VBS_SSWW_cHW_INT_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+
+VBS_SSWW_cHW_2017 = sample(ROOT.kMagenta+2, 1, 1001, "VBS ssWW c_{HW} (BSM+INT)", "VBS_SSWW_cHW_2017")
+VBS_SSWW_cHW_2017.year = 2017
+VBS_SSWW_cHW_2017.components = [VBS_SSWW_cHW_BSM_2017]#, VBS_SSWW_cHW_INT_2017]
+
+VBS_SSWW_cW_BSM_2017 = sample(ROOT.kMagenta+3, 1, 1001, "VBS ssWW c_{W} (only BSM)", "VBS_SSWW_cW_BSM_2017")
+VBS_SSWW_cW_BSM_2017.sigma = 0.002014
+VBS_SSWW_cW_BSM_2017.year = 2017
+VBS_SSWW_cW_BSM_2017.dataset = "/VBS_SSWW_cW_BSM_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+
+VBS_SSWW_cW_INT_2017 = sample(ROOT.kMagenta+3, 1, 1001, "VBS ssWW c_{W} (only INT)", "VBS_SSWW_cW_INT_2017")
+VBS_SSWW_cW_INT_2017.sigma = 0.002014
+VBS_SSWW_cW_INT_2017.year = 2017
+VBS_SSWW_cW_INT_2017.dataset = "/VBS_SSWW_cW_INT_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+
+VBS_SSWW_cW_2017 = sample(ROOT.kMagenta+1, 1, 1001, "VBS ssWW c_{W} (BSM+INT)", "VBS_SSWW_cW_2017")
+VBS_SSWW_cW_2017.year = 2017
+VBS_SSWW_cW_2017.components = [VBS_SSWW_cW_BSM_2017]#, VBS_SSWW_cW_INT_2017]
+
+VBS_SSWW_cW_cHW_2017 = sample(ROOT.kAzure+3, 1, 1001, "VBS ssWW c_{HW}+c_{W}", "VBS_SSWW_cW_cHW_2017")
+VBS_SSWW_cW_cHW_2017.sigma = 0.002014
+VBS_SSWW_cW_cHW_2017.year = 2017
+VBS_SSWW_cW_cHW_2017.dataset = "/VBS_SSWW_cW_cHW_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+
+VBS_SSWW_BSM_INT_2017 = sample(ROOT.kGreen+3, 1, 1001, "VBS ssWW (BSM)", "VBS_SSWW_BSM_INT_2017")
+VBS_SSWW_BSM_INT_2017.year = 2017
+VBS_SSWW_BSM_INT_2017.components = [VBS_SSWW_cHW_BSM_2017, VBS_SSWW_cW_BSM_2017, VBS_SSWW_cW_cHW_2017]
+
+VBS_SSWW_BSM_SM_2017 = sample(ROOT.kGreen+2, 1, 1001, "VBS ssWW (BSM+SM+INT)", "VBS_SSWW_BSM_SM_2017")
+VBS_SSWW_BSM_SM_2017.year = 2017
+VBS_SSWW_BSM_SM_2017.components = [VBS_SSWW_cHW_BSM_2017, VBS_SSWW_cHW_INT_2017, VBS_SSWW_cW_BSM_2017, VBS_SSWW_cW_INT_2017, VBS_SSWW_cW_cHW_2017, VBS_SSWW_LL_SM_2017, VBS_SSWW_TL_SM_2017, VBS_SSWW_TT_SM_2017]
 
 ###################################################################################################################################################################
 ############################################################                                           ############################################################
@@ -1147,15 +1207,21 @@ DataHT_2018.components = [DataHTA_2018, DataHTB_2018, DataHTC_2018, DataHTD_2018
 sample_dict={
     'WpWpJJ_EWK_2017':WpWpJJ_EWK_2017,
     'WpWpJJ_QCD_2017':WpWpJJ_QCD_2017,
+    'VBS_SSWW_SM_2017':VBS_SSWW_SM_2017, 'VBS_SSWW_LL_SM_2017':VBS_SSWW_LL_SM_2017, 'VBS_SSWW_TL_SM_2017':VBS_SSWW_TL_SM_2017, 'VBS_SSWW_TT_SM_2017':VBS_SSWW_TT_SM_2017,
+    'VBS_SSWW_cHW_2017':VBS_SSWW_cHW_2017, 'VBS_SSWW_cHW_BSM_2017':VBS_SSWW_cHW_BSM_2017, 'VBS_SSWW_cHW_INT_2017':VBS_SSWW_cHW_INT_2017,
+    'VBS_SSWW_cW_2017':VBS_SSWW_cW_2017, 'VBS_SSWW_cW_BSM_2017':VBS_SSWW_cW_BSM_2017, 'VBS_SSWW_cW_INT_2017':VBS_SSWW_cW_INT_2017,
+    'VBS_SSWW_cW_cHW_2017':VBS_SSWW_cW_cHW_2017,
+    'VBS_SSWW_BSM_INT_2017':VBS_SSWW_BSM_INT_2017,
+    'VBS_SSWW_BSM_SM_2017':VBS_SSWW_BSM_SM_2017,
     ### fake contributions form here...
     'QCD_2017':QCD_2017, 'QCDHT_100to200_2017':QCDHT_100to200_2017, 'QCDHT_200to300_2017':QCDHT_200to300_2017, 'QCDHT_300to500_2017':QCDHT_300to500_2017, 'QCDHT_500to700_2017':QCDHT_500to700_2017, 'QCDHT_700to1000_2017':QCDHT_700to1000_2017, 'QCDHT_1000to1500_2017':QCDHT_1000to1500_2017, 'QCDHT_1500to2000_2017':QCDHT_1500to2000_2017, 'QCDHT_2000toInf_2017':QCDHT_2000toInf_2017,
     'ZZtoLep_2017':ZZtoLep_2017, 'ZZTo2L2Nu_2017':ZZTo2L2Nu_2017, 'ZZJJTo4L_EWK_2017':ZZJJTo4L_EWK_2017, 'ZZJJTo4L_QCD_2017':ZZJJTo4L_QCD_2017, 'GluGluToContinToZZTo2e2nu_2017':GluGluToContinToZZTo2e2nu_2017, 'GluGluToContinToZZTo2e2mu_2017':GluGluToContinToZZTo2e2mu_2017, 'GluGluToContinToZZTo2e2tau_2017':GluGluToContinToZZTo2e2tau_2017, 'GluGluToContinToZZTo2mu2nu_2017':GluGluToContinToZZTo2mu2nu_2017, 'GluGluToContinToZZTo2mu2tau_2017':GluGluToContinToZZTo2mu2tau_2017, 'GluGluToContinToZZTo4e_2017':GluGluToContinToZZTo4e_2017, 'GluGluToContinToZZTo4mu_2017':GluGluToContinToZZTo4mu_2017,
     'TT_2017':TT_2017, 'TT_SemiLep2017':TT_SemiLep_2017, 'TT_Had_2017':TT_Had_2017,#'TT_DiLep_2017':TT_DiLep_2017, 
     'WJets_2017':WJets_2017, 'WJets_Fake_2017':WJets_Fake_2017, 'WJetsHT70to100_2017':WJetsHT70to100_2017, 'WJetsHT100to200_2017':WJetsHT100to200_2017, 'WJetsHT200to400_2017':WJetsHT200to400_2017, 'WJetsHT400to600_2017':WJetsHT400to600_2017, 'WJetsHT600to800_2017':WJetsHT600to800_2017, 'WJetsHT800to1200_2017':WJetsHT800to1200_2017, 'WJetsHT1200to2500_2017':WJetsHT1200to2500_2017, 'WJetsHT2500toInf_2017':WJetsHT2500toInf_2017,
     'WJets_Fake_2017':WJets_Fake_2017, 'WJetsHT70to100_Fake_2017':WJetsHT70to100_Fake_2017, 'WJetsHT100to200_Fake_2017':WJetsHT100to200_Fake_2017, 'WJetsHT200to400_Fake_2017':WJetsHT200to400_Fake_2017, 'WJetsHT400to600_Fake_2017':WJetsHT400to600_Fake_2017, 'WJetsHT600to800_Fake_2017':WJetsHT600to800_Fake_2017, 'WJetsHT800to1200_Fake_2017':WJetsHT800to1200_Fake_2017, 'WJetsHT1200to2500_Fake_2017':WJetsHT1200to2500_Fake_2017, 'WJetsHT2500toInf_Fake_2017':WJetsHT2500toInf_Fake_2017,
-    'DYJetsToLL_2017':DYJetsToLL_2017, 'DY1JetsToLL_2017':DY1JetsToLL_2017, 'DY2JetsToLL_2017':DY2JetsToLL_2017, 'DY3JetsToLL_2017':DY3JetsToLL_2017, 'DY4JetsToLL_2017':DY4JetsToLL_2017,
+    'DYJetsToLL_2017':DYJetsToLL_2017, 'DY1JetsToLL_2017':DY1JetsToLL_2017, 'DY2JetsToLL_2017':DY2JetsToLL_2017, 'DY3JetsToLL_2017':DY3JetsToLL_2017, 'DY4JetsToLL_2017':DY4JetsToLL_2017, 'DYJetsToLLM5to50_2017':DYJetsToLLM5to50_2017,
     'DYJetsToLL_Fake_2017':DYJetsToLL_Fake_2017, 'DY1JetsToLL_Fake_2017':DY1JetsToLL_Fake_2017, 'DY2JetsToLL_Fake_2017':DY2JetsToLL_Fake_2017, 'DY3JetsToLL_Fake_2017':DY3JetsToLL_Fake_2017, 'DY4JetsToLL_Fake_2017':DY4JetsToLL_Fake_2017,
-    'DYJetsM_2017':DYJetsM_2017, 'DYJetsToLLM5to50_2017':DYJetsToLLM5to50_2017, 'DYJetsToLLM50_2017':DYJetsToLLM50_2017,
+    #'DYJetsM_2017':DYJetsM_2017, 'DYJetsToLLM5to50_2017':DYJetsToLLM5to50_2017, 'DYJetsToLLM50_2017':DYJetsToLLM50_2017,
     # to here
     'VG_2017':VG_2017, 'ZG_2017':ZG_2017, 'WG_2017':WG_2017,
     'TVX_2017':TVX_2017, 'TTGJets_2017':TTGJets_2017, 'TTZToQQ_2017':TTZToQQ_2017, 'TTZToLLNuNu_2017':TTZToLLNuNu_2017, 'TTWJetsToQQ_2017':TTWJetsToQQ_2017, 'TTWJetsToLNu_2017':TTWJetsToLNu_2017, 'tZq_ll_4f_2017':tZq_ll_4f_2017,
@@ -1177,6 +1243,12 @@ sample_dict={
 class_dict={
     'WpWpJJ_EWK_2017':WpWpJJ_EWK_2017,
     'WpWpJJ_QCD_2017':WpWpJJ_QCD_2017,
+    'VBS_SSWW_SM_2017':VBS_SSWW_SM_2017,
+    'VBS_SSWW_cHW_2017':VBS_SSWW_cHW_2017,
+    'VBS_SSWW_cW_2017':VBS_SSWW_cW_2017,
+    #'VBS_SSWW_cW_cHW_2017':VBS_SSWW_cW_cHW_2017,
+    'VBS_SSWW_BSM_INT_2017':VBS_SSWW_BSM_INT_2017,
+    'VBS_SSWW_BSM_SM_2017':VBS_SSWW_BSM_SM_2017,
     ### fake contributions form here...
     'QCD_2017':QCD_2017,
     'ZZtoLep_2017':ZZtoLep_2017,
@@ -1203,6 +1275,12 @@ class_dict={
 class_list=[
     WpWpJJ_EWK_2017,
     WpWpJJ_QCD_2017,
+    VBS_SSWW_SM_2017,
+    #VBS_SSWW_cHW_2017,
+    #VBS_SSWW_cW_2017,
+    #VBS_SSWW_cW_cHW_2017,
+    VBS_SSWW_BSM_INT_2017,
+    VBS_SSWW_BSM_SM_2017,
     ZZtoLep_2017,
     VG_2017,
     Other_2017,    
@@ -1213,8 +1291,8 @@ class_list=[
     #DYJetsToLL_Fake_2017,
     #DYJetsM_2017,
     TT_2017,
-    QCD_2017,
-    WJets_2017,
+    #QCD_2017,
+    #WJets_2017,
     #WJets_Fake_2017,
     FakeMu_2017,
     DataMu_2017,

@@ -17,11 +17,11 @@ class lepSFProducer(Module):
             el_h = ["EGamma_SF2D", "EGamma_SF2D"]
 
         if muonSelectionTag == "TightWP_2017":
-            mu_f = ["Mu_RunBCDEF_SF_ID_2017_syst.root"]
-            mu_h = ["NUM_TightID_DEN_genTracks_pt_abseta_syst"]
+            mu_f = ["Muon_RunBCDEF_SF_ID_2017.root", "Muon_RunBCDEF_SF_ISO_2017.root"]
+            mu_h = ["NUM_TightID_DEN_genTracks_pt_abseta", 'NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta']
 
-        if electronSelectionTag == "NoIsoMVA90_2017":
-            el_f = ["EGM2D_RECO_SF_2017.root", "2017_ElectronMVA90noiso.root"]
+        if electronSelectionTag == "IsoMVA90_2017":
+            el_f = ["EGM2D_2017_passingRECO_highEt.root", "Electron_MVA90_2017.root"]
             el_h = ["EGamma_SF2D", "EGamma_SF2D"]
 
         if muonSelectionTag == "TightWP_2018":
@@ -84,5 +84,5 @@ class lepSFProducer(Module):
 # define modules using the syntax 'name = lambda : constructor' to avoid having them loaded when not needed
 
 lepSF_2016 = lambda : lepSFProducer("TightWP_2016", "NoIsoMVA90_2016")
-lepSF_2017 = lambda : lepSFProducer("TightWP_2017", "NoIsoMVA90_2017")
+lepSF_2017 = lambda : lepSFProducer("TightWP_2017", "IsoMVA90_2017")
 lepSF_2018 = lambda : lepSFProducer("TightWP_2018", "NoIsoMVA90_2018")

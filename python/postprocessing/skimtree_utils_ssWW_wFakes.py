@@ -141,7 +141,7 @@ def doesOverlap(eta1, phi1, eta2, phi2):
 def FindSecondJet(jet, jetCollection, GoodTau, GoodMu):
     for k in range(len(jetCollection)):
         if abs(jetCollection[k].eta)>ETA_CUT_JET: continue
-        if jetCollection[k].pt<PT_CUT_JET:
+        if jetCollection[k].pt<PT_CUT_JET or jetCollection[k].jetId<2:
             return -1
         if abs(jet.eta-jetCollection[k].eta)>DELTAETA_JJ_CUT:
             if deltaR(jet.eta, jet.phi, GoodTau.eta, GoodTau.phi)>DR_OVERLAP_CONE_TAU or deltaR(jet.eta, jet.phi, GoodMu.eta, GoodMu.phi)>DR_OVERLAP_CONE_OTHER:
@@ -284,7 +284,7 @@ def LepVeto(GoodLepton, ElectronCollection, MuonCollection):
 def SelectJet(jetCollection, GoodTau, GoodMu):
     if len(jetCollection)<2:
         return -999
-    if jetCollection[0].pt<PT_CUT_JET: return -999
+    if jetCollection[0].pt<PT_CUT_JET or jetCollection[0].jetId<2: return -999
     if jetCollection==None: return -999
     #select higher pT jet
     GoodJet=jetCollection[0]
@@ -319,7 +319,7 @@ def mTlepMet(MET, lepton):
 def Zeppenfeld(lep_eta, tau_eta, ljet_eta, sljet_eta):
     zepp_lepjj = lep_eta - 0.5*(ljet_eta+sljet_eta)
     zepp_taujj = tau_eta - 0.5*(ljet_eta+sljet_eta)
-    zepp_event = 0.5*zepp_lepjj+zepp_taujj
+    zepp_event = 0.5*(zepp_lepjj+zepp_taujj)
     return zepp_lepjj, zepp_taujj, zepp_event
 
 def closest(obj,collection,presel=lambda x,y: True):
@@ -1722,14 +1722,133 @@ class systWeights(object):
 ###        End of tree_skimmer_utlis        ###
 ###############################################
 
+def Lepton_IDIso_SF(lepton):
+    if abs(lepton.pdgId)==13:
+        #print "It's a muon!"
+        #f_muon_id = ROOT.TFile.Open("./data/leptonSF/Muon_RunBCDEF_SF_ID_2017.root", "READ")
+        f_muon_id = ROOT.TFile.Open("Muon_RunBCDEF_SF_ID_2017.root", "READ")
+        #f_muon_iso = ROOT.TFile.Open("./data/leptonSF/Muon_RunBCDEF_SF_ISO_2017.root", "READ")
+        f_muon_iso = ROOT.TFile.Open("Muon_RunBCDEF_SF_ISO_2017.root", "READ")
+
+        h_muon_id = ROOT.TH2D(f_muon_id.Get("NUM_TightID_DEN_genTracks_pt_abseta"))
+        h_muon_iso = ROOT.TH2D(f_muon_iso.Get("NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta"))
+      
+        pt = lepton.pt
+        abseta = abs(lepton.eta)
+        binx_id = h_muon_id.GetXaxis().FindBin(pt)
+        biny_id = h_muon_id.GetYaxis().FindBin(abseta)
+        nxbins_id = h_muon_id.GetXaxis().GetNbins()
+        nybins_id = h_muon_id.GetYaxis().GetNbins()
+        if binx_id > nxbins_id:
+            binx_id = copy.deepcopy(nxbins_id)
+        elif binx_id <= 0:
+            binx_id = 1
+        if biny_id > nybins_id:
+            biny_id = copy.deepcopy(nybins_id)
+        elif biny_id <= 0:
+            biny_id = 1
+
+        binx_iso = h_muon_iso.GetXaxis().FindBin(pt)
+        biny_iso = h_muon_iso.GetYaxis().FindBin(abseta)
+        nxbins_iso = h_muon_iso.GetXaxis().GetNbins()
+        nybins_iso = h_muon_iso.GetYaxis().GetNbins()
+        if binx_iso > nxbins_iso:
+            binx_iso = copy.deepcopy(nxbins_iso)
+        elif binx_iso <= 0:
+            binx_iso = 1
+        if biny_iso > nybins_iso:
+            biny_iso = copy.deepcopy(nybins_iso)
+        elif biny_iso <= 0:
+            biny_iso = 1
+        
+        SF_muon_id = copy.deepcopy(h_muon_id.GetBinContent(binx_id, biny_id))
+        SF_muon_iso = copy.deepcopy(h_muon_iso.GetBinContent(binx_iso, biny_iso))
+
+        f_muon_id.Close()
+        f_muon_iso.Close()
+
+        return SF_muon_id*SF_muon_iso
+
+    elif abs(lepton.pdgId)==11:
+        #print "It's a electron!"
+        #f_electron_id = ROOT.TFile.Open("./data/leptonSF/Electron_MVA90_2017.root", "READ")
+        f_electron_id = ROOT.TFile.Open("Electron_MVA90_2017.root", "READ")
+        h_electron_id = ROOT.TH2F(f_electron_id.Get("EGamma_SF2D"))
+
+        if lepton.pt < 20.:
+            #f_electron_reco = ROOT.TFile.Open("./data/leptonSF/EGM2D_2017_passingRECO_lowEt.root", "READ")
+            f_electron_reco = ROOT.TFile.Open("EGM2D_2017_passingRECO_lowEt.root", "READ")
+        elif lepton.pt >= 20.:
+            #f_electron_reco = ROOT.TFile.Open("./data/leptonSF/EGM2D_2017_passingRECO_highEt.root", "READ")
+            f_electron_reco = ROOT.TFile.Open("EGM2D_2017_passingRECO_highEt.root", "READ")
+        h_electron_reco = ROOT.TH2F(f_electron_reco.Get("EGamma_SF2D"))
+
+        pt = lepton.pt
+        eta = lepton.eta
+        biny_id = h_electron_id.GetXaxis().FindBin(pt)
+        binx_id = h_electron_id.GetYaxis().FindBin(eta)
+        nxbins_id = h_electron_id.GetXaxis().GetNbins()
+        nybins_id = h_electron_id.GetYaxis().GetNbins()
+        if binx_id > nxbins_id:
+            binx_id = copy.deepcopy(nxbins_id)
+        elif binx_id <= 0:
+            binx_id = 1
+        if biny_id > nybins_id:
+            biny_id = copy.deepcopy(nybins_id)
+        elif biny_id <= 0:
+            biny_id = 1
+
+        biny_reco = h_electron_reco.GetXaxis().FindBin(pt)
+        binx_reco = h_electron_reco.GetYaxis().FindBin(eta)
+        nxbins_reco = h_electron_reco.GetXaxis().GetNbins()
+        nybins_reco = h_electron_reco.GetYaxis().GetNbins()
+        if binx_reco > nxbins_reco:
+            binx_reco = copy.deepcopy(nxbins_reco)
+        elif binx_reco <= 0:
+            binx_reco = 1
+        if biny_reco > nybins_reco:
+            biny_reco = copy.deepcopy(nybins_reco)
+        elif biny_reco <= 0:
+            biny_reco = 1
+
+
+        SF_electron_id = copy.deepcopy(h_electron_id.GetBinContent(binx_id, biny_id))
+        SF_electron_reco = copy.deepcopy(h_electron_reco.GetBinContent(binx_reco, biny_reco))
+
+        f_electron_id.Close()
+        f_electron_reco.Close()
+
+        return SF_electron_id*SF_electron_reco
+
+    else:
+        print("I dunno what to do with this particle :/")
+        return -1.
 
 def SFFakeRatio_ele_calc(pT, eta):#, prompt=True):
-    inFile = ROOT.TFile.Open("FR_vsjet4.root")
+    #inFile = ROOT.TFile.Open("FR_vsjet4.root")
+    inFile = ROOT.TFile.Open("FR_vsjet4_new.root")
     #if prompt:
     histo=ROOT.TH2F(inFile.Get("hFRDataeledif"))
     #else:
     #histo=ROOT.TH2F(inFile.Get("hFRDataele"))
     FR=0
+
+    binx = histo.GetXaxis().FindBin(pT)
+    biny = histo.GetYaxis().FindBin(eta)
+    nxbins = histo.GetXaxis().GetNbins()
+    nybins = histo.GetYaxis().GetNbins()
+    if binx > nxbins:
+        binx = copy.deepcopy(nxbins)
+    elif binx <= 0:
+        binx = 1
+    if biny > nybins:
+        biny = copy.deepcopy(nybins)
+    elif biny <= 0:
+        biny = 1
+
+    FR = copy.deepcopy(histo.GetBinContent(binx, biny))
+
+    '''
     if(pT<=20):
         if(abs(eta)<1):         FR=histo.GetBinContent(1,1)
         elif(abs(eta)<1.5):     FR=histo.GetBinContent(1,2)
@@ -1756,17 +1875,37 @@ def SFFakeRatio_ele_calc(pT, eta):#, prompt=True):
         elif(abs(eta)<2):       FR=histo.GetBinContent(5,3)
         elif(abs(eta)<2.4):     FR=histo.GetBinContent(5,4)
     else: FR=0
+    '''
+
     return FR/(1-FR)
 
 def SFFakeRatio_tau_calc(pT, eta):#, prompt=True):
     histo = ROOT.TH2F()
-    inFile = ROOT.TFile.Open("FR_vsjet4.root")
+    #inFile = ROOT.TFile.Open("FR_vsjet4.root")
+    inFile = ROOT.TFile.Open("FR_vsjet4_new.root")
     #if prompt:
     histo=(ROOT.TH2F)(inFile.Get("hFRDatataudif"))
     #else:
     #histo=(ROOT.TH2F)(inFile.Get("hFRDatatau"))
 
     FR=0
+
+    binx = histo.GetXaxis().FindBin(pT)
+    biny = histo.GetYaxis().FindBin(abs(eta))
+    nxbins = histo.GetXaxis().GetNbins()
+    nybins = histo.GetYaxis().GetNbins()
+    if binx > nxbins:
+        binx = copy.deepcopy(nxbins)
+    elif binx <= 0:
+        binx = 1
+    if biny > nybins:
+        biny = copy.deepcopy(nybins)
+    elif biny <= 0:
+        biny = 1
+
+    FR = copy.deepcopy(histo.GetBinContent(binx, biny))
+
+    '''
     if(pT<=20):
         if(abs(eta)<1):         FR=histo.GetBinContent(1,1)
         elif(abs(eta)<1.5):     FR=histo.GetBinContent(1,2)
@@ -1793,16 +1932,36 @@ def SFFakeRatio_tau_calc(pT, eta):#, prompt=True):
         elif(abs(eta)<2):       FR=histo.GetBinContent(5,3)
         elif(abs(eta)<2.4):     FR=histo.GetBinContent(5,4)
     else: FR=0    
+    '''
+
     return FR/(1-FR)
 
 def SFFakeRatio_mu_calc(pT, eta):#, prompt=True):
     histo = ROOT.TH2F()
-    inFile = ROOT.TFile.Open("FR_vsjet4.root")
+    #inFile = ROOT.TFile.Open("FR_vsjet4.root")
+    inFile = ROOT.TFile.Open("FR_vsjet4_new.root")
     #if prompt:
     histo=(ROOT.TH2F)(inFile.Get("hFRDatamudif"))
     #else:
     #histo=(ROOT.TH2F)(inFile.Get("hFRDatamu"))
     FR=0
+
+    binx = histo.GetXaxis().FindBin(pT)
+    biny = histo.GetYaxis().FindBin(abs(eta))
+    nxbins = histo.GetXaxis().GetNbins()
+    nybins = histo.GetYaxis().GetNbins()
+    if binx > nxbins:
+        binx = copy.deepcopy(nxbins)
+    elif binx <= 0:
+        binx = 1
+    if biny > nybins:
+        biny = copy.deepcopy(nybins)
+    elif biny <= 0:
+        biny = 1
+
+    FR = copy.deepcopy(histo.GetBinContent(binx, biny))
+
+    '''
     if(pT<=20):
         if(abs(eta)<1):         FR=histo.GetBinContent(1,1)
         elif(abs(eta)<1.5):     FR=histo.GetBinContent(1,2)
@@ -1829,5 +1988,7 @@ def SFFakeRatio_mu_calc(pT, eta):#, prompt=True):
         elif(abs(eta)<2):       FR=histo.GetBinContent(5,3)
         elif(abs(eta)<2.4):     FR=histo.GetBinContent(5,4)
     else: FR=0    
+    '''
+
     return FR/(1-FR)
 
