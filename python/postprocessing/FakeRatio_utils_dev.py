@@ -480,10 +480,10 @@ def Veto_muons(mu):
         return False
 
 def pTCalculator(pT):
-    if pT<20:       return 1
-    elif pT<30:     return 2
-    elif pT<40:     return 3
-    elif pT<50:     return 4
+    if pT<30:       return 1
+    elif pT<45:     return 2
+    elif pT<60:     return 3
+    elif pT<80:     return 4
     else:           return 5
 
 def etaCalculator(eta):
