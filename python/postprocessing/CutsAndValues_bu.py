@@ -37,6 +37,6 @@ ID_TAU_RECO_MVA=            8 #IsolationMVArun2v1DBoldDMwLT ID working point (20
 ID_TAU_ANTIMU=              1 #Anti-muon discriminator V3: : bitmask 1 = Loose, 2 = Tight
 ID_TAU_ANTIELE=             2 #Anti-electron MVA discriminator V6 (2015): bitmask 1 = VLoose, 2 = Loose, 4 = Medium, 8 = Tight, 16 = VTight
 PT_CUT_TAU=30
-ETA_CUT_TAU=2.4
+ETA_CUT_TAU=2.3
 M_JJ_CUT=   500
 MET_CUT=    40

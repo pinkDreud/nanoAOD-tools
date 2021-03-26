@@ -113,7 +113,7 @@ for prname, proc in class_dict.items():
         continue
     if "Fake" in prname:
         continue
-    elif "DataHT" in prname or 'DataMET' in prname:
+    elif "DataMET" in prname:# or 'DataHT' in prname:
         continue
     elif '_BSM_INT_' in prname:
         continue
@@ -203,7 +203,7 @@ if not opt.check:
     t.write("ID_TAU_ANTIMU=              1 #Anti-muon discriminator V3: : bitmask 1 = Loose, 2 = Tight\n")
     t.write("ID_TAU_ANTIELE=             2 #Anti-electron MVA discriminator V6 (2015): bitmask 1 = VLoose, 2 = Loose, 4 = Medium, 8 = Tight, 16 = VTight\n")
     t.write("PT_CUT_TAU=30\n")
-    t.write("ETA_CUT_TAU=2.4\n")
+    t.write("ETA_CUT_TAU=2.3\n")
     t.write("M_JJ_CUT=   500\n")
     t.write("MET_CUT=    40\n")
     t.close()

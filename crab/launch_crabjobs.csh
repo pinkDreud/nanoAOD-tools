@@ -26,5 +26,5 @@ reset
 #python submit_crab.py -d VBS_SSWW_cHW_$year -s
 #python submit_crab.py -d VBS_SSWW_cW_$year -s
 #python submit_crab.py -d VBS_SSWW_cW_cHW_$year -s
-python submit_crab.py -d DataEleD_$year -s
-#python submit_crab.py -d DataMu_$year -s
+python submit_crab.py -d DataEle_$year -s
+python submit_crab.py -d DataMu_$year -s

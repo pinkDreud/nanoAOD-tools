@@ -628,7 +628,6 @@ for i in range(tree.GetEntries()):
                 FakeLepton_jetRelIso[0]     =   lepGood.jetRelIso
                 FakeLepton_miniPFRelIso[0]  =   lepGood.miniPFRelIso_all
                 FakeLepton_tkRelIso[0]      =   lepGood.tkRelIso
-
                 FakeLepton_isTight[0]       =   lepGood.tightId
             if isMC:
                 FakeLepton_isPrompt[0]      =   lepGood.genPartFlav

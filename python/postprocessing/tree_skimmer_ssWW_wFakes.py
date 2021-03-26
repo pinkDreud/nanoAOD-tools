@@ -631,25 +631,34 @@ for i in range(tree.GetEntries()):
     #print("Errore")#Questo ora non dovrebbe succedere
 
     #print("n ele:", len(electrons), "n mu:", len(muons)) 
-    if passEle and not passMu:
-        if len(electrons)>0:  
-            SingleEle=True
-            LeadLepFamily="electrons"
-            HighestLepPt=copy.deepcopy(electrons[0].pt)
-            #print("HighestLepPt:", HighestLepPt)
+    
+
+    if 'DataHT' not in sample.label:
+        if passEle and not passMu:
+            if len(electrons)>0:  
+                SingleEle=True
+                LeadLepFamily="electrons"
+                HighestLepPt=copy.deepcopy(electrons[0].pt)
+                #print("HighestLepPt:", HighestLepPt)
+            else:
+                continue
+
+        elif passMu and not passEle:
+            if len(muons)>0:
+                SingleMu=True
+                LeadLepFamily="muons"
+                HighestLepPt=copy.deepcopy(muons[0].pt)
+            else:
+                continue
+
+        elif passMu and passEle:
+            ElMu=True
+
+    else:
+        if passHT:
+            ElMu=True
         else:
             continue
-
-    elif passMu and not passEle:
-        if len(muons)>0:
-            SingleMu=True
-            LeadLepFamily="muons"
-            HighestLepPt=copy.deepcopy(muons[0].pt)
-        else:
-            continue
-
-    elif passMu and passEle:
-        ElMu=True
 
     #print("HighestLepPt:", HighestLepPt)
     #print("passEle:", passEle, "\tpassMu:", passMu)

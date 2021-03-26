@@ -1111,9 +1111,33 @@ SampleHTFake_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "SampleHTFake_2017")
 SampleHTFake_2017.year = 2017
 SampleHTFake_2017.components = [DataHTB_2017, DataHTC_2017, DataHTD_2017, DataHTE_2017, DataHTF_2017, WJetsHT70to100_2017, WJetsHT100to200_2017, WJetsHT200to400_2017, WJetsHT400to600_2017, WJetsHT600to800_2017, WJetsHT800to1200_2017, WJetsHT1200to2500_2017, WJetsHT2500toInf_2017, DY1JetsToLL_2017, DY2JetsToLL_2017, DY3JetsToLL_2017, DY4JetsToLL_2017, DYJetsToLLM5to50_2017]
 
+FakeElePromptTau_2017 = sample(ROOT.kGray+1, 1, 1001, "Fake e Prompt #tau", "FakeElePromptTau_2017")
+FakeElePromptTau_2017.year = 2017
+FakeElePromptTau_2017.components = [DataEle_2017, DataHT_2017, WJets_2017, DYJetsToLL_2017]
+
+PromptEleFakeTau_2017 = sample(ROOT.kGray+2, 1, 1001, "Prompt e Fake #tau", "PromptEleFakeTau_2017")
+PromptEleFakeTau_2017.year = 2017
+PromptEleFakeTau_2017.components = [DataEle_2017, DataHT_2017, WJets_2017, DYJetsToLL_2017]
+
+FakeEleFakeTau_2017 = sample(ROOT.kGray+3, 1, 1001, "Fake e Fake #tau", "FakeEleFakeTau_2017")
+FakeEleFakeTau_2017.year = 2017
+FakeEleFakeTau_2017.components = [DataEle_2017, DataHT_2017, WJets_2017, DYJetsToLL_2017]
+
 FakeEle_2017 = sample(ROOT.kGray, 1, 1001, "Fake Leptons", "FakeEle_2017")
 FakeEle_2017.year = 2017
 FakeEle_2017.components = [DataEle_2017, DataHT_2017, WJets_2017, DYJetsToLL_2017]
+
+FakeMuPromptTau_2017 = sample(ROOT.kGray+1, 1, 1001, "Fake #mu Prompt #tau", "FakeMuPromptTau_2017")
+FakeMuPromptTau_2017.year = 2017
+FakeMuPromptTau_2017.components = [DataMu_2017, DataHT_2017, WJets_2017, DYJetsToLL_2017]
+
+PromptMuFakeTau_2017 = sample(ROOT.kGray+2, 1, 1001, "Prompt #mu Fake #tau", "PromptMuFakeTau_2017")
+PromptMuFakeTau_2017.year = 2017
+PromptMuFakeTau_2017.components = [DataMu_2017, DataHT_2017, WJets_2017, DYJetsToLL_2017]
+
+FakeMuFakeTau_2017 = sample(ROOT.kGray+3, 1, 1001, "Fake #mu Fake #tau", "FakeMuFakeTau_2017")
+FakeMuFakeTau_2017.year = 2017
+FakeMuFakeTau_2017.components = [DataMu_2017, DataHT_2017, WJets_2017, DYJetsToLL_2017]
 
 FakeMu_2017 = sample(ROOT.kGray, 1, 1001, "Fake Leptons", "FakeMu_2017")
 FakeMu_2017.year = 2017
@@ -1295,8 +1319,14 @@ class_list=[
     #WJets_2017,
     #WJets_Fake_2017,
     FakeMu_2017,
+    FakeMuPromptTau_2017,
+    PromptMuFakeTau_2017,
+    FakeMuFakeTau_2017,
     DataMu_2017,
     FakeEle_2017,
+    FakeEleFakeTau_2017,
+    FakeElePromptTau_2017,
+    PromptEleFakeTau_2017,
     DataEle_2017,
     DataHT_2017,
 ]

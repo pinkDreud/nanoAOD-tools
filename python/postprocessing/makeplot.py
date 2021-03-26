@@ -34,7 +34,7 @@ parser.add_option('--user', dest='user', type='string', default=str(os.environ.g
 parser.add_option('--ttbar', dest='ttbar', default = False, action='store_true', help='Enable ttbar CR, default disabled')
 parser.add_option('--count', dest='count', default = False, action='store_true', help='Enable countings')
 parser.add_option('--HT', dest='HT', default = False, action='store_true', help='Enable CTHT')
-parser.add_option('--wfake', dest='wfake', default = False, action='store_true', help='Enable stackplots with data-driven fake leptons, default disabled')
+parser.add_option('--wfake', dest='wfake', type='string', default = 'nofake', help='Enable stackplots with data-driven fake leptons, default disabled')
 parser.add_option('--wjets', dest='wjets', default = False, action='store_true', help='Enable WJets CR, default disabled')
 parser.add_option('--blinded', dest='blinded', default = False, action='store_true', help='Activate blinding')
 parser.add_option('--signal', dest='signal', default = False, action='store_true', help='Activate only signal')
@@ -63,6 +63,9 @@ if opt.plot:
 if opt.stack:
      if not os.path.exists(plotrepo + 'stack'):
           os.makedirs(plotrepo + 'stack')
+
+if not (opt.wfake=='nofake' or opt.wfake=='incl' or opt.wfake=='sep'):
+     raise ValueError('Specify a value for --wfake between nofake, incl, and sep')
 
 def mergepart(dataset):
      samples = []
@@ -149,12 +152,20 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
           countf.write(sample.label)
           countf.write("\nBin\tContent\tError")
 
-     if str(sample.label).startswith('Fake'):
+     if 'Fake' in str(sample.label):
           if not opt.folder.startswith('CTHT'):
                f1 = ROOT.TFile.Open(filerepo + sample.components[0].label + "/"  + sample.components[0].label + ".root")
           else:
                f1 = ROOT.TFile.Open(filerepo + sample.components[1].label + "/"  + sample.components[1].label + ".root")
-          cut = cutbase + "*(lepton_LnTRegion==1||tau_LnTRegion==1)*(event_SFFake)*(event_SFFake>-1.)"        
+          if str(sample.label).startswith('FakeEle_') or str(sample.label).startswith('FakeMu_'):
+               cut = cutbase + "*(lepton_LnTRegion==1||tau_LnTRegion==1)*(event_SFFake)*(event_SFFake>-1.)"
+          elif str(sample.label).startswith('FakeElePromptTau') or str(sample.label).startswith('FakeMuPromptTau'):
+               cut = cutbase + "*(lepton_LnTRegion==1&&tau_LnTRegion==0)*(event_SFFake)*(event_SFFake>-1.)"
+          elif str(sample.label).startswith('PromptEleFakeTau') or str(sample.label).startswith('PromptMuFakeTau'):
+               cut = cutbase + "*(lepton_LnTRegion==0&&tau_LnTRegion==1)*(event_SFFake)*(event_SFFake>-1.)"
+          elif str(sample.label).startswith('FakeEleFakeTau') or str(sample.label).startswith('FakeMuFakeTau'):
+               cut = cutbase + "*(lepton_LnTRegion==1&&tau_LnTRegion==1)*(event_SFFake)*(event_SFFake>-1.)"
+
      else:
           f1 = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + ".root")
           cut = cutbase + "*(lepton_TightRegion==1&&tau_TightRegion==1)"
@@ -211,7 +222,7 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
 
      for bidx in range(nbins):          
           bidx_l = bidx + 1
-          if str(sample.label).startswith('Fake'):
+          if str(sample.label).startswith('Fake') or str(sample.label).startswith('Prompt'):
                h1.SetBinError(bidx_l, 0.3*h1.GetBinContent(bidx_l))
 
           if not opt.count:
@@ -268,9 +279,9 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           histoname = "h_"+reg_+"_"+variabile_._name+"_"+cut_tag_
           stackname = "stack_"+reg_+"_"+variabile_._name+"_"+cut_tag_
           canvasname = "stack_"+reg_+"_"+variabile_._name+"_"+cut_tag_+"_"+lep_ + "_" + str(samples_[0].year)
-     if opt.wfake:
-          stackname += "_wFakes"
-          canvasname += "_wFakes"
+     if opt.wfake != 'nofake':
+          stackname += "_wFakes_" + str(opt.wfake)
+          canvasname += "_wFakes_" + str(opt.wfake)
      if("selection_AND_best_Wpjet_isbtag_AND_best_topjet_isbtag" in cut_tag_ ) or ("selection_AND_best_topjet_isbtag_AND_best_Wpjet_isbtag" in cut_tag_ ):
           blind = True
      stack = ROOT.THStack(stackname, variabile_._name)
@@ -279,9 +290,14 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
 
      print samples_
      for s in samples_:
-          if opt.wfake:
+          if opt.wfake != 'nofake':
                if s.label.startswith('WJets') or s.label.startswith('QCD') or s.label.startswith('DY') or s.label.startswith('TT_'):
                     continue
+               elif 'Fake' in s.label:
+                    if opt.wfake == 'incl' and not (s.label.startswith('FakeEle_') or s.label.startswith('FakeMu_')):
+                         continue
+                    elif opt.wfake == 'sep' and (s.label.startswith('FakeEle_') or s.label.startswith('FakeMu_')):
+                         continue
           else:
                if s.label.startswith('Fake'):
                     continue
@@ -298,9 +314,15 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      i = 0
 
      for s in samples_:
-          if opt.wfake:
+          if opt.wfake != 'nofake':
                if s.label.startswith('WJets') or s.label.startswith('QCD') or s.label.startswith('DY') or s.label.startswith('TT_'):
                     continue
+               elif 'Fake' in s.label:
+                    if opt.wfake == 'incl' and not (s.label.startswith('FakeEle_') or s.label.startswith('FakeMu_')):
+                         continue
+                    elif opt.wfake == 'sep' and (s.label.startswith('FakeEle_') or s.label.startswith('FakeMu_')):
+                         continue
+
           else:
                if s.label.startswith('Fake'):# or s.label.startswith('QCD'):
                     continue
@@ -435,9 +457,9 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      h_err.SetFillStyle(3154)
      h_err.SetMarkerSize(0)
      h_err.SetFillColor(ROOT.kGray+2)
-     if not opt.tostack:
-          h_err.Draw("e2same0")
-          leg_stack.AddEntry(h_err, "Stat. Unc.", "f")
+     h_err.Draw("e2same0")
+     leg_stack.AddEntry(h_err, "Stat. Unc.", "f")
+
      if not blind: 
           print(hdata.Integral())
           hdata.Draw("eSAMEpx0")
@@ -499,8 +521,8 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
 
      h_bkg_err.SetMarkerSize(0)
      h_bkg_err.SetFillColor(ROOT.kGray+1)
-     if not opt.tostack:
-          h_bkg_err.Draw("e20same")
+     #if not opt.tostack:
+     h_bkg_err.Draw("e20same")
      
      if not variabile_._iscustom:
           xmin = variabile_._xmin
@@ -595,10 +617,12 @@ else:
                continue
           #elif 'VBS_SSWW' in v.label:
                #continue
-          elif 'electron' in leptons and ('DataMu' in v.label or 'FakeMu' in v.label):
-               continue
-          elif 'muon' in leptons and ('DataEle' in v.label or 'FakeEle' in v.label):
-               continue
+          elif 'electron' in leptons:
+               if 'DataMu' in v.label or 'FakeMu' in v.label or 'PromptMu' in v.label:
+                    continue
+          elif 'muon' in leptons:
+               if 'DataEle' in v.label or 'FakeEle' in v.label or 'PromptEle' in v.label:
+                    continue
           dataset_dict[str(v.year)].append(v)
      '''
           '2017':[WpWpJJ_QCD_2017, WZ_2017, TT_2017, DYJetsToLL_2017, WJets_2017, WpWpJJ_EWK_2017, DataMu_2017, DataEle_2017],#, DataHT_2017],
@@ -626,33 +650,33 @@ print(years)
 cut = opt.cut #default cut must be obvious, for example lepton_eta>-10.
 
 if opt.bveto:
-     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&(" + cut + ")", 
-                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&(" + cut + ")", 
-                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&(" + cut + ")", 
+     cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1)*(" + cut + ")", 
+                 'electron':"(abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1)*(" + cut + ")", 
+                 'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1)*(" + cut + ")", 
           }
      cut_tag = 'selection_upto_bveto'
      if opt.cut != "lepton_eta>-10.":
           cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut) 
 elif opt.ttbar:
-     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.&&(" + cut + ")", 
-                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.&&(" + cut + ")", 
-                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.&&(" + cut + ")", 
+     cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.)*(" + cut + ")", 
+                 'electron':"(abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.)*(" + cut + ")", 
+                 'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.)*(" + cut + ")", 
           }
      cut_tag = 'ttbar_CR'
      if opt.cut != "lepton_eta>-10.":
           cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut)           
 elif opt.wjets:
-     cut_dict = {'muon':"abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&MET_pt<=50.&&mT_lep_MET>50.&&(" + cut + ")", 
-                 'electron':"abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&MET_pt<=50.&&mT_lep_MET>50.&&(" + cut + ")",
-                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&MET_pt<=50.&&mT_lep_MET>50.&&(" + cut + ")",
+     cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&MET_pt<=50.&&mT_lep_MET>50.)*(" + cut + ")", 
+                 'electron':"(abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&MET_pt<=50.&&mT_lep_MET>50.)*(" + cut + ")",
+                 'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&MET_pt<=50.&&mT_lep_MET>50.)*(" + cut + ")",
           }
      cut_tag = 'wjets_CR'
      if opt.cut != "lepton_eta>-10.":
           cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut)           
 elif opt.sel:
-     cut_dict = {'muon':"abs(lepton_pdgid)==13&&(" + cut + ")&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1", 
-                 'electron':"abs(lepton_pdgid)==11&&(" + cut + ")&&pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1", 
-                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&(" + cut + ")pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1", 
+     cut_dict = {'muon':"(abs(lepton_pdgid)==13)*(" + cut + ")*(pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1)", 
+                 'electron':"(abs(lepton_pdgid)==11)*(" + cut + ")*(pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1)", 
+                 'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11))*(" + cut + ")*(pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1)", 
           }
      cut_tag = "selection"
      if opt.cut != "lepton_eta>-10.":
@@ -699,6 +723,7 @@ for year in years:
           cutbase = cut_dict[lep]
           
           variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cutbase+')', 20, -5., 5.))
+
           variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cutbase+')', 14, -3.50, 3.50))
           
           bin_lepton_pt = array("f", [0., 30., 45., 60., 80., 100., 200., 300., 400., 600., 1000.])
@@ -769,7 +794,7 @@ for year in years:
 
           variables.append(variabile('nJets', 'n jets',  wzero+'*('+cutbase+')',  11, -0.5, 10.5))
           variables.append(variabile('nBJets', 'n bjets (DeepJet M)',  wzero+'*('+cutbase+')',  6, -0.5, 5.5))
-
+         
           if opt.blinded:
                bin_metpt = array("f", [0., 10., 20., 30., 40.])#50., 100., 150., 200., 300., 500., 800.])
           else:
