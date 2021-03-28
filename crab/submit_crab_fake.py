@@ -55,9 +55,9 @@ def cfg_writer(sample, isMC, outdir):
         elif sample.year == '2018':
             f.write("config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/13TeV/ReReco/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt'\n")
         f.write("config.Data.unitsPerJob = 50\n")
-    #elif('WJetsHT200to400' in sample.label or 'WJetsHT600to800' in sample.label or 'WJetsHT800to1200' in sample.label or 'WJetsHT1200to2500' in sample.label or 'WJetsHT2500toInf' in sample.label):
-        #f.write("config.Data.splitting = 'EventAwareLumiBased'\n")
-        #f.write("config.Data.unitsPerJob = 100000\n")
+    elif(('WJetsHT' in sample.label and not ('HT70to100' in sample.label or 'HT100to200' in sample.label or 'HT400to600' in sample.label)) or 'QCDHT' in sample.label):
+        f.write("config.Data.splitting = 'EventAwareLumiBased'\n")                            
+        f.write("config.Data.unitsPerJob = 50000\n")
     else:
         f.write("config.Data.splitting = 'FileBased'\n")
         f.write("config.Data.unitsPerJob = 1\n")

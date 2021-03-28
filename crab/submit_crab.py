@@ -32,8 +32,8 @@ def cfg_writer(sample, isMC, outdir):
     f.write("config.JobType.scriptExe = 'crab_script.sh'\n")
     f.write("config.JobType.inputFiles = ['crab_script.py','../scripts/haddnano.py', '../scripts/keep_and_drop.txt']\n") #hadd nano will not be needed once nano tools are in cmssw
     f.write("config.JobType.sendPythonFolder = True\n")
-    #f.write("config.JobType.maxMemoryMB = 5000\n")
-    #f.write("config.JobType.numCores = 8\n")
+    f.write("config.JobType.maxMemoryMB = 5000\n")
+    f.write("config.JobType.numCores = 8\n")
     f.write("config.section_('Data')\n")
     f.write("config.Data.inputDataset = '"+sample.dataset+"'\n")
     f.write("config.Data.allowNonValidInputDataset = True\n")
@@ -48,7 +48,9 @@ def cfg_writer(sample, isMC, outdir):
         elif sample.year == '2018':
             f.write("config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/13TeV/ReReco/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt'\n")
         f.write("config.Data.unitsPerJob = 50\n")
-    #elif('WJetsHT' in sample.label or 'QCDHT' in sample.label): #'200to400' in sample.label or 'WJetsHT400to600' in sample.label or 'WJetsHT600to800' in sample.label or 'WJetsHT800to1200' in sample.label or 'WJetsHT1200to2500' in sample.label or 'WJetsHT2500toInf' in sample.label):
+    elif(('WJetsHT' in sample.label and not ('HT70to100' in sample.label or 'HT100to200' in sample.label or 'HT400to600' in sample.label)) or 'QCDHT' in sample.label): #'200to400' in sample.label or 'WJetsHT400to600' in sample.label or 'WJetsHT600to800' in sample.label or 'WJetsHT800to1200' in sample.label or 'WJetsHT1200to2500' in sample.label or 'WJetsHT2500toInf' in sample.label):
+        f.write("config.Data.splitting = 'EventAwareLumiBased'\n")                                             
+        f.write("config.Data.unitsPerJob = 50000\n")                       
         #f.write("config.Data.splitting = 'Automatic'\n")
     else:
         f.write("config.Data.splitting = 'FileBased'\n")
