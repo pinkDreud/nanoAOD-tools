@@ -1,4 +1,5 @@
-import os, commands
+import os 
+#import commands
 import sys
 import optparse
 import ROOT
@@ -8,12 +9,16 @@ import copy as copy
 from CMS_lumi import CMS_lumi
 from PhysicsTools.NanoAODTools.postprocessing.samples.samples import *
 from array import array
+import pandas as pd
+import uproot
+import pickle
+import numpy as np
 
 #print TT_2017
 
 print("cavalletti")
-usage = 'python makeplot.py'# -y year --lep lepton -d dataset --merpart --lumi --mertree --sel --cut cut_string -p -s'
-usageToCopyPaste= "python makeplot.py -y 2017 --lep muon --bveto --user apiccine -f v4 -p"
+usage = 'python3 makeplot.py'# -y year --lep lepton -d dataset --merpart --lumi --mertree --sel --cut cut_string -p -s'
+usageToCopyPaste= "python3 makeplot.py -y 2017 --lep muon --bveto --user apiccine -f v4 -p"
 
 parser = optparse.OptionParser(usage)
 parser.add_option('--merpart', dest='merpart', default = False, action='store_true', help='Default parts are not merged')
@@ -38,11 +43,12 @@ parser.add_option('--wfake', dest='wfake', type='string', default = 'nofake', he
 parser.add_option('--wjets', dest='wjets', default = False, action='store_true', help='Enable WJets CR, default disabled')
 parser.add_option('--blinded', dest='blinded', default = False, action='store_true', help='Activate blinding')
 parser.add_option('--signal', dest='signal', default = False, action='store_true', help='Activate only signal')
+parser.add_option('--model', dest='model', default = '/eos/user/t/ttedesch/SWAN_projects/VBS_ML/gradBDT.p', type='string', help='Path to ML model')
 
 (opt, args) = parser.parse_args()
 print("cavallotti")
 #print (opt, args)
-print "to stack?", opt.tostack
+print("to stack?", opt.tostack)
 
 folder = opt.folder
 
@@ -74,11 +80,68 @@ def mergepart(dataset):
      else:
           samples.append(dataset)
      for sample in samples:
+          # insert BDT output value
+          file_list = [name for name in os.listdir(filerepo + sample.label)]
+          print(os.listdir(filerepo + sample.label))
+          print(file_list)
+          for file_name in file_list:
+               file_path = filerepo + sample.label + "/"  + file_name
+               model_path = opt.model
+
+	       # load model 
+               file = open(model_path,'rb')
+               clf = pickle.load(file)
+               file.close()
+
+	       # open root file
+               file = uproot.open(file_path)
+               tree = file["events_all"]
+               df = tree.arrays(library="pd")
+               df = df.fillna(0)
+               
+               #for i in range(0,len(df.columns)):
+                    #print(df.columns[i])
+	       # remove unused features
+               w_PDFs = []
+               for i in range(0,110):
+                    w_PDFs.append('w_PDF[{}]'.format(i))
+
+
+               X = df.drop(columns=['w_nominal[0]','lepSF[0]', 'lepUp[0]', 'lepDown[0]', 'puSF[0]', 'puUp[0]',
+                                    'puDown[0]', 'PFSF[0]', 'PFUp[0]', 'PFDown[0]', 'q2Up[0]', 'q2Down[0]',
+                                    'SF_Fake[0]','tau_isPrompt[0]','lepton_isPrompt[0]',
+                                    'event_SFFake[0]','lepton_SFFake[0]', 'tau_SFFake[0]','tau_DeepTau_WP[0]',
+                                    'tau_DeepTauVsJet_WP[0]', 'tau_DeepTauVsMu_WP[0]','tau_DeepTauVsEle_WP[0]', 'm_leptau[0]',
+                                    'HLT_effLumi[0]', 'pass_lepton_selection[0]','pass_tau_selection[0]', 'pass_tau_vsJetWP[0]',
+                                    'event_Zeppenfeld_over_deltaEta_jj[0]', 'pass_lepton_veto[0]', 'pass_charge_selection[0]', 'pass_b_veto[0]',
+                                    'pass_jet_selection[0]', 'pass_upToBVeto[0]', 'nBJets[0]',
+                                    'tau_Zeppenfeld_over_deltaEta_jj[0]', 'lepton_Zeppenfeld_over_deltaEta_jj[0]', 'lepton_LnTRegion[0]', 'tau_LnTRegion[0]', 'pass_lepton_iso[0]', 'tau_isolation[0]', 
+                                    'lepton_TightRegion[0]','tau_TightRegion[0]'] + w_PDFs).to_numpy()	       
+
+               # update root file with BDT branch
+               BDT_output_array = clf.decision_function(X)
+               myfile = ROOT.TFile(file_path, 'update')
+               mytree = myfile.Get("events_all")
+               listOfNewBranches = []
+               BDT_output   = array('d', [0.5] )
+               listOfNewBranches.append(mytree.Branch("BDT_output", BDT_output, "BDT_output/D") )
+               numOfEvents = mytree.GetEntries()
+               for n in range(numOfEvents):
+                    BDT_output[0] = BDT_output_array[n]
+                    #if n%1000 == 0:
+                         #print(BDT_output[0])
+                    mytree.GetEntry(n)
+                    for newBranch in sorted(listOfNewBranches):
+                         newBranch.Fill()
+               mytree.Write("", ROOT.TFile.kOverwrite)
+               myfile.Close()       
+
+          # merge files 
           add = "hadd -f " + filerepo + sample.label + "/"  + sample.label + "_merged.root " + filerepo + sample.label + "/"  + sample.label + "_part*.root" 
-          print add
+          print(add)
           os.system(str(add))
           check = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + "_merged.root ")
-          print "Number of entries of the file %s are %s" %(filerepo + sample.label + "/"  + sample.label + "_merged.root", (check.Get("events_all")).GetEntries())
+          print("Number of entries of the file %s are %s" %(filerepo + sample.label + "/"  + sample.label + "_merged.root", (check.Get("events_all")).GetEntries()))
 
 def mergetree(sample):
      if not os.path.exists(filerepo + sample.label):
@@ -87,7 +150,7 @@ def mergetree(sample):
           add = "hadd -f " + filerepo + sample.label + "/"  + sample.label + ".root" 
           for comp in sample.components:
                add+= " " + filerepo + comp.label + "/"  + comp.label + ".root" 
-          print add
+          print(add)
           os.system(str(add))
 
 def lumi_writer(dataset, lumi):
@@ -96,7 +159,7 @@ def lumi_writer(dataset, lumi):
           samples = [sample for sample in dataset.components]# Method exists and was used.
      else:
           samples.append(dataset)
-     print samples
+     print(samples)
      for sample in samples:
           if not ('Data' in sample.label):# or 'TT_dilep' in sample.label):
                infile =  ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + "_merged.root")
@@ -120,14 +183,14 @@ def lumi_writer(dataset, lumi):
                     print(len(w_PDF))
                     tree_new.Branch('w_PDF', w_PDF, 'w_PDF/F')
                tree.SetBranchStatus('w_nominal', 1)
-               for event in xrange(0, tree.GetEntries()):
+               for event in range(0, tree.GetEntries()):
                     tree.GetEntry(event)
                     if event%10000==1:
                          #print("Processing event %s     complete %s percent" %(event, 100*event/tree.GetEntries()))
                          sys.stdout.write("\rProcessing event {}     complete {} percent".format(event, 100*event/tree.GetEntries()))
                     w_nom[0] = tree.w_nominal * sample.sigma * tree.HLT_effLumi * 1000./float(h_genw_tmp.GetBinContent(1))
                     if isthere_pdf: #not ("WZ" in sample.label):
-                         for i in xrange(1, nbins):
+                         for i in range(1, nbins):
                               w_PDF[i] = h_pdfw_tmp.GetBinContent(i+1)/h_genw_tmp.GetBinContent(2) 
                     tree_new.Fill()
                tree_new.Write()
@@ -141,12 +204,12 @@ def cutToTag(cut):
     return newstring
 
 def plot(lep, reg, variable, sample, cut_tag, syst=""):
-     print "plotting ", variable._name, " for sample ", sample.label, " with cut ", cut_tag#, " ", syst,
+     print("plotting ", variable._name, " for sample ", sample.label, " with cut ", cut_tag)#, " ", syst,
      ROOT.TH1.SetDefaultSumw2()
      cutbase = variable._taglio
      cut = ''
 
-     print "count? ", opt.count
+     print("count? ", opt.count)
      if opt.count:
           countf = open(plotrepo + lepstr + '/countings/' + cut_tag + "/" + variable._name + ".txt", "a")
           countf.write(sample.label)
@@ -173,7 +236,7 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
      nbins = variable._nbins
      histoname = "h_" + reg + "_" + variable._name + "_" + cut_tag
 
-     print variable._iscustom
+     print(variable._iscustom)
      if not variable._iscustom:
           h1 = ROOT.TH1F(histoname, variable._name + "_" + reg, variable._nbins, variable._xmin, variable._xmax)
      else:
@@ -189,7 +252,7 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
      #if "WpWpJJ_EWK" in sample.label or 'VBS_SSWW' in sample.label:
           #cut = cut + "*10."
 
-     print str(cut)
+     print(str(cut))
      foutput = plotrepo + lepstr + "/" + sample.label + "_" + lep+".root"
 
      '''
@@ -235,7 +298,7 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
 
           countf.write("\n[" + minedge + ", " + maxedge +")\t" + bincont + "\t" + binerrcont)
 
-     print h1.Integral()
+     print(h1.Integral())
      for i in range(0, nbins+1):
           content = h1.GetBinContent(i)
           if(content<0.):
@@ -266,7 +329,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      h_sig = []
      h_err = ROOT.TH1F()
      h_bkg_err = ROOT.TH1F()
-     print "Variabile:", variabile_._name
+     print("Variabile:", variabile_._name)
      ROOT.gROOT.SetStyle('Plain')
      ROOT.gStyle.SetPalette(1)
      ROOT.gStyle.SetOptStat(0)
@@ -288,7 +351,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      leg_stack = ROOT.TLegend(0.33,0.62,0.91,0.87)
      signal = False
 
-     print samples_
+     print(samples_)
      for s in samples_:
           if opt.wfake != 'nofake':
                if s.label.startswith('WJets') or s.label.startswith('QCD') or s.label.startswith('DY') or s.label.startswith('TT_'):
@@ -303,7 +366,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
                     continue
           if('WpWpJJ_EWK' in s.label or 'VBS_SSWW' in s.label) and not opt.signal:
                signal = True
-          print s.label
+          print(s.label)
           if(syst_ == ""):
                outfile = plotrepo + "stack_" + str(lep_).strip('[]') + ".root"
                infile[s.label] = ROOT.TFile.Open(plotrepo + lepstr + "/" + s.label + "_" + lep + ".root")
@@ -328,7 +391,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
                     continue
           
           infile[s.label].cd()
-          print "opening file: ", infile[s.label].GetName()
+          print("opening file: ", infile[s.label].GetName())
           if('Data' in s.label):
                if ("GenPart" in variabile_._name) or ("MC_" in variabile_._name):
                     continue
@@ -374,7 +437,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           if not ('Data' in hist.GetName()):
                leg_stack.AddEntry(hist, hist.GetName(), "f")
      #style options
-     print "Is it blind? " + str(blind)
+     print("Is it blind? " + str(blind))
      leg_stack.SetNColumns(2)
      leg_stack.SetFillColor(0)
      leg_stack.SetFillStyle(0)
@@ -421,7 +484,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           stack.Draw("HIST NOSTACK")
      if not variabile_._iscustom:
           step = float(variabile_._xmax - variabile_._xmin)/float(variabile_._nbins)
-          print str(step)
+          print(str(step))
           if "GeV" in variabile_._title:
                if step.is_integer():
                     ytitle = "Events"#/ %.0f GeV" %step
@@ -438,7 +501,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           else:
                ytitle = "Events"# / a.u"
      
-     print stack
+     print(stack)
      stack.GetYaxis().SetTitle(ytitle)
      stack.GetYaxis().SetTitleFont(42)
      stack.GetXaxis().SetLabelOffset(1.8)
@@ -476,7 +539,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      else:
           lep_tag = "incl."
          
-     print "lep_tag: ", lep_tag
+     print("lep_tag: ", lep_tag)
      lumi_sqrtS = "%s fb^{-1}  (13 TeV)"%(lumi)
      
      iPeriod = 0
@@ -591,17 +654,17 @@ leptons = map(str,opt.lep.split(','))
 dataset_dict = {'2017':[],'2018':[]}
 
 if(opt.dat != 'all'):
-     print opt.dat
+     print(opt.dat)
      if not(opt.dat in sample_dict.keys()):
-          print "dataset not found!"
-          print sample_dict.keys()
-     print opt.dat
+          print("dataset not found!")
+          print(sample_dict.keys())
+     print(opt.dat)
      if 'DataMET' in str(opt.dat):
           raise Exception("Not interesting dataset")
      elif not opt.folder.startswith('CTHT') and 'DataHT' in str(opt.dat) and (opt.plot or opt.stack):
           raise Exception("Not interesting dataset")
      dataset_names = map(str, opt.dat.strip('[]').split(','))
-     print dataset_names
+     print(dataset_names)
      samples = []
      [samples.append(sample_dict[dataset_name]) for dataset_name in dataset_names]
      [dataset_dict[str(sample.year)].append(sample) for sample in samples]
@@ -636,7 +699,7 @@ else:
      '''
 
 for v in dataset_dict.values():
-     print [o.label for o in v]
+     print([o.label for o in v])
 
 #print(dataset_dict.keys())
 
@@ -691,7 +754,7 @@ else:
 
 lumi = {'2016': 35.9, "2017": 41.53, "2018": 59.7}
 
-print cut_tag
+print(cut_tag)
 
 for year in years:
     for sample in dataset_dict[year]:
@@ -702,13 +765,13 @@ for year in years:
           if(opt.mertree):
                mergetree(sample)
 
-print "\nStarting"
+print("\nStarting")
 for year in years:
-     print year
+     print(year)
      for lep in leptons:
-          print lep
+          print(lep)
           dataset_new = dataset_dict[year]
-          print [h.label for h in dataset_new]
+          print([h.label for h in dataset_new])
           #dataset_new.remove(sample_dict['DataMET_'+str(year)])
           if lep == 'muon' and sample_dict['DataEle_'+str(year)] in dataset_new:
                dataset_new.remove(sample_dict['DataEle_'+str(year)])
@@ -849,7 +912,7 @@ for year in years:
 
           if(opt.stack):
                for var in variables:
-                    print var._xmax
+                    print(var._xmax)
                     os.system('set LD_PRELOAD=libtcmalloc.so')
                     makestack(lep, 'jets', var, dataset_new, cut_tag, "", lumi[str(year)])
                     os.system('set LD_PRELOAD=libtcmalloc.so')

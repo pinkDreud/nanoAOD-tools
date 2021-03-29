@@ -3,7 +3,7 @@ import optparse
 import sys
 from samples.samples import *
 
-usage = 'python PrepareToPlot.py -y year -f folder'
+usage = 'python3 PrepareToPlot.py -y year -f folder'
 parser = optparse.OptionParser(usage)
 parser.add_option('-y', dest='year', type=str, default = '2017', help='Please enter a year, default is 2017')
 parser.add_option('-f', dest='folder', type=str, default = 'v20', help='Please enter a folder, default is v4')
@@ -69,10 +69,10 @@ def AreAllCondored(samplename):
             lenstore += 1
 
     if len(condoredlist) < lenstore:
-        print "condored: ", len(condoredlist), "\tlenstore: ", lenstore
+        print("condored: ", len(condoredlist), "\tlenstore: ", lenstore)
         return False
     elif lenstore==0 and len(condoredlist)==0:
-        print "Warning for", samplename, "False flag for crabbed files! need to recrab them"
+        print("Warning for", samplename, "False flag for crabbed files! need to recrab them")
         return False
     else:
         return True
@@ -100,11 +100,11 @@ for k, v in class_dict.items():
         
         if mergable:
             if Debug:
-                print "python makeplot.py -y ", opt.year, " --mertree -d " + k + " --folder ", ofolder
+                print("python3 makeplot.py -y ", opt.year, " --mertree -d " + k + " --folder ", ofolder)
             else:
-                os.system("python makeplot.py -y " + opt.year + " --mertree -d " + k + " --folder " + ofolder)
+                os.system("python3 makeplot.py -y " + opt.year + " --mertree -d " + k + " --folder " + ofolder)
         else:
-            print k, "not mergable"
+            print(k, "not mergable")
         continue
 
     if hasattr(v, 'components'):
@@ -114,31 +114,31 @@ for k, v in class_dict.items():
                     if not k.startswith(opt.dat):
                         continue
             if not DoesSampleExist(c.label):
-                print c.label, "not crabbed yet"
+                print(c.label, "not crabbed yet")
                 continue
             cpath = path + c.label + "/"
             if not AreAllCondored(c.label):
             #if not os.path.exists(cpath):
-                print c.label + " not condorly produced yet"
+                print(c.label + " not condorly produced yet")
                 continue
 
             doesexist.append(True)
             if not os.path.exists(cpath+c.label+".root"):
                 if os.path.exists(cpath+c.label+"_merged.root"):
                     if Debug:
-                        print "rm -f " + cpath + c.label + "_merged.root"
+                        print("rm -f " + cpath + c.label + "_merged.root")
                     else:
                         os.system("rm -f " + cpath + c.label + "_merged.root")
-                print c.label + " not merged so far"
-                print "Merging and luming " + c.label + "..."
+                print(c.label + " not merged so far")
+                print("Merging and luming " + c.label + "...")
                 merging.append(True)
                 if Debug:
-                    print "python makeplot.py -y " + opt.year + " --merpart --lumi -d " + c.label + " --folder " + ofolder
+                    print("python3 makeplot.py -y " + opt.year + " --merpart --lumi -d " + c.label + " --folder " + ofolder)
                 else:
-                    os.system("python makeplot.py -y " + opt.year + " --merpart --lumi -d " + c.label + " --folder " + ofolder)
-                print "Merged and lumied!"
+                    os.system("python3 makeplot.py -y " + opt.year + " --merpart --lumi -d " + c.label + " --folder " + ofolder)
+                print("Merged and lumied!")
             else:
-                print c.label + " is already merged and lumied"
+                print(c.label + " is already merged and lumied")
 
         samplemerge = False
 
@@ -146,7 +146,7 @@ for k, v in class_dict.items():
         if len(doesexist) == len(v.components):
             if len(merging) == 0:
                 if os.path.exists(kpath+k+".root"):
-                    print k + " already merged"
+                    print(k + " already merged")
                     samplemerge = False
                 else:
                     samplemerge = True
@@ -157,9 +157,9 @@ for k, v in class_dict.items():
                 if os.path.exists(kpath+k+".root"):
                     os.system("rm -f "+kpath+k+".root")
                 if Debug:
-                    print "python makeplot.py -y ", opt.year, " --mertree -d " + k + " --folder ", ofolder
+                    print("python3 makeplot.py -y ", opt.year, " --mertree -d " + k + " --folder ", ofolder)
                 else:
-                    os.system("python makeplot.py -y " + opt.year + " --mertree -d " + k + " --folder " + ofolder)
+                    os.system("python3 makeplot.py -y " + opt.year + " --mertree -d " + k + " --folder " + ofolder)
         #else:
             #print k + "not ready to be merged"
     else:
@@ -167,26 +167,26 @@ for k, v in class_dict.items():
             if not k.startswith(opt.dat):
                 continue
         if not DoesSampleExist(k):
-            print k + " not crabbed yet"
+            print(k + " not crabbed yet")
             continue
         if not AreAllCondored(k):
         #if not os.path.exists(kpath+k):
-            print k + " not condored at all yet"
+            print(k + " not condored at all yet")
             continue
 
         doesexist.append(True)
         if not os.path.exists(kpath+k+".root"):
             if os.path.exists(kpath+k+"_merged.root"):
                 if Debug:
-                    print "rm -f " + kpath + k + "_merged.root"
+                    print("rm -f " + kpath + k + "_merged.root")
                 else:
                     os.system("rm -f " + kpath + k + "_merged.root")
-            print k + " neither merged nor lumied so far"
-            print "Merging and luming " + k + "..."
+            print(k + " neither merged nor lumied so far")
+            print("Merging and luming " + k + "...")
             if Debug:
-                print "python makeplot.py -y ", opt.year, " --merpart --lumi --mertree -d " + k + " --folder ", ofolder
+                print("python3 makeplot.py -y ", opt.year, " --merpart --lumi --mertree -d " + k + " --folder ", ofolder)
             else:
-                os.system("python makeplot.py -y " + opt.year + " --merpart --lumi --mertree -d " + k + " --folder " + ofolder)
-            print "Merged and lumied!"
+                os.system("python3 makeplot.py -y " + opt.year + " --merpart --lumi --mertree -d " + k + " --folder " + ofolder)
+            print("Merged and lumied!")
         else:
-            print k + "is already merged and lumied"
+            print(k + "is already merged and lumied")
