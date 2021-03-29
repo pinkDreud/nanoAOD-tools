@@ -99,8 +99,8 @@ def mergepart(dataset):
                df = tree.arrays(library="pd")
                df = df.fillna(0)
                
-               for i in range(0,len(df.columns)):
-                    print(df.columns[i])
+               #for i in range(0,len(df.columns)):
+                    #print(df.columns[i])
 	       # remove unused features
                w_PDFs = []
                for i in range(0,110):
@@ -128,8 +128,8 @@ def mergepart(dataset):
                numOfEvents = mytree.GetEntries()
                for n in range(numOfEvents):
                     BDT_output[0] = BDT_output_array[n]
-                    if n%1000 == 0:
-                         print(BDT_output[0])
+                    #if n%1000 == 0:
+                         #print(BDT_output[0])
                     mytree.GetEntry(n)
                     for newBranch in sorted(listOfNewBranches):
                          newBranch.Fill()
