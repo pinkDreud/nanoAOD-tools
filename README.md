@@ -9,13 +9,14 @@ If you are reading these lines, you should already be in the right branch.
 After that, fork the repo and verify that, in your github, the default branch of nanoAOD-tools is VBS_PG. Otherwise, you can set that in "Settings".
 
 ## Let's work in LXPLUS 
-At this stage you can log in your lxplus. As I'm working with CMSSW_10_5_0, it would be nice we work with the same CMSSW release.
+At this stage you can log in your lxplus. 
+In order to make ML machinery to properly work, you must use Python3. As consequence, you should work with a CMSSW release greater than 11_3_X.
 
-Anyway, after the routine procedure after logged in and moved in your favourite CMSSW_X_Y_Z/src, run the following command line:
+After the logging procedure and moved in your favourite CMSSW_X_Y_Z/src, run the following command line:
     
     git clone git@github.com:<your_github_name>/nanoAOD-tools.git PhysicsTools/NanoAODTools
+    scram b -j 8
     cd PhysicsTools/NanoAODTools
-    scram b
 
 It's important that, before locally cloning the repo, you have made sure the default branch of YOUR github repo is VBS_PG. If "master" is the default one, then you will clone all my W' stuff (good, but not great)
 
