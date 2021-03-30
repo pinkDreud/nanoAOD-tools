@@ -225,6 +225,7 @@ def cutToTag(cut):
     return newstring
 
 def plot(lep, reg, variable, sample, cut_tag, syst=""):
+     print("in plot function")
      print("plotting ", variable._name, " for sample ", sample.label, " with cut ", cut_tag)#, " ", syst,
      ROOT.TH1.SetDefaultSumw2()
      cutbase = variable._taglio
@@ -669,7 +670,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           infile[kf].Delete()
      os.system('set LD_PRELOAD=libtcmalloc.so')
 
-leptons = map(str,opt.lep.split(',')) 
+leptons = opt.lep.split(',')
 
 #dataset_dict = {'2016':[],'2017':[],'2018':[]}
 dataset_dict = {'2017':[],'2018':[]}
@@ -684,7 +685,7 @@ if(opt.dat != 'all'):
           raise Exception("Not interesting dataset")
      elif not opt.folder.startswith('CTHT') and 'DataHT' in str(opt.dat) and (opt.plot or opt.stack):
           raise Exception("Not interesting dataset")
-     dataset_names = map(str, opt.dat.strip('[]').split(','))
+     dataset_names = opt.dat.strip('[]').split(',')
      print(dataset_names)
      samples = []
      [samples.append(sample_dict[dataset_name]) for dataset_name in dataset_names]
@@ -722,14 +723,14 @@ else:
 for v in dataset_dict.values():
      print([o.label for o in v])
 
+
 #print(dataset_dict.keys())
 
 years = []
 if(opt.year!='all'):
-     years = map(str,opt.year.strip('[]').split(','))
+     years = opt.year.strip('[]').split(',')
 else:
      years = ['2016','2017','2018']
-print(years)
 
 cut = opt.cut #default cut must be obvious, for example lepton_eta>-10.
 
@@ -806,6 +807,7 @@ for year in years:
           wzero = 'w_nominal*PFSF*puSF*lepSF'
           cutbase = cut_dict[lep]
           
+          variables.append(variabile('BDT_output', 'BDT output', wzero+'*('+cutbase+')', 120, -10., 20.))
           variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cutbase+')', 20, -5., 5.))
 
           variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cutbase+')', 14, -3.50, 3.50))

@@ -1,0 +1,13 @@
+python submit_condor.py -d VBS_SSWW_LL_SM_2017  -f v63 --wp VTTVL
+python submit_condor.py -d VBS_SSWW_TL_SM_2017  -f v63 --wp VTTVL
+python submit_condor.py -d VBS_SSWW_TT_SM_2017  -f v63 --wp VTTVL
+python submit_condor.py -d VBS_SSWW_cHW_BSM_2017  -f v63 --wp VTTVL
+python submit_condor.py -d VBS_SSWW_cW_BSM_2017  -f v63 --wp VTTVL
+python submit_condor.py -d VBS_SSWW_cHW_BSM_2017  -f v63 --wp VTTVL
+python submit_condor.py -d VBS_SSWW_cHW_INT_2017  -f v63 --wp VTTVL
+python submit_condor.py -d VBS_SSWW_cW_BSM_2017  -f v63 --wp VTTVL
+python submit_condor.py -d VBS_SSWW_cW_INT_2017  -f v63 --wp VTTVL
+python submit_condor.py -d VBS_SSWW_cW_cHW_2017  -f v63 --wp VTTVL
+python submit_condor.py -d VBS_SSWW_LL_SM_2017  -f v63 --wp VTTVL
+python submit_condor.py -d VBS_SSWW_TL_SM_2017  -f v63 --wp VTTVL
+python submit_condor.py -d VBS_SSWW_TT_SM_2017  -f v63 --wp VTTVL
