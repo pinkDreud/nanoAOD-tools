@@ -106,9 +106,10 @@ f = open(cshname, "w")
 
 dirlist = [dirs for dirs in os.listdir(path) if os.path.isdir(path+dirs)]
 
-
+print(class_dict.items())
 
 for prname, proc in class_dict.items():
+    
     if opt.year not in prname:
         continue
     if "Fake" in prname:

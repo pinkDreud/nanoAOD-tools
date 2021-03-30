@@ -16,7 +16,6 @@ import numpy as np
 
 #print TT_2017
 
-print("cavalletti")
 usage = 'python3 makeplot.py'# -y year --lep lepton -d dataset --merpart --lumi --mertree --sel --cut cut_string -p -s'
 usageToCopyPaste= "python3 makeplot.py -y 2017 --lep muon --bveto --user apiccine -f v4 -p"
 
@@ -47,7 +46,6 @@ parser.add_option('--signal', dest='signal', default = False, action='store_true
 parser.add_option('--model', dest='model', default = '/afs/cern.ch/user/t/ttedesch/public/gradBDT.p', type='string', help='Path to ML model')
 
 (opt, args) = parser.parse_args()
-print("cavallotti")
 #print (opt, args)
 print("to stack?", opt.tostack)
 
@@ -83,8 +81,9 @@ def mergepart(dataset):
      for sample in samples:
           # insert BDT output value
           file_list = [name for name in os.listdir(filerepo + sample.label)]
-          print(os.listdir(filerepo + sample.label))
-          print(file_list)
+          #print(os.listdir(filerepo + sample.label))
+          #print(file_list)
+          print("Processing events with Tommaso's BDT...")
           for file_name in file_list:
                file_path = filerepo + sample.label + "/"  + file_name
                model_path = opt.model
