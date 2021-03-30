@@ -45,7 +45,7 @@ usage = 'python SetAndLaunchCondorRun.py -y year -j wp_jet -m wp_mu -e wp_ele -f
 parser = optparse.OptionParser(usage)
 parser.add_option('-y', dest='year', type=str, default = '2017', help='Please enter a year, default is 2017')
 parser.add_option('-j', dest='jetwp', type=str, default = 'VT', help='Please enter a TauID WP for vsJet')
-parser.add_option('-m', dest='muwp', type=str, default = 'L', help='Please enter a TauID WP for vsMu')
+parser.add_option('-m', dest='muwp', type=str, default = 'T', help='Please enter a TauID WP for vsMu')
 parser.add_option('-e', dest='elewp', type=str, default = 'VL', help='Please enter a TauID WP for vsEle')
 parser.add_option('-f', dest='fold', type=str, default = 'v30', help='Please enter a folder')
 parser.add_option('--max', dest='maxj', type=int, default = 0, help='Please enter a maximum for number of condor jobs')
