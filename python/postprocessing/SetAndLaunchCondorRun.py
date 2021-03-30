@@ -33,10 +33,10 @@ def AreAllCondored(samplename):
             lenstore += 1
 
     if len(condoredlist) < lenstore:
-        print "condored: ", len(condoredlist), "\tlenstore: ", lenstore
+        print("condored: ", len(condoredlist), "\tlenstore: ", lenstore)
         return False
     elif lenstore==0 and len(condoredlist)==0:
-        print "Warning for", samplename, "False flag for crabbed files! need to recrab them"
+        print("Warning for", samplename, "False flag for crabbed files! need to recrab them")
         return True
     else:
         return True
@@ -84,7 +84,7 @@ vsEle_dict = {"VVVL": '1',
 username = str(os.environ.get('USER'))
 inituser = str(os.environ.get('USER')[0])
 
-print username
+print(username)
 
 if opt.fold == '':
     folder = "Eff_Jet" + opt.jetwp + "_Mu" + opt.muwp + "_Ele" + opt.elewp
@@ -92,7 +92,7 @@ else:
     folder = opt.fold
 
 path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/"
-#print folder, path
+#print(folder, path
 
 if not os.path.exists(path):
     os.makedirs(path)
@@ -132,15 +132,15 @@ for prname, proc in class_dict.items():
                 #if sample.label in dirlist:
             if not AreAllCondored(sample.label):
                 if opt.check:
-                    print sample.label, "not completely condored"
+                    print(sample.label, "not completely condored")
                 else:
                     if os.path.exists(path+sample.label):
-                        print "Setting jobs for missing condored files..."
+                        print("Setting jobs for missing condored files...")
                         #os.system("rm -r "+ path + sample.label + "/*")
-                    print "Writing " + sample.label + " in csh..."  
+                    print("Writing " + sample.label + " in csh...")
                     f.write("python submit_condor.py -d " + sample.label+ " " + optstring)
             else:
-                print sample.label, " completely condored"
+                print(sample.label, " completely condored")
 
     else:
         if opt.dat != 'all':
@@ -150,15 +150,15 @@ for prname, proc in class_dict.items():
             continue
         if not AreAllCondored(proc.label):
             if opt.check:
-                print proc.label, "not completely condored"
+                print(proc.label, "not completely condored")
             else:
                 if os.path.exists(path+proc.label):
-                    print "Setting jobs for missing condored files..."
+                    print("Setting jobs for missing condored files...")
                     #os.system("rm -f "+ path + proc.label + "/*")
-                print "Writing " + proc.label + " in csh..."  
+                print("Writing " + proc.label + " in csh...")  
                 f.write("python submit_condor.py -d " + proc.label+ " " + optstring)
         else:
-            print proc.label, " completely condored"
+            print(proc.label, " completely condored")
 f.close()
 
 if not opt.check:
@@ -208,6 +208,6 @@ if not opt.check:
     t.write("MET_CUT=    40\n")
     t.close()
     
-    print "Launching jobs on condor..."
+    print("Launching jobs on condor...")
     os.system("source ./" + cshname)
-    print "Done! Goodbye my friend :D"
+    print("Done! Goodbye my friend :D")

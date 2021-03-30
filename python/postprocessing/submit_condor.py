@@ -52,14 +52,14 @@ def sub_writer(sample, n, files, folder):
     f.write("queue\n")
 
 if not(opt.dat in sample_dict.keys()):
-    print sample_dict.keys()
+    print(sample_dict.keys())
 dataset = sample_dict[opt.dat]
 samples = []
 
 if hasattr(dataset, 'components'): # How to check whether this exists or not
     samples = [sample for sample in dataset.components]# Method exists and was used.
 else:
-    print "You are launching a single sample and not an entire bunch of samples"
+    print("You are launching a single sample and not an entire bunch of samples")
     samples.append(dataset)
 
 if not os.path.exists("condor/output"):
