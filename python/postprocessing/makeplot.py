@@ -103,21 +103,42 @@ def mergepart(dataset):
                #for i in range(0,len(df.columns)):
                     #print(df.columns[i])
 	       # remove unused features
-               w_PDFs = []
-               for i in range(0,110):
-                    w_PDFs.append('w_PDF[{}]'.format(i))
+               #w_PDFs = []
+               #for i in range(0,110):
+               #     w_PDFs.append('w_PDF[{}]'.format(i))
+               new_columns = []
+               for i in df.columns:
+                    new_columns.append(i.split('[')[0])
+               df.columns = new_columns
 
-
-               X = df.drop(columns=['w_nominal[0]','lepSF[0]', 'lepUp[0]', 'lepDown[0]', 'puSF[0]', 'puUp[0]',
-                                    'puDown[0]', 'PFSF[0]', 'PFUp[0]', 'PFDown[0]', 'q2Up[0]', 'q2Down[0]',
-                                    'SF_Fake[0]','tau_isPrompt[0]','lepton_isPrompt[0]',
-                                    'event_SFFake[0]','lepton_SFFake[0]', 'tau_SFFake[0]','tau_DeepTau_WP[0]',
-                                    'tau_DeepTauVsJet_WP[0]', 'tau_DeepTauVsMu_WP[0]','tau_DeepTauVsEle_WP[0]', 'm_leptau[0]',
-                                    'HLT_effLumi[0]', 'pass_lepton_selection[0]','pass_tau_selection[0]', 'pass_tau_vsJetWP[0]',
-                                    'event_Zeppenfeld_over_deltaEta_jj[0]', 'pass_lepton_veto[0]', 'pass_charge_selection[0]', 'pass_b_veto[0]',
-                                    'pass_jet_selection[0]', 'pass_upToBVeto[0]', 'nBJets[0]',
-                                    'tau_Zeppenfeld_over_deltaEta_jj[0]', 'lepton_Zeppenfeld_over_deltaEta_jj[0]', 'lepton_LnTRegion[0]', 'tau_LnTRegion[0]', 'pass_lepton_iso[0]', 'tau_isolation[0]', 
-                                    'lepton_TightRegion[0]','tau_TightRegion[0]'] + w_PDFs).to_numpy()	       
+               X = df[['lepton_pt', 'lepton_eta', 'lepton_phi', 'lepton_mass', 'lepton_pdgid',
+                        'lepton_pfRelIso04', 'tau_pt', 'tau_eta', 'tau_phi', 'tau_mass',
+                        'tau_DeepTauVsEle_raw', 'tau_DeepTauVsMu_raw', 'leadjet_pt',
+                        'leadjet_eta', 'leadjet_phi', 'leadjet_mass', 'leadjet_CSVv2_b',
+                        'leadjet_DeepFlv_b', 'leadjet_DeepCSVv2_b', 'AK8leadjet_pt',
+                        'AK8leadjet_eta', 'AK8leadjet_phi', 'AK8leadjet_mass',
+                        'AK8leadjet_tau21', 'AK8leadjet_tau32', 'AK8leadjet_tau43',
+                        'leadjet_dRAK48', 'subleadjet_pt', 'subleadjet_eta', 'subleadjet_phi',
+                        'subleadjet_mass', 'subleadjet_CSVv2_b', 'subleadjet_DeepFlv_b',
+                        'subleadjet_DeepCSVv2_b', 'AK8subleadjet_pt', 'AK8subleadjet_eta',
+                        'AK8subleadjet_phi', 'AK8subleadjet_mass', 'AK8subleadjet_tau21',
+                        'AK8subleadjet_tau32', 'AK8subleadjet_tau43', 'subleadjet_dRAK48',
+                        'nJets', 'MET_pt', 'MET_phi', 'mjj', 'mT_lep_MET', 'mT_tau_MET',
+                        'mT_leptau_MET', 'deltaPhi_jj', 'deltaPhi_taulep', 'deltaPhi_tauj1',
+                        'deltaPhi_tauj2', 'deltaPhi_lepj1', 'deltaPhi_lepj2', 'deltaEta_jj',
+                        'lepton_Zeppenfeld', 'tau_Zeppenfeld', 'event_Zeppenfeld',
+                        'pass_mjj_cut', 'pass_MET_cut', 'pass_everyCut']].to_numpy()
+               
+               #X = df.drop(columns=['w_nominal[0]','lepSF[0]', 'lepUp[0]', 'lepDown[0]', 'puSF[0]', 'puUp[0]',
+               #                     'puDown[0]', 'PFSF[0]', 'PFUp[0]', 'PFDown[0]', 'q2Up[0]', 'q2Down[0]',
+               #                     'SF_Fake[0]','tau_isPrompt[0]','lepton_isPrompt[0]',
+               #                     'event_SFFake[0]','lepton_SFFake[0]', 'tau_SFFake[0]','tau_DeepTau_WP[0]',
+               #                     'tau_DeepTauVsJet_WP[0]', 'tau_DeepTauVsMu_WP[0]','tau_DeepTauVsEle_WP[0]', 'm_leptau[0]',
+               #                     'HLT_effLumi[0]', 'pass_lepton_selection[0]','pass_tau_selection[0]', 'pass_tau_vsJetWP[0]',
+               #                     'event_Zeppenfeld_over_deltaEta_jj[0]', 'pass_lepton_veto[0]', 'pass_charge_selection[0]', 'pass_b_veto[0]',
+               #                     'pass_jet_selection[0]', 'pass_upToBVeto[0]', 'nBJets[0]',
+               #                     'tau_Zeppenfeld_over_deltaEta_jj[0]', 'lepton_Zeppenfeld_over_deltaEta_jj[0]', 'lepton_LnTRegion[0]', 'tau_LnTRegion[0]', 'pass_lepton_iso[0]', 'tau_isolation[0]', 
+               #                     'lepton_TightRegion[0]','tau_TightRegion[0]'] + w_PDFs).to_numpy()	       
 
                # update root file with BDT branch
                BDT_output_array = clf.decision_function(X)
