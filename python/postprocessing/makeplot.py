@@ -16,6 +16,8 @@ import numpy as np
 
 #print TT_2017
 
+ROOT.EnableThreadSafety()
+
 usage = 'python3 makeplot.py'# -y year --lep lepton -d dataset --merpart --lumi --mertree --sel --cut cut_string -p -s'
 usageToCopyPaste= "python3 makeplot.py -y 2017 --lep muon --bveto --user apiccine -f v4 -p"
 
@@ -337,7 +339,7 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
           countf.close()
 
 def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
-     os.system('set LD_PRELOAD=libtcmalloc.so')
+     #os.system('set LD_PRELOAD=libtcmalloc.so')
 
      blind = False
      infile = {}
@@ -668,7 +670,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           infile[kf].Close()
           #infile[s.label].Delete()
           infile[kf].Delete()
-     os.system('set LD_PRELOAD=libtcmalloc.so')
+     #os.system('set LD_PRELOAD=libtcmalloc.so')
 
 leptons = opt.lep.split(',')
 
@@ -807,7 +809,7 @@ for year in years:
           wzero = 'w_nominal*PFSF*puSF*lepSF'
           cutbase = cut_dict[lep]
           
-          variables.append(variabile('BDT_output', 'BDT output', wzero+'*('+cutbase+')', 120, -10., 20.))
+          variables.append(variabile('BDT_output', 'BDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
           variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cutbase+')', 20, -5., 5.))
 
           variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cutbase+')', 14, -3.50, 3.50))
@@ -936,9 +938,9 @@ for year in years:
           if(opt.stack):
                for var in variables:
                     print(var._xmax)
-                    os.system('set LD_PRELOAD=libtcmalloc.so')
+                    #os.system('set LD_PRELOAD=libtcmalloc.so')
                     makestack(lep, 'jets', var, dataset_new, cut_tag, "", lumi[str(year)])
-                    os.system('set LD_PRELOAD=libtcmalloc.so')
+                    #os.system('set LD_PRELOAD=libtcmalloc.so')
 
           if lep == 'muon':
                dataset_new.append(sample_dict['DataEle_'+str(year)])

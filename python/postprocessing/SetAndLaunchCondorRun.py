@@ -27,8 +27,8 @@ def AreAllCondored(samplename):
     lenstore = len(storelist)
 
     if 'Data' in samplename:
-        remainder = lenstore%split
-        lenstore = lenstore/split
+        remainder = int(lenstore%split)
+        lenstore = int(lenstore/split)
         if remainder > 0:
             lenstore += 1
 
