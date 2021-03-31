@@ -16,7 +16,7 @@ import numpy as np
 
 #print TT_2017
 
-ROOT.EnableThreadSafety()
+ROOT.ROOT.EnableThreadSafety()
 
 usage = 'python3 makeplot.py'# -y year --lep lepton -d dataset --merpart --lumi --mertree --sel --cut cut_string -p -s'
 usageToCopyPaste= "python3 makeplot.py -y 2017 --lep muon --bveto --user apiccine -f v4 -p"
@@ -88,6 +88,7 @@ def mergepart(dataset):
           print("Processing events with Tommaso's BDT...")
           for file_name in file_list:
                file_path = filerepo + sample.label + "/"  + file_name
+               print(file_path)
                model_path = opt.model
 
 	       # load model 
