@@ -80,40 +80,39 @@ def mergepart(dataset):
           samples = [sample for sample in dataset.components]# Method exists and was used.
      else:
           samples.append(dataset)
-     for sample in samples:
-          # insert BDT output value
-          file_list = [name for name in os.listdir(filerepo + sample.label)]
-          #print(os.listdir(filerepo + sample.label))
-          #print(file_list)
+
+          # merge files 
+          add = "hadd -f " + filerepo + sample.label + "/"  + sample.label + "_merged.root " + filerepo + sample.label + "/"  + sample.label + "_part*.root" 
+          print(add)
+          os.system(str(add))
+          check = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + "_merged.root ")
+          print("Number of entries of the file %s are %s" %(filerepo + sample.label + "/"  + sample.label + "_merged.root", (check.Get("events_all")).GetEntries()))
+
+          # insert BDT output value into merged file
           print("Processing events with Tommaso's BDT...")
-          for file_name in file_list:
-               file_path = filerepo + sample.label + "/"  + file_name
-               print(file_path)
-               model_path = opt.model
+          file_path = filerepo + sample.label + "/"  + sample.label + "_merged.root"
+          print(file_path)
+          
+          model_path = opt.model
+          print(model_path)
 
-	       # load model 
-               file = open(model_path,'rb')
-               clf = pickle.load(file)
-               file.close()
+	  # load model 
+          file = open(model_path,'rb')
+          clf = pickle.load(file)
+          file.close()
 
-	       # open root file
-               file = uproot.open(file_path)
-               tree = file["events_all"]
-               df = tree.arrays(library="pd")
-               df = df.fillna(0)
+	  # open root file
+          file = uproot.open(file_path)
+          tree = file["events_all"]
+          df = tree.arrays(library="pd")
+          df = df.fillna(0)
                
-               #for i in range(0,len(df.columns)):
-                    #print(df.columns[i])
-	       # remove unused features
-               #w_PDFs = []
-               #for i in range(0,110):
-               #     w_PDFs.append('w_PDF[{}]'.format(i))
-               new_columns = []
-               for i in df.columns:
-                    new_columns.append(i.split('[')[0])
-               df.columns = new_columns
+          new_columns = []
+          for i in df.columns:
+               new_columns.append(i.split('[')[0])
+          df.columns = new_columns
 
-               X = df[['lepton_pt', 'lepton_eta', 'lepton_phi', 'lepton_mass', 'lepton_pdgid',
+          X = df[['lepton_pt', 'lepton_eta', 'lepton_phi', 'lepton_mass', 'lepton_pdgid',
                         'lepton_pfRelIso04', 'tau_pt', 'tau_eta', 'tau_phi', 'tau_mass',
                         'tau_DeepTauVsEle_raw', 'tau_DeepTauVsMu_raw', 'leadjet_pt',
                         'leadjet_eta', 'leadjet_phi', 'leadjet_mass', 'leadjet_CSVv2_b',
@@ -129,43 +128,25 @@ def mergepart(dataset):
                         'mT_leptau_MET', 'deltaPhi_jj', 'deltaPhi_taulep', 'deltaPhi_tauj1',
                         'deltaPhi_tauj2', 'deltaPhi_lepj1', 'deltaPhi_lepj2', 'deltaEta_jj',
                         'lepton_Zeppenfeld', 'tau_Zeppenfeld', 'event_Zeppenfeld',
-                        'pass_mjj_cut', 'pass_MET_cut', 'pass_everyCut']].to_numpy()
-               
-               #X = df.drop(columns=['w_nominal[0]','lepSF[0]', 'lepUp[0]', 'lepDown[0]', 'puSF[0]', 'puUp[0]',
-               #                     'puDown[0]', 'PFSF[0]', 'PFUp[0]', 'PFDown[0]', 'q2Up[0]', 'q2Down[0]',
-               #                     'SF_Fake[0]','tau_isPrompt[0]','lepton_isPrompt[0]',
-               #                     'event_SFFake[0]','lepton_SFFake[0]', 'tau_SFFake[0]','tau_DeepTau_WP[0]',
-               #                     'tau_DeepTauVsJet_WP[0]', 'tau_DeepTauVsMu_WP[0]','tau_DeepTauVsEle_WP[0]', 'm_leptau[0]',
-               #                     'HLT_effLumi[0]', 'pass_lepton_selection[0]','pass_tau_selection[0]', 'pass_tau_vsJetWP[0]',
-               #                     'event_Zeppenfeld_over_deltaEta_jj[0]', 'pass_lepton_veto[0]', 'pass_charge_selection[0]', 'pass_b_veto[0]',
-               #                     'pass_jet_selection[0]', 'pass_upToBVeto[0]', 'nBJets[0]',
-               #                     'tau_Zeppenfeld_over_deltaEta_jj[0]', 'lepton_Zeppenfeld_over_deltaEta_jj[0]', 'lepton_LnTRegion[0]', 'tau_LnTRegion[0]', 'pass_lepton_iso[0]', 'tau_isolation[0]', 
-               #                     'lepton_TightRegion[0]','tau_TightRegion[0]'] + w_PDFs).to_numpy()	       
+                        'pass_mjj_cut', 'pass_MET_cut', 'pass_everyCut']].to_numpy() 
 
-               # update root file with BDT branch
-               BDT_output_array = clf.decision_function(X)
-               myfile = ROOT.TFile(file_path, 'update')
-               mytree = myfile.Get("events_all")
-               listOfNewBranches = []
-               BDT_output   = array('d', [0.5] )
-               listOfNewBranches.append(mytree.Branch("BDT_output", BDT_output, "BDT_output/D") )
-               numOfEvents = mytree.GetEntries()
-               for n in range(numOfEvents):
-                    BDT_output[0] = BDT_output_array[n]
-                    #if n%1000 == 0:
-                         #print(BDT_output[0])
-                    mytree.GetEntry(n)
-                    for newBranch in sorted(listOfNewBranches):
-                         newBranch.Fill()
-               mytree.Write("", ROOT.TFile.kOverwrite)
-               myfile.Close()       
-
-          # merge files 
-          add = "hadd -f " + filerepo + sample.label + "/"  + sample.label + "_merged.root " + filerepo + sample.label + "/"  + sample.label + "_part*.root" 
-          print(add)
-          os.system(str(add))
-          check = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + "_merged.root ")
-          print("Number of entries of the file %s are %s" %(filerepo + sample.label + "/"  + sample.label + "_merged.root", (check.Get("events_all")).GetEntries()))
+          # update root file with BDT branch
+          BDT_output_array = clf.decision_function(X)
+          myfile = ROOT.TFile(file_path, 'update')
+          mytree = myfile.Get("events_all")
+          listOfNewBranches = []
+          BDT_output   = array('d', [0.5] )
+          listOfNewBranches.append(mytree.Branch("BDT_output", BDT_output, "BDT_output/D") )
+          numOfEvents = mytree.GetEntries()
+          for n in range(numOfEvents):
+               BDT_output[0] = BDT_output_array[n]
+               #if n%1000 == 0:
+                    #print(BDT_output[0])
+               mytree.GetEntry(n)
+               for newBranch in sorted(listOfNewBranches):
+                    newBranch.Fill()
+          mytree.Write("", ROOT.TFile.kOverwrite)
+          myfile.Close()       
 
 def mergetree(sample):
      if not os.path.exists(filerepo + sample.label):
