@@ -6,6 +6,21 @@ from samples.samples import *
 cshname = "condorrun_tauwp.csh"
 split = 50
 
+def CondoredList(samplename):
+    try:
+        condlist = os.listdir(path+samplename)
+    except:
+        condlist = []
+
+    if len(condlist) > 0:
+        for condfile in condlist:
+            if os.stat(path+samplename+"/"+condfile).st_size < 1024.:
+                print("Something went wrong during crabbing", samplename, "fix it and relaunch")
+                os.system("rm -r "+ path + samplename + "/*")            
+                return CondoredList(samplename)
+
+    return condlist
+
 def DoesSampleExist(samplename):
     if samplename+".txt" not in os.listdir("../../crab/macros/files/"):
         return False
@@ -14,10 +29,8 @@ def DoesSampleExist(samplename):
                 
 def AreAllCondored(samplename):
     storelist = [line for line in open("../../crab/macros/files/"+samplename+".txt")]
-    try:
-        condoredlist = os.listdir(path+samplename)
-    except:
-        condoredlist = []
+
+    condoredlist = CondoredList(samplename)
 
     if samplename+"_merged.root" in condoredlist:
         condoredlist.remove(samplename+"_merged.root")
@@ -92,12 +105,11 @@ else:
     folder = opt.fold
 
 path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/"
-#print(folder, path
 
 if not os.path.exists(path):
     os.makedirs(path)
 
-optstring = " -f " + folder + " --wp " + str(opt.jetwp + opt.muwp + opt.elewp)# + " --wop"
+optstring = " -f " + folder + " --wpjet " + str(opt.jetwp) + " --wpele " + str(opt.elewp) + " --wpmu " + str(opt.muwp)# + " --wop"
 if opt.maxj > 0:
     optstring = optstring + " --max " + str(opt.maxj)
 optstring = optstring + "\n"
@@ -106,7 +118,7 @@ f = open(cshname, "w")
 
 dirlist = [dirs for dirs in os.listdir(path) if os.path.isdir(path+dirs)]
 
-print(class_dict.items())
+#print(class_dict.items())
 
 for prname, proc in class_dict.items():
     
@@ -140,6 +152,7 @@ for prname, proc in class_dict.items():
                         #os.system("rm -r "+ path + sample.label + "/*")
                     print("Writing " + sample.label + " in csh...")
                     f.write("python submit_condor.py -d " + sample.label+ " " + optstring)
+
             else:
                 print(sample.label, " completely condored")
 
@@ -147,6 +160,7 @@ for prname, proc in class_dict.items():
         if opt.dat != 'all':
             if not prname.startswith(opt.dat):
                 continue
+
         if not DoesSampleExist(prname):
             continue
         if not AreAllCondored(proc.label):
@@ -158,8 +172,10 @@ for prname, proc in class_dict.items():
                     #os.system("rm -f "+ path + proc.label + "/*")
                 print("Writing " + proc.label + " in csh...")  
                 f.write("python submit_condor.py -d " + proc.label+ " " + optstring)
+
         else:
             print(proc.label, " completely condored")
+
 f.close()
 
 if not opt.check:

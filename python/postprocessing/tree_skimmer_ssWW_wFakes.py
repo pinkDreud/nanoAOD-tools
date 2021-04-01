@@ -876,7 +876,8 @@ for i in range(tree.GetEntries()):
     tau_phi[0]              =   GoodTau.phi
     tau_mass[0]             =   GoodTau.mass
     tau_charge[0]           =   GoodTau.charge
-    tau_GenMatch[0]         =   GoodTau.genPartFlav
+    if isMC:
+        tau_GenMatch[0]         =   GoodTau.genPartFlav
     tau_DecayMode[0]        =   GoodTau.decayMode
 
     #if not isMC:

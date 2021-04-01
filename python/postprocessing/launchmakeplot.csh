@@ -1,8 +1,8 @@
-set LD_PRELOAD=libtcmalloc.so
+#set LD_PRELOAD=libtcmalloc.so
 set year = 2017
-set folder = v62
+set folder = v63
 
-rm -rf /eos/home-a/apiccine/VBS/nosynch/$folder/plot/electron/countings
+rm -rf /eos/home-a/apiccine/VBS/nosynch/$folder/plot/electron/ #countings
 
 python3 makeplot.py -y 2017 --lep electron --bveto -f $folder -p --count #--blinded
 #python3 makeplot.py -y 2017 --lep electron --bveto -f $folder -p --count --signal #--blinded
@@ -28,7 +28,7 @@ python3 makeplot.py -y 2017 --lep electron --wjets -f $folder -p --count
 #python3 makeplot.py -y 2017 --lep electron --wjets -f $folder -s --wfake incl --cut "nJets>2" 
 #python3 makeplot.py -y 2017 --lep electron --wjets -f $folder -s --wfake sep --cut "nJets>2" 
 
-python3 makeplot.py -y 2017 --lep electron --ttbar -f $folder -p --count 
+python3 makeplot.py -y 2017 --lep electron --ttbar -f $folder -p --count -d TT_2017
 #python3 makeplot.py -y 2017 --lep electron --ttbar -f $folder -p --count --cut "abs(lepton_Zeppenfeld)<1.8"
 #python3 makeplot.py -y 2017 --lep electron --ttbar -f $folder -p --count --cut "nJets>2"
 ##python3 makeplot.py -y 2017 --lep electron --ttbar -f $folder -s
@@ -41,7 +41,7 @@ python3 makeplot.py -y 2017 --lep electron --ttbar -f $folder -p --count
 
 #set LD_PRELOAD=libtcmalloc.so
 
-rm -rf /eos/home-a/apiccine/VBS/nosynch/$folder/plot/muon/countings
+rm -rf /eos/home-a/apiccine/VBS/nosynch/$folder/plot/muon/ #countings
 
 python3 makeplot.py -y 2017 --lep muon --bveto -f $folder -p --count #--blinded
 #python3 makeplot.py -y 2017 --lep muon --bveto -f $folder -p --count --signal #--blinded

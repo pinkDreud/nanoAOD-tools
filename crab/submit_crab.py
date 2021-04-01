@@ -10,6 +10,7 @@ parser.add_option('--status', dest = 'status', default = False, action = 'store_
 parser.add_option('--verb', dest = 'verb', default = False, action = 'store_true', help = 'Default do not verbosely check the status')
 parser.add_option('-s', '--sub', dest = 'sub', default = False, action = 'store_true', help = 'Default do not submit')
 parser.add_option('-k', '--kill', dest = 'kill', default = False, action = 'store_true', help = 'Default do not kill')
+parser.add_option('-p', '--purge', dest = 'purge', default = False, action = 'store_true', help = 'Default do not kill')
 parser.add_option('-r', '--resub', dest = 'resub', default = False, action = 'store_true', help = 'Default do not resubmit')
 parser.add_option('-g', '--gout', dest = 'gout', default = False, action = 'store_true', help = 'Default do not do getoutput')
 (opt, args) = parser.parse_args()
@@ -48,9 +49,9 @@ def cfg_writer(sample, isMC, outdir):
         elif sample.year == '2018':
             f.write("config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/13TeV/ReReco/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt'\n")
         f.write("config.Data.unitsPerJob = 50\n")
-    elif('WJetsHT' in sample.label or 'QCDHT' in sample.label): #'200to400' in sample.label or 'WJetsHT400to600' in sample.label or 'WJetsHT600to800' in sample.label or 'WJetsHT800to1200' in sample.label or 'WJetsHT1200to2500' in sample.label or 'WJetsHT2500toInf' in sample.label):
+    elif('WJetsHT' in sample.label or 'QCDHT' in sample.label and ('WJetsHT400to600' in sample.label or 'WJetsHT600to800' in sample.label or 'WJetsHT800to1200' in sample.label or 'WJetsHT1200to2500' in sample.label or 'WJetsHT2500toInf' in sample.label)):
         f.write("config.Data.splitting = 'EventAwareLumiBased'\n")                                             
-        f.write("config.Data.unitsPerJob = 1000\n")                       
+        f.write("config.Data.unitsPerJob = 5000\n")                       
         #f.write("config.Data.splitting = 'Automatic'\n")
     else:
         f.write("config.Data.splitting = 'FileBased'\n")
@@ -153,6 +154,7 @@ submit = opt.sub
 status = opt.status
 verbose = opt.verb
 kill = opt.kill
+purge = opt.purge
 resubmit = opt.resub
 getout = opt.gout
 #Writing the configuration file
@@ -195,7 +197,7 @@ for sample in samples:
 
         print "Producing crab configuration file"
 
-        cfg_writer(sample, isMC, "VBS_SSWW")
+        cfg_writer(sample, isMC, "VBS")
 
         if isMC:
             modules = "MCweight_writer('" + sample.label + "'), " + met_hlt_mod + ", preselection(), " + lep_mod + ", " + pu_mod + ", " + btag_mod + ", PrefCorr(), jmeCorrections(), " + muon_pt_corr + ", " + ht_producer + ", " + mht_producer # Put here all the modules you want to be runned by crab
@@ -209,6 +211,11 @@ for sample in samples:
         #Launching crab
         print "Submitting crab jobs..."
         os.system("crab submit -c crab_cfg.py")
+
+    elif purge:
+        print "Purging crab jobs..."
+        os.system("crab purge -d crab_" + sample.label)
+        #os.system("rm -rf crab_" + sample.label)
 
     elif kill:
         print "Killing crab jobs..."
