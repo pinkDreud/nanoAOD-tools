@@ -16,7 +16,8 @@ import numpy as np
 
 #print TT_2017
 
-print("cavalletti")
+ROOT.ROOT.EnableThreadSafety()
+
 usage = 'python3 makeplot.py'# -y year --lep lepton -d dataset --merpart --lumi --mertree --sel --cut cut_string -p -s'
 usageToCopyPaste= "python3 makeplot.py -y 2017 --lep muon --bveto --user apiccine -f v4 -p"
 
@@ -43,10 +44,10 @@ parser.add_option('--wfake', dest='wfake', type='string', default = 'nofake', he
 parser.add_option('--wjets', dest='wjets', default = False, action='store_true', help='Enable WJets CR, default disabled')
 parser.add_option('--blinded', dest='blinded', default = False, action='store_true', help='Activate blinding')
 parser.add_option('--signal', dest='signal', default = False, action='store_true', help='Activate only signal')
-parser.add_option('--model', dest='model', default = '/eos/user/t/ttedesch/SWAN_projects/VBS_ML/gradBDT.p', type='string', help='Path to ML model')
+#parser.add_option('--model', dest='model', default = '/eos/user/t/ttedesch/SWAN_projects/VBS_ML/gradBDT.p', type='string', help='Path to ML model')
+parser.add_option('--model', dest='model', default = '/afs/cern.ch/user/t/ttedesch/public/gradBDT.p', type='string', help='Path to ML model')
 
 (opt, args) = parser.parse_args()
-print("cavallotti")
 #print (opt, args)
 print("to stack?", opt.tostack)
 
@@ -79,62 +80,6 @@ def mergepart(dataset):
           samples = [sample for sample in dataset.components]# Method exists and was used.
      else:
           samples.append(dataset)
-     for sample in samples:
-          # insert BDT output value
-          file_list = [name for name in os.listdir(filerepo + sample.label)]
-          print(os.listdir(filerepo + sample.label))
-          print(file_list)
-          for file_name in file_list:
-               file_path = filerepo + sample.label + "/"  + file_name
-               model_path = opt.model
-
-	       # load model 
-               file = open(model_path,'rb')
-               clf = pickle.load(file)
-               file.close()
-
-	       # open root file
-               file = uproot.open(file_path)
-               tree = file["events_all"]
-               df = tree.arrays(library="pd")
-               df = df.fillna(0)
-               
-               #for i in range(0,len(df.columns)):
-                    #print(df.columns[i])
-	       # remove unused features
-               w_PDFs = []
-               for i in range(0,110):
-                    w_PDFs.append('w_PDF[{}]'.format(i))
-
-
-               X = df.drop(columns=['w_nominal[0]','lepSF[0]', 'lepUp[0]', 'lepDown[0]', 'puSF[0]', 'puUp[0]',
-                                    'puDown[0]', 'PFSF[0]', 'PFUp[0]', 'PFDown[0]', 'q2Up[0]', 'q2Down[0]',
-                                    'SF_Fake[0]','tau_isPrompt[0]','lepton_isPrompt[0]',
-                                    'event_SFFake[0]','lepton_SFFake[0]', 'tau_SFFake[0]','tau_DeepTau_WP[0]',
-                                    'tau_DeepTauVsJet_WP[0]', 'tau_DeepTauVsMu_WP[0]','tau_DeepTauVsEle_WP[0]', 'm_leptau[0]',
-                                    'HLT_effLumi[0]', 'pass_lepton_selection[0]','pass_tau_selection[0]', 'pass_tau_vsJetWP[0]',
-                                    'event_Zeppenfeld_over_deltaEta_jj[0]', 'pass_lepton_veto[0]', 'pass_charge_selection[0]', 'pass_b_veto[0]',
-                                    'pass_jet_selection[0]', 'pass_upToBVeto[0]', 'nBJets[0]',
-                                    'tau_Zeppenfeld_over_deltaEta_jj[0]', 'lepton_Zeppenfeld_over_deltaEta_jj[0]', 'lepton_LnTRegion[0]', 'tau_LnTRegion[0]', 'pass_lepton_iso[0]', 'tau_isolation[0]', 
-                                    'lepton_TightRegion[0]','tau_TightRegion[0]'] + w_PDFs).to_numpy()	       
-
-               # update root file with BDT branch
-               BDT_output_array = clf.decision_function(X)
-               myfile = ROOT.TFile(file_path, 'update')
-               mytree = myfile.Get("events_all")
-               listOfNewBranches = []
-               BDT_output   = array('d', [0.5] )
-               listOfNewBranches.append(mytree.Branch("BDT_output", BDT_output, "BDT_output/D") )
-               numOfEvents = mytree.GetEntries()
-               for n in range(numOfEvents):
-                    BDT_output[0] = BDT_output_array[n]
-                    #if n%1000 == 0:
-                         #print(BDT_output[0])
-                    mytree.GetEntry(n)
-                    for newBranch in sorted(listOfNewBranches):
-                         newBranch.Fill()
-               mytree.Write("", ROOT.TFile.kOverwrite)
-               myfile.Close()       
 
           # merge files 
           add = "hadd -f " + filerepo + sample.label + "/"  + sample.label + "_merged.root " + filerepo + sample.label + "/"  + sample.label + "_part*.root" 
@@ -142,6 +87,66 @@ def mergepart(dataset):
           os.system(str(add))
           check = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + "_merged.root ")
           print("Number of entries of the file %s are %s" %(filerepo + sample.label + "/"  + sample.label + "_merged.root", (check.Get("events_all")).GetEntries()))
+
+          # insert BDT output value into merged file
+          print("Processing events with Tommaso's BDT...")
+          file_path = filerepo + sample.label + "/"  + sample.label + "_merged.root"
+          print(file_path)
+          
+          model_path = opt.model
+          print(model_path)
+
+	  # load model 
+          file = open(model_path,'rb')
+          clf = pickle.load(file)
+          file.close()
+
+	  # open root file
+          file = uproot.open(file_path)
+          tree = file["events_all"]
+          df = tree.arrays(library="pd")
+          df = df.fillna(0)
+               
+          new_columns = []
+          for i in df.columns:
+               new_columns.append(i.split('[')[0])
+          df.columns = new_columns
+
+          X = df[['lepton_pt', 'lepton_eta', 'lepton_phi', 'lepton_mass', 'lepton_pdgid',
+                        'lepton_pfRelIso04', 'tau_pt', 'tau_eta', 'tau_phi', 'tau_mass',
+                        'tau_DeepTauVsEle_raw', 'tau_DeepTauVsMu_raw', 'leadjet_pt',
+                        'leadjet_eta', 'leadjet_phi', 'leadjet_mass', 'leadjet_CSVv2_b',
+                        'leadjet_DeepFlv_b', 'leadjet_DeepCSVv2_b', 'AK8leadjet_pt',
+                        'AK8leadjet_eta', 'AK8leadjet_phi', 'AK8leadjet_mass',
+                        'AK8leadjet_tau21', 'AK8leadjet_tau32', 'AK8leadjet_tau43',
+                        'leadjet_dRAK48', 'subleadjet_pt', 'subleadjet_eta', 'subleadjet_phi',
+                        'subleadjet_mass', 'subleadjet_CSVv2_b', 'subleadjet_DeepFlv_b',
+                        'subleadjet_DeepCSVv2_b', 'AK8subleadjet_pt', 'AK8subleadjet_eta',
+                        'AK8subleadjet_phi', 'AK8subleadjet_mass', 'AK8subleadjet_tau21',
+                        'AK8subleadjet_tau32', 'AK8subleadjet_tau43', 'subleadjet_dRAK48',
+                        'nJets', 'MET_pt', 'MET_phi', 'mjj', 'mT_lep_MET', 'mT_tau_MET',
+                        'mT_leptau_MET', 'deltaPhi_jj', 'deltaPhi_taulep', 'deltaPhi_tauj1',
+                        'deltaPhi_tauj2', 'deltaPhi_lepj1', 'deltaPhi_lepj2', 'deltaEta_jj',
+                        'lepton_Zeppenfeld', 'tau_Zeppenfeld', 'event_Zeppenfeld',
+                        'pass_mjj_cut', 'pass_MET_cut', 'pass_everyCut']].to_numpy() 
+
+          # update root file with BDT branch
+          BDT_output_array = clf.decision_function(X)
+          myfile = ROOT.TFile(file_path, 'update')
+          mytree = myfile.Get("events_all")
+          listOfNewBranches = []
+          BDT_output   = array('d', [0.5] )
+          listOfNewBranches.append(mytree.Branch("BDT_output", BDT_output, "BDT_output/D") )
+          numOfEvents = mytree.GetEntries()
+          for n in range(numOfEvents):
+               BDT_output[0] = BDT_output_array[n]
+               #if n%1000 == 0:
+                    #print(BDT_output[0])
+               mytree.GetEntry(n)
+               for newBranch in sorted(listOfNewBranches):
+                    newBranch.Fill()
+          mytree.Write("", ROOT.TFile.kOverwrite)
+          myfile.Close()       
 
 def mergetree(sample):
      if not os.path.exists(filerepo + sample.label):
@@ -204,6 +209,7 @@ def cutToTag(cut):
     return newstring
 
 def plot(lep, reg, variable, sample, cut_tag, syst=""):
+     print("in plot function")
      print("plotting ", variable._name, " for sample ", sample.label, " with cut ", cut_tag)#, " ", syst,
      ROOT.TH1.SetDefaultSumw2()
      cutbase = variable._taglio
@@ -315,7 +321,7 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
           countf.close()
 
 def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
-     os.system('set LD_PRELOAD=libtcmalloc.so')
+     #os.system('set LD_PRELOAD=libtcmalloc.so')
 
      blind = False
      infile = {}
@@ -646,9 +652,9 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           infile[kf].Close()
           #infile[s.label].Delete()
           infile[kf].Delete()
-     os.system('set LD_PRELOAD=libtcmalloc.so')
+     #os.system('set LD_PRELOAD=libtcmalloc.so')
 
-leptons = map(str,opt.lep.split(',')) 
+leptons = opt.lep.split(',')
 
 #dataset_dict = {'2016':[],'2017':[],'2018':[]}
 dataset_dict = {'2017':[],'2018':[]}
@@ -663,7 +669,7 @@ if(opt.dat != 'all'):
           raise Exception("Not interesting dataset")
      elif not opt.folder.startswith('CTHT') and 'DataHT' in str(opt.dat) and (opt.plot or opt.stack):
           raise Exception("Not interesting dataset")
-     dataset_names = map(str, opt.dat.strip('[]').split(','))
+     dataset_names = opt.dat.strip('[]').split(',')
      print(dataset_names)
      samples = []
      [samples.append(sample_dict[dataset_name]) for dataset_name in dataset_names]
@@ -701,14 +707,14 @@ else:
 for v in dataset_dict.values():
      print([o.label for o in v])
 
+
 #print(dataset_dict.keys())
 
 years = []
 if(opt.year!='all'):
-     years = map(str,opt.year.strip('[]').split(','))
+     years = opt.year.strip('[]').split(',')
 else:
      years = ['2016','2017','2018']
-print(years)
 
 cut = opt.cut #default cut must be obvious, for example lepton_eta>-10.
 
@@ -782,14 +788,15 @@ for year in years:
 
           variables = []
 
-          wzero = 'w_nominal*PFSF*puSF*lepSF'
+          wzero = 'w_nominal*PFSF*puSF*lepSF*tau_vsjet_SF*tau_vsele_SF*tau_vsmu_SF'
           cutbase = cut_dict[lep]
           
+          variables.append(variabile('BDT_output', 'BDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
           variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cutbase+')', 20, -5., 5.))
 
           variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cutbase+')', 14, -3.50, 3.50))
           
-          bin_lepton_pt = array("f", [0., 30., 45., 60., 80., 100., 200., 300., 400., 600., 1000.])
+          bin_lepton_pt = array("f", [0., 30., 45., 60., 80., 100., 200., 300., 500., 800.])
           nbin_lepton_pt = len(bin_lepton_pt)-1
           variables.append(variabile('lepton_pt',  'Lepton p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_lepton_pt, bin_lepton_pt))#30, 1500))
 
@@ -804,6 +811,7 @@ for year in years:
           variables.append(variabile('tau_eta', '#tau #eta',  wzero+'*('+cutbase+')', 20, -5, 5))
           variables.append(variabile('tau_Zeppenfeld', '#tau Zeppenfeld',  wzero+'*('+cutbase+')', 20, -5, 5))
           variables.append(variabile('tau_phi', '#tau #Phi',  wzero+'*('+cutbase+')',  14, -3.50, 3.50))
+          variables.append(variabile('tau_DecayMode', '#tau decay mode',  wzero+'*('+cutbase+')', 12, -0.5, 11.5))
 
           #variables.append(variabile('tau_DeepTauVsEle_raw', '#tau DeepTauVsEle raw',  wzero+'*('+cutbase+')',  10, 0.35, 1.35))
           #variables.append(variabile('tau_DeepTauVsMu_raw', '#tau DeepTauVsMu raw',  wzero+'*('+cutbase+')',  10, 0.2, 1.2))
@@ -849,7 +857,7 @@ for year in years:
           variables.append(variabile('AK8subleadjet_tau43', 'AK8 Sublead jet #tau_{43}',  wzero+'*('+cutbase+')',  20, 0., 1.))
 
 
-          bin_subleadjet_pt = array("f", [0., 75., 150., 250., 400., 800.])
+          bin_subleadjet_pt = array("f", [0., 100., 250., 500., 800.])
           nbin_subleadjet_pt = len(bin_subleadjet_pt) - 1
           variables.append(variabile('subleadjet_pt',  'Sublead jet p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_subleadjet_pt, bin_subleadjet_pt))#40, 30, 1000))
           variables.append(variabile('subleadjet_eta', 'Sublead jet #eta',  wzero+'*('+cutbase+')', 20, -5., 5.))
@@ -868,7 +876,8 @@ for year in years:
           if opt.blinded:
                bin_mjj = array("f", [0., 100., 200., 300., 400., 500.])#, 600., 700., 800., 900., 1000., 1100., 1200., 1400., 1600., 2000., 2500., 3500., 4500.])
           else:
-               bin_mjj = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 900., 1000., 1100., 1200., 1400., 1600., 2000., 2500., 3500., 4500.])
+               bin_mjj = array("f", [0., 150., 300., 450., 600., 750., 900., 1050., 1200., 1500., 1800., 2100., 3000., 4500.])
+               #bin_mjj = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 900., 1000., 1100., 1200., 1400., 1600., 2000., 2500., 3500., 4500.])
           nbin_mjj = len(bin_mjj) - 1 
           variables.append(variabile('mjj', 'M_{jj} [GeV]',  wzero+'*('+cutbase+')', nbin_mjj, bin_mjj))# 20, 500, 2000))
 
@@ -913,9 +922,9 @@ for year in years:
           if(opt.stack):
                for var in variables:
                     print(var._xmax)
-                    os.system('set LD_PRELOAD=libtcmalloc.so')
+                    #os.system('set LD_PRELOAD=libtcmalloc.so')
                     makestack(lep, 'jets', var, dataset_new, cut_tag, "", lumi[str(year)])
-                    os.system('set LD_PRELOAD=libtcmalloc.so')
+                    #os.system('set LD_PRELOAD=libtcmalloc.so')
 
           if lep == 'muon':
                dataset_new.append(sample_dict['DataEle_'+str(year)])

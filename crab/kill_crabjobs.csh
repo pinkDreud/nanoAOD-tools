@@ -1,9 +1,9 @@
 set year = '2017'
 reset
 #python submit_crab.py -d TT_$year -k 
-python submit_crab.py -d WJets_$year -k 
-#python submit_crab.py -d WJetsHT70to100_$year -k 
-#python submit_crab.py -d WJetsHT100to200_$year -k 
+#python submit_crab.py -d WJets_$year -k
+python submit_crab.py -d WJetsHT70to100_$year -k
+python submit_crab.py -d WJetsHT100to200_$year -k 
 #python submit_crab.py -d WJetsHT400to600_$year -k 
 #python submit_crab.py -d WJetsHT600to800_$year -k 
 #python submit_crab.py -d WJetsHT800to1200_$year -k 
@@ -16,7 +16,7 @@ python submit_crab.py -d WJets_$year -k
 #python submit_crab.py -d WrongSign_$year -k 
 #python submit_crab.py -d Other_$year -k 
 #python submit_crab.py -d ZZtoLep_$year -k 
-python submit_crab.py -d QCD_$year -k
+#python submit_crab.py -d QCD_$year -k
 #python submit_crab.py -d QCDHT_500to700_$year -k
 #python submit_crab.py -d QCDHT_700to1000_$year -k
 #python submit_crab.py -d QCDHT_1000to1500_$year -k

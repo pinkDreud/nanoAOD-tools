@@ -19,8 +19,35 @@ import datetime
 import copy
 from array import array
 from skimtree_utils_ssWW_wFakes import *
+from TauIDSFTool import TauIDSFTool, TauESTool, TauFESTool, campaigns
 
-usage = "python tree_skimmer_ssWW_wFakes.py [nome_del_sample_in_samples.py] 0 [file_in_input] local "#[prompt]"
+vsJet = {"VVVL": 'VVVLoose',
+         "VVL": 'VVLoose',
+         "VL": 'VLoose',
+         "L": 'Loose',
+         "M": 'Medium',
+         "T": 'Tight',
+         "VT": 'VTight',
+         "VVT": 'VVTight',
+}
+
+vsMu = {"VL": 'VLoose',
+        "L": 'Loose',
+        "M": 'Medium',
+        "T": 'Tight'
+}
+
+vsEle = {"VVVL": 'VVVLoose',
+         "VVL": 'VVLoose',
+         "VL": 'VLoose',
+         "L": 'Loose',
+         "M": 'Medium',
+         "T": 'Tight',
+         "VT": 'VTight',
+         "VVT": 'VVTight',
+}
+
+usage = "python tree_skimmer_ssWW_wFakes.py [nome_del_sample_in_samples.py] 0 [file_in_input] local wpvsjet wpvsele wpvsmu"
 
 if sys.argv[4] == 'remote':
     from samples import *
@@ -41,6 +68,23 @@ elif sys.argv[5] == 'noprompt':
 
 print(fakewithprompt)
 '''
+
+vsjetWP = vsJet[sys.argv[5]]
+vseleWP = vsEle[sys.argv[6]]
+vsmuWP = vsMu[sys.argv[7]]
+
+act_camp = ''
+for cam in campaigns:
+    if str(sample.year) in cam:
+        act_camp = copy.deepcopy(cam)
+        break
+
+#print(cam, vsjetWP, vseleWP, vsmuWP)
+tauSFTool_vsjet = TauIDSFTool(act_camp, 'DeepTau2017v2p1VSjet', vsjetWP)
+tauSFTool_vsele = TauIDSFTool(act_camp, 'DeepTau2017v2p1VSe', vseleWP)
+tauSFTool_vsmu = TauIDSFTool(act_camp, 'DeepTau2017v2p1VSmu', vsmuWP)
+tesTool = TauESTool(act_camp, 'DeepTau2017v2p1VSjet')
+fesTool = TauFESTool(act_camp, 'DeepTau2017v2p1VSe')
 
 MCReco = True
 startTime = datetime.datetime.now()
@@ -65,8 +109,6 @@ if ('Data' in sample.label):
     isMC = False
 
 MCReco = MCReco * isMC
-
-
 
 #Cut_dict = {}
 
@@ -119,6 +161,24 @@ systTree.setWeightName("lepDown",1.)
 systTree.setWeightName("PFSF",1.)
 systTree.setWeightName("PFUp",1.)
 systTree.setWeightName("PFDown",1.)
+systTree.setWeightName("tau_vsjet_SF",1.)
+systTree.setWeightName("tau_vsjet_Up",1.)
+systTree.setWeightName("tau_vsjet_Down",1.)
+systTree.setWeightName("tau_vsele_SF",1.)
+systTree.setWeightName("tau_vsele_Up",1.)
+systTree.setWeightName("tau_vsele_Down",1.)
+systTree.setWeightName("tau_vsmu_SF",1.)
+systTree.setWeightName("tau_vsmu_Up",1.)
+systTree.setWeightName("tau_vsmu_Down",1.)
+systTree.setWeightName("tauSF",1.)
+systTree.setWeightName("tauUp",1.)
+systTree.setWeightName("tauDown",1.)
+systTree.setWeightName("TESSF",1.)
+systTree.setWeightName("TESUp",1.)
+systTree.setWeightName("TESDown",1.)
+systTree.setWeightName("FESSF",1.)
+systTree.setWeightName("FESUp",1.)
+systTree.setWeightName("FESDown",1.)
 
 #++++++++++++++++++++++++++++++++++
 #++     variables to branch      ++
@@ -161,6 +221,8 @@ tau_eta                 =   array.array('f', [-999.])
 tau_phi                 =   array.array('f', [-999.])
 tau_charge              =   array.array('i', [-999])
 tau_mass                =   array.array('f', [-999.])
+tau_GenMatch            =   array.array('f', [-999.])
+tau_DecayMode           =   array.array('f', [-999.])
 tau_DeepTau_WP          =   array.array('f', [-999.])
 tau_isolation           =   array.array('f', [-999.])
 tau_DeepTauVsEle_WP     =   array.array('f', [-999.])
@@ -181,6 +243,8 @@ var_list.append(tau_eta)
 var_list.append(tau_phi)
 var_list.append(tau_charge)
 var_list.append(tau_mass)
+var_list.append(tau_GenMatch)
+var_list.append(tau_DecayMode)
 var_list.append(tau_DeepTau_WP)
 var_list.append(tau_DeepTauVsEle_raw)#
 var_list.append(tau_DeepTauVsMu_WP)#
@@ -373,6 +437,8 @@ systTree.branchTreesSysts(trees, "all", "tau_pt",               outTreeFile, tau
 systTree.branchTreesSysts(trees, "all", "tau_eta",              outTreeFile, tau_eta)
 systTree.branchTreesSysts(trees, "all", "tau_phi",              outTreeFile, tau_phi)
 systTree.branchTreesSysts(trees, "all", "tau_mass",             outTreeFile, tau_mass)
+systTree.branchTreesSysts(trees, "all", "tau_GenMatch",             outTreeFile, tau_GenMatch)
+systTree.branchTreesSysts(trees, "all", "tau_DecayMode",             outTreeFile, tau_DecayMode)
 systTree.branchTreesSysts(trees, "all", "tau_DeepTau_WP",             outTreeFile, tau_DeepTau_WP)
 systTree.branchTreesSysts(trees, "all", "tau_isolation",             outTreeFile, tau_isolation)
 systTree.branchTreesSysts(trees, "all", "tau_DeepTauVsEle_WP",      outTreeFile, tau_DeepTauVsEle_WP)#
@@ -810,6 +876,9 @@ for i in range(tree.GetEntries()):
     tau_phi[0]              =   GoodTau.phi
     tau_mass[0]             =   GoodTau.mass
     tau_charge[0]           =   GoodTau.charge
+    if isMC:
+        tau_GenMatch[0]         =   GoodTau.genPartFlav
+    tau_DecayMode[0]        =   GoodTau.decayMode
 
     #if not isMC:
     tau_SFFake[0] = SFFakeRatio_tau_calc(tau_pt[0], tau_eta[0])#, fakewithprompt)
@@ -843,6 +912,50 @@ for i in range(tree.GetEntries()):
     tauleadTk_ptOverTau[0]  =   GoodTau.leadTkPtOverTauPt#
     tauleadTk_deltaPhi[0]   =   GoodTau.leadTkDeltaPhi#
     tauleadTk_deltaEta[0]   =   GoodTau.leadTkDeltaEta#
+
+    if isMC:
+        #print('Tau genmatch:', GoodTau.genPartFlav)
+
+        #print('pt, mass before tes&fes:', tau_pt[0], tau_mass[0])
+
+        #real had tau
+        GoodTau_vsjet_Down, GoodTau_vsjet_SF, GoodTau_vsjet_Up = tauSFTool_vsjet.getSFvsPT(GoodTau.pt, GoodTau.genPartFlav, unc='All')
+        #print('vsJet SFs:', GoodTau_vsjet_Down, GoodTau_vsjet_SF, GoodTau_vsjet_Up)
+        systTree.setWeightName("tau_vsjet_SF", copy.deepcopy(GoodTau_vsjet_SF))
+        systTree.setWeightName("tau_vsjet_Up", copy.deepcopy(GoodTau_vsjet_Up))
+        systTree.setWeightName("tau_vsjet_Down", copy.deepcopy(GoodTau_vsjet_Down))
+
+        tes_Down, tes, tes_Up = tesTool.getTES(GoodTau.eta, GoodTau.decayMode, GoodTau.genPartFlav, unc='All')
+        systTree.setWeightName("TESSF", copy.deepcopy(tes))
+        systTree.setWeightName("TESUp", copy.deepcopy(tes_Up))
+        systTree.setWeightName("TESDown", copy.deepcopy(tes_Down))
+        #print('tes:', tes_Down, tes, tes_Up)
+        tau_pt[0] *= tes
+        tau_mass[0] *= tes
+
+        #ele faking tau
+        GoodTau_vsele_Down, GoodTau_vsele_SF, GoodTau_vsele_Up = tauSFTool_vsele.getSFvsEta(GoodTau.eta, GoodTau.genPartFlav, unc='All')
+        #print('vsEle SFs:', GoodTau_vsele_Down, GoodTau_vsele_SF, GoodTau_vsele_Up)
+        systTree.setWeightName("tau_vsele_SF", copy.deepcopy(GoodTau_vsele_SF))
+        systTree.setWeightName("tau_vsele_Up", copy.deepcopy(GoodTau_vsele_Up))
+        systTree.setWeightName("tau_vsele_Down", copy.deepcopy(GoodTau_vsele_Down))
+
+        fes_Down, fes, fes_Up = fesTool.getFES(GoodTau.eta, GoodTau.decayMode, GoodTau.genPartFlav, unc='All')
+        systTree.setWeightName("FESSF", copy.deepcopy(fes))
+        systTree.setWeightName("FESUp", copy.deepcopy(fes_Up))
+        systTree.setWeightName("FESDown", copy.deepcopy(fes_Down))
+        #print('fes:', fes_Down, fes, fes_Up)
+        tau_pt[0] *= fes
+        tau_mass[0] *= fes
+
+        #mu faking tau
+        GoodTau_vsmu_Down, GoodTau_vsmu_SF, GoodTau_vsmu_Up = tauSFTool_vsmu.getSFvsEta(GoodTau.eta, GoodTau.genPartFlav, unc='All')
+        #print('vsEle SFs:', GoodTau_vsmu_Down, GoodTau_vsmu_SF, GoodTau_vsmu_Up)
+        systTree.setWeightName("tau_vsmu_SF", copy.deepcopy(GoodTau_vsmu_SF))
+        systTree.setWeightName("tau_vsmu_Up", copy.deepcopy(GoodTau_vsmu_Up))
+        systTree.setWeightName("tau_vsmu_Down", copy.deepcopy(GoodTau_vsmu_Down))
+    
+        #print('pt, mass after tes&fes:', tau_pt[0], tau_mass[0])
 
     #if not isMC:
     if lepton_LnTRegion[0]==1 and tau_LnTRegion[0]==0:

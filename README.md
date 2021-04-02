@@ -9,10 +9,9 @@ If you are reading these lines, you should already be in the right branch.
 After that, fork the repo and verify that, in your github, the default branch of nanoAOD-tools is VBS_PG. Otherwise, you can set that in "Settings".
 
 ## Let's work in LXPLUS 
-At this stage you can log in your lxplus. 
-In order to make ML machinery to properly work, you must use Python3. As consequence, you should work with a CMSSW release greater than 11_3_X.
+In order to make ML machinery to properly work, you need to run Python3. As consequence, you should install CMSSW release greater than 11_3_X.
 
-After the logging procedure and moved in your favourite CMSSW_X_Y_Z/src, run the following command line:
+After logged in and moved in your favourite CMSSW_X_Y_Z/src, run the following command line:
     
     git clone git@github.com:<your_github_name>/nanoAOD-tools.git PhysicsTools/NanoAODTools
     scram b -j 8

@@ -6,6 +6,21 @@ from samples.samples import *
 cshname = "condorrun_tauwp.csh"
 split = 50
 
+def CondoredList(samplename):
+    try:
+        condlist = os.listdir(path+samplename)
+    except:
+        condlist = []
+
+    if len(condlist) > 0:
+        for condfile in condlist:
+            if os.stat(path+samplename+"/"+condfile).st_size < 1024.:
+                print("Something went wrong during crabbing", samplename, "fix it and relaunch")
+                os.system("rm -r "+ path + samplename + "/*")            
+                return CondoredList(samplename)
+
+    return condlist
+
 def DoesSampleExist(samplename):
     if samplename+".txt" not in os.listdir("../../crab/macros/files/"):
         return False
@@ -14,10 +29,8 @@ def DoesSampleExist(samplename):
                 
 def AreAllCondored(samplename):
     storelist = [line for line in open("../../crab/macros/files/"+samplename+".txt")]
-    try:
-        condoredlist = os.listdir(path+samplename)
-    except:
-        condoredlist = []
+
+    condoredlist = CondoredList(samplename)
 
     if samplename+"_merged.root" in condoredlist:
         condoredlist.remove(samplename+"_merged.root")
@@ -27,16 +40,16 @@ def AreAllCondored(samplename):
     lenstore = len(storelist)
 
     if 'Data' in samplename:
-        remainder = lenstore%split
-        lenstore = lenstore/split
+        remainder = int(lenstore%split)
+        lenstore = int(lenstore/split)
         if remainder > 0:
             lenstore += 1
 
     if len(condoredlist) < lenstore:
-        print "condored: ", len(condoredlist), "\tlenstore: ", lenstore
+        print("condored: ", len(condoredlist), "\tlenstore: ", lenstore)
         return False
     elif lenstore==0 and len(condoredlist)==0:
-        print "Warning for", samplename, "False flag for crabbed files! need to recrab them"
+        print("Warning for", samplename, "False flag for crabbed files! need to recrab them")
         return True
     else:
         return True
@@ -45,7 +58,7 @@ usage = 'python SetAndLaunchCondorRun.py -y year -j wp_jet -m wp_mu -e wp_ele -f
 parser = optparse.OptionParser(usage)
 parser.add_option('-y', dest='year', type=str, default = '2017', help='Please enter a year, default is 2017')
 parser.add_option('-j', dest='jetwp', type=str, default = 'VT', help='Please enter a TauID WP for vsJet')
-parser.add_option('-m', dest='muwp', type=str, default = 'L', help='Please enter a TauID WP for vsMu')
+parser.add_option('-m', dest='muwp', type=str, default = 'T', help='Please enter a TauID WP for vsMu')
 parser.add_option('-e', dest='elewp', type=str, default = 'VL', help='Please enter a TauID WP for vsEle')
 parser.add_option('-f', dest='fold', type=str, default = 'v30', help='Please enter a folder')
 parser.add_option('--max', dest='maxj', type=int, default = 0, help='Please enter a maximum for number of condor jobs')
@@ -84,7 +97,7 @@ vsEle_dict = {"VVVL": '1',
 username = str(os.environ.get('USER'))
 inituser = str(os.environ.get('USER')[0])
 
-print username
+print(username)
 
 if opt.fold == '':
     folder = "Eff_Jet" + opt.jetwp + "_Mu" + opt.muwp + "_Ele" + opt.elewp
@@ -92,12 +105,11 @@ else:
     folder = opt.fold
 
 path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/"
-#print folder, path
 
 if not os.path.exists(path):
     os.makedirs(path)
 
-optstring = " -f " + folder + " --wp " + str(opt.jetwp + opt.muwp + opt.elewp)# + " --wop"
+optstring = " -f " + folder + " --wpjet " + str(opt.jetwp) + " --wpele " + str(opt.elewp) + " --wpmu " + str(opt.muwp)# + " --wop"
 if opt.maxj > 0:
     optstring = optstring + " --max " + str(opt.maxj)
 optstring = optstring + "\n"
@@ -106,9 +118,10 @@ f = open(cshname, "w")
 
 dirlist = [dirs for dirs in os.listdir(path) if os.path.isdir(path+dirs)]
 
-
+#print(class_dict.items())
 
 for prname, proc in class_dict.items():
+    
     if opt.year not in prname:
         continue
     if "Fake" in prname:
@@ -132,33 +145,37 @@ for prname, proc in class_dict.items():
                 #if sample.label in dirlist:
             if not AreAllCondored(sample.label):
                 if opt.check:
-                    print sample.label, "not completely condored"
+                    print(sample.label, "not completely condored")
                 else:
                     if os.path.exists(path+sample.label):
-                        print "Setting jobs for missing condored files..."
+                        print("Setting jobs for missing condored files...")
                         #os.system("rm -r "+ path + sample.label + "/*")
-                    print "Writing " + sample.label + " in csh..."  
+                    print("Writing " + sample.label + " in csh...")
                     f.write("python submit_condor.py -d " + sample.label+ " " + optstring)
+
             else:
-                print sample.label, " completely condored"
+                print(sample.label, " completely condored")
 
     else:
         if opt.dat != 'all':
             if not prname.startswith(opt.dat):
                 continue
+
         if not DoesSampleExist(prname):
             continue
         if not AreAllCondored(proc.label):
             if opt.check:
-                print proc.label, "not completely condored"
+                print(proc.label, "not completely condored")
             else:
                 if os.path.exists(path+proc.label):
-                    print "Setting jobs for missing condored files..."
+                    print("Setting jobs for missing condored files...")
                     #os.system("rm -f "+ path + proc.label + "/*")
-                print "Writing " + proc.label + " in csh..."  
+                print("Writing " + proc.label + " in csh...")  
                 f.write("python submit_condor.py -d " + proc.label+ " " + optstring)
+
         else:
-            print proc.label, " completely condored"
+            print(proc.label, " completely condored")
+
 f.close()
 
 if not opt.check:
@@ -208,6 +225,6 @@ if not opt.check:
     t.write("MET_CUT=    40\n")
     t.close()
     
-    print "Launching jobs on condor..."
+    print("Launching jobs on condor...")
     os.system("source ./" + cshname)
-    print "Done! Goodbye my friend :D"
+    print("Done! Goodbye my friend :D")
