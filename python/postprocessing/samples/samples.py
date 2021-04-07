@@ -1316,7 +1316,7 @@ class_list=[
     #DYJetsM_2017,
     TT_2017,
     #QCD_2017,
-    #WJets_2017,
+    WJets_2017,
     #WJets_Fake_2017,
     FakeMu_2017,
     FakeMuPromptTau_2017,
