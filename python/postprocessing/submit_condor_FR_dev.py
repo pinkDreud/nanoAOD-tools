@@ -4,13 +4,13 @@ import optparse
 import sys
 
 
-usage = 'python submit_condor.py -d dataset_name -f destination_folder --wp working_point'
+usage = 'python submit_condor_FR_dev.py -d dataset_name -f destination_folder --wp working_point'
 parser = optparse.OptionParser(usage)
 parser.add_option('-d', '--dat', dest='dat', type=str, default = '', help='Please enter a dataset name')
 parser.add_option('-f', '--folder', dest='folder', type=str, default = '', help='Please enter a destination folder')
-parser.add_option('--wp', dest='wp', type=str, default = '', help='Please enter working point!')
+parser.add_option('--wp', dest='wp', type=str, default = 'VTLT', help='Please enter working point!')
 parser.add_option('--max', dest='maxj', type=int, default = 0, help='Please enter working point!')
-parser.add_option('--trig', dest='trig', type=str, default = '', help='Please enter trigger (electron, muon, HT)')
+parser.add_option('--trig', dest='trig', type=str, default = 'HT', help='Please enter trigger (electron, muon, HT)')
 parser.add_option('--infold', dest = 'infold', type = str, default= 'Fake', help = 'input folder for the crabbed files')
 #parser.add_option('-u', '--user', dest='us', type='string', default = 'ade', help="")
 (opt, args) = parser.parse_args()
@@ -47,14 +47,14 @@ def sub_writer(sample, n, files, folder):
     f.write("queue\n")
 
 if not(opt.dat in sample_dict.keys()):
-    print sample_dict.keys()
+    print(sample_dict.keys())
 dataset = sample_dict[opt.dat]
 samples = []
 
 if hasattr(dataset, 'components'): # How to check whether this exists or not
     samples = [sample for sample in dataset.components]# Method exists and was used.
 else:
-    print "You are launching a single sample and not an entire bunch of samples"
+    print("You are launching a single sample and not an entire bunch of samples")
     samples.append(dataset)
 
 if not os.path.exists("condor_FRTau2/output"):
