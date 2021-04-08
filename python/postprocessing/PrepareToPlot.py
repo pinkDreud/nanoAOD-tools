@@ -28,8 +28,8 @@ else:
 
 ofolder = ''
 
-if opt.ct != '':
-    ofolder += "CT" + opt.ct + "_"
+#if opt.ct != '':
+    #ofolder += "CT" + opt.ct + "_"
 
 ofolder += opt.folder
 

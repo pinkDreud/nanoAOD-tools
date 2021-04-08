@@ -88,6 +88,7 @@ def mergepart(dataset):
           check = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + "_merged.root ")
           print("Number of entries of the file %s are %s" %(filerepo + sample.label + "/"  + sample.label + "_merged.root", (check.Get("events_all")).GetEntries()))
 
+          '''
           # insert BDT output value into merged file
           print("Processing events with Tommaso's BDT...")
           file_path = filerepo + sample.label + "/"  + sample.label + "_merged.root"
@@ -147,6 +148,7 @@ def mergepart(dataset):
                     newBranch.Fill()
           mytree.Write("", ROOT.TFile.kOverwrite)
           myfile.Close()       
+          '''
 
 def mergetree(sample):
      if not os.path.exists(filerepo + sample.label):

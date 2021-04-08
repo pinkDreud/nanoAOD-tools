@@ -3,7 +3,7 @@ import os
 import optparse
 import sys
 
-usage = 'python submit_crab.py'
+usage = 'python3 submit_crab.py'
 parser = optparse.OptionParser(usage)
 parser.add_option('-d', '--dat', dest='dat', type=str, default = '', help='Please enter a dataset name')
 parser.add_option('--status', dest = 'status', default = False, action = 'store_true', help = 'Default do not check the status')
@@ -15,7 +15,7 @@ parser.add_option('-r', '--resub', dest = 'resub', default = False, action = 'st
 parser.add_option('-g', '--gout', dest = 'gout', default = False, action = 'store_true', help = 'Default do not do getoutput')
 (opt, args) = parser.parse_args()
 
-print opt.dat
+print(opt.dat)
 
 def cfg_writer(sample, isMC, outdir):
     f = open("crab_cfg.py", "w")
@@ -105,7 +105,7 @@ def crab_script_writer(sample, outpath, isMC, modules, presel):
         f.write("jmeCorrections = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", runPeriod='"+str(sample.runP)+"', jesUncert='All', redojec=True, jetType = 'AK8PFchs')\n")
         f.write("p=PostProcessor('.', inputFiles(), '"+presel+"', modules=["+modules+"], provenance=True, fwkJobReport=True, jsonInput=runsAndLumis(), haddFileName='tree_hadd.root', outputbranchsel='keep_and_drop.txt')\n")#
     f.write("p.run()\n")
-    f.write("print 'DONE'\n")
+    f.write("print('DONE')\n")
     f.close()
 
     f_sh = open("crab_script.sh", "w")
@@ -139,7 +139,7 @@ def crab_script_writer(sample, outpath, isMC, modules, presel):
     f_sh.close()
 
 if not(opt.dat in sample_dict.keys()):
-    print sample_dict.keys()
+    print(sample_dict.keys())
 dataset = sample_dict[opt.dat]
 
 samples = []
@@ -147,7 +147,7 @@ samples = []
 if hasattr(dataset, 'components'): # How to check whether this exists or not
     samples = [sample for sample in dataset.components]# Method exists and was used.  
 else:
-    print "You are launching a single sample and not an entire bunch of samples"
+    print("You are launching a single sample and not an entire bunch of samples")
     samples.append(dataset)
 
 submit = opt.sub
@@ -159,7 +159,7 @@ resubmit = opt.resub
 getout = opt.gout
 #Writing the configuration file
 for sample in samples:
-    print 'Launching sample ' + sample.label
+    print('Launching sample ' + sample.label)
     if submit:
         #Writing the script file 
         year = str(sample.year)
@@ -193,9 +193,9 @@ for sample in samples:
             isMC = True
             presel = ""
                 
-        print 'The flag isMC is: ' + str(isMC)
+        print('The flag isMC is: ' + str(isMC))
 
-        print "Producing crab configuration file"
+        print("Producing crab configuration file")
 
         cfg_writer(sample, isMC, "VBS")
 
@@ -204,37 +204,37 @@ for sample in samples:
         else:
             modules = "preselection(), jmeCorrections(), " + muon_pt_corr + ", " + ht_producer + ", " + mht_producer # Put here all the modules you want to be runned by crab
             
-        print "Producing crab script"
+        print("Producing crab script")
         crab_script_writer(sample,'/eos/user/'+str(os.environ.get('USER')[0]) + '/'+str(os.environ.get('USER'))+'/Wprime/nosynch/', isMC, modules, presel)
         os.system("chmod +x crab_script.sh")
         
         #Launching crab
-        print "Submitting crab jobs..."
+        print("Submitting crab jobs...")
         os.system("crab submit -c crab_cfg.py")
 
     elif purge:
-        print "Purging crab jobs..."
+        print("Purging crab jobs...")
         os.system("crab purge -d crab_" + sample.label)
         #os.system("rm -rf crab_" + sample.label)
 
     elif kill:
-        print "Killing crab jobs..."
+        print("Killing crab jobs...")
         os.system("crab kill -d crab_" + sample.label)
         os.system("rm -rf crab_" + sample.label)
 
     elif resubmit:
-        print "Resubmitting crab jobs..."
+        print("Resubmitting crab jobs...")
         os.system("crab resubmit -d crab_" + sample.label)
 
     elif status:
-        print "Checking crab jobs status..."
+        print("Checking crab jobs status...")
         if verbose:
             os.system("crab status --verboseErrors -d crab_" + sample.label)
         else:
             os.system("crab status --verboseErrors -d crab_" + sample.label)
         
     elif getout:
-        print "crab getoutput -d crab_" + sample.label + " --xrootd > ./macros/files/" + sample.label + ".txt"
+        print("crab getoutput -d crab_" + sample.label + " --xrootd > ./macros/files/" + sample.label + ".txt")
         os.system("crab getoutput -d crab_" + sample.label + " --xrootd > ./macros/files/" + sample.label + ".txt")
         #for i in xrange(1, 969):
         #os.system("crab getoutput -d crab_" + sample.label + " --outputpath=/eos/user/"+str(os.environ.get('USER')[0]) + "/"+str(os.environ.get('USER'))+"/Wprime/nosynch/" + sample.label + "/ --jobids="+str(i))
