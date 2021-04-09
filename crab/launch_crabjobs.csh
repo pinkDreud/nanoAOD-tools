@@ -17,7 +17,7 @@ python3 submit_crab.py -d WJets_$year -s
 #python3 submit_crab.py -d WrongSign_$year -s 
 #python3 submit_crab.py -d Other_$year -s 
 #python3 submit_crab.py -d ZZtoLep_$year -s 
-python3 submit_crab.py -d QCD_$year -s
+#python3 submit_crab.py -d QCD_$year -s
 #python3 submit_crab.py -d QCDHT_500to700_$year -s
 #python3 submit_crab.py -d QCDHT_700to1000_$year -s
 #python3 submit_crab.py -d QCDHT_1000to1500_$year -s
