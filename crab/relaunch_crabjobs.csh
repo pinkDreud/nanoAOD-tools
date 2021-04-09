@@ -8,12 +8,12 @@ python submit_crab.py -d WJets_$year -r
 #python submit_crab.py -d WrongSign_$year -r 
 #python submit_crab.py -d Other_$year -r 
 #python submit_crab.py -d ZZtoLep_$year -r 
-python submit_crab.py -d QCD_$year -r
+#python submit_crab.py -d QCD_$year -r
 #python submit_crab.py -d WpWpJJ_EWK_$year -r 
 #python submit_crab.py -d WpWpJJ_QCD_$year -r
 #python submit_crab.py -d VBS_SSWW_SM_$year -r
 #python submit_crab.py -d VBS_SSWW_cHW_$year -r
 #python submit_crab.py -d VBS_SSWW_cW_$year -r
 #python submit_crab.py -d VBS_SSWW_cW_cHW_$year -r
-python submit_crab.py -d DataEle_$year -r
-python submit_crab.py -d DataMu_$year -r
+#python submit_crab.py -d DataEle_$year -r
+#python submit_crab.py -d DataMu_$year -r
