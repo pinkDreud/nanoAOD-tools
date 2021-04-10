@@ -55,11 +55,13 @@ for sample in samples:
     for u in url:
         if 'root' not in u:
             print "Let's split requests to make crab getoutput happy..."
-            #print u.split("for ")[-1].split(" ")[0]
+
             try:
                 npaths = int(u.split("for ")[-1].split(" ")[0])
             except:
                 continue
+
+            print npaths
 
             finished = False
             rang = 500
