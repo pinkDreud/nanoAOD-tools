@@ -88,32 +88,33 @@ def mergepart(dataset):
           check = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + "_merged.root ")
           print("Number of entries of the file %s are %s" %(filerepo + sample.label + "/"  + sample.label + "_merged.root", (check.Get("events_all")).GetEntries()))
 
-          '''
-          # insert BDT output value into merged file
-          print("Processing events with Tommaso's BDT...")
-          file_path = filerepo + sample.label + "/"  + sample.label + "_merged.root"
-          print(file_path)
+          if not folder.startswith('FR_'):
+
+               # insert BDT output value into merged file
+               print("Processing events with Tommaso's BDT...")
+               file_path = filerepo + sample.label + "/"  + sample.label + "_merged.root"
+               print(file_path)
           
-          model_path = opt.model
-          print(model_path)
+               model_path = opt.model
+               print(model_path)
 
-	  # load model 
-          file = open(model_path,'rb')
-          clf = pickle.load(file)
-          file.close()
+               # load model 
+               file = open(model_path,'rb')
+               clf = pickle.load(file)
+               file.close()
 
-	  # open root file
-          file = uproot.open(file_path)
-          tree = file["events_all"]
-          df = tree.arrays(library="pd")
-          df = df.fillna(0)
+               # open root file
+               file = uproot.open(file_path)
+               tree = file["events_all"]
+               df = tree.arrays(library="pd")
+               df = df.fillna(0)
                
-          new_columns = []
-          for i in df.columns:
-               new_columns.append(i.split('[')[0])
-          df.columns = new_columns
+               new_columns = []
+               for i in df.columns:
+                    new_columns.append(i.split('[')[0])
+               df.columns = new_columns
 
-          X = df[['lepton_pt', 'lepton_eta', 'lepton_phi', 'lepton_mass', 'lepton_pdgid',
+               X = df[['lepton_pt', 'lepton_eta', 'lepton_phi', 'lepton_mass', 'lepton_pdgid',
                         'lepton_pfRelIso04', 'tau_pt', 'tau_eta', 'tau_phi', 'tau_mass',
                         'tau_DeepTauVsEle_raw', 'tau_DeepTauVsMu_raw', 'leadjet_pt',
                         'leadjet_eta', 'leadjet_phi', 'leadjet_mass', 'leadjet_CSVv2_b',
@@ -131,24 +132,23 @@ def mergepart(dataset):
                         'lepton_Zeppenfeld', 'tau_Zeppenfeld', 'event_Zeppenfeld',
                         'pass_mjj_cut', 'pass_MET_cut', 'pass_everyCut']].to_numpy() 
 
-          # update root file with BDT branch
-          BDT_output_array = clf.decision_function(X)
-          myfile = ROOT.TFile(file_path, 'update')
-          mytree = myfile.Get("events_all")
-          listOfNewBranches = []
-          BDT_output   = array('d', [0.5] )
-          listOfNewBranches.append(mytree.Branch("BDT_output", BDT_output, "BDT_output/D") )
-          numOfEvents = mytree.GetEntries()
-          for n in range(numOfEvents):
-               BDT_output[0] = BDT_output_array[n]
-               #if n%1000 == 0:
-                    #print(BDT_output[0])
-               mytree.GetEntry(n)
-               for newBranch in sorted(listOfNewBranches):
-                    newBranch.Fill()
-          mytree.Write("", ROOT.TFile.kOverwrite)
-          myfile.Close()       
-          '''
+               # update root file with BDT branch
+               BDT_output_array = clf.decision_function(X)
+               myfile = ROOT.TFile(file_path, 'update')
+               mytree = myfile.Get("events_all")
+               listOfNewBranches = []
+               BDT_output   = array('d', [0.5] )
+               listOfNewBranches.append(mytree.Branch("BDT_output", BDT_output, "BDT_output/D") )
+               numOfEvents = mytree.GetEntries()
+               for n in range(numOfEvents):
+                    BDT_output[0] = BDT_output_array[n]
+                    #if n%1000 == 0:
+                         #print(BDT_output[0])
+                    mytree.GetEntry(n)
+                    for newBranch in sorted(listOfNewBranches):
+                         newBranch.Fill()
+               mytree.Write("", ROOT.TFile.kOverwrite)
+               myfile.Close()       
 
 def mergetree(sample):
      if not os.path.exists(filerepo + sample.label):
