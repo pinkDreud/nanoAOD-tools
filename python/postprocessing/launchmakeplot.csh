@@ -1,6 +1,6 @@
 #set LD_PRELOAD=libtcmalloc.so
 set year = 2017
-set folder = v64
+set folder = v65
 
 #rm -rf /eos/home-a/apiccine/VBS/nosynch/$folder/plot/electron/ #countings
 #rm -rf /eos/home-a/apiccine/VBS/nosynch/$folder/stack/ #countings
