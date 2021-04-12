@@ -13,7 +13,6 @@ import shutil
 import numpy as np
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
-
 class fatJetUncertaintiesProducer(Module):
     def __init__(
             self,

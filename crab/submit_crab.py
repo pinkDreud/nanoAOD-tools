@@ -35,8 +35,8 @@ def cfg_writer(sample, isMC, outdir):
     f.write("config.JobType.inputFiles = ['crab_script.py','../scripts/haddnano.py', '../scripts/keep_and_drop.txt']\n") #hadd nano will not be needed once nano tools are in cmssw
     f.write("config.JobType.sendPythonFolder = True\n")
     f.write("config.JobType.maxMemoryMB = 5000\n")
-    f.write("config.JobType.numCores = 8\n")
-    f.write("config.JobType.maxJobRuntimeMin = 3000\n")
+    #f.write("config.JobType.numCores = 8\n")
+    #f.write("config.JobType.maxJobRuntimeMin = 3000\n")
     f.write("config.section_('Data')\n")
     f.write("config.Data.inputDataset = '"+sample.dataset+"'\n")
     f.write("config.Data.allowNonValidInputDataset = True\n")
@@ -97,9 +97,9 @@ def crab_script_writer(sample, outpath, isMC, modules, presel):
     #f.write("outpath = '"+ outpath+"'\n")
     #Deafult PostProcessor(outputDir,inputFiles,cut=None,branchsel=None,modules=[],compression='LZMA:9',friend=False,postfix=None, jsonInput=None,noOut=False,justcount=False,provenance=False,haddFileName=None,fwkJobReport=False,histFileName=None,histDirName=None, outputbranchsel=None,maxEntries=None,firstEntry=0, prefetch=False,longTermCache=False)\n")
     if isMC:
-        #f.write("metCorrector = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", jesUncert='All', redojec=True)\n")
-        #f.write("fatJetCorrector = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", jesUncert='All', redojec=True, jetType = 'AK8PFchs')\n")
-        f.write("jmeCorrections = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", jesUncert='All', redojec=True, jetType = 'AK8PFchs')\n")
+        f.write("metCorrector = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", jesUncert='All', applyHEMfix=True)\n")
+        f.write("fatJetCorrector = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", jesUncert='All', applyHEMfix=True, jetType = 'AK8PFPuppi')\n")
+        #f.write("jmeCorrections = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", jesUncert='All', jetType = 'AK8PFchs')\n")
         f.write("p=PostProcessor('.', inputFiles(), '', modules=["+modules+"], provenance=True, fwkJobReport=True, histFileName='hist.root', histDirName='plots', outputbranchsel='keep_and_drop.txt')\n")# haddFileName='"+sample.label+".root'
     else: 
         #f.write("metCorrector = createJMECorrector(isMC="+str(isMC)+", dataYear="+str(sample.year)+", runPeriod='"+str(sample.runP)+"', jesUncert='All', redojec=True)\n")
@@ -202,9 +202,9 @@ for sample in samples:
         cfg_writer(sample, isMC, "VBS")
 
         if isMC:
-            modules = "MCweight_writer('" + sample.label + "'), " + met_hlt_mod + ", preselection(), " + lep_mod + ", " + pu_mod + ", " + btag_mod + ", PrefCorr(), jmeCorrections(), " + muon_pt_corr + ", " + ht_producer + ", " + mht_producer # Put here all the modules you want to be runned by crab
+            modules = "MCweight_writer('" + sample.label + "'), " + met_hlt_mod + ", preselection(), " + lep_mod + ", " + pu_mod + ", " + btag_mod + ", PrefCorr(), metCorrector(), fatJetCorrector(), " + muon_pt_corr + ", " + ht_producer + ", " + mht_producer # Put here all the modules you want to be runned by crab
         else:
-            modules = "preselection(), jmeCorrections(), " + muon_pt_corr + ", " + ht_producer + ", " + mht_producer # Put here all the modules you want to be runned by crab
+            modules = "preselection(), metCorrector(), fatJetCorrector(), " + muon_pt_corr + ", " + ht_producer + ", " + mht_producer # Put here all the modules you want to be runned by crab
             
         print("Producing crab script")
         crab_script_writer(sample,'/eos/user/'+str(os.environ.get('USER')[0]) + '/'+str(os.environ.get('USER'))+'/Wprime/nosynch/', isMC, modules, presel)
@@ -214,28 +214,28 @@ for sample in samples:
         print("Submitting crab jobs...")
         os.system("crab submit -c crab_cfg.py")
 
-    elif purge:
-        print("Purging crab jobs...")
-        os.system("crab purge -d crab_" + sample.label)
-        #os.system("rm -rf crab_" + sample.label)
-
-    elif kill:
+    if kill:
         print("Killing crab jobs...")
         os.system("crab kill -d crab_" + sample.label)
+        #os.system("rm -rf crab_" + sample.label)
+
+    if purge:
+        print("Purging crab jobs...")
+        os.system("crab purge -d crab_" + sample.label)
         os.system("rm -rf crab_" + sample.label)
 
-    elif resubmit:
+    if resubmit:
         print("Resubmitting crab jobs...")
         os.system("crab resubmit -d crab_" + sample.label)
 
-    elif status:
+    if status:
         print("Checking crab jobs status...")
         if verbose:
             os.system("crab status --verboseErrors -d crab_" + sample.label)
         else:
             os.system("crab status --verboseErrors -d crab_" + sample.label)
         
-    elif getout:
+    if getout:
         print("crab getoutput -d crab_" + sample.label + " --xrootd > ./macros/files/" + sample.label + ".txt")
         os.system("crab getoutput -d crab_" + sample.label + " --xrootd > ./macros/files/" + sample.label + ".txt")
         #for i in xrange(1, 969):

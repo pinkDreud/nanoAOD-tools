@@ -58,7 +58,10 @@ class Object:
 
     def __init__(self, event, prefix, index=None):
         self._event = event
-        self._prefix = prefix + "_"
+        if not (prefix == 'LHEPdfWeight' or prefix == 'LHEScaleWeight' or prefix == 'PSWeight' or prefix == 'run'):
+            self._prefix = prefix+"_"
+        else:
+            self._prefix = prefix
         self._index = index
 
     def __getattr__(self, name):

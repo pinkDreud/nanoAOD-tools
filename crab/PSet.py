@@ -10,7 +10,7 @@ process.source.fileNames = [
 	'root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/JetHT/DataHTB_2017/201111_134952/0000/tree_hadd_378.root'#'../../NanoAOD/test/lzma.root' ##you can change only this line
 ]
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10))
-process.options.numberOfThreads=cms.untracked.uint32(8)
+#process.options.numberOfThreads=cms.untracked.uint32(8)
 process.output = cms.OutputModule("PoolOutputModule", fileName = cms.untracked.string('tree_hadd.root'))
 process.out = cms.EndPath(process.output)
 
