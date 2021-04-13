@@ -13,6 +13,7 @@ parser.add_option('-s', '--sub', dest = 'sub', default = False, action = 'store_
 parser.add_option('-k', '--kill', dest = 'kill', default = False, action = 'store_true', help = 'Default do not kill')
 parser.add_option('-r', '--resub', dest = 'resub', default = False, action = 'store_true', help = 'Default do not resubmit')
 parser.add_option('-g', '--gout', dest = 'gout', default = False, action = 'store_true', help = 'Default do not do getoutput')
+parser.add_option('-p', '--purge', dest = 'purge', default = False, action = 'store_true', help = 'Default do not kill')
 (opt, args) = parser.parse_args()
 
 print opt.dat
@@ -20,8 +21,8 @@ print opt.dat
 if not (opt.trig == "Lep" or opt.trig == "Tau" or opt.trig == "HT"):
     raise ValueError
 
-dirtag = "_Fake" + opt.trig
-
+dirtag = "_Fake"# + opt.trig
+print dirtag
 
 def cfg_writer(sample, isMC, outdir):
     f = open("crab_cfg.py", "w")
@@ -157,6 +158,7 @@ submit = opt.sub
 status = opt.status
 verbose = opt.verb
 kill = opt.kill
+purge = opt.purge
 resubmit = opt.resub
 getout = opt.gout
 #Writing the configuration file
@@ -220,23 +222,27 @@ for sample in samples:
         print "Submitting crab jobs..."
         os.system("crab submit -c crab_cfg.py")
 
-    elif kill:
-        print "Killing crab jobs..."
-        os.system("crab kill -d crab_" + sample.label + dirtag )
-        os.system("rm -rf crab_" + sample.label + dirtag )
+    if kill:
+        print("Killing crab jobs...")
+        os.system("crab kill -d crab_" + sample.label + dirtag)
+        os.system("rm -rf crab_" + sample.label  + dirtag)
+    if purge:
+        print("Purging crab jobs...")
+        os.system("crab purge -d crab_" + sample.label + dirtag)
+        os.system("rm -rf crab_" + sample.label + dirtag)
 
-    elif resubmit:
+    if resubmit:
         print "Resubmitting crab jobs..."
         os.system("crab resubmit -d crab_" + sample.label + dirtag )
 
-    elif status:
+    if status:
         print "Checking crab jobs status..."
         if verbose:
             os.system("crab status --verboseErrors -d crab_" + sample.label + dirtag )
         else:
             os.system("crab status --verboseErrors -d crab_" + sample.label + dirtag )
         
-    elif getout:
+    if getout:
         print "crab getoutput -d crab_" + sample.label + dirtag  + " --xrootd > ./macros/files/Fake/" + opt.trig + "/" + sample.label + ".txt"
         os.system("crab getoutput -d crab_" + sample.label + dirtag + " --xrootd > ./macros/files/Fake/" + opt.trig + "/" + sample.label + ".txt")
         #for i in xrange(1, 969):
