@@ -45,7 +45,9 @@ parser.add_option('--wjets', dest='wjets', default = False, action='store_true',
 parser.add_option('--blinded', dest='blinded', default = False, action='store_true', help='Activate blinding')
 parser.add_option('--signal', dest='signal', default = False, action='store_true', help='Activate only signal')
 #parser.add_option('--model', dest='model', default = '/eos/user/t/ttedesch/SWAN_projects/VBS_ML/gradBDT.p', type='string', help='Path to ML model')
-parser.add_option('--model', dest='model', default = '/afs/cern.ch/user/t/ttedesch/public/gradBDT.p', type='string', help='Path to ML model')
+parser.add_option('--model', dest='model', default = '/afs/cern.ch/user/t/ttedesch/public/gradBDT.p', type='string', help='Path to ML model for all events')
+parser.add_option('--model_ele', dest='model_ele', default = '/afs/cern.ch/user/t/ttedesch/public/gradBDT_ele.p', type='string', help='Path to ML model for electron events')
+parser.add_option('--model_mu', dest='model_mu', default = '/afs/cern.ch/user/t/ttedesch/public/gradBDT_mu.p', type='string', help='Path to ML model for muon events')
 
 (opt, args) = parser.parse_args()
 #print (opt, args)
@@ -96,13 +98,25 @@ def mergepart(dataset):
                print(file_path)
           
                model_path = opt.model
+               model_ele_path = opt.model_ele
+               model_mu_path = opt.model_mu
                print(model_path)
+               print(model_ele_path)
+               print(model_mu_path)
 
                # load model 
                file = open(model_path,'rb')
                clf = pickle.load(file)
                file.close()
 
+               file = open(model_ele_path,'rb')
+               clf_ele = pickle.load(file)
+               file.close()
+               
+               file = open(model_mu_path,'rb')
+               clf_mu = pickle.load(file)
+               file.close()
+               
                # open root file
                file = uproot.open(file_path)
                tree = file["events_all"]
@@ -134,14 +148,22 @@ def mergepart(dataset):
 
                # update root file with BDT branch
                BDT_output_array = clf.decision_function(X)
+               BDT_output_ele_array = clf_ele.decision_function(X)
+               BDT_output_mu_array = clf_mu.decision_function(X)
                myfile = ROOT.TFile(file_path, 'update')
                mytree = myfile.Get("events_all")
                listOfNewBranches = []
                BDT_output   = array('d', [0.5] )
+               BDT_output_ele   = array('d', [0.5] )
+               BDT_output_mu   = array('d', [0.5] )
                listOfNewBranches.append(mytree.Branch("BDT_output", BDT_output, "BDT_output/D") )
+               listOfNewBranches.append(mytree.Branch("BDT_output_ele", BDT_output_ele, "BDT_output_ele/D") )
+               listOfNewBranches.append(mytree.Branch("BDT_output_mu", BDT_output_mu, "BDT_output_mu/D") )
                numOfEvents = mytree.GetEntries()
                for n in range(numOfEvents):
                     BDT_output[0] = BDT_output_array[n]
+                    BDT_output_ele[0] = BDT_output_ele_array[n]
+                    BDT_output_mu[0] = BDT_output_mu_array[n]
                     #if n%1000 == 0:
                          #print(BDT_output[0])
                     mytree.GetEntry(n)
