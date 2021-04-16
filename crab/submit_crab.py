@@ -217,7 +217,7 @@ for sample in samples:
     if purge:
         print("Purging crab jobs...")
         os.system("crab purge -d crab_" + sample.label)
-        #os.system("rm -rf crab_" + sample.label)
+        os.system("rm -rf crab_" + sample.label)
 
     if kill:
         print("Killing crab jobs...")
