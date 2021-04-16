@@ -21,11 +21,11 @@ print opt.dat
 if not (opt.trig == "Lep" or opt.trig == "Tau" or opt.trig == "HT"):
     raise ValueError
 
-dirtag = "_Fake"# + opt.trig
+dirtag = "_Fake" + opt.trig
 print dirtag
 
 def cfg_writer(sample, isMC, outdir):
-    f = open("crab_cfg.py", "w")
+    f = open("crab_cfg_fake.py", "w")
     f.write("from WMCore.Configuration import Configuration\n")
     #f.write("from CRABClient.UserUtilities import config, getUsernameFromSiteDB\n")
     f.write("\nconfig = Configuration()\n")
@@ -36,12 +36,12 @@ def cfg_writer(sample, isMC, outdir):
     f.write("config.General.transferLogs=True\n")
     f.write("config.section_('JobType')\n")
     f.write("config.JobType.pluginName = 'Analysis'\n")
-    f.write("config.JobType.psetName = 'PSet.py'\n")
+    f.write("config.JobType.psetName = 'PSet_fake.py'\n")
     f.write("config.JobType.scriptExe = 'crab_script.sh'\n")
     f.write("config.JobType.inputFiles = ['crab_script.py','../scripts/haddnano.py', '../scripts/keep_and_drop.txt']\n") #hadd nano will not be needed once nano tools are in cmssw
     f.write("config.JobType.sendPythonFolder = True\n")
-    f.write("config.JobType.maxMemoryMB = 5000\n")                                                                                                                                                                                                                   
-    f.write("config.JobType.numCores = 8\n")
+    #f.write("config.JobType.maxMemoryMB = 5000\n")                                                                                                                                                                                                                   
+    #f.write("config.JobType.numCores = 8\n")
     f.write("config.section_('Data')\n")
     f.write("config.Data.inputDataset = '"+sample.dataset+"'\n")
     f.write("config.Data.allowNonValidInputDataset = True\n")
@@ -56,9 +56,9 @@ def cfg_writer(sample, isMC, outdir):
         elif sample.year == '2018':
             f.write("config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/13TeV/ReReco/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt'\n")
         f.write("config.Data.unitsPerJob = 50\n")
-    elif(('WJetsHT' in sample.label and not ('HT70to100' in sample.label or 'HT100to200' in sample.label or 'HT400to600' in sample.label)) or 'QCDHT' in sample.label):
-        f.write("config.Data.splitting = 'EventAwareLumiBased'\n")                            
-        f.write("config.Data.unitsPerJob = 50000\n")
+    #elif(('WJetsHT' in sample.label and not ('HT70to100' in sample.label or 'HT100to200' in sample.label or 'HT400to600' in sample.label)) or 'QCDHT' in sample.label):
+        #f.write("config.Data.splitting = 'EventAwareLumiBased'\n")                            
+        #f.write("config.Data.unitsPerJob = 50000\n")
     else:
         f.write("config.Data.splitting = 'FileBased'\n")
         f.write("config.Data.unitsPerJob = 1\n")
@@ -76,7 +76,7 @@ def cfg_writer(sample, isMC, outdir):
     f.close()
 
 def crab_script_writer(sample, outpath, isMC, modules, presel):
-    f = open("crab_script.py", "w")
+    f = open("crab_script_fake.py", "w")
     f.write("#!/usr/bin/env python\n")
     f.write("import os\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import *\n")
@@ -112,7 +112,7 @@ def crab_script_writer(sample, outpath, isMC, modules, presel):
     f.write("print 'DONE'\n")
     f.close()
 
-    f_sh = open("crab_script.sh", "w")
+    f_sh = open("crab_script_fake.sh", "w")
     f_sh.write("#!/bin/bash\n")
     f_sh.write("echo Check if TTY\n")
     f_sh.write("if [\"`tty`\" != \"not a tty\" ]; then\n")
@@ -136,7 +136,7 @@ def crab_script_writer(sample, outpath, isMC, modules, presel):
     f_sh.write("mv python $CMSSW_BASE/python\n")
 
     f_sh.write("echo Found Proxy in: $X509_USER_PROXY\n")
-    f_sh.write("python crab_script.py $1\n")
+    f_sh.write("python crab_script_fake.py $1\n")
     if isMC:
         f_sh.write("hadd tree_hadd.root tree.root hist.root\n")
     f_sh.write("fi\n")
@@ -210,17 +210,17 @@ for sample in samples:
         cfg_writer(sample, isMC, "VBS")
 
         if isMC:
-            modules = "MCweight_writer('" + sample.label + "'), " + met_hlt_mod + ", preselection(), " + lep_mod + ", " + pu_mod + ", " + btag_mod + ", PrefCorr(), jmeCorrections(), " + muon_pt_corr + ", " + ht_producer + ", " + mht_producer # Put here all the modules you want to be runned by crab
+            modules = "MCweight_writer('" + sample.label + "'), " + met_hlt_mod + ", preselection(), " + lep_mod + ", " + pu_mod + ", " + btag_mod + ", PrefCorr(), metCorrector(), fatJetCorrector(), " + muon_pt_corr + ", " + ht_producer + ", " + mht_producer # Put here all the modules you want to be runned by crab
         else:
-            modules = "preselection(), jmeCorrections(), " + muon_pt_corr + ", " + ht_producer + ", " + mht_producer # Put here all the modules you want to be runned by crab
-            
+            modules = "preselection(), metCorrector(), fatJetCorrector(), " + muon_pt_corr + ", " + ht_producer + ", " + mht_producer # Put here all the modules you want to be runned by crab
+        print "modules:", modules
         print "Producing crab script"
         crab_script_writer(sample,'/eos/user/'+str(os.environ.get('USER')[0]) + '/'+str(os.environ.get('USER'))+'/Wprime/nosynch/', isMC, modules, presel)
-        os.system("chmod +x crab_script.sh")
+        os.system("chmod +x crab_script_fake.sh")
         
         #Launching crab
         print "Submitting crab jobs..."
-        os.system("crab submit -c crab_cfg.py")
+        os.system("crab submit -c crab_cfg_fake.py")
 
     if kill:
         print("Killing crab jobs...")
