@@ -14,8 +14,8 @@ def CondoredList(samplename):
 
     if len(condlist) > 0:
         for condfile in condlist:
-            if os.stat(path+samplename+"/"+condfile).st_size < 1024.:
-                print("Something went wrong during crabbing", samplename, "fix it and relaunch")
+            if not samplename.startswith('DY') and os.stat(path+samplename+"/"+condfile).st_size < 1024.:
+                print("Something went wrong during condoring", samplename, "fix it and relaunch")
                 os.system("rm -r "+ path + samplename + "/*")            
                 return CondoredList(samplename)
 

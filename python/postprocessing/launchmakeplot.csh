@@ -1,8 +1,8 @@
 #set LD_PRELOAD=libtcmalloc.so
 set year = 2017
-set folder = v65
+set folder = v66
 
-#rm -rf /eos/home-a/apiccine/VBS/nosynch/$folder/plot/electron/ #countings
+rm -rf /eos/home-a/apiccine/VBS/nosynch/$folder/plot/electron/ #countings
 #rm -rf /eos/home-a/apiccine/VBS/nosynch/$folder/stack/ #countings
 
 python3 makeplot.py -y 2017 --lep electron --bveto -f $folder -p --count #--blinded
@@ -42,7 +42,7 @@ python3 makeplot.py -y 2017 --lep electron --ttbar -f $folder -p --count --cut "
 
 #set LD_PRELOAD=libtcmalloc.so
 
-#rm -rf /eos/home-a/apiccine/VBS/nosynch/$folder/plot/muon/ #countings
+rm -rf /eos/home-a/apiccine/VBS/nosynch/$folder/plot/muon/ #countings
 
 python3 makeplot.py -y 2017 --lep muon --bveto -f $folder -p --count #--blinded
 #python3 makeplot.py -y 2017 --lep muon --bveto -f $folder -p --count --signal #--blinded
