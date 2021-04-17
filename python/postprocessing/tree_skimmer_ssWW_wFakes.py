@@ -217,6 +217,7 @@ var_list.append(lepton_Zeppenfeld)
 var_list.append(lepton_Zeppenfeld_over_deltaEta_jj)
 #tau#
 tau_pt                  =   array.array('f', [-999.])
+tau_relleadtkpt         =   array.array('f', [-999.])
 tau_eta                 =   array.array('f', [-999.])
 tau_phi                 =   array.array('f', [-999.])
 tau_charge              =   array.array('i', [-999])
@@ -239,6 +240,7 @@ tau_Zeppenfeld           =   array.array('f', [-999])
 tau_Zeppenfeld_over_deltaEta_jj           =   array.array('f', [-999])
 var_list.append(tau_isolation)
 var_list.append(tau_pt)
+var_list.append(tau_relleadtkpt)
 var_list.append(tau_eta)
 var_list.append(tau_phi)
 var_list.append(tau_charge)
@@ -434,6 +436,7 @@ systTree.branchTreesSysts(trees, "all", "lepton_isPrompt",        outTreeFile, l
 
 #tau variables
 systTree.branchTreesSysts(trees, "all", "tau_pt",               outTreeFile, tau_pt)
+systTree.branchTreesSysts(trees, "all", "tau_relLeadTkpt",      outTreeFile, tau_relleadtkpt)
 systTree.branchTreesSysts(trees, "all", "tau_eta",              outTreeFile, tau_eta)
 systTree.branchTreesSysts(trees, "all", "tau_phi",              outTreeFile, tau_phi)
 systTree.branchTreesSysts(trees, "all", "tau_mass",             outTreeFile, tau_mass)
@@ -872,6 +875,7 @@ for i in range(tree.GetEntries()):
     #if (SingleEle or SingleMu) and pass_lepton_iso[0]==1 and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1: Cut_dict[4][1]+=1
 
     tau_pt[0]               =   GoodTau.pt
+    tau_relleadtkpt[0]      =   GoodTau.leadTkPtOverTauPt
     tau_eta[0]              =   GoodTau.eta
     tau_phi[0]              =   GoodTau.phi
     tau_mass[0]             =   GoodTau.mass
