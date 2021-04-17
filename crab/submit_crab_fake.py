@@ -37,8 +37,8 @@ def cfg_writer(sample, isMC, outdir):
     f.write("config.section_('JobType')\n")
     f.write("config.JobType.pluginName = 'Analysis'\n")
     f.write("config.JobType.psetName = 'PSet_fake.py'\n")
-    f.write("config.JobType.scriptExe = 'crab_script.sh'\n")
-    f.write("config.JobType.inputFiles = ['crab_script.py','../scripts/haddnano.py', '../scripts/keep_and_drop.txt']\n") #hadd nano will not be needed once nano tools are in cmssw
+    f.write("config.JobType.scriptExe = 'crab_script_fake.sh'\n")
+    f.write("config.JobType.inputFiles = ['crab_script_fake.py','../scripts/haddnano.py', '../scripts/keep_and_drop.txt']\n") #hadd nano will not be needed once nano tools are in cmssw
     f.write("config.JobType.sendPythonFolder = True\n")
     #f.write("config.JobType.maxMemoryMB = 5000\n")                                                                                                                                                                                                                   
     #f.write("config.JobType.numCores = 8\n")
@@ -84,15 +84,18 @@ def crab_script_writer(sample, outpath, isMC, modules, presel):
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.jme.htProducerCpp import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.jme.mht import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.framework.crabhelper import inputFiles,runsAndLumis\n")
-    f.write("from PhysicsTools.NanoAODTools.postprocessing.examples.MCweight_writer import *\n")
+    if isMC:
+        f.write("from PhysicsTools.NanoAODTools.postprocessing.examples.MCweight_writer import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.examples.MET_HLT_Filter_Fake import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.examples.preselection import *\n")
-    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.PrefireCorr import *\n")
-    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer import *\n")
+    if isMC:
+        f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.PrefireCorr import *\n")
+        f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer import *\n")
+        f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.lepSFProducer import *\n")
+        f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.muonScaleResProducer import *\n")
-    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.lepSFProducer import *\n")
     f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.common.hepmcDump import *\n")
-    f.write("from PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer import *\n")
+
 
 
     #f.write("infile = "+str(sample.files)+"\n")
