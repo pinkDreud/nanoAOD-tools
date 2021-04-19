@@ -243,7 +243,7 @@ GluGluToContinToZZTo4mu_2017.year = 2017
 GluGluToContinToZZTo4mu_2017.dataset = "/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/" + tag3_2017 + "-v1/NANOAODSIM"
 GluGluToContinToZZTo4mu_2017.sigma = 1.402 #pb
 
-ZZtoLep_2017 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "ZZtoLep_2017")
+ZZtoLep_2017 = sample(ROOT.kViolet-9, 1, 1001, "ZZ", "ZZtoLep_2017")
 ZZtoLep_2017.year = 2017
 ZZtoLep_2017.components = [ZZTo2L2Nu_2017, ZZJJTo4L_EWK_2017, ZZJJTo4L_QCD_2017, GluGluToContinToZZTo2e2nu_2017, GluGluToContinToZZTo2e2mu_2017, GluGluToContinToZZTo2e2tau_2017, GluGluToContinToZZTo2mu2nu_2017, GluGluToContinToZZTo2mu2tau_2017, GluGluToContinToZZTo4e_2017, GluGluToContinToZZTo4mu_2017]
 
@@ -1305,6 +1305,7 @@ class_dict={
 
 class_list=[
     #WpWpJJ_EWK_2017,
+    ZZtoLep_2017,
     WpWpJJ_QCD_2017,
     VBS_SSWW_SM_2017,
     #VBS_SSWW_cHW_2017,
@@ -1312,18 +1313,17 @@ class_list=[
     #VBS_SSWW_cW_cHW_2017,
     VBS_SSWW_BSM_INT_2017,
     VBS_SSWW_BSM_SM_2017,
-    ZZtoLep_2017,
     VG_2017,
-    OtherWS_2017,
-    #Other_2017,    
     TVX_2017,
     WZ_2017,
+    TTTo2L2Nu_2017,
+    OtherWS_2017,
+    #Other_2017,
     #WrongSign_2017, 
     DYJetsToLL_2017,
     #DYJetsToLL_Fake_2017,
     #DYJetsM_2017,
     TT_2017,
-    TTTo2L2Nu_2017,
     #QCD_2017,
     WJets_2017,
     #WJets_Fake_2017,
