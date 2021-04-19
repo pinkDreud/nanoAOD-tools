@@ -21,11 +21,11 @@ class MCweight_writer(Module):
         self.addObject(self.h_PDFweight)
 
     def analyze(self, event):
-        print self.samplename
+        #print(self.samplename)
         lheweight = True
         if "WZ" in self.samplename or "WWTo2L2Nu_DoubleScattering" in self.samplename:
             lheweight = False
-        print lheweight
+        #print(lheweight)
         """process event, return True (go to next module) or False (fail, go to next event)"""
         Generator = Object(event, "Generator")
         PSWeight = Collection(event, 'PSWeight')

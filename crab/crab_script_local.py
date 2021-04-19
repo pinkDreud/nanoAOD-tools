@@ -11,11 +11,11 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer im
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.lepSFProducer import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.btv.btagSFProducer import *
 
-metCorrector = createJMECorrector(isMC=True, dataYear=2017, jesUncert='All', redojec=True)
-fatJetCorrector = createJMECorrector(isMC=True, dataYear=2017, jesUncert='All', redojec=True, jetType = 'AK8PFchs')
+metCorrector = createJMECorrector(isMC=True, dataYear=2017, jesUncert='All', applyHEMfix=True)
+fatJetCorrector = createJMECorrector(isMC=True, dataYear=2017, jesUncert='All', applyHEMfix=True, jetType = 'AK8PFPuppi')
 
-p = PostProcessor('.', ['root://cms-xrd-global.cern.ch//store/mc/RunIIFall17NanoAODv7/WZ_TuneCP5_13TeV-pythia8/NANOAODSIM/PU2017_12Apr2018_Nano02Apr2020_PU2017_EXT_102X_mc2017_realistic_v8-v1/130000/64130768-224A-F945-AF0D-85352D905EDE.root'], '', modules=[MCweight_writer('WZ')],#MET_HLT_Filter_2017(), preselection(), PrefCorr(), metCorrector(), fatJetCorrector(), lepSF_2017(), btagSF2017()],
-outputbranchsel=os.path.abspath('../scripts/keep_and_drop.txt'), histFileName="histOut.root", histDirName="plots", maxEntries=10000, provenance=True, fwkJobReport=True)
+p = PostProcessor('.', ['/store/mc/RunIIFall17NanoAODv7/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/NANOAODSIM/PU2017_12Apr2018_Nano02Apr2020_new_pmx_102X_mc2017_realistic_v8-v1/60000/15CBBFFC-A5FB-0543-90C1-12DE4418883C.root'], '', modules=[MCweight_writer('TTTo2L2Nu_2017'), MET_HLT_Filter_2017(), preselection(), PrefCorr(), metCorrector(), fatJetCorrector(), lepSF_2017(), btagSF2017()],
+outputbranchsel=os.path.abspath('../scripts/keep_and_drop.txt'), histFileName="histOut.root", histDirName="plots", maxEntries=1000, provenance=True, fwkJobReport=True)
 p.run()
-print 'DONE'
+print('DONE')
 #, PrefCorr(), metCorrector(), fatJetCorrector()

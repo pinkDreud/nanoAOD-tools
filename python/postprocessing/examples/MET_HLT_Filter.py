@@ -26,7 +26,7 @@ class MET_HLT_Filter(Module):
         elif(self.year == 2018):
             good_HLT = HLT.IsoMu24 or HLT.Ele32_WPTight_Gsf_L1DoubleEG
         else:
-            print "Please specify the year: possible choices are 2016, 2017 or 2018"
+            print("Please specify the year: possible choices are 2016, 2017 or 2018")
         return good_MET and good_HLT
 
 MET_HLT_Filter_2016 = lambda : MET_HLT_Filter(2016)
