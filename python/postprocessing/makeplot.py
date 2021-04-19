@@ -256,23 +256,23 @@ def lumi_writer(dataset, lumi):
                #print("h_genweight first bin content is %f and h_PDFweight has %f bins" %(h_genw_tmp.GetBinContent(1), nbins))
                w_nom = array('f', [0.]) 
                tree_new.Branch('w_nominal', w_nom, 'w_nominal/F')
+               tree.SetBranchStatus('w_nominal', 1)
                if isthere_pdf:# ("WZ" in sample.label):
                     h_pdfw_tmp = ROOT.TH1F(infile.Get("h_PDFweight"))
                     nbins = h_pdfw_tmp.GetXaxis().GetNbins()
-                    w_PDF = array('f', [0.]*nbins)
+                    #w_PDF = array('f', [0.]*nbins)
                     print(nbins)
-                    print(len(w_PDF))
-                    tree_new.Branch('w_PDF', w_PDF, 'w_PDF/F')
-               tree.SetBranchStatus('w_nominal', 1)
+                    #print(len(w_PDF))
+                    #tree_new.Branch('w_PDF', w_PDF, 'w_PDF[' + str(int(len(w_PDF))) + ']/F')
                for event in range(0, tree.GetEntries()):
                     tree.GetEntry(event)
                     if event%10000==1:
                          #print("Processing event %s     complete %s percent" %(event, 100*event/tree.GetEntries()))
                          sys.stdout.write("\rProcessing event {}     complete {} percent".format(event, 100*event/tree.GetEntries()))
                     w_nom[0] = tree.w_nominal * sample.sigma * tree.HLT_effLumi * 1000./float(h_genw_tmp.GetBinContent(1))
-                    if isthere_pdf: #not ("WZ" in sample.label):
-                         for i in range(1, nbins):
-                              w_PDF[i] = h_pdfw_tmp.GetBinContent(i+1)/h_genw_tmp.GetBinContent(2) 
+                    #if isthere_pdf: #not ("WZ" in sample.label):
+                         #for i in range(1, nbins):
+                              #w_PDF[i] = h_pdfw_tmp.GetBinContent(i+1)/h_genw_tmp.GetBinContent(2) 
                     tree_new.Fill()
                tree_new.Write()
                outfile.Close()
@@ -815,18 +815,20 @@ for year in years:
 
           wzero = 'w_nominal*PFSF*puSF*lepSF*tau_vsjet_SF*tau_vsele_SF*tau_vsmu_SF'
           cutbase = cut_dict[lep]
-          
+
+          '''
           variables.append(variabile('BDT_output', 'BDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
           variables.append(variabile('BDT_output_ele', 'eleBDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
           variables.append(variabile('BDT_output_mu', '#muBDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
           variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cutbase+')', 20, -5., 5.))
 
           variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cutbase+')', 14, -3.50, 3.50))
-          
+          '''
+
           bin_lepton_pt = array("f", [0., 30., 45., 60., 80., 100., 200., 300., 500., 800.])
           nbin_lepton_pt = len(bin_lepton_pt)-1
           variables.append(variabile('lepton_pt',  'Lepton p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_lepton_pt, bin_lepton_pt))#30, 1500))
-
+          '''
           variables.append(variabile('lepton_pdgid', 'lepton pdgid',  wzero+'*('+cutbase+')', 31, -15.5, 15.5))
           variables.append(variabile('lepton_pfRelIso04', 'lepton rel iso',  wzero+'*('+cutbase+')', 15, 0, 0.15))
           variables.append(variabile('lepton_Zeppenfeld', 'lepton Zeppenfeld',  wzero+'*('+cutbase+')', 24, -6, 6))
@@ -926,7 +928,7 @@ for year in years:
           variables.append(variabile('deltaPhi_tauj2', '#Delta #phi_{#tau j_{2}}',  wzero+'*('+cutbase+')',  16, -4., 4.))
           variables.append(variabile('deltaPhi_lepj1', '#Delta #phi_{l j_{1}}',  wzero+'*('+cutbase+')', 16, -4., 4.))
           variables.append(variabile('deltaPhi_lepj2', '#Delta #phi_{l j_{2}}',  wzero+'*('+cutbase+')', 16, -4., 4.))
-
+          '''
           for sample in dataset_new:
                if ('DataHT' in sample.label or 'DataMET' in sample.label) and not opt.folder.startswith("CTHT"):# or "WJets" in sample.label:
                     continue

@@ -123,7 +123,7 @@ for k, v in class_dict.items():
                 continue
 
             doesexist.append(True)
-            if not os.path.exists(cpath+c.label+".root"):
+            if True:#not os.path.exists(cpath+c.label+".root"):
                 if os.path.exists(cpath+c.label+"_merged.root"):
                     if Debug:
                         print("rm -f " + cpath + c.label + "_merged.root")
@@ -154,7 +154,7 @@ for k, v in class_dict.items():
                 samplemerge = True
 
             if samplemerge:
-                if os.path.exists(kpath+k+".root"):
+                if True:#os.path.exists(kpath+k+".root"):
                     if Debug:
                         print("rm -f "+kpath+k+".root")
                     else:
@@ -178,7 +178,7 @@ for k, v in class_dict.items():
             continue
 
         doesexist.append(True)
-        if not os.path.exists(kpath+k+".root"):
+        if True:#not os.path.exists(kpath+k+".root"):
             if os.path.exists(kpath+k+"_merged.root"):
                 if Debug:
                     print("rm -f " + kpath + k + "_merged.root")

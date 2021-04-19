@@ -130,4 +130,7 @@ class Collection:
         return ret
 
     def __len__(self):
-        return self._len
+        if type(self._len) is int:
+            return self._len
+        else:
+            return 0

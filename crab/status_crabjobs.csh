@@ -10,7 +10,7 @@ reset
 #python submit_crab.py -d VG_$year --status #
 #python submit_crab.py -d TVX_$year --status 
 #python submit_crab.py -d WrongSign_$year --status
-#python submit_crab.py -d TTTo2L2Nu_$year --status
+python submit_crab.py -d TTTo2L2Nu_$year --status
 #python submit_crab.py -d Other_$year --status #
 #python submit_crab.py -d ZZtoLep_$year --status
 #python submit_crab.py -d QCD_$year --status
