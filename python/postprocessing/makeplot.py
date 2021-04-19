@@ -116,8 +116,10 @@ if opt.plot:
      if not os.path.exists(plotrepo + lepstr):
           os.makedirs(plotrepo + lepstr)
 if opt.stack:
-     if not os.path.exists(plotrepo + 'stack_' + cut_tag):
-          os.makedirs(plotrepo + 'stack_' + cut_tag)
+     if not os.path.exists(plotrepo + 'stack'):
+          os.makedirs(plotrepo + 'stack')
+     if not os.path.exists(plotrepo + 'stack/' + cut_tag):
+          os.makedirs(plotrepo + 'stack/' + cut_tag)
 
 if not (opt.wfake=='nofake' or opt.wfake=='incl' or opt.wfake=='sep'):
      raise ValueError('Specify a value for --wfake between nofake, incl, and sep')
@@ -696,7 +698,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      pad2.RedrawAxis()
      c1.Update()
      #c1.Print("stack/"+canvasname+".pdf")
-     c1.Print(plotrepo + "stack_" + cut_tag + "/"+canvasname+".png")
+     c1.Print(plotrepo + "stack/" + cut_tag + "/"+canvasname+".png")
      del histo
      tmp.Delete()
      h.Delete()
