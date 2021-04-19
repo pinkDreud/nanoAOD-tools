@@ -53,6 +53,10 @@ parser.add_option('--model_mu', dest='model_mu', default = '/afs/cern.ch/user/t/
 #print (opt, args)
 print("to stack?", opt.tostack)
 
+def cutToTag(cut):
+    newstring = cut.replace("-", "neg").replace(">=","_GE_").replace(">","_G_").replace(" ","").replace("&&","_AND_").replace("||","_OR_").replace("<=","_LE_").replace("<","_L_").replace(".","p").replace("(","").replace(")","").replace("==","_EQ_").replace("!=","_NEQ_").replace("=","_EQ_").replace("*","_AND_").replace("+","_OR_")
+    return newstring
+
 folder = opt.folder
 
 filerepo = '/eos/home-'+opt.user[0]+'/'+opt.user+'/VBS/nosynch/' + folder + '/'
@@ -276,9 +280,6 @@ def lumi_writer(dataset, lumi):
           else:
                os.popen("mv " + filerepo + sample.label + "/"  + sample.label + "_merged.root " + filerepo + sample.label + "/"  + sample.label + ".root")
 
-def cutToTag(cut):
-    newstring = cut.replace("-", "neg").replace(">=","_GE_").replace(">","_G_").replace(" ","").replace("&&","_AND_").replace("||","_OR_").replace("<=","_LE_").replace("<","_L_").replace(".","p").replace("(","").replace(")","").replace("==","_EQ_").replace("!=","_NEQ_").replace("=","_EQ_").replace("*","_AND_").replace("+","_OR_")
-    return newstring
 
 def plot(lep, reg, variable, sample, cut_tag, syst=""):
      print("in plot function")
