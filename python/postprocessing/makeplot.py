@@ -64,14 +64,60 @@ if opt.lep != 'incl':
 else:
      lepstr = 'plot'
 
+cut = opt.cut #default cut must be obvious, for example lepton_eta>-10.
+
+if opt.bveto:
+     cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1)*(" + cut + ")", 
+                 'electron':"(abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1)*(" + cut + ")", 
+                 'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1)*(" + cut + ")", 
+          }
+     cut_tag = 'selection_upto_bveto'
+     if opt.cut != "lepton_eta>-10.":
+          cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut) 
+elif opt.ttbar:
+     cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.)*(" + cut + ")", 
+                 'electron':"(abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.)*(" + cut + ")", 
+                 'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.)*(" + cut + ")", 
+          }
+     cut_tag = 'ttbar_CR'
+     if opt.cut != "lepton_eta>-10.":
+          cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut)           
+elif opt.wjets:
+     cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&MET_pt<=50.&&mT_lep_MET>50.)*(" + cut + ")", 
+                 'electron':"(abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&MET_pt<=50.&&mT_lep_MET>50.)*(" + cut + ")",
+                 'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&MET_pt<=50.&&mT_lep_MET>50.)*(" + cut + ")",
+          }
+     cut_tag = 'wjets_CR'
+     if opt.cut != "lepton_eta>-10.":
+          cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut)           
+elif opt.sel:
+     cut_dict = {'muon':"(abs(lepton_pdgid)==13)*(" + cut + ")*(pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1)", 
+                 'electron':"(abs(lepton_pdgid)==11)*(" + cut + ")*(pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1)", 
+                 'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11))*(" + cut + ")*(pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1)", 
+          }
+     cut_tag = "selection"
+     if opt.cut != "lepton_eta>-10.":
+          cut_tag = cut_tag + '_AND_' + cutToTag(opt.cut) 
+
+else:
+     cut_dict = {'muon':"abs(lepton_pdgid)==13&&(" + cut + ")",
+                 'electron':"abs(lepton_pdgid)==11&&(" + cut + ")",
+                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&(" + cut + ")",
+     }
+     cut_tag = cutToTag(opt.cut)
+
+lumi = {'2016': 35.9, "2017": 41.53, "2018": 59.7}
+
+print(cut_tag)
+
 if opt.plot:
      if not os.path.exists(plotrepo + lepstr):
           os.makedirs(plotrepo + lepstr)
      if not os.path.exists(plotrepo + lepstr):
           os.makedirs(plotrepo + lepstr)
 if opt.stack:
-     if not os.path.exists(plotrepo + 'stack'):
-          os.makedirs(plotrepo + 'stack')
+     if not os.path.exists(plotrepo + 'stack_' + cut_tag):
+          os.makedirs(plotrepo + 'stack_' + cut_tag)
 
 if not (opt.wfake=='nofake' or opt.wfake=='incl' or opt.wfake=='sep'):
      raise ValueError('Specify a value for --wfake between nofake, incl, and sep')
@@ -650,7 +696,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      pad2.RedrawAxis()
      c1.Update()
      #c1.Print("stack/"+canvasname+".pdf")
-     c1.Print(plotrepo + "stack/"+canvasname+".png")
+     c1.Print(plotrepo + "stack_" + cut_tag + "/"+canvasname+".png")
      del histo
      tmp.Delete()
      h.Delete()
@@ -730,8 +776,6 @@ else:
 
 for v in dataset_dict.values():
      print([o.label for o in v])
-
-
 #print(dataset_dict.keys())
 
 years = []
@@ -739,52 +783,6 @@ if(opt.year!='all'):
      years = opt.year.strip('[]').split(',')
 else:
      years = ['2016','2017','2018']
-
-cut = opt.cut #default cut must be obvious, for example lepton_eta>-10.
-
-if opt.bveto:
-     cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1)*(" + cut + ")", 
-                 'electron':"(abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1)*(" + cut + ")", 
-                 'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1)*(" + cut + ")", 
-          }
-     cut_tag = 'selection_upto_bveto'
-     if opt.cut != "lepton_eta>-10.":
-          cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut) 
-elif opt.ttbar:
-     cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.)*(" + cut + ")", 
-                 'electron':"(abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.)*(" + cut + ")", 
-                 'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.)*(" + cut + ")", 
-          }
-     cut_tag = 'ttbar_CR'
-     if opt.cut != "lepton_eta>-10.":
-          cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut)           
-elif opt.wjets:
-     cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&MET_pt<=50.&&mT_lep_MET>50.)*(" + cut + ")", 
-                 'electron':"(abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&MET_pt<=50.&&mT_lep_MET>50.)*(" + cut + ")",
-                 'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&MET_pt<=50.&&mT_lep_MET>50.)*(" + cut + ")",
-          }
-     cut_tag = 'wjets_CR'
-     if opt.cut != "lepton_eta>-10.":
-          cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut)           
-elif opt.sel:
-     cut_dict = {'muon':"(abs(lepton_pdgid)==13)*(" + cut + ")*(pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1)", 
-                 'electron':"(abs(lepton_pdgid)==11)*(" + cut + ")*(pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1)", 
-                 'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11))*(" + cut + ")*(pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1)", 
-          }
-     cut_tag = "selection"
-     if opt.cut != "lepton_eta>-10.":
-          cut_tag = cut_tag + '_AND_' + cutToTag(opt.cut) 
-
-else:
-     cut_dict = {'muon':"abs(lepton_pdgid)==13&&(" + cut + ")",
-                 'electron':"abs(lepton_pdgid)==11&&(" + cut + ")",
-                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&(" + cut + ")",
-     }
-     cut_tag = cutToTag(opt.cut)
-
-lumi = {'2016': 35.9, "2017": 41.53, "2018": 59.7}
-
-print(cut_tag)
 
 for year in years:
     for sample in dataset_dict[year]:
