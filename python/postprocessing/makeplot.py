@@ -816,6 +816,8 @@ for year in years:
           cutbase = cut_dict[lep]
           
           variables.append(variabile('BDT_output', 'BDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
+          variables.append(variabile('BDT_output_ele', 'eleBDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
+          variables.append(variabile('BDT_output_mu', '#muBDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
           variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cutbase+')', 20, -5., 5.))
 
           variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cutbase+')', 14, -3.50, 3.50))
@@ -832,6 +834,7 @@ for year in years:
           bin_taupt = array("f", [0., 30., 45., 60., 80., 100., 200., 300., 400., 800.])
           nbin_taupt = len(bin_taupt) - 1
           variables.append(variabile('tau_pt',  '#tau p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_taupt, bin_taupt))
+          variables.append(variabile('tau_relLeadTkpt',  '#tau LeadTk relative p_{T}',  wzero+'*('+cutbase+')', 20, 0, 1))
           variables.append(variabile('tau_eta', '#tau #eta',  wzero+'*('+cutbase+')', 20, -5, 5))
           variables.append(variabile('tau_Zeppenfeld', '#tau Zeppenfeld',  wzero+'*('+cutbase+')', 20, -5, 5))
           variables.append(variabile('tau_phi', '#tau #Phi',  wzero+'*('+cutbase+')',  14, -3.50, 3.50))

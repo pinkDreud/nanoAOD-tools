@@ -155,7 +155,10 @@ for k, v in class_dict.items():
 
             if samplemerge:
                 if os.path.exists(kpath+k+".root"):
-                    os.system("rm -f "+kpath+k+".root")
+                    if Debug:
+                        print("rm -f "+kpath+k+".root")
+                    else:
+                        os.system("rm -f "+kpath+k+".root")
                 if Debug:
                     print("python3 makeplot.py -y ", opt.year, " --mertree -d " + k + " --folder ", ofolder)
                 else:
@@ -189,4 +192,4 @@ for k, v in class_dict.items():
                 os.system("python3 makeplot.py -y " + opt.year + " --merpart --lumi --mertree -d " + k + " --folder " + ofolder)
             print("Merged and lumied!")
         else:
-            print(k + "is already merged and lumied")
+            print(k + " is already merged and lumied")
