@@ -453,7 +453,7 @@ WrongSign_2017.year = 2017
 WrongSign_2017.components = [WWto2L2Nu_2017, GluGluToWWToENuENu_2017, GluGluToWWToENuMNu2017, 
                             GluGluToWWToENuTNu2017, GluGluToWWToMNuENu_2017, GluGluToWWToMNuMNu2017, 
                             GluGluToWWToMNuTNu2017, GluGluToWWToTNuENu_2017, GluGluToWWToTNuMNu2017, 
-                            GluGluToWWToTNuTNu2017, TTTo2L2Nu_2017, STtW_top_2017, GluGluHToWWTo2L2Nu_2017, 
+                            GluGluToWWToTNuTNu2017, STtW_top_2017, GluGluHToWWTo2L2Nu_2017, 
                             GluGluHToZZTo2L2Q_2017, GluGluHToZZTo4L_2017, GluGluHToTauTau_2017, 
                             VBFHToWWTo2L2Nu_2017, VBFHToTauTau_2017, ttHToNonbb_2017, VHToNonbb_2017]
 
@@ -498,6 +498,9 @@ Other_2017 = sample(ROOT.kOrange-4, 1, 1001, "Other", "Other_2017")
 Other_2017.year = 2017
 Other_2017.components = [WWTo2L2Nu_DoubleScattering_2017, WWW_4F_2017, WWZTo3L1Nu2Q_2017, WZZ_2017, ZZZ_2017, WWG_2017]
 
+OtherWS_2017 = sample(ROOT.kOrange-4, 1, 1001, "Other", "Other_2017")
+OtherWS_2017.year = 2017
+OtherWS_2017.components = [WWTo2L2Nu_DoubleScattering_2017, WWW_4F_2017, WWZTo3L1Nu2Q_2017, WZZ_2017, ZZZ_2017, WWG_2017, WWto2L2Nu_2017, GluGluToWWToENuENu_2017, GluGluToWWToENuMNu2017, GluGluToWWToENuTNu2017, GluGluToWWToMNuENu_2017, GluGluToWWToMNuMNu2017, GluGluToWWToMNuTNu2017, GluGluToWWToTNuENu_2017, GluGluToWWToTNuMNu2017, GluGluToWWToTNuTNu2017, STtW_top_2017, GluGluHToWWTo2L2Nu_2017, GluGluHToZZTo2L2Q_2017, GluGluHToZZTo4L_2017, GluGluHToTauTau_2017, VBFHToWWTo2L2Nu_2017, VBFHToTauTau_2017, ttHToNonbb_2017, VHToNonbb_2017]
 
 ################################ WJets ################################
 WJetsHT70to100_2017 = sample(ROOT.kGreen+2, 1, 1001, "W + Jets", "WJetsHT70to100_2017")
@@ -1249,8 +1252,10 @@ sample_dict={
     # to here
     'VG_2017':VG_2017, 'ZG_2017':ZG_2017, 'WG_2017':WG_2017,
     'TVX_2017':TVX_2017, 'TTGJets_2017':TTGJets_2017, 'TTZToQQ_2017':TTZToQQ_2017, 'TTZToLLNuNu_2017':TTZToLLNuNu_2017, 'TTWJetsToQQ_2017':TTWJetsToQQ_2017, 'TTWJetsToLNu_2017':TTWJetsToLNu_2017, 'tZq_ll_4f_2017':tZq_ll_4f_2017,
-    'WrongSign_2017': WrongSign_2017, 'WWto2L2Nu_2017':WWto2L2Nu_2017, 'GluGluToWWToENuENu_2017':GluGluToWWToENuENu_2017, 'GluGluToWWToENuMNu2017':GluGluToWWToENuMNu2017, 'GluGluToWWToENuTNu2017':GluGluToWWToENuTNu2017, 'GluGluToWWToMNuENu_2017':GluGluToWWToMNuENu_2017, 'GluGluToWWToMNuMNu2017':GluGluToWWToMNuMNu2017, 'GluGluToWWToMNuTNu2017':GluGluToWWToMNuTNu2017, 'GluGluToWWToTNuENu_2017':GluGluToWWToTNuENu_2017, 'GluGluToWWToTNuMNu2017':GluGluToWWToTNuMNu2017, 'GluGluToWWToTNuTNu2017':GluGluToWWToTNuTNu2017, 'TTTo2L2Nu_2017':TTTo2L2Nu_2017, 'STtW_top_2017':STtW_top_2017, 'GluGluHToWWTo2L2Nu_2017':GluGluHToWWTo2L2Nu_2017, 'GluGluHToZZTo2L2Q_2017':GluGluHToZZTo2L2Q_2017, 'GluGluHToZZTo4L_2017':GluGluHToZZTo4L_2017, 'GluGluHToTauTau_2017':GluGluHToTauTau_2017, 'VBFHToWWTo2L2Nu_2017':VBFHToWWTo2L2Nu_2017, 'VBFHToTauTau_2017':VBFHToTauTau_2017, 'ttHToNonbb_2017':ttHToNonbb_2017, 'VHToNonbb_2017':VHToNonbb_2017,
+    'WrongSign_2017': WrongSign_2017, 'WWto2L2Nu_2017':WWto2L2Nu_2017, 'GluGluToWWToENuENu_2017':GluGluToWWToENuENu_2017, 'GluGluToWWToENuMNu2017':GluGluToWWToENuMNu2017, 'GluGluToWWToENuTNu2017':GluGluToWWToENuTNu2017, 'GluGluToWWToMNuENu_2017':GluGluToWWToMNuENu_2017, 'GluGluToWWToMNuMNu2017':GluGluToWWToMNuMNu2017, 'GluGluToWWToMNuTNu2017':GluGluToWWToMNuTNu2017, 'GluGluToWWToTNuENu_2017':GluGluToWWToTNuENu_2017, 'GluGluToWWToTNuMNu2017':GluGluToWWToTNuMNu2017, 'GluGluToWWToTNuTNu2017':GluGluToWWToTNuTNu2017, 'STtW_top_2017':STtW_top_2017, 'GluGluHToWWTo2L2Nu_2017':GluGluHToWWTo2L2Nu_2017, 'GluGluHToZZTo2L2Q_2017':GluGluHToZZTo2L2Q_2017, 'GluGluHToZZTo4L_2017':GluGluHToZZTo4L_2017, 'GluGluHToTauTau_2017':GluGluHToTauTau_2017, 'VBFHToWWTo2L2Nu_2017':VBFHToWWTo2L2Nu_2017, 'VBFHToTauTau_2017':VBFHToTauTau_2017, 'ttHToNonbb_2017':ttHToNonbb_2017, 'VHToNonbb_2017':VHToNonbb_2017,
     'Other_2017':Other_2017, 'WWTo2L2Nu_DoubleScattering_2017':WWTo2L2Nu_DoubleScattering_2017, 'WWW_4F_2017':WWW_4F_2017, 'WWZTo3L1Nu2Q_2017':WWZTo3L1Nu2Q_2017, 'WZZ_2017':WZZ_2017, 'ZZZ_2017':ZZZ_2017, 'WWG_2017':WWG_2017,
+    'OtherWS_2017':OtherWS_2017,
+    'TTTo2L2Nu_2017':TTTo2L2Nu_2017,
     'WZ_2017':WZ_2017,
     'FakeMu_2017':FakeMu_2017,
     'DataMu_2017':DataMu_2017, 'DataMuB_2017':DataMuB_2017, 'DataMuC_2017':DataMuC_2017, 'DataMuD_2017':DataMuD_2017, 'DataMuE_2017':DataMuE_2017, 'DataMuF_2017':DataMuF_2017, 'DataMuFake_2017': DataMuFake_2017,
@@ -1285,13 +1290,15 @@ class_dict={
     # to here
     'VG_2017':VG_2017,
     'TVX_2017':TVX_2017,
-    'WrongSign_2017': WrongSign_2017,
-    'Other_2017':Other_2017,
+    #'WrongSign_2017': WrongSign_2017,
+    #'Other_2017':Other_2017,
+    'OtherWS_2017':OtherWS_2017,
+    'TTTo2L2Nu_2017':TTTo2L2Nu_2017,
     'WZ_2017':WZ_2017,
     'DataMu_2017':DataMu_2017,
     'DataEle_2017':DataEle_2017,
     'DataHT_2017':DataHT_2017,
-    'DataMET_2017':DataMET_2017,
+    #'DataMET_2017':DataMET_2017,
     #'FakeEle_2017': FakeEle_2017,
     #'FakeMu_2017': FakeMu_2017,
 }
@@ -1307,14 +1314,16 @@ class_list=[
     VBS_SSWW_BSM_SM_2017,
     ZZtoLep_2017,
     VG_2017,
-    Other_2017,    
+    OtherWS_2017,
+    #Other_2017,    
     TVX_2017,
     WZ_2017,
-    WrongSign_2017, 
+    #WrongSign_2017, 
     DYJetsToLL_2017,
     #DYJetsToLL_Fake_2017,
     #DYJetsM_2017,
     TT_2017,
+    TTTo2L2Nu_2017,
     #QCD_2017,
     WJets_2017,
     #WJets_Fake_2017,
@@ -1328,7 +1337,7 @@ class_list=[
     FakeElePromptTau_2017,
     PromptEleFakeTau_2017,
     DataEle_2017,
-    DataHT_2017,
+    #DataHT_2017,
 ]
 
 
