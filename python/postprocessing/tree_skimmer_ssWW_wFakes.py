@@ -54,7 +54,7 @@ if sys.argv[4] == 'remote':
     Debug = False
 else:
     from samples.samples import *
-    Debug = False
+    Debug = True
 sample = sample_dict[sys.argv[1]]
 part_idx = sys.argv[2]
 file_list = list(map(str, sys.argv[3].strip('[]').split(',')))
@@ -269,9 +269,24 @@ var_list.append(event_Zeppenfeld_over_deltaEta_jj)
 tauleadTk_ptOverTau     =   array.array('f', [-999.])#
 tauleadTk_deltaPhi      =   array.array('f', [-999.])#
 tauleadTk_deltaEta      =   array.array('f', [-999.])#
+tauleadTk_Gamma      =   array.array('f', [-999.])#
 var_list.append(tauleadTk_ptOverTau)#
 var_list.append(tauleadTk_deltaPhi)#
 var_list.append(tauleadTk_deltaEta)#
+var_list.append(tauleadTk_Gamma)#
+
+#taujet
+taujet_RelPt       = array.array('f', [-999.])#
+taujet_deltaPhi    = array.array('f', [-999.])#
+taujet_deltaEta    = array.array('f', [-999.])#
+taujet_HadGamma    = array.array('f', [-999.])#
+taujet_EmGamma     = array.array('f', [-999.])#
+taujet_HEGamma      = array.array('f', [-999.])#
+var_list.append(taujet_RelPt)
+var_list.append(taujet_deltaPhi)
+var_list.append(taujet_deltaEta)
+var_list.append(taujet_HadGamma)
+var_list.append(taujet_HEGamma)
 
 #event SFFake
 event_SFFake              =   array.array('f', [-999.])
@@ -436,7 +451,6 @@ systTree.branchTreesSysts(trees, "all", "lepton_isPrompt",        outTreeFile, l
 
 #tau variables
 systTree.branchTreesSysts(trees, "all", "tau_pt",               outTreeFile, tau_pt)
-systTree.branchTreesSysts(trees, "all", "tau_relLeadTkpt",      outTreeFile, tau_relleadtkpt)
 systTree.branchTreesSysts(trees, "all", "tau_eta",              outTreeFile, tau_eta)
 systTree.branchTreesSysts(trees, "all", "tau_phi",              outTreeFile, tau_phi)
 systTree.branchTreesSysts(trees, "all", "tau_mass",             outTreeFile, tau_mass)
@@ -454,6 +468,16 @@ systTree.branchTreesSysts(trees, "all", "tau_LnTRegion",            outTreeFile,
 systTree.branchTreesSysts(trees, "all", "tau_SFFake",               outTreeFile, tau_SFFake)#
 systTree.branchTreesSysts(trees, "all", "tau_isPrompt",               outTreeFile, tau_isPrompt)#
 systTree.branchTreesSysts(trees, "all", "event_SFFake",               outTreeFile, event_SFFake)#
+systTree.branchTreesSysts(trees, "all", "tauleadTk_ptOverTau",      outTreeFile, tauleadTk_ptOverTau)
+systTree.branchTreesSysts(trees, "all", "tauleadTk_deltaPhi",      outTreeFile, tauleadTk_deltaPhi)
+systTree.branchTreesSysts(trees, "all", "tauleadTk_deltaEta",      outTreeFile, tauleadTk_deltaEta)
+systTree.branchTreesSysts(trees, "all", "tauleadTk_Gamma",      outTreeFile, tauleadTk_Gamma)
+systTree.branchTreesSysts(trees, "all", "taujet_relpt",               outTreeFile, taujet_RelPt)
+systTree.branchTreesSysts(trees, "all", "taujet_deltaPhi",               outTreeFile, taujet_deltaPhi)
+systTree.branchTreesSysts(trees, "all", "taujet_deltaEta",               outTreeFile, taujet_deltaEta)
+systTree.branchTreesSysts(trees, "all", "taujet_HadGamma",               outTreeFile, taujet_HadGamma)
+systTree.branchTreesSysts(trees, "all", "taujet_EmGamma",               outTreeFile, taujet_EmGamma)
+systTree.branchTreesSysts(trees, "all", "taujet_HEGamma",               outTreeFile, taujet_HEGamma)
 #jet variables
 systTree.branchTreesSysts(trees, "all", "leadjet_pt",           outTreeFile, leadjet_pt)
 systTree.branchTreesSysts(trees, "all", "leadjet_eta",          outTreeFile, leadjet_eta)
@@ -600,11 +624,11 @@ for i in range(tree.GetEntries()):
     #++++++++++++++++++++++++++++++++++
     
     if Debug:
-        print("evento n. " + str(i))
-        if i > 2000:
+        #print("evento n. " + str(i))
+        if i > 5000:
             break
     
-    if not Debug and i%500 == 0:#
+    if i%500 == 0:#
         print("Event #", i+1, " out of ", tree.GetEntries())
 
     event       = Event(tree,i)
@@ -916,6 +940,18 @@ for i in range(tree.GetEntries()):
     tauleadTk_ptOverTau[0]  =   GoodTau.leadTkPtOverTauPt#
     tauleadTk_deltaPhi[0]   =   GoodTau.leadTkDeltaPhi#
     tauleadTk_deltaEta[0]   =   GoodTau.leadTkDeltaEta#
+    if not isMC:
+        tauleadTk_Gamma[0] = 2.*GoodTau.leadTkPtOverTauPt - 1.
+ 
+    #variables related to tau-associated jet
+    if GoodTau.jetIdx > -1:
+        taujet = jets[GoodTau.jetIdx]
+        taujet_RelPt[0] = taujet.pt/GoodTau.pt
+        taujet_deltaPhi[0] = deltaPhi(GoodTau, taujet)
+        taujet_deltaEta[0] = taujet.eta - GoodTau.eta
+        taujet_HadGamma[0] = taujet.chHEF - taujet.neHEF
+        taujet_EmGamma[0] = taujet.chEmEF - taujet.neEmEF
+        taujet_HEGamma[0] = taujet.chHEF - taujet.neHEF + taujet.chEmEF - taujet.neEmEF
 
     if isMC:
         #print('Tau genmatch:', GoodTau.genPartFlav)
@@ -936,6 +972,8 @@ for i in range(tree.GetEntries()):
         #print('tes:', tes_Down, tes, tes_Up)
         tau_pt[0] *= tes
         tau_mass[0] *= tes
+        tauleadTk_ptOverTau[0] *= 1/(tes)
+
 
         #ele faking tau
         GoodTau_vsele_Down, GoodTau_vsele_SF, GoodTau_vsele_Up = tauSFTool_vsele.getSFvsEta(GoodTau.eta, GoodTau.genPartFlav, unc='All')
@@ -951,6 +989,12 @@ for i in range(tree.GetEntries()):
         #print('fes:', fes_Down, fes, fes_Up)
         tau_pt[0] *= fes
         tau_mass[0] *= fes
+        tauleadTk_ptOverTau[0] *= 1/(fes)
+
+        if GoodTau.jetIdx > -1:
+            taujet_RelPt[0] *= 1/(fes*tes)
+
+        tauleadTk_Gamma[0] = 2.*GoodTau.leadTkPtOverTauPt/(fes*tes) - 1.
 
         #mu faking tau
         GoodTau_vsmu_Down, GoodTau_vsmu_SF, GoodTau_vsmu_Up = tauSFTool_vsmu.getSFvsEta(GoodTau.eta, GoodTau.genPartFlav, unc='All')
