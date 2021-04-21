@@ -38,9 +38,10 @@ def cfg_writer(sample, isMC, outdir):
     f.write("config.JobType.pluginName = 'Analysis'\n")
     f.write("config.JobType.psetName = 'PSet_fake.py'\n")
     f.write("config.JobType.scriptExe = 'crab_script_fake.sh'\n")
+    f.write("config.JobType.allowUndistributedCMSSW = True\n")
     f.write("config.JobType.inputFiles = ['crab_script_fake.py','../scripts/haddnano.py', '../scripts/keep_and_drop.txt']\n") #hadd nano will not be needed once nano tools are in cmssw
     f.write("config.JobType.sendPythonFolder = True\n")
-    #f.write("config.JobType.maxMemoryMB = 5000\n")                                                                                                                                                                                                                   
+    f.write("config.JobType.maxMemoryMB = 5000\n")         
     #f.write("config.JobType.numCores = 8\n")
     f.write("config.section_('Data')\n")
     f.write("config.Data.inputDataset = '"+sample.dataset+"'\n")
@@ -216,7 +217,7 @@ for sample in samples:
             modules = "MCweight_writer('" + sample.label + "'), " + met_hlt_mod + ", preselection(), " + lep_mod + ", " + pu_mod + ", " + btag_mod + ", PrefCorr(), metCorrector(), fatJetCorrector(), " + muon_pt_corr + ", " + ht_producer + ", " + mht_producer # Put here all the modules you want to be runned by crab
         else:
             modules = "preselection(), metCorrector(), fatJetCorrector(), " + muon_pt_corr + ", " + ht_producer + ", " + mht_producer # Put here all the modules you want to be runned by crab
-        print "modules:", modules
+        #print "modules:", modules
         print "Producing crab script"
         crab_script_writer(sample,'/eos/user/'+str(os.environ.get('USER')[0]) + '/'+str(os.environ.get('USER'))+'/Wprime/nosynch/', isMC, modules, presel)
         os.system("chmod +x crab_script_fake.sh")
