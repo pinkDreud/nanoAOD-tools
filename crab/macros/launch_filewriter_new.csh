@@ -1,6 +1,6 @@
 set year = '2017'
 #python files_writer_new.py -d TT_$year #--fake -t HT
-python files_writer_new.py -d WJets_$year 
+#python files_writer_new.py -d WJets_$year 
 ##python files_writer_new.py -d WJetsHT100to200_$year 
 #python files_writer_new.py -d WJets_$year --fake -t HT
 #python files_writer_new.py -d WZ_$year #--fake -t HT
@@ -22,6 +22,6 @@ python files_writer_new.py -d WJets_$year
 ##python files_writer_new.py -d VBS_SSWW_cW_cHW_$year #--fake -t HT
 #python files_writer_new.py -d VBS_SSWW_BSM_SM_$year #--fake -t HT
 ##python files_writer_new.py -d DataHTB_$year --fake -t HT
-#python files_writer_new.py -d DataEle_$year 
+python files_writer_new.py -d DataEle_$year 
 ###python files_writer_new.py -d DataEle_$year --fake -t Lep
-#python files_writer_new.py -d DataMu_$year 
+python files_writer_new.py -d DataMu_$year 
