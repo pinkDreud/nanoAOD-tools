@@ -842,11 +842,11 @@ for i in range(tree.GetEntries()):
     if isMC:
         tightlep_SF = tightlep.effSF
         #tightlep_SF = Lepton_IDIso_SF(tightlep)
-        tightlep_SFUp = tightlep.effSF_errUp
-        tightlep_SFDown = tightlep.effSF_errDown
+        #tightlep_SFUp = tightlep.effSF_errUp
+        #tightlep_SFDown = tightlep.effSF_errDown
         systTree.setWeightName("lepSF", copy.deepcopy(tightlep_SF))
-        systTree.setWeightName("lepUp", copy.deepcopy(tightlep_SFUp))
-        systTree.setWeightName("lepDown", copy.deepcopy(tightlep_SFDown))
+        #systTree.setWeightName("lepUp", copy.deepcopy(tightlep_SFUp))
+        #systTree.setWeightName("lepDown", copy.deepcopy(tightlep_SFDown))
 
         PF_SF = chain.PrefireWeight
         PF_SFUp = chain.PrefireWeight_Up

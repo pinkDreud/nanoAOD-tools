@@ -65,6 +65,7 @@ parser.add_option('--max', dest='maxj', type=int, default = 0, help='Please ente
 parser.add_option('-c', dest='check', default = False, action='store_true', help='Default executes condorrun')
 parser.add_option('-d', dest='dat', type=str, default = 'all', help='Default is all')
 parser.add_option('--rw', dest='rw', default = False, action='store_true', help='Rewrite the files if not are all condored for a specific sample')
+parser.add_option('--nodata', dest='nodata', default = False, action='store_true', help='Not processing Data files')
 
 (opt, args) = parser.parse_args()
 
@@ -136,6 +137,8 @@ for prname, proc in class_dict.items():
     if hasattr(proc, 'components'):
         for sample in proc.components:
             if "Fake" in sample.label:
+                continue
+            elif opt.nodata and 'Data' in sample.label:
                 continue
             if opt.dat != 'all':
                 if not (str(sample.label).startswith(opt.dat) or prname.startswith(opt.dat)):
