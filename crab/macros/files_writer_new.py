@@ -48,8 +48,7 @@ for sample in samples:
 
     f = open(dirpath+str(sample.label)+".txt", "w")
     url = os.popen('crab getoutput --xrootd --quantity="all" -d ' + path + crabdir).readlines()
-
-    print("Printing out crabbed files for "+str(sample.label))
+    print "Printing out crabbed files for "+str(sample.label)
 
     url_dict = {}
     for u in url:
@@ -61,8 +60,6 @@ for sample in samples:
             except:
                 continue
 
-            print npaths
-
             finished = False
             rang = 500
             t = 0
@@ -70,9 +67,14 @@ for sample in samples:
                 intmin = int(t*500+1)
                 intmax = int(min((t+1)*500, npaths))
                 crabgo = str(intmin)+'-'+str(intmax)
+
                 print 'Finding rootfile produced by jobs', str(crabgo), "..."
                 curl = os.popen('crab getoutput --xrootd --jobids=' + str(crabgo) + ' -d ' + path + crabdir).readlines()
-                
+                if 'files to retrieve' in curl:
+                    print 'Files not reachable with xrootd, relaunch jobs with another remote output folder.'
+                    finished = True
+                    break
+
                 cidx = 0
                 while cidx < len(curl):
                     cu = curl[cidx]
@@ -101,11 +103,13 @@ for sample in samples:
             idx = int(u.split("hadd_")[-1].split(".")[0])
             url_dict[idx] = u
 
-    for u_idx in range(len(url_dict)):
-        ru_idx = u_idx + 1
-        try:
-            f.write(url_dict[ru_idx])
-        except:
-            continue
+    print len(url_dict), "paths found for", sample.label
+    pr = 0
+    for k, v in url_dict.items():
+        f.write(v)
+        pr += 1
+       
+    print pr, "paths saved for", sample.label
 
     f.close()
+

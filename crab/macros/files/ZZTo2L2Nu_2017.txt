@@ -8,3 +8,5 @@ root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/ZZTo2L2Nu_13TeV_powheg_py
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/ZZTo2L2Nu_13TeV_powheg_pythia8/ZZTo2L2Nu_2017/210420_110004/0000/tree_hadd_9.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/ZZTo2L2Nu_13TeV_powheg_pythia8/ZZTo2L2Nu_2017/210420_110004/0000/tree_hadd_10.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/ZZTo2L2Nu_13TeV_powheg_pythia8/ZZTo2L2Nu_2017/210420_110004/0000/tree_hadd_11.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/ZZTo2L2Nu_13TeV_powheg_pythia8/ZZTo2L2Nu_2017/210420_110004/0000/tree_hadd_13.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/ZZTo2L2Nu_13TeV_powheg_pythia8/ZZTo2L2Nu_2017/210420_110004/0000/tree_hadd_14.root

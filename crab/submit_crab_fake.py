@@ -41,8 +41,10 @@ def cfg_writer(sample, isMC, outdir):
     f.write("config.JobType.allowUndistributedCMSSW = True\n")
     f.write("config.JobType.inputFiles = ['crab_script_fake.py','../scripts/haddnano.py', '../scripts/keep_and_drop.txt']\n") #hadd nano will not be needed once nano tools are in cmssw
     f.write("config.JobType.sendPythonFolder = True\n")
-    f.write("config.JobType.maxMemoryMB = 5000\n")         
-    #f.write("config.JobType.numCores = 8\n")
+    if isMC:
+        f.write("config.JobType.maxMemoryMB = 5000\n")         
+        f.write("config.JobType.maxJobRuntimeMin = 3000\n")
+        #f.write("config.JobType.numCores = 8\n")
     f.write("config.section_('Data')\n")
     f.write("config.Data.inputDataset = '"+sample.dataset+"'\n")
     f.write("config.Data.allowNonValidInputDataset = True\n")
@@ -211,7 +213,7 @@ for sample in samples:
 
         print "Producing crab configuration file"
 
-        cfg_writer(sample, isMC, "VBS")
+        cfg_writer(sample, isMC, "VBS_Fake")
 
         if isMC:
             modules = "MCweight_writer('" + sample.label + "'), " + met_hlt_mod + ", preselection(), " + lep_mod + ", " + pu_mod + ", " + btag_mod + ", PrefCorr(), metCorrector(), fatJetCorrector(), " + muon_pt_corr + ", " + ht_producer + ", " + mht_producer # Put here all the modules you want to be runned by crab

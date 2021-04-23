@@ -4,3 +4,4 @@ root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/GluGluToContinToZZTo2e2mu
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/GluGluToContinToZZTo2e2mu_2017/210420_110640/0000/tree_hadd_5.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/GluGluToContinToZZTo2e2mu_2017/210420_110640/0000/tree_hadd_6.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/GluGluToContinToZZTo2e2mu_2017/210420_110640/0000/tree_hadd_7.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/GluGluToContinToZZTo2e2mu_2017/210420_110640/0000/tree_hadd_8.root
