@@ -148,9 +148,11 @@ for prname, proc in class_dict.items():
                     print(sample.label, "not completely condored")
                 else:
                     if os.path.exists(path+sample.label):
-                        print("Setting jobs for missing condored files...")
                         if opt.rw:
+                            print('Relaunching all the jobs for', sample.label)
                             os.system("rm -r "+ path + sample.label + "/*")
+                        else:
+                            print("Setting jobs for missing condored files...")
                     print("Writing " + sample.label + " in csh...")
                     f.write("python submit_condor.py -d " + sample.label+ " " + optstring)
 
@@ -169,8 +171,12 @@ for prname, proc in class_dict.items():
                 print(proc.label, "not completely condored")
             else:
                 if os.path.exists(path+proc.label):
-                    print("Setting jobs for missing condored files...")
-                    #os.system("rm -f "+ path + proc.label + "/*")
+                    if opt.rw:
+                        print('Relaunching all the jobs for', sample.label)
+                        os.system("rm -f "+ path + proc.label + "/*")
+                    else:
+                        print("Setting jobs for missing condored files...")
+
                 print("Writing " + proc.label + " in csh...")  
                 f.write("python submit_condor.py -d " + proc.label+ " " + optstring)
 
