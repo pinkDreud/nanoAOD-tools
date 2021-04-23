@@ -64,7 +64,7 @@ parser.add_option('-f', dest='fold', type=str, default = 'v30', help='Please ent
 parser.add_option('--max', dest='maxj', type=int, default = 0, help='Please enter a maximum for number of condor jobs')
 parser.add_option('-c', dest='check', default = False, action='store_true', help='Default executes condorrun')
 parser.add_option('-d', dest='dat', type=str, default = 'all', help='Default is all')
-#parser.add_option('--wop', dest='wop', default = False, action='store_true', help='Default executes with FR without prompt substraction')
+parser.add_option('--rw', dest='rw', default = False, action='store_true', help='Rewrite the files if not are all condored for a specific sample')
 
 (opt, args) = parser.parse_args()
 
@@ -149,7 +149,8 @@ for prname, proc in class_dict.items():
                 else:
                     if os.path.exists(path+sample.label):
                         print("Setting jobs for missing condored files...")
-                        #os.system("rm -r "+ path + sample.label + "/*")
+                        if opt.rw:
+                            os.system("rm -r "+ path + sample.label + "/*")
                     print("Writing " + sample.label + " in csh...")
                     f.write("python submit_condor.py -d " + sample.label+ " " + optstring)
 

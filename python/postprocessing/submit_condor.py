@@ -95,13 +95,14 @@ for sample in samples:
         for i, files in enumerate(files_list):
             if opt.maxj > 0:
                 if i > opt.maxj: break
-            if os.path.exists(opath + sample.label + "_part" + str(i) + ".root"):
+            idx = int(files.split("_hadd_")[-1].split(".")[0])
+            if os.path.exists(opath + sample.label + "_part" + str(idx) + ".root"):
                 continue
-            sub_writer(sample, i, files, folder)
+            sub_writer(sample, idx, files, folder)
             os.popen('condor_submit condor.sub')
             print('condor_submit condor.sub')
             #os.popen("python tree_skimmer_ssWW.py " " + sample.label + " " + str(i) + " " + str(files))
-            print("python tree_skimmer_ssWW_wFakes.py " + sample.label + " " + str(i) + " " + str(files) + " remote")
+            print("python tree_skimmer_ssWW_wFakes.py " + sample.label + " " + str(idx) + " " + str(files) + " remote")
     else:
         for i in range(len(files_list)/split+1):
             if os.path.exists(opath + sample.label + "_part" + str(i) + ".root"):
