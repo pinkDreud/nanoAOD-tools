@@ -82,7 +82,11 @@ class lepSFProducer(Module):
         self.out = wrappedOutputTree
         self.out.branch("Muon_effSF", "F", lenVar="nMuon")
         self.out.branch("Electron_effSF", "F", lenVar="nElectron")
-
+        self.out.branch("Muon_effSF_errUp", "F", lenVar="nMuon")
+        self.out.branch("Electron_effSF_errUp", "F", lenVar="nElectron")
+        self.out.branch("Muon_effSF_errDown", "F", lenVar="nMuon")
+        self.out.branch("Electron_effSF_errDown", "F", lenVar="nElectron")
+        
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
@@ -96,8 +100,14 @@ class lepSFProducer(Module):
         sf_mu = [
             self._worker_mu.getSF(mu.pdgId, mu.pt, mu.eta) for mu in muons
         ]
+        sferr_el = [ self._worker_el.getSFErr(el.pdgId,el.pt,el.eta) for el in electrons ]
+        sferr_mu = [ self._worker_mu.getSFErr(mu.pdgId,mu.pt,mu.eta) for mu in muons ]
         self.out.fillBranch("Muon_effSF", sf_mu)
         self.out.fillBranch("Electron_effSF", sf_el)
+        self.out.fillBranch("Muon_effSF_errUp", [errsf + sf for errsf, sf in zip(sferr_mu, sf_mu)])
+        self.out.fillBranch("Electron_effSF_errUp", [errsf + sf for errsf, sf in zip(sferr_el, sf_el)])
+        self.out.fillBranch("Muon_effSF_errDown", [errsf - sf for errsf, sf in zip(sferr_mu, sf_mu)])
+        self.out.fillBranch("Electron_effSF_errDown", [errsf - sf for errsf, sf in zip(sferr_el, sf_el)])
         return True
 
 
