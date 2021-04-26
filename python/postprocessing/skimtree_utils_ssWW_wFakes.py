@@ -214,6 +214,7 @@ def SelectTau(tauCollection, GoodMuon, vsEleWP, vsMuWP, vsJetWP):
     if len(tauCollection)<1:
         return -1, -999
     for i in range(len(tauCollection)):
+        #print(i, "deltaR(tightlep):", deltaR(tauCollection[i].eta, tauCollection[i].phi, GoodMuon.eta, GoodMuon.phi), "DTvse:", tauCollection[i].idDeepTau2017v2p1VSe, "DTvsmu:", tauCollection[i].idDeepTau2017v2p1VSmu, "DTvsjet:", tauCollection[i].idDeepTau2017v2p1VSjet, "tau pt:", tauCollection[i].pt, "tau eta:", tauCollection[i].eta)
         if deltaR(tauCollection[i].eta, tauCollection[i].phi, GoodMuon.eta, GoodMuon.phi)<DR_OVERLAP_CONE_TAU:
             continue
         if not (tauCollection[i].idDeepTau2017v2p1VSe>=vsEleWP and tauCollection[i].idDeepTau2017v2p1VSmu>=vsMuWP and tauCollection[i].idDeepTau2017v2p1VSjet>=vsJetWP and tauCollection[i].idDecayModeNewDMs):   
@@ -236,6 +237,25 @@ def SelectTau(tauCollection, GoodMuon, vsEleWP, vsMuWP, vsJetWP):
         return i, 0
      
     return -1, -999
+
+def SelectAndVetoTaus(taus, lepton):
+    nTau=0
+    idxl = []
+    if len(taus)==0:
+        return 0, idxl
+    for i, tau in enumerate(taus):
+        #print(i, "deltaR(tightlep):", deltaR(tau.eta, tau.phi, lepton.eta, lepton.phi), "DTvse:", tau.idDeepTau2017v2p1VSe, "DTvsmu:", tau.idDeepTau2017v2p1VSmu, "DTvsjet:", tau.idDeepTau2017v2p1VSjet, "tau pt:", tau.pt, "tau eta:", tau.eta)
+        #print(deltaR(tau.eta, tau.phi, lepton.eta, lepton.phi)>DR_OVERLAP_CONE_TAU, tau.idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE, tau.idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU, tau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET_LOOSE, tau.pt>=PT_CUT_TAU, abs(tau.eta)<=ETA_CUT_TAU, tau.idDecayModeNewDMs)
+        if (tau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET_LOOSE and tau.idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and tau.idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and tau.idDecayModeNewDMs) and deltaR(tau.eta, tau.phi, lepton.eta, lepton.phi)>DR_OVERLAP_CONE_TAU and tau.pt>=PT_CUT_TAU and abs(tau.eta)<=ETA_CUT_TAU:
+            nTau+=1
+            if tau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET:
+                idxl.append([i, "T"])
+            else:
+                idxl.append([i, "L"])
+    if nTau!=1:
+        return 0, idxl                                                                                                       
+    else:
+        return 1, idxl
 
 def BVeto(jetCollection):
     veto = False
@@ -265,20 +285,51 @@ def IsNotTheSameObject(obj1, obj2):
 
 def LepVetoOneCollection(GoodLepton, collection, relIsoCut, ptCut, etaCut, isMu):
     i=0
+    #print("relisocut:", relIsoCut)
     for i in range(len(collection)):
         lep=collection[i]
+        veto = False
+        '''
         if IsNotTheSameObject(GoodLepton, lep): 
             if isMu:
-              if lep.pfRelIso04_all>=relIsoCut: continue
+                print(i, "pdgId:", abs(lep.pdgId), "pt:", lep.pt, "iso", lep.pfRelIso04_all, "eta", lep.eta)
+                if lep.pfRelIso04_all>=relIsoCut:#passa al prossimo se non passa la selezione loose su iso
+                    continue
             else:
-              if lep.jetRelIso>=relIsoCut: continue
-            if lep.pt<ptCut: continue
-            if abs(lep.eta)>etaCut: continue
-            return False
-    return True
+                print(i, "pdgId:", abs(lep.pdgId), "pt:", lep.pt, "iso", lep.jetRelIso, "eta", lep.eta)
+                if lep.jetRelIso>=relIsoCut:#passa al prossimo se non passa la selezione loose su iso
+                    continue
+            if lep.pt<ptCut:#passa al prossimo se non passa la selezione loose su pt
+                continue
+            if abs(lep.eta)>etaCut:#passa al prossimo se non passa la selezione loose su eta
+                continue
+            veto = False
+            return veto
+        '''
+        if IsNotTheSameObject(GoodLepton, lep): 
+            if isMu:
+                #print(i, "pdgId:", abs(lep.pdgId), "pt:", lep.pt, "iso", lep.pfRelIso04_all, "eta", lep.eta)
+                if not (lep.pfRelIso04_all<relIsoCut and lep.pt>ptCut and abs(lep.eta)<etaCut):
+                    continue
+            else:
+                #print(i, "pdgId:", abs(lep.pdgId), "pt:", lep.pt, "iso", lep.jetRelIso, "eta", lep.eta)
+                if not (lep.jetRelIso<relIsoCut and lep.pt>ptCut and abs(lep.eta)<etaCut):
+                    continue
+
+            veto = False
+            return veto
+
+    veto = True
+    return veto
+
+
+    
 
 def LepVeto(GoodLepton, ElectronCollection, MuonCollection):
-    return bool(LepVetoOneCollection(GoodLepton, ElectronCollection, REL_ISO_CUT_LEP_VETO_ELE, PT_CUT_LEP_VETO_ELE, ETA_CUT_LEP_VETO_ELE, False) or LepVetoOneCollection(GoodLepton, MuonCollection, REL_ISO_CUT_LEP_VETO_MU, PT_CUT_LEP_VETO_MU, ETA_CUT_LEP_VETO_MU, True))
+    eleveto = LepVetoOneCollection(GoodLepton, ElectronCollection, REL_ISO_CUT_LEP_VETO_ELE, PT_CUT_LEP_VETO_ELE, ETA_CUT_LEP_VETO_ELE, False)
+    muveto = LepVetoOneCollection(GoodLepton, MuonCollection, REL_ISO_CUT_LEP_VETO_MU, PT_CUT_LEP_VETO_MU, ETA_CUT_LEP_VETO_MU, True)
+    print("eleveto:", eleveto, "muveto:", muveto)
+    return bool(eleveto and muveto)
 
 #semplifica la macro
 def SelectJet(jetCollection, GoodTau, GoodMu):

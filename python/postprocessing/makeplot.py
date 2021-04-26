@@ -71,7 +71,7 @@ else:
 cut = opt.cut #default cut must be obvious, for example lepton_eta>-10.
 
 if opt.bveto:
-     cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1)*(" + cut + ")", 
+     cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==0&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1)*(" + cut + ")", 
                  'electron':"(abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1)*(" + cut + ")", 
                  'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1)*(" + cut + ")", 
           }
@@ -260,19 +260,23 @@ def lumi_writer(dataset, lumi):
                if isthere_pdf:# ("WZ" in sample.label):
                     h_pdfw_tmp = ROOT.TH1F(infile.Get("h_PDFweight"))
                     nbins = h_pdfw_tmp.GetXaxis().GetNbins()
-                    #w_PDF = array('f', [0.]*nbins)
                     print(nbins)
-                    #print(len(w_PDF))
-                    #tree_new.Branch('w_PDF', w_PDF, 'w_PDF[' + str(int(len(w_PDF))) + ']/F')
+                    w_PDF = array('f', [0.]*nbins)
+               else:
+                    w_PDF = array('f', [1.])
+                    
+               print(len(w_PDF))
+               tree_new.Branch('w_PDF', w_PDF, 'w_PDF[' + str(int(len(w_PDF))) + ']/F')
+               
                for event in range(0, tree.GetEntries()):
                     tree.GetEntry(event)
                     if event%10000==1:
                          #print("Processing event %s     complete %s percent" %(event, 100*event/tree.GetEntries()))
                          sys.stdout.write("\rProcessing event {}     complete {} percent".format(event, 100*event/tree.GetEntries()))
                     w_nom[0] = tree.w_nominal * sample.sigma * tree.HLT_effLumi * 1000./float(h_genw_tmp.GetBinContent(1))
-                    #if isthere_pdf: #not ("WZ" in sample.label):
-                         #for i in range(1, nbins):
-                              #w_PDF[i] = h_pdfw_tmp.GetBinContent(i+1)/h_genw_tmp.GetBinContent(2) 
+                    if isthere_pdf: #not ("WZ" in sample.label):
+                        for i in range(1, nbins):
+                            w_PDF[i] = h_pdfw_tmp.GetBinContent(i+1)/h_genw_tmp.GetBinContent(2) 
                     tree_new.Fill()
                tree_new.Write()
                outfile.Close()

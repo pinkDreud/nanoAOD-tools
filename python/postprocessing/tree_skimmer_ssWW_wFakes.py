@@ -609,6 +609,7 @@ contagood=0
 #++++++++++++++++++++++++++++++++++
 #++   looping over the events    ++
 #++++++++++++++++++++++++++++++++++
+taucont = 0
 for i in range(tree.GetEntries()):
     #reinizializza tutte le variabili a 0, per sicurezza
     for j, var in enumerate(var_list):
@@ -624,11 +625,11 @@ for i in range(tree.GetEntries()):
     #++++++++++++++++++++++++++++++++++
     
     if Debug:
-        #print("evento n. " + str(i))
-        if i > 5000:
+        print("\nevento n. " + str(i))
+        if i > 20000:
             break
     
-    if i%500 == 0:#
+    if i%500 == 0 and not Debug:#
         print("Event #", i+1, " out of ", tree.GetEntries())
 
     event       = Event(tree,i)
@@ -868,35 +869,27 @@ for i in range(tree.GetEntries()):
     
     pass_lepton_veto[0]=LepVeto(GoodLep, electrons, muons)
     
-    #if (SingleEle or SingleMu) and pass_lepton_iso[0]==1 and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1: Cut_dict[3][1]+=1    
-    
-    #UseDeepTau=True
-    DeepTauVsEle = ID_TAU_RECO_DEEPTAU_VSELE#
-    DeepTauVsMu = ID_TAU_RECO_DEEPTAU_VSMU#
-    DeepTauVsJet = ID_TAU_RECO_DEEPTAU_VSJET#
-    
-    indexGoodTau, tau_TightRegion[0] = SelectTau(list(taus), tightlep, DeepTauVsEle, DeepTauVsMu, DeepTauVsJet)
-    if tau_TightRegion[0] == 1 : tau_LnTRegion[0] = 0
-    elif tau_TightRegion[0] == 0 : tau_LnTRegion[0] = 1
+    ThereIsOneTau, ltau_list = SelectAndVetoTaus(list(taus), tightlep)
+
+    if ThereIsOneTau:
+        taucont = taucont + 1
+        indexGoodTau = ltau_list[0][0]
+        if ltau_list[0][1] == 'T':
+            tau_TightRegion[0] = 1
+            tau_LnTRegion[0] = 0
+        elif ltau_list[0][1] == 'L':
+            tau_TightRegion[0] = 0
+            tau_LnTRegion[0] = 1            
     else:
-        tau_LnTRegion[0] = -999
-
-
-    if indexGoodTau<0 or indexGoodTau>=len(taus) or (tau_TightRegion[0]<0 and tau_LnTRegion[0]<0): 
-        #systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
-        #systTree.fillTreesSysts(trees, "all")
-        continue      
-    
+        continue
 
     GoodTau=taus[indexGoodTau]
-    #pass_tau_selection_ML[0]=1#
 
-    if tau_TightRegion[0]==1 or tau_LnTRegion[0]==1:#GoodTau.idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and GoodTau.idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and GoodTau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET:#
-        pass_tau_selection[0] = 1#
+    if tau_TightRegion[0]==1 or tau_LnTRegion[0]==1:
+        pass_tau_selection[0] = 1
     else:
         pass_tau_selection[0] = 0
     
-    #if (SingleEle or SingleMu) and pass_lepton_iso[0]==1 and pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1: Cut_dict[4][1]+=1
 
     tau_pt[0]               =   GoodTau.pt
     tau_relleadtkpt[0]      =   GoodTau.leadTkPtOverTauPt
@@ -973,7 +966,6 @@ for i in range(tree.GetEntries()):
         tau_pt[0] *= tes
         tau_mass[0] *= tes
         tauleadTk_ptOverTau[0] *= 1/(tes)
-
 
         #ele faking tau
         GoodTau_vsele_Down, GoodTau_vsele_SF, GoodTau_vsele_Up = tauSFTool_vsele.getSFvsEta(GoodTau.eta, GoodTau.genPartFlav, unc='All')
@@ -1193,3 +1185,5 @@ print("Number of events in output tree " + str(trees[0].GetEntries()))
 
 endTime = datetime.datetime.now()
 print("Ending running at " + str(endTime) + "\n Goodbye")
+
+print("events with one only at-least-loose tau:", taucont)

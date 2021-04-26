@@ -1,0 +1,9 @@
+python submit_condor.py -d ZZJJTo4L_EWK_2017  -f v68 --wpjet VT --wpele VL --wpmu T
+python submit_condor.py -d ZZJJTo4L_QCD_2017  -f v68 --wpjet VT --wpele VL --wpmu T
+python submit_condor.py -d GluGluToContinToZZTo2e2nu_2017  -f v68 --wpjet VT --wpele VL --wpmu T
+python submit_condor.py -d GluGluToContinToZZTo2e2mu_2017  -f v68 --wpjet VT --wpele VL --wpmu T
+python submit_condor.py -d GluGluToContinToZZTo2e2tau_2017  -f v68 --wpjet VT --wpele VL --wpmu T
+python submit_condor.py -d GluGluToContinToZZTo2mu2nu_2017  -f v68 --wpjet VT --wpele VL --wpmu T
+python submit_condor.py -d GluGluToContinToZZTo2mu2tau_2017  -f v68 --wpjet VT --wpele VL --wpmu T
+python submit_condor.py -d GluGluToContinToZZTo4e_2017  -f v68 --wpjet VT --wpele VL --wpmu T
+python submit_condor.py -d GluGluToContinToZZTo4mu_2017  -f v68 --wpjet VT --wpele VL --wpmu T
