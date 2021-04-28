@@ -368,14 +368,18 @@ var_list.append(MET_pt)
 var_list.append(MET_phi)
 
 
-
-mjj                         =   array.array('f', [-999.])
-m_leptau                    =   array.array('f', [-999.])
+#inv and transv masses
+m_jjtau = array.array('f', [-999.])#
+m_jjtaulep = array.array('f', [-999.])#
+m_jj                         =   array.array('f', [-999.])
+m_taulep                    =   array.array('f', [-999.])
 mT_lep_MET                  =   array.array('f', [-999.])
 mT_tau_MET                  =   array.array('f', [-999.])
 mT_leptau_MET               =   array.array('f', [-999.])
-var_list.append(mjj)
-var_list.append(m_leptau)
+var_list.append(m_jjtau)
+var_list.append(m_jjtaulep)
+var_list.append(m_jj)
+var_list.append(m_taulep)
 var_list.append(mT_lep_MET)
 var_list.append(mT_tau_MET)
 var_list.append(mT_leptau_MET)
@@ -394,13 +398,53 @@ var_list.append(deltaPhi_tauj2)#
 var_list.append(deltaPhi_lepj1)#
 var_list.append(deltaPhi_lepj2)#
 
+#deltaTheta
+deltaTheta_jj                 =   array.array('f', [-999.])#
+deltaTheta_taulep             =   array.array('f', [-999.])#
+deltaTheta_tauj1              =   array.array('f', [-999.])#
+deltaTheta_tauj2              =   array.array('f', [-999.])#
+deltaTheta_lepj1              =   array.array('f', [-999.])#
+deltaTheta_lepj2              =   array.array('f', [-999.])#
+var_list.append(deltaTheta_jj)#
+var_list.append(deltaTheta_taulep)#
+var_list.append(deltaTheta_tauj1)#
+var_list.append(deltaTheta_tauj2)#
+var_list.append(deltaTheta_lepj1)#
+var_list.append(deltaTheta_lepj2)#
+
+#ptRel
+ptRel_jj                 =   array.array('f', [-999.])#
+ptRel_taulep             =   array.array('f', [-999.])#
+ptRel_tauj1              =   array.array('f', [-999.])#
+ptRel_tauj2              =   array.array('f', [-999.])#
+ptRel_lepj1              =   array.array('f', [-999.])#
+ptRel_lepj2              =   array.array('f', [-999.])#
+var_list.append(ptRel_jj)#
+var_list.append(ptRel_taulep)#
+var_list.append(ptRel_tauj1)#
+var_list.append(ptRel_tauj2)#
+var_list.append(ptRel_lepj1)#
+var_list.append(ptRel_lepj2)#
+
 #other#
 SF_Fake                     =   array.array('f', [1.])
 var_list.append(SF_Fake)
 HLT_effLumi                 =   array.array('f', [-999.])
 var_list.append(HLT_effLumi)
+
+#deltaEta#                                                                      
 deltaEta_jj                 =   array.array('f', [-999.])#
-var_list.append(deltaEta_jj)
+deltaEta_taulep             =   array.array('f', [-999.])#
+deltaEta_tauj1              =   array.array('f', [-999.])#
+deltaEta_tauj2              =   array.array('f', [-999.])#
+deltaEta_lepj1              =   array.array('f', [-999.])#
+deltaEta_lepj2              =   array.array('f', [-999.])#
+var_list.append(deltaEta_jj)#
+var_list.append(deltaEta_taulep)#
+var_list.append(deltaEta_tauj1)#
+var_list.append(deltaEta_tauj2)#
+var_list.append(deltaEta_lepj1)#
+var_list.append(deltaEta_lepj2)#
 
 #cut variables
 pass_lepton_selection       =   array.array('i', [0])
@@ -516,11 +560,13 @@ systTree.branchTreesSysts(trees, "all", "nBJets", outTreeFile, nBJets)#
 systTree.branchTreesSysts(trees, "all", "MET_pt",               outTreeFile, MET_pt)
 systTree.branchTreesSysts(trees, "all", "MET_phi",              outTreeFile, MET_phi)
 #masses#
-systTree.branchTreesSysts(trees, "all", "mjj",                  outTreeFile, mjj)
+systTree.branchTreesSysts(trees, "all", "m_jj",                  outTreeFile, m_jj)
 systTree.branchTreesSysts(trees, "all", "mT_lep_MET",                  outTreeFile, mT_lep_MET)
 systTree.branchTreesSysts(trees, "all", "mT_tau_MET",                  outTreeFile, mT_tau_MET)
 systTree.branchTreesSysts(trees, "all", "mT_leptau_MET",                  outTreeFile, mT_leptau_MET)
-systTree.branchTreesSysts(trees, "all", "m_leptau",                  outTreeFile, m_leptau)
+systTree.branchTreesSysts(trees, "all", "m_taulep",                  outTreeFile, m_taulep)
+systTree.branchTreesSysts(trees, "all", "m_jjtau",                  outTreeFile, m_jjtau)
+systTree.branchTreesSysts(trees, "all", "m_jjtaulep",                  outTreeFile, m_jjtaulep)
 #deltaPhi#
 systTree.branchTreesSysts(trees, "all", "deltaPhi_jj",              outTreeFile, deltaPhi_jj)#
 systTree.branchTreesSysts(trees, "all", "deltaPhi_taulep",          outTreeFile, deltaPhi_taulep)#
@@ -528,8 +574,28 @@ systTree.branchTreesSysts(trees, "all", "deltaPhi_tauj1",           outTreeFile,
 systTree.branchTreesSysts(trees, "all", "deltaPhi_tauj2",           outTreeFile, deltaPhi_tauj2)#
 systTree.branchTreesSysts(trees, "all", "deltaPhi_lepj1",           outTreeFile, deltaPhi_lepj1)#
 systTree.branchTreesSysts(trees, "all", "deltaPhi_lepj2",           outTreeFile, deltaPhi_lepj2)#
-#other                                                                                    
+#deltaEta#
 systTree.branchTreesSysts(trees, "all", "deltaEta_jj",              outTreeFile, deltaEta_jj)#
+systTree.branchTreesSysts(trees, "all", "deltaEta_taulep",          outTreeFile, deltaEta_taulep)#
+systTree.branchTreesSysts(trees, "all", "deltaEta_tauj1",           outTreeFile, deltaEta_tauj1)#
+systTree.branchTreesSysts(trees, "all", "deltaEta_tauj2",           outTreeFile, deltaEta_tauj2)#
+systTree.branchTreesSysts(trees, "all", "deltaEta_lepj1",           outTreeFile, deltaEta_lepj1)#
+systTree.branchTreesSysts(trees, "all", "deltaEta_lepj2",           outTreeFile, deltaEta_lepj2)#
+#deltaTheta#
+systTree.branchTreesSysts(trees, "all", "deltaTheta_jj",              outTreeFile, deltaTheta_jj)#
+systTree.branchTreesSysts(trees, "all", "deltaTheta_taulep",          outTreeFile, deltaTheta_taulep)#
+systTree.branchTreesSysts(trees, "all", "deltaTheta_tauj1",           outTreeFile, deltaTheta_tauj1)#
+systTree.branchTreesSysts(trees, "all", "deltaTheta_tauj2",           outTreeFile, deltaTheta_tauj2)#
+systTree.branchTreesSysts(trees, "all", "deltaTheta_lepj1",           outTreeFile, deltaTheta_lepj1)#
+systTree.branchTreesSysts(trees, "all", "deltaTheta_lepj2",           outTreeFile, deltaTheta_lepj2)#
+#ptRel#
+systTree.branchTreesSysts(trees, "all", "ptRel_jj",              outTreeFile, ptRel_jj)#
+systTree.branchTreesSysts(trees, "all", "ptRel_taulep",          outTreeFile, ptRel_taulep)#
+systTree.branchTreesSysts(trees, "all", "ptRel_tauj1",           outTreeFile, ptRel_tauj1)#
+systTree.branchTreesSysts(trees, "all", "ptRel_tauj2",           outTreeFile, ptRel_tauj2)#
+systTree.branchTreesSysts(trees, "all", "ptRel_lepj1",           outTreeFile, ptRel_lepj1)#
+systTree.branchTreesSysts(trees, "all", "ptRel_lepj2",           outTreeFile, ptRel_lepj2)#
+#other                                                                                    
 systTree.branchTreesSysts(trees, "all", "SF_Fake",                  outTreeFile, SF_Fake)#
 systTree.branchTreesSysts(trees, "all", "HLT_effLumi",              outTreeFile, HLT_effLumi)#
 #zeppenfeld
@@ -626,7 +692,7 @@ for i in range(tree.GetEntries()):
     
     if Debug:
         print("\nevento n. " + str(i))
-        if i > 20000:
+        if i > 40000:
             break
     
     if i%500 == 0 and not Debug:#
@@ -908,7 +974,7 @@ for i in range(tree.GetEntries()):
         tau_isPrompt[0] = GoodTau.genPartFlav
 
     mT_tau_MET[0]=mTlepMet(met, GoodTau.p4())
-    mT_leptau_MET[0]=mTlepMet(met, GoodTau.p4()+tightlep.p4())
+    mT_leptau_MET[0]=mTlepMet(met, GoodTau.p4()+GoodLep.p4())
     tau_DeepTau_WP[0] = GoodTau.idDeepTau2017v2p1VSjet*1000.**2. + GoodTau.idDeepTau2017v2p1VSmu*1000. + GoodTau.idDeepTau2017v2p1VSe
     if GoodTau.idDeepTau2017v2p1VSe+1 > 0.:
         tau_DeepTauVsEle_WP[0]  =   math.log(GoodTau.idDeepTau2017v2p1VSe+1, 2)#
@@ -929,7 +995,13 @@ for i in range(tree.GetEntries()):
     tau_DeepTauVsJet_raw[0] =   GoodTau.rawDeepTau2017v2p1VSjet#
 
     tau_isolation[0]=   GoodTau.neutralIso
-    m_leptau=(GoodTau.p4() + tightlep.p4()).M()
+
+    m_taulep[0]=(GoodTau.p4() + GoodLep.p4()).M()
+
+    deltaEta_taulep[0] = GoodTau.eta - GoodLep.eta
+    deltaTheta_taulep[0] = (GoodTau.p4() - GoodLep.p4()).CosTheta()
+    ptRel_taulep[0] = get_ptrel(GoodLep, GoodTau)
+
     tauleadTk_ptOverTau[0]  =   GoodTau.leadTkPtOverTauPt#
     tauleadTk_deltaPhi[0]   =   GoodTau.leadTkDeltaPhi#
     tauleadTk_deltaEta[0]   =   GoodTau.leadTkDeltaEta#
@@ -1054,6 +1126,30 @@ for i in range(tree.GetEntries()):
     deltaPhi_lepj1[0]   =   deltaPhi(GoodLep, jet1)#
     deltaPhi_lepj2[0]   =   deltaPhi(GoodLep, jet2)#
 
+    #calculating deltaEta                                                                                                      
+    deltaEta_jj[0]      =   jet1.eta - jet2.eta#
+    deltaEta_taulep[0]  =   GoodTau.eta - GoodLep.eta#
+    deltaEta_tauj1[0]   =   GoodTau.eta - jet1.eta#
+    deltaEta_tauj2[0]   =   GoodTau.eta - jet2.eta#
+    deltaEta_lepj1[0]   =   GoodLep.eta - jet1.eta#
+    deltaEta_lepj2[0]   =   GoodLep.eta - jet2.eta#
+
+    #calculating deltaTheta                                                                                                      
+    deltaTheta_jj[0]      =   (jet1.p4() - jet2.p4()).CosTheta()
+    deltaTheta_taulep[0]  =   (GoodTau.p4() - GoodLep.p4()).CosTheta()
+    deltaTheta_tauj1[0]   =   (GoodTau.p4() - jet1.p4()).CosTheta()
+    deltaTheta_tauj2[0]   =   (GoodTau.p4() - jet2.p4()).CosTheta()
+    deltaTheta_lepj1[0]   =   (GoodLep.p4() - jet1.p4()).CosTheta()
+    deltaTheta_lepj2[0]   =   (GoodLep.p4() - jet2.p4()).CosTheta()
+
+    #calculating ptRel                                                                                                      
+    ptRel_jj[0]      =   get_ptrel(jet1, jet2)
+    ptRel_taulep[0]  =   get_ptrel(GoodTau, GoodLep)
+    ptRel_tauj1[0]   =   get_ptrel(GoodTau, jet1)
+    ptRel_tauj2[0]   =   get_ptrel(GoodTau, jet2)
+    ptRel_lepj1[0]   =   get_ptrel(GoodLep, jet1)
+    ptRel_lepj2[0]   =   get_ptrel(GoodLep, jet2)
+
     lepton_Zeppenfeld[0], tau_Zeppenfeld[0], event_Zeppenfeld[0] = Zeppenfeld(lepton_eta[0], tau_eta[0], leadjet_eta[0], subleadjet_eta[0])
 
     AK8jet1, dR_jet1AK48 = closest(jet1, fatjets)
@@ -1098,8 +1194,8 @@ for i in range(tree.GetEntries()):
     
     if not JetCut(leadJet, subleadJet): pass_mjj_cut[0]=1
 
-    mjj[0]=(leadJet+subleadJet).M()
-    deltaEta_jj[0]=abs(leadJet.Eta()-subleadJet.Eta())
+    m_jj[0]=(leadJet+subleadJet).M()
+
     lepton_Zeppenfeld_over_deltaEta_jj[0] = lepton_Zeppenfeld[0]/deltaEta_jj[0]
     tau_Zeppenfeld_over_deltaEta_jj[0] = tau_Zeppenfeld[0]/deltaEta_jj[0]
     lepton_Zeppenfeld_over_deltaEta_jj[0] = event_Zeppenfeld[0]/deltaEta_jj[0]

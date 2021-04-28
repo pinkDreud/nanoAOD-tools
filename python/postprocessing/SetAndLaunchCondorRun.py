@@ -125,13 +125,9 @@ for prname, proc in class_dict.items():
     
     if opt.year not in prname:
         continue
-    if "Fake" in prname:
+    if "Fake" in prname or prname.startswith("DataMET") or prname.startswith('DataHT') or '_BSM_INT_' in prname or prname.startswith('TT_') or prname.startswith('DY'):
         continue
-    elif "DataMET" in prname:# or 'DataHT' in prname:
-        continue
-    elif '_BSM_INT_' in prname:
-        continue
-
+        
     toLaunch = True
 
     if hasattr(proc, 'components'):
@@ -206,7 +202,7 @@ if not opt.check:
     t.write("REL_ISO_CUT_LEP_VETO_ELE=   0.1\n")
     t.write("PT_CUT_LEP_VETO_ELE=        15\n")
     t.write("ETA_CUT_LEP_VETO_ELE=       2.4\n")
-    t.write("REL_ISO_CUT_LEP_VETO_MU=    0.25\n")
+    t.write("REL_ISO_CUT_LEP_VETO_MU=    0.4\n")
     t.write("PT_CUT_LEP_VETO_MU=         10\n")
     t.write("ETA_CUT_LEP_VETO_MU=        2.4\n\n")
     

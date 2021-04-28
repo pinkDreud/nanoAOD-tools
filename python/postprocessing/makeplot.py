@@ -142,8 +142,8 @@ def mergepart(dataset):
           check = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + "_merged.root ")
           print("Number of entries of the file %s are %s" %(filerepo + sample.label + "/"  + sample.label + "_merged.root", (check.Get("events_all")).GetEntries()))
 
-          if not folder.startswith('FR_'):
-
+          if not folder.startswith('FR'):
+              
                # insert BDT output value into merged file
                print("Processing events with Tommaso's BDT...")
                file_path = filerepo + sample.label + "/"  + sample.label + "_merged.root"
@@ -739,6 +739,8 @@ leptons = opt.lep.split(',')
 #dataset_dict = {'2016':[],'2017':[],'2018':[]}
 dataset_dict = {'2017':[],'2018':[]}
 
+print(class_list)
+
 if(opt.dat != 'all'):
      print(opt.dat)
      if not(opt.dat in sample_dict.keys()):
@@ -756,6 +758,7 @@ if(opt.dat != 'all'):
      [dataset_dict[str(sample.year)].append(sample) for sample in samples]
 else:
      for v in class_list:
+          #print(v)
           if opt.signal and not ('WpWpJJ_EWK' in v.label or 'VBS_SSWW' in v.label):
                continue
           if 'DataMET' in v.label:
@@ -833,6 +836,7 @@ for year in years:
           bin_lepton_pt = array("f", [0., 30., 45., 60., 80., 100., 200., 300., 500., 800.])
           nbin_lepton_pt = len(bin_lepton_pt)-1
           variables.append(variabile('lepton_pt',  'Lepton p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_lepton_pt, bin_lepton_pt))#30, 1500))
+          
           '''
           #variables.append(variabile('lepton_pdgid', 'lepton pdgid',  wzero+'*('+cutbase+')', 31, -15.5, 15.5))
           #variables.append(variabile('lepton_pfRelIso04', 'lepton rel iso',  wzero+'*('+cutbase+')', 15, 0, 0.15))
@@ -949,6 +953,7 @@ for year in years:
           '''
 
           for sample in dataset_new:
+               print(sample)
                if ('DataHT' in sample.label or 'DataMET' in sample.label) and not opt.folder.startswith("CTHT"):# or "WJets" in sample.label:
                     continue
                elif ('DataMu' in sample.label or 'DataEle' in sample.label or 'DataMET' in sample.label or 'QCD' in sample.label) and opt.folder.startswith("CTHT"):

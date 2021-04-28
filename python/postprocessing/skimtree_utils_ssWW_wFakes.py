@@ -148,6 +148,10 @@ def FindSecondJet(jet, jetCollection, GoodTau, GoodMu):
                 return k
     return -1
 
+def get_ptrel(lepton, jet):
+    ptrel = ((jet.p4()-lepton.p4()).Vect().Cross(lepton.p4().Vect())).Mag()/(jet.p4().Vect().Mag())
+    return ptrel
+
 def SelectLepton(lepCollection, isMu): #isMu==True -> muons else Ele 
     pT_cut=-999
     eta_cut=-999
@@ -309,11 +313,11 @@ def LepVetoOneCollection(GoodLepton, collection, relIsoCut, ptCut, etaCut, isMu)
         if IsNotTheSameObject(GoodLepton, lep): 
             if isMu:
                 #print(i, "pdgId:", abs(lep.pdgId), "pt:", lep.pt, "iso", lep.pfRelIso04_all, "eta", lep.eta)
-                if not (lep.pfRelIso04_all<relIsoCut and lep.pt>ptCut and abs(lep.eta)<etaCut):
+                if not (lep.pfRelIso04_all<relIsoCut and lep.pt>ptCut and abs(lep.eta)<etaCut and lep.looseId):
                     continue
             else:
                 #print(i, "pdgId:", abs(lep.pdgId), "pt:", lep.pt, "iso", lep.jetRelIso, "eta", lep.eta)
-                if not (lep.jetRelIso<relIsoCut and lep.pt>ptCut and abs(lep.eta)<etaCut):
+                if not (lep.jetRelIso<relIsoCut and lep.pt>ptCut and abs(lep.eta)<etaCut and lep.mvaFall17V2Iso_WPL):
                     continue
 
             veto = False
@@ -1895,7 +1899,7 @@ def Lepton_IDIso_SF(lepton):
 
 def SFFakeRatio_ele_calc(pT, eta):#, prompt=True):
     #inFile = ROOT.TFile.Open("FR_vsjet4.root")
-    inFile = ROOT.TFile.Open("FR_vsjet2_vsmuT.root")
+    inFile = ROOT.TFile.Open("FR_vsjet4_vsmuT.root")
     #if prompt:
     histo=ROOT.TH2F(inFile.Get("hFRDataeledif"))
     #else:
@@ -1951,7 +1955,7 @@ def SFFakeRatio_ele_calc(pT, eta):#, prompt=True):
 def SFFakeRatio_tau_calc(pT, eta):#, prompt=True):
     histo = ROOT.TH2F()
     #inFile = ROOT.TFile.Open("FR_vsjet4.root")
-    inFile = ROOT.TFile.Open("FR_vsjet2_vsmuT.root")
+    inFile = ROOT.TFile.Open("FR_vsjet4_vsmuT.root")
     #if prompt:
     histo=(ROOT.TH2F)(inFile.Get("hFRDatataudif"))
     #else:
@@ -2008,7 +2012,7 @@ def SFFakeRatio_tau_calc(pT, eta):#, prompt=True):
 def SFFakeRatio_mu_calc(pT, eta):#, prompt=True):
     histo = ROOT.TH2F()
     #inFile = ROOT.TFile.Open("FR_vsjet4.root")
-    inFile = ROOT.TFile.Open("FR_vsjet2_new.root")
+    inFile = ROOT.TFile.Open("FR_vsjet4_vsmuT.root")
     #if prompt:
     histo=(ROOT.TH2F)(inFile.Get("hFRDatamudif"))
     #else:

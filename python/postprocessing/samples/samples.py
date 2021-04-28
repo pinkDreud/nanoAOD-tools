@@ -1286,10 +1286,10 @@ class_dict={
     ### fake contributions from here...
     #'QCD_2017':QCD_2017,
     'ZZtoLep_2017':ZZtoLep_2017,
-    #'TT_2017':TT_2017,
-    #'WJets_2017':WJets_2017,
+    'TT_2017':TT_2017,
+    'WJets_2017':WJets_2017,
     #'WJets_Fake_2017':WJets_Fake_2017,
-    #'DYJetsToLL_2017':DYJetsToLL_2017,
+    'DYJetsToLL_2017':DYJetsToLL_2017,
     #'DYJetsToLL_Fake_2017':DYJetsToLL_Fake_2017,
     #'DYJetsM_2017':DYJetsM_2017,
     # to here
@@ -1302,7 +1302,7 @@ class_dict={
     'WZ_2017':WZ_2017,
     'DataMu_2017':DataMu_2017,
     'DataEle_2017':DataEle_2017,
-    #'DataHT_2017':DataHT_2017,
+    'DataHT_2017':DataHT_2017,
     #'DataMET_2017':DataMET_2017,
     #'FakeEle_2017': FakeEle_2017,
     #'FakeMu_2017': FakeMu_2017,
@@ -1326,6 +1326,16 @@ class_list=[
     TTTo2L2Nu_2017,
     OtherWS_2017,
     ZZtoLep_2017,
+    #ZZTo2L2Nu_2017,
+    #ZZJJTo4L_EWK_2017,
+    #ZZJJTo4L_QCD_2017,
+    #GluGluToContinToZZTo2e2nu_2017,
+    #GluGluToContinToZZTo2e2mu_2017,
+    #GluGluToContinToZZTo2e2tau_2017,
+    #GluGluToContinToZZTo2mu2nu_2017,
+    #GluGluToContinToZZTo2mu2tau_2017,
+    #GluGluToContinToZZTo4e_2017,
+    #GluGluToContinToZZTo4mu_2017,
     #Other_2017,
     #WrongSign_2017, 
     #DYJetsToLL_2017,
@@ -1346,8 +1356,7 @@ class_list=[
     PromptEleFakeTau_2017,
     DataEle_2017,
     #DataHT_2017,
-]
-
+    ]
 
 '''
 sample_dict = {

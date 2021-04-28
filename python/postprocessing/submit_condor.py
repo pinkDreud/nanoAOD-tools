@@ -41,7 +41,7 @@ def sub_writer(sample, n, files, folder):
     f.write("use_x509userproxy       = true\n")
     f.write("should_transfer_files   = YES\n")
     f.write("when_to_transfer_output = ON_EXIT\n")
-    f.write("transfer_input_files    = $(Proxy_path), samples/samples.py, skimtree_utils_ssWW_wFakes.py, CutsAndValues_bu.py, FR_vsjet2_vsmuT.root, ./data/leptonSF/Muon_RunBCDEF_SF_ID_2017.root, TauIDSFTool.py, __init__.py, ./data\n")
+    f.write("transfer_input_files    = $(Proxy_path), samples/samples.py, skimtree_utils_ssWW_wFakes.py, CutsAndValues_bu.py, FR_vsjet4_vsmuT.root, ./data/leptonSF/Muon_RunBCDEF_SF_ID_2017.root, TauIDSFTool.py, __init__.py, ./data\n")
     f.write("transfer_output_remaps  = \""+ sample.label + "_part" + str(n) + ".root=/eos/home-"+inituser + "/" + username+"/VBS/nosynch/" + folder + "/" + sample.label +"/"+ sample.label + "_part" + str(n) + ".root\"\n")
     f.write("+JobFlavour             = \"testmatch\"\n") # options are espresso = 20 minutes, microcentury = 1 hour, longlunch = 2 hours, workday = 8 hours, tomorrow = 1 day, testmatch = 3 days, nextweek     = 1 week
     f.write("executable              = tree_skimmer_ssWW_wFakes.py\n")
@@ -64,12 +64,14 @@ else:
     print("You are launching a single sample and not an entire bunch of samples")
     samples.append(dataset)
 
-if not os.path.exists("condor/output"):
-    os.makedirs("condor/output")
-if not os.path.exists("condor/error"):
-    os.makedirs("condor/error")
-if not os.path.exists("condor/log"):
-    os.makedirs("condor/log")
+folder = opt.folder
+
+if not os.path.exists("condor_" + folder + "/output"):
+    os.makedirs("condor_" + folder + "/output")
+if not os.path.exists("condor_" + folder + "/error"):
+    os.makedirs("condor_" + folder + "/error")
+if not os.path.exists("condor_" + folder + "/log"):
+    os.makedirs("condor_" + folder + "/log")
 
 if(uid == 0):
     print("Please insert your uid")
@@ -78,7 +80,7 @@ if not os.path.exists("/tmp/x509up_u" + str(uid)):
     os.system('voms-proxy-init --rfc --voms cms -valid 192:00')
 os.popen("cp /tmp/x509up_u" + str(uid) + " /afs/cern.ch/user/" + inituser + "/" + username + "/private/x509up")
 
-folder = opt.folder
+
 split = 50
 #Writing the configuration file
 for sample in samples:

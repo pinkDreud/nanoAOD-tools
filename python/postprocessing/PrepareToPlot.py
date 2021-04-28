@@ -90,6 +90,13 @@ for k, v in class_dict.items():
 
     kpath = path+k+"/"
 
+    if opt.ct == '':
+        if k.startswith('TT_') or k.startswith('DY'):
+            continue
+    else:
+        if not (k.startswith('DataHT') or k.startswith('DY') or k.startswith('WJets') or k.startswith('TT_')):
+            continue
+
     if k.startswith('Fake'):
         mergable = False
         for c in v.components:
@@ -123,7 +130,7 @@ for k, v in class_dict.items():
                 continue
 
             doesexist.append(True)
-            if True:#not os.path.exists(cpath+c.label+".root"):
+            if not os.path.exists(cpath+c.label+".root"):
                 if os.path.exists(cpath+c.label+"_merged.root"):
                     if Debug:
                         print("rm -f " + cpath + c.label + "_merged.root")
@@ -154,7 +161,7 @@ for k, v in class_dict.items():
                 samplemerge = True
 
             if samplemerge:
-                if True:#os.path.exists(kpath+k+".root"):
+                if os.path.exists(kpath+k+".root"):
                     if Debug:
                         print("rm -f "+kpath+k+".root")
                     else:
@@ -178,7 +185,7 @@ for k, v in class_dict.items():
             continue
 
         doesexist.append(True)
-        if True:#not os.path.exists(kpath+k+".root"):
+        if not os.path.exists(kpath+k+".root"):
             if os.path.exists(kpath+k+"_merged.root"):
                 if Debug:
                     print("rm -f " + kpath + k + "_merged.root")
