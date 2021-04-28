@@ -36,7 +36,7 @@ def cfg_writer(sample, isMC, outdir):
     f.write("config.JobType.sendPythonFolder = True\n")
     if isMC:
         f.write("config.JobType.maxMemoryMB = 5000\n")
-        f.write("config.JobType.maxJobRuntimeMin = 3000\n")
+        f.write("config.JobType.maxJobRuntimeMin = 2750\n")
         #f.write("config.JobType.numCores = 8\n")
     f.write("config.section_('Data')\n")
     f.write("config.Data.inputDataset = '"+sample.dataset+"'\n")
