@@ -1898,8 +1898,8 @@ def Lepton_IDIso_SF(lepton):
         return -1.
 
 def SFFakeRatio_ele_calc(pT, eta):#, prompt=True):
-    #inFile = ROOT.TFile.Open("FR_vsjet4.root")
-    inFile = ROOT.TFile.Open("FR_vsjet4_vsmuT.root")
+    #inFile = ROOT.TFile.Open("FR_vsjet2.root")
+    inFile = ROOT.TFile.Open("FR_vsjet2_vsmuT.root")
     #if prompt:
     histo=ROOT.TH2F(inFile.Get("hFRDataeledif"))
     #else:
@@ -1954,8 +1954,8 @@ def SFFakeRatio_ele_calc(pT, eta):#, prompt=True):
 
 def SFFakeRatio_tau_calc(pT, eta):#, prompt=True):
     histo = ROOT.TH2F()
-    #inFile = ROOT.TFile.Open("FR_vsjet4.root")
-    inFile = ROOT.TFile.Open("FR_vsjet4_vsmuT.root")
+    #inFile = ROOT.TFile.Open("FR_vsjet2.root")
+    inFile = ROOT.TFile.Open("FR_vsjet2_vsmuT.root")
     #if prompt:
     histo=(ROOT.TH2F)(inFile.Get("hFRDatataudif"))
     #else:
@@ -2011,8 +2011,8 @@ def SFFakeRatio_tau_calc(pT, eta):#, prompt=True):
 
 def SFFakeRatio_mu_calc(pT, eta):#, prompt=True):
     histo = ROOT.TH2F()
-    #inFile = ROOT.TFile.Open("FR_vsjet4.root")
-    inFile = ROOT.TFile.Open("FR_vsjet4_vsmuT.root")
+    #inFile = ROOT.TFile.Open("FR_vsjet2.root")
+    inFile = ROOT.TFile.Open("FR_vsjet2_vsmuT.root")
     #if prompt:
     histo=(ROOT.TH2F)(inFile.Get("hFRDatamudif"))
     #else:
