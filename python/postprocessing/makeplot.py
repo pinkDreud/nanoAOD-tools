@@ -62,6 +62,9 @@ folder = opt.folder
 filerepo = '/eos/home-'+opt.user[0]+'/'+opt.user+'/VBS/nosynch/' + folder + '/'
 plotrepo = '/eos/home-'+opt.user[0]+'/'+opt.user+'/VBS/nosynch/' + folder + '/'
 
+FRtag = opt.wfake.split("_")[-1]
+print("FRtag:", FRtag)
+
 ROOT.gROOT.SetBatch() # don't pop up canvases
 if opt.lep != 'incl':
      lepstr = 'plot/' + opt.lep
@@ -114,19 +117,21 @@ lumi = {'2016': 35.9, "2017": 41.53, "2018": 59.7}
 
 print(cut_tag)
 
+pathplot = plotrepo + lepstr + "_" + str(FRtag) + "/"
+pathstack = plotrepo + "stack_" + str(FRtag) + "/" + cut_tag + "/"
+
 if opt.plot:
-     if not os.path.exists(plotrepo + lepstr):
-          os.makedirs(plotrepo + lepstr)
-     if not os.path.exists(plotrepo + lepstr):
-          os.makedirs(plotrepo + lepstr)
+     if not os.path.exists(pathplot):
+          os.makedirs(pathplot)
+
 if opt.stack:
      if not os.path.exists(plotrepo + 'stack'):
           os.makedirs(plotrepo + 'stack')
-     if not os.path.exists(plotrepo + 'stack/' + cut_tag):
-          os.makedirs(plotrepo + 'stack/' + cut_tag)
+     if not os.path.exists(pathstack):
+          os.makedirs(pathstack)
 
-if not (opt.wfake=='nofake' or opt.wfake=='incl' or opt.wfake=='sep'):
-     raise ValueError('Specify a value for --wfake between nofake, incl, and sep')
+if not (opt.wfake=='nofake' or opt.wfake.startswith('incl') or opt.wfake.startswith('sep')):
+     raise ValueError('Specify a value for --wfake between nofake, incl*, and sep*')
 
 def mergepart(dataset):
      samples = []
@@ -287,14 +292,14 @@ def lumi_writer(dataset, lumi):
 
 def plot(lep, reg, variable, sample, cut_tag, syst=""):
      print("in plot function")
-     print("plotting ", variable._name, " for sample ", sample.label, " with cut ", cut_tag)#, " ", syst,
+     print("plotting ", variable._name, " for sample ", sample.label, " with cut ", cut_tag, "with FR", FRtag)#, " ", syst,
      ROOT.TH1.SetDefaultSumw2()
      cutbase = variable._taglio
      cut = ''
 
      print("count? ", opt.count)
      if opt.count:
-          countf = open(plotrepo + lepstr + '/countings/' + cut_tag + "/" + variable._name + ".txt", "a")
+          countf = open(pathplot + 'countings/' + cut_tag + "/" + variable._name + ".txt", "a")
           countf.write(sample.label)
           countf.write("\nBin\tContent\tError")
 
@@ -304,13 +309,13 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
           else:
                f1 = ROOT.TFile.Open(filerepo + sample.components[1].label + "/"  + sample.components[1].label + ".root")
           if str(sample.label).startswith('FakeEle_') or str(sample.label).startswith('FakeMu_'):
-               cut = cutbase + "*(lepton_LnTRegion==1||tau_LnTRegion==1)*(event_SFFake)*(event_SFFake>-1.)"
+               cut = cutbase + "*(lepton_LnTRegion==1||tau_LnTRegion==1)*(event_SFFake" + str(FRtag)  + ")*(event_SFFake" + str(FRtag)  + ">-1.)"
           elif str(sample.label).startswith('FakeElePromptTau') or str(sample.label).startswith('FakeMuPromptTau'):
-               cut = cutbase + "*(lepton_LnTRegion==1&&tau_LnTRegion==0)*(event_SFFake)*(event_SFFake>-1.)"
+               cut = cutbase + "*(lepton_LnTRegion==1&&tau_LnTRegion==0)*(event_SFFake" + str(FRtag)  + ")*(event_SFFake" + str(FRtag)  + ">-1.)"
           elif str(sample.label).startswith('PromptEleFakeTau') or str(sample.label).startswith('PromptMuFakeTau'):
-               cut = cutbase + "*(lepton_LnTRegion==0&&tau_LnTRegion==1)*(event_SFFake)*(event_SFFake>-1.)"
+               cut = cutbase + "*(lepton_LnTRegion==0&&tau_LnTRegion==1)*(event_SFFake" + str(FRtag)  + ")*(event_SFFake" + str(FRtag)  + ">-1.)"
           elif str(sample.label).startswith('FakeEleFakeTau') or str(sample.label).startswith('FakeMuFakeTau'):
-               cut = cutbase + "*(lepton_LnTRegion==1&&tau_LnTRegion==1)*(event_SFFake)*(event_SFFake>-1.)"
+               cut = cutbase + "*(lepton_LnTRegion==1&&tau_LnTRegion==1)*(event_SFFake" + str(FRtag)  + ")*(event_SFFake" + str(FRtag)  + ">-1.)"
 
      else:
           f1 = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + ".root")
@@ -339,7 +344,7 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
           #cut = cut + "*10."
 
      print(str(cut))
-     foutput = plotrepo + lepstr + "/" + sample.label + "_" + lep+".root"
+     foutput = pathplot + sample.label + "_" + lep + ".root"
 
      '''
      else:
@@ -454,12 +459,12 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
                signal = True
           print(s.label)
           if(syst_ == ""):
-               outfile = plotrepo + "stack_" + str(lep_).strip('[]') + ".root"
-               infile[s.label] = ROOT.TFile.Open(plotrepo + lepstr + "/" + s.label + "_" + lep + ".root")
+               #outfile = plotrepo + "stack_" + str(lep_).strip('[]') + ".root"
+               infile[s.label] = ROOT.TFile.Open(pathplot + s.label + "_" + lep + ".root")
 
           else:
-               outfile = plotrepo + "stack_"+syst_+"_"+str(lep_).strip('[]')+".root"
-               infile[s.label] = ROOT.TFile.Open(plotrepo + lepstr + "/" + s.label + "_" + lep + "_" + syst_ + ".root")
+               #outfile = plotrepo + "stack_"+syst_+"_"+str(lep_).strip('[]')+".root"
+               infile[s.label] = ROOT.TFile.Open(pathplot + s.label + "_" + lep + "_" + syst_ + ".root")
      i = 0
 
      for s in samples_:
@@ -467,9 +472,9 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
                if s.label.startswith('WJets') or s.label.startswith('QCD') or s.label.startswith('DY') or s.label.startswith('TT_'):
                     continue
                elif 'Fake' in s.label:
-                    if opt.wfake == 'incl' and not (s.label.startswith('FakeEle_') or s.label.startswith('FakeMu_')):
+                    if opt.wfake.startswith('incl') and not (s.label.startswith('FakeEle_') or s.label.startswith('FakeMu_')):
                          continue
-                    elif opt.wfake == 'sep' and (s.label.startswith('FakeEle_') or s.label.startswith('FakeMu_')):
+                    elif opt.wfake.startswith('sep') and (s.label.startswith('FakeEle_') or s.label.startswith('FakeMu_')):
                          continue
 
           else:
@@ -706,7 +711,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      pad2.RedrawAxis()
      c1.Update()
      #c1.Print("stack/"+canvasname+".pdf")
-     c1.Print(plotrepo + "stack/" + cut_tag + "/"+canvasname+".png")
+     c1.Print(pathstack + canvasname + ".png")
      del histo
      tmp.Delete()
      h.Delete()
@@ -962,12 +967,12 @@ for year in years:
                if(opt.plot):
                     for var in variables:
                          if opt.count:
-                              if not os.path.exists(plotrepo + lepstr + '/countings/'):
-                                   os.makedirs(plotrepo + lepstr + '/countings/')
-                              if not os.path.exists(plotrepo + lepstr + '/countings/' + cut_tag):
-                                   os.makedirs(plotrepo + lepstr + '/countings/' + cut_tag)
-                              if not os.path.exists(plotrepo + lepstr + '/countings/' + cut_tag + "/" + var._name + ".txt"):
-                                   tmp_f = open(plotrepo + lepstr + '/countings/' + cut_tag + "/" + var._name + ".txt", "w")
+                              if not os.path.exists(pathplot + 'countings/'):
+                                   os.makedirs(pathplot + 'countings/')
+                              if not os.path.exists(pathplot + 'countings/' + cut_tag):
+                                   os.makedirs(pathplot + 'countings/' + cut_tag)
+                              if not os.path.exists(pathplot + 'countings/' + cut_tag + "/" + var._name + ".txt"):
+                                   tmp_f = open(pathplot + 'countings/' + cut_tag + "/" + var._name + ".txt", "w")
                                    tmp_f.close()
                          if (("GenPart" in var._name) or ("MC_" in var._name)) and "Data" in sample.label:
                               continue
