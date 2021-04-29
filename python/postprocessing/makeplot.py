@@ -434,8 +434,8 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           stackname = "stack_"+reg_+"_"+variabile_._name+"_"+cut_tag_
           canvasname = "stack_"+reg_+"_"+variabile_._name+"_"+cut_tag_+"_"+lep_ + "_" + str(samples_[0].year)
      if opt.wfake != 'nofake':
-          stackname += "_wFakes_" + str(opt.wfake)
-          canvasname += "_wFakes_" + str(opt.wfake)
+          stackname += "_wFakes_" + str(opt.wfake.split('_')[0])
+          canvasname += "_wFakes_" + str(opt.wfake.split('_')[0])
      if("selection_AND_best_Wpjet_isbtag_AND_best_topjet_isbtag" in cut_tag_ ) or ("selection_AND_best_topjet_isbtag_AND_best_Wpjet_isbtag" in cut_tag_ ):
           blind = True
      stack = ROOT.THStack(stackname, variabile_._name)
@@ -448,9 +448,9 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
                if s.label.startswith('WJets') or s.label.startswith('QCD') or s.label.startswith('DY') or s.label.startswith('TT_'):
                     continue
                elif 'Fake' in s.label:
-                    if opt.wfake == 'incl' and not (s.label.startswith('FakeEle_') or s.label.startswith('FakeMu_')):
+                    if opt.wfake.startswith('incl') and not (s.label.startswith('FakeEle_') or s.label.startswith('FakeMu_')):
                          continue
-                    elif opt.wfake == 'sep' and (s.label.startswith('FakeEle_') or s.label.startswith('FakeMu_')):
+                    elif opt.wfake.startswith('sep') and (s.label.startswith('FakeEle_') or s.label.startswith('FakeMu_')):
                          continue
           else:
                if s.label.startswith('Fake'):
