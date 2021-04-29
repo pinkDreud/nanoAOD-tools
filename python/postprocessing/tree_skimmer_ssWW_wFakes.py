@@ -1100,12 +1100,12 @@ for i in range(tree.GetEntries()):
 
     if isMC:
         if event_SFFake_vsjet4[0]>0.:
-            if abs(lepton_isPrompt[0])==1 or abs(tau_isPrompt[0]==5):
+            if abs(lepton_isPrompt[0])==1 or abs(tau_isPrompt[0])==5:
                 event_SFFake_vsjet4[0] = -1.*event_SFFake_vsjet4[0]
             else:
                 event_SFFake_vsjet4[0] = 0.
         if event_SFFake_vsjet2[0]>0.:
-            if abs(lepton_isPrompt[0])==1 or abs(tau_isPrompt[0]==5):
+            if abs(lepton_isPrompt[0])==1 or abs(tau_isPrompt[0])==5:
                 event_SFFake_vsjet2[0] = -1.*event_SFFake_vsjet2[0]
             else:
                 event_SFFake_vsjet2[0] = 0.
