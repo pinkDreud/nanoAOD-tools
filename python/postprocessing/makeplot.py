@@ -192,7 +192,7 @@ def mergepart(dataset):
                         'subleadjet_DeepCSVv2_b', 'AK8subleadjet_pt', 'AK8subleadjet_eta',
                         'AK8subleadjet_phi', 'AK8subleadjet_mass', 'AK8subleadjet_tau21',
                         'AK8subleadjet_tau32', 'AK8subleadjet_tau43', 'subleadjet_dRAK48',
-                        'nJets', 'MET_pt', 'MET_phi', 'mjj', 'mT_lep_MET', 'mT_tau_MET',
+                        'nJets', 'MET_pt', 'MET_phi', 'm_jj', 'mT_lep_MET', 'mT_tau_MET',
                         'mT_leptau_MET', 'deltaPhi_jj', 'deltaPhi_taulep', 'deltaPhi_tauj1',
                         'deltaPhi_tauj2', 'deltaPhi_lepj1', 'deltaPhi_lepj2', 'deltaEta_jj',
                         'lepton_Zeppenfeld', 'tau_Zeppenfeld', 'event_Zeppenfeld',

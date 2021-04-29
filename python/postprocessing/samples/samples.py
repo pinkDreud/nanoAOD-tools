@@ -250,7 +250,7 @@ GluGluToContinToZZTo4tau_2017.sigma = 1.404 #pb
 
 GluGluToContinToZZTo4L_2017 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "GluGluToContinToZZTo4L_2017")
 GluGluToContinToZZTo4L_2017.year = 2017
-GluGluToContinToZZTo4L_2017.dataset = "/GluGluToContinToZZTo4L_13TeV_TuneCP5_MCFM701_pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+GluGluToContinToZZTo4L_2017.dataset = "/GluGluToContinToZZTo4L_13TeV_TuneCP5_madgraphMLM_pythia8/" + tag_2017 + "-v1/NANOAODSIM"
 GluGluToContinToZZTo4L_2017.sigma = 0.7882 #pb
 
 ZZtoLep_2017 = sample(ROOT.kViolet-9, 1, 1001, "ZZ", "ZZtoLep_2017")
