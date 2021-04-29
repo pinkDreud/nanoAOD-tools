@@ -1897,9 +1897,12 @@ def Lepton_IDIso_SF(lepton):
         print("I dunno what to do with this particle :/")
         return -1.
 
-def SFFakeRatio_ele_calc(pT, eta):#, prompt=True):
+def SFFakeRatio_ele_calc(pT, eta, wp = 'vsjet2'):
     #inFile = ROOT.TFile.Open("FR_vsjet2.root")
-    inFile = ROOT.TFile.Open("FR_vsjet2_vsmuT.root")
+    if wp == 'vsjet2':
+        inFile = ROOT.TFile.Open("FR_vsjet2_vsmuT.root")
+    elif wp == 'vsjet4':
+        inFile = ROOT.TFile.Open("FR_vsjet4_vsmuT.root")
     #if prompt:
     histo=ROOT.TH2F(inFile.Get("hFRDataeledif"))
     #else:
@@ -1952,10 +1955,13 @@ def SFFakeRatio_ele_calc(pT, eta):#, prompt=True):
 
     return FR/(1-FR)
 
-def SFFakeRatio_tau_calc(pT, eta):#, prompt=True):
+def SFFakeRatio_tau_calc(pT, eta, wp ='vsjet2'):
     histo = ROOT.TH2F()
     #inFile = ROOT.TFile.Open("FR_vsjet2.root")
-    inFile = ROOT.TFile.Open("FR_vsjet2_vsmuT.root")
+    if wp == 'vsjet2':
+        inFile = ROOT.TFile.Open("FR_vsjet2_vsmuT.root")
+    elif wp == 'vsjet4':
+        inFile = ROOT.TFile.Open("FR_vsjet4_vsmuT.root")
     #if prompt:
     histo=(ROOT.TH2F)(inFile.Get("hFRDatataudif"))
     #else:
@@ -2009,10 +2015,13 @@ def SFFakeRatio_tau_calc(pT, eta):#, prompt=True):
 
     return FR/(1-FR)
 
-def SFFakeRatio_mu_calc(pT, eta):#, prompt=True):
+def SFFakeRatio_mu_calc(pT, eta, wp = 'vsjet2'):
     histo = ROOT.TH2F()
     #inFile = ROOT.TFile.Open("FR_vsjet2.root")
-    inFile = ROOT.TFile.Open("FR_vsjet2_vsmuT.root")
+    if wp == 'vsjet2':
+        inFile = ROOT.TFile.Open("FR_vsjet2_vsmuT.root")
+    elif wp == 'vsjet4':
+        inFile = ROOT.TFile.Open("FR_vsjet4_vsmuT.root")
     #if prompt:
     histo=(ROOT.TH2F)(inFile.Get("hFRDatamudif"))
     #else:

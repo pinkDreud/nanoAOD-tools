@@ -199,7 +199,8 @@ lepton_pdgid            =   array.array('i', [-999])
 lepton_pfRelIso04       =   array.array('f', [-999.])
 lepton_TightRegion      =   array.array('i', [-999])
 lepton_LnTRegion        =   array.array('i', [-999])
-lepton_SFFake           =   array.array('f', [-999.])
+lepton_SFFake_vsjet2           =   array.array('f', [-999.])
+lepton_SFFake_vsjet4           =   array.array('f', [-999.])
 lepton_isPrompt           =   array.array('i', [-999])
 lepton_Zeppenfeld           =   array.array('f', [-999])
 lepton_Zeppenfeld_over_deltaEta_jj           =   array.array('f', [-999])
@@ -211,7 +212,8 @@ var_list.append(lepton_pdgid)
 var_list.append(lepton_pfRelIso04)
 var_list.append(lepton_TightRegion)
 var_list.append(lepton_LnTRegion)
-var_list.append(lepton_SFFake)
+var_list.append(lepton_SFFake_vsjet2)
+var_list.append(lepton_SFFake_vsjet4)
 var_list.append(lepton_isPrompt)
 var_list.append(lepton_Zeppenfeld)
 var_list.append(lepton_Zeppenfeld_over_deltaEta_jj)
@@ -234,7 +236,8 @@ tau_DeepTauVsJet_WP     =   array.array('f', [-999.])
 tau_DeepTauVsJet_raw    =   array.array('f', [-999.])
 tau_TightRegion         =   array.array('i', [-999])
 tau_LnTRegion           =   array.array('i', [-999])
-tau_SFFake              =   array.array('f', [-999.])
+tau_SFFake_vsjet2              =   array.array('f', [-999.])
+tau_SFFake_vsjet4              =   array.array('f', [-999.])
 tau_isPrompt           =   array.array('i', [-999])
 tau_Zeppenfeld           =   array.array('f', [-999])
 tau_Zeppenfeld_over_deltaEta_jj           =   array.array('f', [-999])
@@ -255,7 +258,8 @@ var_list.append(tau_DeepTauVsJet_WP)#
 var_list.append(tau_DeepTauVsJet_raw)#
 var_list.append(tau_TightRegion)#
 var_list.append(tau_LnTRegion)#
-var_list.append(tau_SFFake)#
+var_list.append(tau_SFFake_vsjet2)#
+var_list.append(tau_SFFake_vsjet4)#
 var_list.append(tau_isPrompt)#
 var_list.append(tau_Zeppenfeld)
 var_list.append(tau_Zeppenfeld_over_deltaEta_jj)
@@ -289,8 +293,10 @@ var_list.append(taujet_HadGamma)
 var_list.append(taujet_HEGamma)
 
 #event SFFake
-event_SFFake              =   array.array('f', [-999.])
-var_list.append(event_SFFake)
+event_SFFake_vsjet2              =   array.array('f', [-999.])
+event_SFFake_vsjet4              =   array.array('f', [-999.])
+var_list.append(event_SFFake_vsjet2)
+var_list.append(event_SFFake_vsjet4)
 
 #jet#
 leadjet_pt                  =   array.array('f', [-999.])
@@ -490,7 +496,8 @@ systTree.branchTreesSysts(trees, "all", "lepton_pdgid",         outTreeFile, lep
 systTree.branchTreesSysts(trees, "all", "lepton_pfRelIso04",    outTreeFile, lepton_pfRelIso04)
 systTree.branchTreesSysts(trees, "all", "lepton_TightRegion",   outTreeFile, lepton_TightRegion)
 systTree.branchTreesSysts(trees, "all", "lepton_LnTRegion",     outTreeFile, lepton_LnTRegion)
-systTree.branchTreesSysts(trees, "all", "lepton_SFFake",        outTreeFile, lepton_SFFake)
+systTree.branchTreesSysts(trees, "all", "lepton_SFFake_vsjet2",        outTreeFile, lepton_SFFake_vsjet2)
+systTree.branchTreesSysts(trees, "all", "lepton_SFFake_vsjet4",        outTreeFile, lepton_SFFake_vsjet4)
 systTree.branchTreesSysts(trees, "all", "lepton_isPrompt",        outTreeFile, lepton_isPrompt)
 
 #tau variables
@@ -509,9 +516,11 @@ systTree.branchTreesSysts(trees, "all", "tau_DeepTauVsMu_raw",      outTreeFile,
 systTree.branchTreesSysts(trees, "all", "tau_DeepTauVsJet_WP",      outTreeFile, tau_DeepTauVsJet_WP)#
 systTree.branchTreesSysts(trees, "all", "tau_TightRegion",          outTreeFile, tau_TightRegion)#
 systTree.branchTreesSysts(trees, "all", "tau_LnTRegion",            outTreeFile, tau_LnTRegion)#
-systTree.branchTreesSysts(trees, "all", "tau_SFFake",               outTreeFile, tau_SFFake)#
+systTree.branchTreesSysts(trees, "all", "tau_SFFake_vsjet2",               outTreeFile, tau_SFFake_vsjet2)#
+systTree.branchTreesSysts(trees, "all", "tau_SFFake_vsjet4",               outTreeFile, tau_SFFake_vsjet4)#
 systTree.branchTreesSysts(trees, "all", "tau_isPrompt",               outTreeFile, tau_isPrompt)#
-systTree.branchTreesSysts(trees, "all", "event_SFFake",               outTreeFile, event_SFFake)#
+systTree.branchTreesSysts(trees, "all", "event_SFFake_vsjet2",               outTreeFile, event_SFFake_vsjet2)#
+systTree.branchTreesSysts(trees, "all", "event_SFFake_vsjet4",               outTreeFile, event_SFFake_vsjet4)#
 systTree.branchTreesSysts(trees, "all", "tauleadTk_ptOverTau",      outTreeFile, tauleadTk_ptOverTau)
 systTree.branchTreesSysts(trees, "all", "tauleadTk_deltaPhi",      outTreeFile, tauleadTk_deltaPhi)
 systTree.branchTreesSysts(trees, "all", "tauleadTk_deltaEta",      outTreeFile, tauleadTk_deltaEta)
@@ -897,7 +906,12 @@ for i in range(tree.GetEntries()):
         lepton_pfRelIso04[0]        =   tightlep.jetRelIso
 
     #if not isMC:
-    lepton_SFFake[0] = SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0])#, fakewithprompt)
+    if abs(tightlep.pdgId)==1:
+        lepton_SFFake_vsjet4[0] = SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0], 'vsjet4')
+        lepton_SFFake_vsjet2[0] = SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0], 'vsjet2')
+    elif abs(tightlep.pdgId)==1:
+        lepton_SFFake_vsjet4[0] = SFFakeRatio_mu_calc(lepton_pt[0], lepton_eta[0], 'vsjet4')
+        lepton_SFFake_vsjet2[0] = SFFakeRatio_mu_calc(lepton_pt[0], lepton_eta[0], 'vsjet2')
     #else:
     if isMC:
         lepton_isPrompt[0] = tightlep.genPartFlav
@@ -968,7 +982,8 @@ for i in range(tree.GetEntries()):
     tau_DecayMode[0]        =   GoodTau.decayMode
 
     #if not isMC:
-    tau_SFFake[0] = SFFakeRatio_tau_calc(tau_pt[0], tau_eta[0])#, fakewithprompt)
+    tau_SFFake_vsjet4[0] = SFFakeRatio_tau_calc(tau_pt[0], tau_eta[0], 'vsjet4')
+    tau_SFFake_vsjet2[0] = SFFakeRatio_tau_calc(tau_pt[0], tau_eta[0], 'vsjet2')
     #else:
     if isMC:
         tau_isPrompt[0] = GoodTau.genPartFlav
@@ -1071,19 +1086,29 @@ for i in range(tree.GetEntries()):
 
     #if not isMC:
     if lepton_LnTRegion[0]==1 and tau_LnTRegion[0]==0:
-        event_SFFake[0] = lepton_SFFake[0]
+        event_SFFake_vsjet4[0] = lepton_SFFake_vsjet4[0]
+        event_SFFake_vsjet2[0] = lepton_SFFake_vsjet2[0]
     elif lepton_LnTRegion[0]==0 and tau_LnTRegion[0]==1:
-        event_SFFake[0] = tau_SFFake[0]
+        event_SFFake_vsjet4[0] = tau_SFFake_vsjet4[0]
+        event_SFFake_vsjet2[0] = tau_SFFake_vsjet2[0]
     elif lepton_LnTRegion[0]==1 and tau_LnTRegion[0]==1:
-        event_SFFake[0] = lepton_SFFake[0]*tau_SFFake[0]
+        event_SFFake_vsjet4[0] = lepton_SFFake_vsjet4[0]*tau_SFFake_vsjet4[0]
+        event_SFFake_vsjet2[0] = lepton_SFFake_vsjet2[0]*tau_SFFake_vsjet2[0]
     elif lepton_LnTRegion[0]==0 and tau_LnTRegion[0]==0:
-        event_SFFake[0] = 0.
+        event_SFFake_vsjet4[0] = 0.
+        event_SFFake_vsjet2[0] = 0.
 
-    if isMC and event_SFFake[0]>0.:
-        if abs(lepton_isPrompt[0])==1 or abs(tau_isPrompt[0]==5):
-            event_SFFake[0] = -1.*event_SFFake[0]
-        else:
-            event_SFFake[0] = 0.
+    if isMC:
+        if event_SFFake_vsjet4[0]>0.:
+            if abs(lepton_isPrompt[0])==1 or abs(tau_isPrompt[0]==5):
+                event_SFFake_vsjet4[0] = -1.*event_SFFake_vsjet4[0]
+            else:
+                event_SFFake_vsjet4[0] = 0.
+        if event_SFFake_vsjet2[0]>0.:
+            if abs(lepton_isPrompt[0])==1 or abs(tau_isPrompt[0]==5):
+                event_SFFake_vsjet2[0] = -1.*event_SFFake_vsjet2[0]
+            else:
+                event_SFFake_vsjet2[0] = 0.
         
 
     if GoodTau.charge==GoodLep.charge:
