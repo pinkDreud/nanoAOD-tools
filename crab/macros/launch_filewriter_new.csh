@@ -14,6 +14,7 @@ set year = '2017'
 ##python submit_crab_fake.py -d STtW_top_$year -s -t HT
 ##python files_writer_new.py -d QCD_$year #--fake -t HT
 #python files_writer_new.py -d ZZtoLep_$year #--fake -t HT
+python files_writer_new.py -d GluGluToContinToZZTo4tau_$year
 #python files_writer_new.py -d WpWpJJ_EWK_$year #--fake -t HT
 #python files_writer_new.py -d WpWpJJ_QCD_$year #--fake -t HT
 ##python files_writer_new.py -d VBS_SSWW_SM_$year #--fake -t HT
@@ -22,6 +23,6 @@ set year = '2017'
 ##python files_writer_new.py -d VBS_SSWW_cW_cHW_$year #--fake -t HT
 #python files_writer_new.py -d VBS_SSWW_BSM_SM_$year #--fake -t HT
 ##python files_writer_new.py -d DataHTB_$year --fake -t HT
-python files_writer_new.py -d DataEle_$year 
+#python files_writer_new.py -d DataEle_$year 
 ###python files_writer_new.py -d DataEle_$year --fake -t Lep
-python files_writer_new.py -d DataMu_$year 
+#python files_writer_new.py -d DataMu_$year 
