@@ -1194,7 +1194,9 @@ for i in range(tree.GetEntries()):
     
     if not JetCut(leadJet, subleadJet): pass_mjj_cut[0]=1
 
-    m_jj[0]=(leadJet+subleadJet).M()
+    m_jj[0]=(leadJet + subleadJet).M()
+    m_jjtau[0]=(leadJet + subleadJet + GoodTau.p4()).M()
+    m_jjtaulep[0]=(leadJet + subleadJet + GoodTau.p4() + GoodLep.p4()).M()
 
     lepton_Zeppenfeld_over_deltaEta_jj[0] = lepton_Zeppenfeld[0]/deltaEta_jj[0]
     tau_Zeppenfeld_over_deltaEta_jj[0] = tau_Zeppenfeld[0]/deltaEta_jj[0]
