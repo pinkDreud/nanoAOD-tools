@@ -906,10 +906,10 @@ for i in range(tree.GetEntries()):
         lepton_pfRelIso04[0]        =   tightlep.jetRelIso
 
     #if not isMC:
-    if abs(tightlep.pdgId)==1:
+    if abs(tightlep.pdgId)==11:
         lepton_SFFake_vsjet4[0] = SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0], 'vsjet4')
         lepton_SFFake_vsjet2[0] = SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0], 'vsjet2')
-    elif abs(tightlep.pdgId)==1:
+    elif abs(tightlep.pdgId)==13:
         lepton_SFFake_vsjet4[0] = SFFakeRatio_mu_calc(lepton_pt[0], lepton_eta[0], 'vsjet4')
         lepton_SFFake_vsjet2[0] = SFFakeRatio_mu_calc(lepton_pt[0], lepton_eta[0], 'vsjet2')
     #else:
