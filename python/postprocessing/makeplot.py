@@ -309,13 +309,13 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
           else:
                f1 = ROOT.TFile.Open(filerepo + sample.components[1].label + "/"  + sample.components[1].label + ".root")
           if str(sample.label).startswith('FakeEle_') or str(sample.label).startswith('FakeMu_'):
-               cut = cutbase + "*(lepton_LnTRegion==1||tau_LnTRegion==1)*(event_SFFake" + str(FRtag)  + ")*(event_SFFake" + str(FRtag)  + ">-1.)"
+               cut = cutbase + "*(lepton_LnTRegion==1||tau_LnTRegion==1)*(event_SFFake_" + str(FRtag)  + ")*(event_SFFake_" + str(FRtag)  + ">-1.)"
           elif str(sample.label).startswith('FakeElePromptTau') or str(sample.label).startswith('FakeMuPromptTau'):
-               cut = cutbase + "*(lepton_LnTRegion==1&&tau_LnTRegion==0)*(event_SFFake" + str(FRtag)  + ")*(event_SFFake" + str(FRtag)  + ">-1.)"
+               cut = cutbase + "*(lepton_LnTRegion==1&&tau_LnTRegion==0)*(event_SFFake_" + str(FRtag)  + ")*(event_SFFake_" + str(FRtag)  + ">-1.)"
           elif str(sample.label).startswith('PromptEleFakeTau') or str(sample.label).startswith('PromptMuFakeTau'):
-               cut = cutbase + "*(lepton_LnTRegion==0&&tau_LnTRegion==1)*(event_SFFake" + str(FRtag)  + ")*(event_SFFake" + str(FRtag)  + ">-1.)"
+               cut = cutbase + "*(lepton_LnTRegion==0&&tau_LnTRegion==1)*(event_SFFake_" + str(FRtag)  + ")*(event_SFFake_" + str(FRtag)  + ">-1.)"
           elif str(sample.label).startswith('FakeEleFakeTau') or str(sample.label).startswith('FakeMuFakeTau'):
-               cut = cutbase + "*(lepton_LnTRegion==1&&tau_LnTRegion==1)*(event_SFFake" + str(FRtag)  + ")*(event_SFFake" + str(FRtag)  + ">-1.)"
+               cut = cutbase + "*(lepton_LnTRegion==1&&tau_LnTRegion==1)*(event_SFFake_" + str(FRtag)  + ")*(event_SFFake_" + str(FRtag)  + ">-1.)"
 
      else:
           f1 = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + ".root")
