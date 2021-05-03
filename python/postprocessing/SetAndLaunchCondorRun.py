@@ -1,4 +1,4 @@
-import os
+65;6003;1cimport os
 import optparse
 import sys
 from samples.samples import *
@@ -142,16 +142,16 @@ for prname, proc in class_dict.items():
             if not DoesSampleExist(sample.label):
                 continue
                 #if sample.label in dirlist:
+            if os.path.exists(path+sample.label):
+                if opt.rw:
+                    print('Relaunching all the jobs for', sample.label)
+                    os.system("rm -r "+ path + sample.label + "/*")
             if not AreAllCondored(sample.label):
                 if opt.check:
                     print(sample.label, "not completely condored")
                 else:
                     if os.path.exists(path+sample.label):
-                        if opt.rw:
-                            print('Relaunching all the jobs for', sample.label)
-                            os.system("rm -r "+ path + sample.label + "/*")
-                        else:
-                            print("Setting jobs for missing condored files...")
+                        print("Setting jobs for missing condored files...")
                     print("Writing " + sample.label + " in csh...")
                     f.write("python submit_condor.py -d " + sample.label+ " " + optstring)
 
@@ -165,15 +165,15 @@ for prname, proc in class_dict.items():
 
         if not DoesSampleExist(prname):
             continue
+        if os.path.exists(path+proc.label):
+            if opt.rw:
+                print('Relaunching all the jobs for', sample.label)
+                os.system("rm -f "+ path + proc.label + "/*")
         if not AreAllCondored(proc.label):
             if opt.check:
                 print(proc.label, "not completely condored")
             else:
                 if os.path.exists(path+proc.label):
-                    if opt.rw:
-                        print('Relaunching all the jobs for', sample.label)
-                        os.system("rm -f "+ path + proc.label + "/*")
-                    else:
                         print("Setting jobs for missing condored files...")
 
                 print("Writing " + proc.label + " in csh...")  
