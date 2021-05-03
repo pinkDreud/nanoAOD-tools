@@ -62,6 +62,9 @@ folder = opt.folder
 filerepo = '/eos/home-'+opt.user[0]+'/'+opt.user+'/VBS/nosynch/' + folder + '/'
 plotrepo = '/eos/home-'+opt.user[0]+'/'+opt.user+'/VBS/nosynch/' + folder + '/'
 
+FRtag = opt.wfake.split("_")[-1]
+print("FRtag:", FRtag)
+
 ROOT.gROOT.SetBatch() # don't pop up canvases
 if opt.lep != 'incl':
      lepstr = 'plot/' + opt.lep
@@ -114,19 +117,21 @@ lumi = {'2016': 35.9, "2017": 41.53, "2018": 59.7}
 
 print(cut_tag)
 
+pathplot = plotrepo + lepstr + "_" + str(FRtag) + "/"
+pathstack = plotrepo + "stack_" + str(FRtag) + "/" + cut_tag + "/"
+
 if opt.plot:
-     if not os.path.exists(plotrepo + lepstr):
-          os.makedirs(plotrepo + lepstr)
-     if not os.path.exists(plotrepo + lepstr):
-          os.makedirs(plotrepo + lepstr)
+     if not os.path.exists(pathplot):
+          os.makedirs(pathplot)
+
 if opt.stack:
      if not os.path.exists(plotrepo + 'stack'):
           os.makedirs(plotrepo + 'stack')
-     if not os.path.exists(plotrepo + 'stack/' + cut_tag):
-          os.makedirs(plotrepo + 'stack/' + cut_tag)
+     if not os.path.exists(pathstack):
+          os.makedirs(pathstack)
 
-if not (opt.wfake=='nofake' or opt.wfake=='incl' or opt.wfake=='sep'):
-     raise ValueError('Specify a value for --wfake between nofake, incl, and sep')
+if not (opt.wfake=='nofake' or opt.wfake.startswith('incl') or opt.wfake.startswith('sep')):
+     raise ValueError('Specify a value for --wfake between nofake, incl*, and sep*')
 
 def mergepart(dataset):
      samples = []
@@ -287,14 +292,14 @@ def lumi_writer(dataset, lumi):
 
 def plot(lep, reg, variable, sample, cut_tag, syst=""):
      print("in plot function")
-     print("plotting ", variable._name, " for sample ", sample.label, " with cut ", cut_tag)#, " ", syst,
+     print("plotting ", variable._name, " for sample ", sample.label, " with cut ", cut_tag, "with FR", FRtag)#, " ", syst,
      ROOT.TH1.SetDefaultSumw2()
      cutbase = variable._taglio
      cut = ''
 
      print("count? ", opt.count)
      if opt.count:
-          countf = open(plotrepo + lepstr + '/countings/' + cut_tag + "/" + variable._name + ".txt", "a")
+          countf = open(pathplot + 'countings/' + cut_tag + "/" + variable._name + ".txt", "a")
           countf.write(sample.label)
           countf.write("\nBin\tContent\tError")
 
@@ -304,13 +309,13 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
           else:
                f1 = ROOT.TFile.Open(filerepo + sample.components[1].label + "/"  + sample.components[1].label + ".root")
           if str(sample.label).startswith('FakeEle_') or str(sample.label).startswith('FakeMu_'):
-               cut = cutbase + "*(lepton_LnTRegion==1||tau_LnTRegion==1)*(event_SFFake)*(event_SFFake>-1.)"
+               cut = cutbase + "*(lepton_LnTRegion==1||tau_LnTRegion==1)*(event_SFFake_" + str(FRtag)  + ")*(event_SFFake_" + str(FRtag)  + ">-1.)"
           elif str(sample.label).startswith('FakeElePromptTau') or str(sample.label).startswith('FakeMuPromptTau'):
-               cut = cutbase + "*(lepton_LnTRegion==1&&tau_LnTRegion==0)*(event_SFFake)*(event_SFFake>-1.)"
+               cut = cutbase + "*(lepton_LnTRegion==1&&tau_LnTRegion==0)*(event_SFFake_" + str(FRtag)  + ")*(event_SFFake_" + str(FRtag)  + ">-1.)"
           elif str(sample.label).startswith('PromptEleFakeTau') or str(sample.label).startswith('PromptMuFakeTau'):
-               cut = cutbase + "*(lepton_LnTRegion==0&&tau_LnTRegion==1)*(event_SFFake)*(event_SFFake>-1.)"
+               cut = cutbase + "*(lepton_LnTRegion==0&&tau_LnTRegion==1)*(event_SFFake_" + str(FRtag)  + ")*(event_SFFake_" + str(FRtag)  + ">-1.)"
           elif str(sample.label).startswith('FakeEleFakeTau') or str(sample.label).startswith('FakeMuFakeTau'):
-               cut = cutbase + "*(lepton_LnTRegion==1&&tau_LnTRegion==1)*(event_SFFake)*(event_SFFake>-1.)"
+               cut = cutbase + "*(lepton_LnTRegion==1&&tau_LnTRegion==1)*(event_SFFake_" + str(FRtag)  + ")*(event_SFFake_" + str(FRtag)  + ">-1.)"
 
      else:
           f1 = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + ".root")
@@ -339,7 +344,7 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
           #cut = cut + "*10."
 
      print(str(cut))
-     foutput = plotrepo + lepstr + "/" + sample.label + "_" + lep+".root"
+     foutput = pathplot + sample.label + "_" + lep + ".root"
 
      '''
      else:
@@ -429,8 +434,8 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           stackname = "stack_"+reg_+"_"+variabile_._name+"_"+cut_tag_
           canvasname = "stack_"+reg_+"_"+variabile_._name+"_"+cut_tag_+"_"+lep_ + "_" + str(samples_[0].year)
      if opt.wfake != 'nofake':
-          stackname += "_wFakes_" + str(opt.wfake)
-          canvasname += "_wFakes_" + str(opt.wfake)
+          stackname += "_wFakes_" + str(opt.wfake.split('_')[0])
+          canvasname += "_wFakes_" + str(opt.wfake.split('_')[0])
      if("selection_AND_best_Wpjet_isbtag_AND_best_topjet_isbtag" in cut_tag_ ) or ("selection_AND_best_topjet_isbtag_AND_best_Wpjet_isbtag" in cut_tag_ ):
           blind = True
      stack = ROOT.THStack(stackname, variabile_._name)
@@ -443,9 +448,9 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
                if s.label.startswith('WJets') or s.label.startswith('QCD') or s.label.startswith('DY') or s.label.startswith('TT_'):
                     continue
                elif 'Fake' in s.label:
-                    if opt.wfake == 'incl' and not (s.label.startswith('FakeEle_') or s.label.startswith('FakeMu_')):
+                    if opt.wfake.startswith('incl') and not (s.label.startswith('FakeEle_') or s.label.startswith('FakeMu_')):
                          continue
-                    elif opt.wfake == 'sep' and (s.label.startswith('FakeEle_') or s.label.startswith('FakeMu_')):
+                    elif opt.wfake.startswith('sep') and (s.label.startswith('FakeEle_') or s.label.startswith('FakeMu_')):
                          continue
           else:
                if s.label.startswith('Fake'):
@@ -454,12 +459,12 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
                signal = True
           print(s.label)
           if(syst_ == ""):
-               outfile = plotrepo + "stack_" + str(lep_).strip('[]') + ".root"
-               infile[s.label] = ROOT.TFile.Open(plotrepo + lepstr + "/" + s.label + "_" + lep + ".root")
+               #outfile = plotrepo + "stack_" + str(lep_).strip('[]') + ".root"
+               infile[s.label] = ROOT.TFile.Open(pathplot + s.label + "_" + lep + ".root")
 
           else:
-               outfile = plotrepo + "stack_"+syst_+"_"+str(lep_).strip('[]')+".root"
-               infile[s.label] = ROOT.TFile.Open(plotrepo + lepstr + "/" + s.label + "_" + lep + "_" + syst_ + ".root")
+               #outfile = plotrepo + "stack_"+syst_+"_"+str(lep_).strip('[]')+".root"
+               infile[s.label] = ROOT.TFile.Open(pathplot + s.label + "_" + lep + "_" + syst_ + ".root")
      i = 0
 
      for s in samples_:
@@ -467,9 +472,9 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
                if s.label.startswith('WJets') or s.label.startswith('QCD') or s.label.startswith('DY') or s.label.startswith('TT_'):
                     continue
                elif 'Fake' in s.label:
-                    if opt.wfake == 'incl' and not (s.label.startswith('FakeEle_') or s.label.startswith('FakeMu_')):
+                    if opt.wfake.startswith('incl') and not (s.label.startswith('FakeEle_') or s.label.startswith('FakeMu_')):
                          continue
-                    elif opt.wfake == 'sep' and (s.label.startswith('FakeEle_') or s.label.startswith('FakeMu_')):
+                    elif opt.wfake.startswith('sep') and (s.label.startswith('FakeEle_') or s.label.startswith('FakeMu_')):
                          continue
 
           else:
@@ -706,7 +711,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      pad2.RedrawAxis()
      c1.Update()
      #c1.Print("stack/"+canvasname+".pdf")
-     c1.Print(plotrepo + "stack/" + cut_tag + "/"+canvasname+".png")
+     c1.Print(pathstack + canvasname + ".png")
      del histo
      tmp.Delete()
      h.Delete()
@@ -824,20 +829,19 @@ for year in years:
           wzero = 'w_nominal*PFSF*puSF*lepSF*tau_vsjet_SF*tau_vsele_SF*tau_vsmu_SF'
           cutbase = cut_dict[lep]
 
-          '''
+
           variables.append(variabile('BDT_output', 'BDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
           variables.append(variabile('BDT_output_ele', 'eleBDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
           variables.append(variabile('BDT_output_mu', '#muBDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
           variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cutbase+')', 20, -5., 5.))
 
           variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cutbase+')', 14, -3.50, 3.50))
-          '''
+
 
           bin_lepton_pt = array("f", [0., 30., 45., 60., 80., 100., 200., 300., 500., 800.])
           nbin_lepton_pt = len(bin_lepton_pt)-1
           variables.append(variabile('lepton_pt',  'Lepton p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_lepton_pt, bin_lepton_pt))#30, 1500))
           
-          '''
           #variables.append(variabile('lepton_pdgid', 'lepton pdgid',  wzero+'*('+cutbase+')', 31, -15.5, 15.5))
           #variables.append(variabile('lepton_pfRelIso04', 'lepton rel iso',  wzero+'*('+cutbase+')', 15, 0, 0.15))
           variables.append(variabile('lepton_Zeppenfeld', 'lepton Zeppenfeld',  wzero+'*('+cutbase+')', 24, -6, 6))
@@ -860,8 +864,8 @@ for year in years:
           variables.append(variabile('taujet_deltaPhi',  '#tau jet relative #Delta#phi',  wzero+'*('+cutbase+')', 16, -4., 4.))
           variables.append(variabile('taujet_deltaEta',  '#tau jet relative #Delta#eta',  wzero+'*('+cutbase+')', 40, -10., 10.))
           variables.append(variabile('taujet_HadGamma',  '#tau jet had#Gamma',  wzero+'*('+cutbase+')', 16, -1., 3.))
-          variables.append(variabile('taujet_EmGamma',  '#tau jet em#Gamma',  wzero+'*('+cutbase+')', 16, -1., 3.))
-          variables.append(variabile('taujet_HEGamma',  '#tau jet hem#Gamma',  wzero+'*('+cutbase+')', 16, -1., 3.))
+          #variables.append(variabile('taujet_EmGamma',  '#tau jet em#Gamma',  wzero+'*('+cutbase+')', 16, -1., 3.))
+          #variables.append(variabile('taujet_HEGamma',  '#tau jet hem#Gamma',  wzero+'*('+cutbase+')', 16, -1., 3.))
 
           #variables.append(variabile('tau_DeepTauVsEle_raw', '#tau DeepTauVsEle raw',  wzero+'*('+cutbase+')',  10, 0.35, 1.35))
           #variables.append(variabile('tau_DeepTauVsMu_raw', '#tau DeepTauVsMu raw',  wzero+'*('+cutbase+')',  10, 0.2, 1.2))
@@ -877,7 +881,7 @@ for year in years:
 
           variables.append(variabile('leadjet_eta', 'Lead jet #eta',  wzero+'*('+cutbase+')', 20, -5., 5.))
           variables.append(variabile('leadjet_phi', 'Lead jet #Phi',  wzero+'*('+cutbase+')',  14, -3.50, 3.50))
-          '''
+
           '''
           bin_ak8leadjet_pt = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 1200., 1600.])
           nbin_ak8leadjet_pt = len(bin_ak8leadjet_pt)-1
@@ -907,7 +911,7 @@ for year in years:
           variables.append(variabile('AK8subleadjet_tau32', 'AK8 Sublead jet #tau_{32}',  wzero+'*('+cutbase+')',  20, 0., 1.))
           variables.append(variabile('AK8subleadjet_tau43', 'AK8 Sublead jet #tau_{43}',  wzero+'*('+cutbase+')',  20, 0., 1.))
           '''
-          '''
+
           bin_subleadjet_pt = array("f", [0., 100., 250., 500., 800.])
           nbin_subleadjet_pt = len(bin_subleadjet_pt) - 1
           variables.append(variabile('subleadjet_pt',  'Sublead jet p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_subleadjet_pt, bin_subleadjet_pt))#40, 30, 1000))
@@ -931,7 +935,15 @@ for year in years:
                bin_mjj = array("f", [0., 150., 300., 450., 600., 750., 900., 1050., 1200., 1500., 1800., 2100., 3000., 4500.])
                #bin_mjj = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 900., 1000., 1100., 1200., 1400., 1600., 2000., 2500., 3500., 4500.])
           nbin_mjj = len(bin_mjj) - 1 
-          variables.append(variabile('mjj', 'M_{jj} [GeV]',  wzero+'*('+cutbase+')', nbin_mjj, bin_mjj))# 20, 500, 2000))
+          variables.append(variabile('m_jj', 'invariant mass j_{1}j_{2} [GeV]',  wzero+'*('+cutbase+')', nbin_mjj, bin_mjj))# 20, 500, 2000))
+
+          bin_invm = array("f", [0., 150., 300., 450., 600., 750., 900., 1050., 1200., 1500., 1800., 2100., 3000., 4500.])
+               #bin_invm = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 900., 1000., 1100., 1200., 1400., 1600., 2000., 2500., 3500., 4500.])
+          nbin_invm = len(bin_invm) - 1 
+          variables.append(variabile('m_jjtau', 'invariant mass j_{1}j_{2}#tau [GeV]',  wzero+'*('+cutbase+')', nbin_invm, bin_invm))# 20, 500, 2000))
+          variables.append(variabile('m_jjtaulep', 'invariant mass j_{1}j_{2}#tau l[GeV]',  wzero+'*('+cutbase+')', nbin_invm, bin_invm))# 20, 500, 2000))
+          variables.append(variabile('m_taulep', 'invariant mass #tau l[GeV]',  wzero+'*('+cutbase+')', nbin_invm, bin_invm))# 20, 500, 2000))
+
 
           bin_mTs = array("f", [0., 25., 50., 75., 100., 125., 150., 200., 250., 300., 400., 500.])
           nbin_mTs = len(bin_mTs) - 1
@@ -950,7 +962,27 @@ for year in years:
           variables.append(variabile('deltaPhi_tauj2', '#Delta #phi_{#tau j_{2}}',  wzero+'*('+cutbase+')',  16, -4., 4.))
           variables.append(variabile('deltaPhi_lepj1', '#Delta #phi_{l j_{1}}',  wzero+'*('+cutbase+')', 16, -4., 4.))
           variables.append(variabile('deltaPhi_lepj2', '#Delta #phi_{l j_{2}}',  wzero+'*('+cutbase+')', 16, -4., 4.))
-          '''
+
+          variables.append(variabile('deltaEta_jj', '#Delta #eta_{jj}',  wzero+'*('+cutbase+')',  32, -8., 8.))
+          variables.append(variabile('deltaEta_taulep', '#Delta #eta_{#tau l}',  wzero+'*('+cutbase+')',  32, -8., 8.))
+          variables.append(variabile('deltaEta_tauj1', '#Delta #eta_{#tau j_{1}}',  wzero+'*('+cutbase+')',  32, -8., 8.))
+          variables.append(variabile('deltaEta_tauj2', '#Delta #eta_{#tau j_{2}}',  wzero+'*('+cutbase+')',  32, -8., 8.))
+          variables.append(variabile('deltaEta_lepj1', '#Delta #eta_{l j_{1}}',  wzero+'*('+cutbase+')', 32, -8., 8.))
+          variables.append(variabile('deltaEta_lepj2', '#Delta #eta_{l j_{2}}',  wzero+'*('+cutbase+')', 32, -8., 8.))
+
+          variables.append(variabile('deltaTheta_jj', 'cos(#Delta#theta_{jj})',  wzero+'*('+cutbase+')',  20, -1., 1.))
+          variables.append(variabile('deltaTheta_taulep', 'cos(#Delta#theta_{#tau l})',  wzero+'*('+cutbase+')',  20, -1., 1.))
+          variables.append(variabile('deltaTheta_tauj1', 'cos(#Delta#theta_{#tau j_{1}})',  wzero+'*('+cutbase+')',  20, -1., 1.))
+          variables.append(variabile('deltaTheta_tauj2', 'cos(#Delta#theta_{#tau j_{2}})',  wzero+'*('+cutbase+')',  20, -1., 1.))
+          variables.append(variabile('deltaTheta_lepj1', 'cos(#Delta#theta_{l j_{1}})',  wzero+'*('+cutbase+')', 20, -1., 1.))
+          variables.append(variabile('deltaTheta_lepj2', 'cos(#Delta#theta_{l j_{2}})',  wzero+'*('+cutbase+')', 20, -1., 1.))
+
+          variables.append(variabile('ptRel_jj', 'relative p_{T} j_{1}j_{2}',  wzero+'*('+cutbase+')',  20, -1., 1.))
+          variables.append(variabile('ptRel_taulep', 'relative p_{T} #tau l',  wzero+'*('+cutbase+')',  20, -1., 1.))
+          variables.append(variabile('ptRel_tauj1', 'relative p_{T} #tau j_{1}',  wzero+'*('+cutbase+')',  20, -1., 1.))
+          variables.append(variabile('ptRel_tauj2', 'relative p_{T} #tau j_{2}',  wzero+'*('+cutbase+')',  20, -1., 1.))
+          variables.append(variabile('ptRel_lepj1', 'relative p_{T} l j_{1}',  wzero+'*('+cutbase+')', 20, -1., 1.))
+          variables.append(variabile('ptRel_lepj2', 'relative p_{T} l j_{2}',  wzero+'*('+cutbase+')', 20, -1., 1.))
 
           for sample in dataset_new:
                print(sample)
@@ -962,12 +994,12 @@ for year in years:
                if(opt.plot):
                     for var in variables:
                          if opt.count:
-                              if not os.path.exists(plotrepo + lepstr + '/countings/'):
-                                   os.makedirs(plotrepo + lepstr + '/countings/')
-                              if not os.path.exists(plotrepo + lepstr + '/countings/' + cut_tag):
-                                   os.makedirs(plotrepo + lepstr + '/countings/' + cut_tag)
-                              if not os.path.exists(plotrepo + lepstr + '/countings/' + cut_tag + "/" + var._name + ".txt"):
-                                   tmp_f = open(plotrepo + lepstr + '/countings/' + cut_tag + "/" + var._name + ".txt", "w")
+                              if not os.path.exists(pathplot + 'countings/'):
+                                   os.makedirs(pathplot + 'countings/')
+                              if not os.path.exists(pathplot + 'countings/' + cut_tag):
+                                   os.makedirs(pathplot + 'countings/' + cut_tag)
+                              if not os.path.exists(pathplot + 'countings/' + cut_tag + "/" + var._name + ".txt"):
+                                   tmp_f = open(pathplot + 'countings/' + cut_tag + "/" + var._name + ".txt", "w")
                                    tmp_f.close()
                          if (("GenPart" in var._name) or ("MC_" in var._name)) and "Data" in sample.label:
                               continue
