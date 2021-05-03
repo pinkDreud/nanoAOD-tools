@@ -699,10 +699,10 @@ for i in range(tree.GetEntries()):
     #++        taking objects        ++
     #++++++++++++++++++++++++++++++++++
     
-    if Debug:
-        print("\nevento n. " + str(i))
-        if i > 40000:
-            break
+    #if Debug:
+        #print("\nevento n. " + str(i))
+        #if i > 40000:
+            #break
     
     if i%500 == 0 and not Debug:#
         print("Event #", i+1, " out of ", tree.GetEntries())
@@ -833,18 +833,26 @@ for i in range(tree.GetEntries()):
     #print("passEle:", passEle, "\tpassMu:", passMu)
 
     if ElMu:
-        for mu in muons:
-            if abs(mu.pt)>HighestLepPt:
-                HighestLepPt=copy.deepcopy(mu.pt)
-                SingleEle = False
-                SingleMu = True
-                break
-        for ele in electrons:
-            if abs(ele.pt)>HighestLepPt:
-                HighestLepPt=copy.deepcopy(ele.pt)
-                SingleEle = True
-                SingleMu = False
-                break
+        #if not isMC:
+            #if dataMu:
+                #SingleEle = False
+                #SingleMu = True
+            #elif dataEle:
+                #SingleEle = True
+                #SingleMu = False
+        if True:#else:
+            for mu in muons:
+                if abs(mu.pt)>HighestLepPt:
+                    HighestLepPt=copy.deepcopy(mu.pt)
+                    SingleEle = False
+                    SingleMu = True
+                    break
+            for ele in electrons:
+                if abs(ele.pt)>HighestLepPt:
+                    HighestLepPt=copy.deepcopy(ele.pt)
+                    SingleEle = True
+                    SingleMu = False
+                    break
     
     leptons = None
 

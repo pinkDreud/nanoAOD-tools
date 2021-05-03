@@ -32,7 +32,7 @@ parser.add_option('-s', '--stack', dest='stack', default = False, action='store_
 parser.add_option('-N', '--notstacked', dest='tostack', default = True, action='store_false', help='Default make plots stacked')
 parser.add_option('-L', '--lep', dest='lep', type='string', default = 'incl', help='Default make incl analysis')
 parser.add_option('-S', '--syst', dest='syst', type='string', default = 'all', help='Default all systematics added')
-parser.add_option('-C', '--cut', dest='cut', type='string', default = 'lepton_eta>-10.', help='Default no cut')
+parser.add_option('-C', '--cut', dest='cut', type='string', default = '1.', help='Default no cut')
 parser.add_option('-y', '--year', dest='year', type='string', default = '2017', help='Default 2016, 2017 and 2018 are included')
 parser.add_option('-f', '--folder', dest='folder', type='string', default = 'v7', help='Default folder is v0')
 parser.add_option('-d', '--dat', dest='dat', type='string', default = 'all', help="")
@@ -71,15 +71,15 @@ if opt.lep != 'incl':
 else:
      lepstr = 'plot'
 
-cut = opt.cut #default cut must be obvious, for example lepton_eta>-10.
+cut = opt.cut #default cut must be obvious, for example 1.
 
 if opt.bveto:
-     cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==0&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1)*(" + cut + ")", 
+     cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1)*(" + cut + ")", 
                  'electron':"(abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1)*(" + cut + ")", 
                  'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1)*(" + cut + ")", 
           }
      cut_tag = 'selection_upto_bveto'
-     if opt.cut != "lepton_eta>-10.":
+     if opt.cut != "1.":
           cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut) 
 elif opt.ttbar:
      cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.)*(" + cut + ")", 
@@ -87,7 +87,7 @@ elif opt.ttbar:
                  'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.)*(" + cut + ")", 
           }
      cut_tag = 'ttbar_CR'
-     if opt.cut != "lepton_eta>-10.":
+     if opt.cut != "1.":
           cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut)           
 elif opt.wjets:
      cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&MET_pt<=50.&&mT_lep_MET>50.)*(" + cut + ")", 
@@ -95,7 +95,7 @@ elif opt.wjets:
                  'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&MET_pt<=50.&&mT_lep_MET>50.)*(" + cut + ")",
           }
      cut_tag = 'wjets_CR'
-     if opt.cut != "lepton_eta>-10.":
+     if opt.cut != "1.":
           cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut)           
 elif opt.sel:
      cut_dict = {'muon':"(abs(lepton_pdgid)==13)*(" + cut + ")*(pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1)", 
@@ -103,7 +103,7 @@ elif opt.sel:
                  'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11))*(" + cut + ")*(pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1)", 
           }
      cut_tag = "selection"
-     if opt.cut != "lepton_eta>-10.":
+     if opt.cut != "1.":
           cut_tag = cut_tag + '_AND_' + cutToTag(opt.cut) 
 
 else:
@@ -319,7 +319,7 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
 
      else:
           f1 = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + ".root")
-          cut = cutbase + "*(lepton_TightRegion==1&&tau_TightRegion==1)*(lepton_pfRelIso04<0.04)"
+          cut = cutbase + "*(lepton_TightRegion==1&&tau_TightRegion==1)"
 
      if not ('Fake' in str(sample.label) or 'Data' in str(sample.label)):
         cut = cut + "*(lepton_isPrompt==1&&tau_isPrompt==5)"
