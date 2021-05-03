@@ -319,7 +319,7 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
 
      else:
           f1 = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + ".root")
-          cut = cutbase + "*(lepton_TightRegion==1&&tau_TightRegion==1)*(lepton_pfRelIso04<0.05)"
+          cut = cutbase + "*(lepton_TightRegion==1&&tau_TightRegion==1)*(lepton_pfRelIso04<0.04)"
 
      if not ('Fake' in str(sample.label) or 'Data' in str(sample.label)):
         cut = cut + "*(lepton_isPrompt==1&&tau_isPrompt==5)"
