@@ -210,42 +210,42 @@ ZZJJTo4L_QCD_2017.sigma = 0.008348 #pb
 
 GluGluToContinToZZTo2e2nu_2017 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "GluGluToContinToZZTo2e2nu_2017")
 GluGluToContinToZZTo2e2nu_2017.year = 2017
-GluGluToContinToZZTo2e2nu_2017.dataset = "/GluGluToContinToZZTo2e2nu_13TeV_MCFM701_pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+GluGluToContinToZZTo2e2nu_2017.dataset = "/GluGluToContinToZZTo2e2nu_13TeV_MCFM701_pythia8/" + tag3_2017 + "-v1/NANOAODSIM"
 GluGluToContinToZZTo2e2nu_2017.sigma = 14.93 #pb
 
 GluGluToContinToZZTo2e2mu_2017 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "GluGluToContinToZZTo2e2mu_2017")
 GluGluToContinToZZTo2e2mu_2017.year = 2017
-GluGluToContinToZZTo2e2mu_2017.dataset = "/GluGluToContinToZZTo2e2mu_13TeV_TuneCP5_MCFM701_pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+GluGluToContinToZZTo2e2mu_2017.dataset = "/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/" + tag3_2017 + "-v1/NANOAODSIM"
 GluGluToContinToZZTo2e2mu_2017.sigma = 3.185 #pb
 
 GluGluToContinToZZTo2e2tau_2017 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "GluGluToContinToZZTo2e2tau_2017")
 GluGluToContinToZZTo2e2tau_2017.year = 2017
-GluGluToContinToZZTo2e2tau_2017.dataset = "/GluGluToContinToZZTo2e2tau_13TeV_TuneCP5_MCFM701_pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+GluGluToContinToZZTo2e2tau_2017.dataset = "/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8/" + tag3_2017 + "-v1/NANOAODSIM"
 GluGluToContinToZZTo2e2tau_2017.sigma = 3.185 #pb
 
 GluGluToContinToZZTo2mu2nu_2017 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "GluGluToContinToZZTo2mu2nu_2017")
 GluGluToContinToZZTo2mu2nu_2017.year = 2017
-GluGluToContinToZZTo2mu2nu_2017.dataset = "/GluGluToContinToZZTo2mu2nu_13TeV_MCFM701_pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+GluGluToContinToZZTo2mu2nu_2017.dataset = "/GluGluToContinToZZTo2mu2nu_13TeV_MCFM701_pythia8/" + tag3_2017 + "-v1/NANOAODSIM"
 GluGluToContinToZZTo2mu2nu_2017.sigma = 14.93 #pb
 
 GluGluToContinToZZTo2mu2tau_2017 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "GluGluToContinToZZTo2mu2tau_2017")
 GluGluToContinToZZTo2mu2tau_2017.year = 2017
-GluGluToContinToZZTo2mu2tau_2017.dataset = "/GluGluToContinToZZTo2mu2tau_13TeV_TuneCP5_MCFM701_pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+GluGluToContinToZZTo2mu2tau_2017.dataset = "/GluGluToContinToZZTo2mu2tau_13TeV_MCFM701_pythia8/" + tag3_2017 + "-v1/NANOAODSIM"
 GluGluToContinToZZTo2mu2tau_2017.sigma = 3.185 #pb
 
 GluGluToContinToZZTo4e_2017 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "GluGluToContinToZZTo4e_2017")
 GluGluToContinToZZTo4e_2017.year = 2017
-GluGluToContinToZZTo4e_2017.dataset = "/GluGluToContinToZZTo4e_13TeV_TuneCP5_MCFM701_pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+GluGluToContinToZZTo4e_2017.dataset = "/GluGluToContinToZZTo4e_13TeV_MCFM701_pythia8/" + tag3_2017 + "-v1/NANOAODSIM"
 GluGluToContinToZZTo4e_2017.sigma = 1.404 #pb
 
 GluGluToContinToZZTo4mu_2017 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "GluGluToContinToZZTo4mu_2017")
 GluGluToContinToZZTo4mu_2017.year = 2017
-GluGluToContinToZZTo4mu_2017.dataset = "/GluGluToContinToZZTo4mu_13TeV_TuneCP5_MCFM701_pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+GluGluToContinToZZTo4mu_2017.dataset = "/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/" + tag3_2017 + "-v1/NANOAODSIM"
 GluGluToContinToZZTo4mu_2017.sigma = 1.404 #pb
 
 GluGluToContinToZZTo4tau_2017 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "GluGluToContinToZZTo4tau_2017")
 GluGluToContinToZZTo4tau_2017.year = 2017
-GluGluToContinToZZTo4tau_2017.dataset = "/GluGluToContinToZZTo4tau_13TeV_TuneCP5_MCFM701_pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+GluGluToContinToZZTo4tau_2017.dataset = "/GluGluToContinToZZTo4tau_13TeV_MCFM701_pythia8/" + tag_2017 + "-v1/NANOAODSIM"
 GluGluToContinToZZTo4tau_2017.sigma = 1.404 #pb
 
 GluGluToContinToZZTo4L_2017 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "GluGluToContinToZZTo4L_2017")
