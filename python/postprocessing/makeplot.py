@@ -978,12 +978,12 @@ for year in years:
           variables.append(variabile('deltaTheta_lepj1', 'cos(#Delta#theta_{l j_{1}})',  wzero+'*('+cutbase+')', 20, -1., 1.))
           variables.append(variabile('deltaTheta_lepj2', 'cos(#Delta#theta_{l j_{2}})',  wzero+'*('+cutbase+')', 20, -1., 1.))
 
-          variables.append(variabile('ptRel_jj', 'relative p_{T} j_{1}j_{2}',  wzero+'*('+cutbase+')',  20, -1., 1.))
-          variables.append(variabile('ptRel_taulep', 'relative p_{T} #tau l',  wzero+'*('+cutbase+')',  20, -1., 1.))
-          variables.append(variabile('ptRel_tauj1', 'relative p_{T} #tau j_{1}',  wzero+'*('+cutbase+')',  20, -1., 1.))
-          variables.append(variabile('ptRel_tauj2', 'relative p_{T} #tau j_{2}',  wzero+'*('+cutbase+')',  20, -1., 1.))
-          variables.append(variabile('ptRel_lepj1', 'relative p_{T} l j_{1}',  wzero+'*('+cutbase+')', 20, -1., 1.))
-          variables.append(variabile('ptRel_lepj2', 'relative p_{T} l j_{2}',  wzero+'*('+cutbase+')', 20, -1., 1.))
+          variables.append(variabile('ptRel_jj', 'relative p_{T} j_{1}j_{2}',  wzero+'*('+cutbase+')',  40, 0., 200.))
+          variables.append(variabile('ptRel_taulep', 'relative p_{T} #tau l',  wzero+'*('+cutbase+')',  40, 0., 200.))
+          variables.append(variabile('ptRel_tauj1', 'relative p_{T} #tau j_{1}',  wzero+'*('+cutbase+')',  40, 0., 200.))
+          variables.append(variabile('ptRel_tauj2', 'relative p_{T} #tau j_{2}',  wzero+'*('+cutbase+')',  40, 0., 200.))
+          variables.append(variabile('ptRel_lepj1', 'relative p_{T} l j_{1}',  wzero+'*('+cutbase+')', 40, 0., 200.))
+          variables.append(variabile('ptRel_lepj2', 'relative p_{T} l j_{2}',  wzero+'*('+cutbase+')', 40, 0., 200.))
 
 
           for sample in dataset_new:
