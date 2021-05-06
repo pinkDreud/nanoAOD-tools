@@ -149,7 +149,9 @@ def FindSecondJet(jet, jetCollection, GoodTau, GoodMu):
     return -1
 
 def get_ptrel(lepton, jet):
-    ptrel = ((jet.p4()-lepton.p4()).Vect().Cross(lepton.p4().Vect())).Mag()/(jet.p4().Vect().Mag())
+    lepjet_tv = (jet.p4()+lepton.p4()).Vect()
+    lep_tv = lepton.p4().Vect()
+    ptrel = (lepjet_tv.Cross(lep_tv)).Mag()/(lepjet.Mag())
     return ptrel
 
 def SelectLepton(lepCollection, isMu): #isMu==True -> muons else Ele 
