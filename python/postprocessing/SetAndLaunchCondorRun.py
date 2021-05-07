@@ -167,7 +167,7 @@ for prname, proc in class_dict.items():
             continue
         if os.path.exists(path+proc.label):
             if opt.rw:
-                print('Relaunching all the jobs for', sample.label)
+                print('Relaunching all the jobs for', proc.label)
                 os.system("rm -f "+ path + proc.label + "/*")
         if not AreAllCondored(proc.label):
             if opt.check:
