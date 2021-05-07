@@ -49,6 +49,9 @@ effLumi_2017 = {
             },
         }
 
+sqrt = lambda x : TMath.Power(x, 0.5)
+squared = lambda x : TMath.Power(x, 2.)
+
 def lumiFinder(particleTrig, vTrigger):
     lumi=0
     for trigtype in effLumi_2017:
@@ -372,6 +375,42 @@ def metCut(met):
 
 def mTlepMet(MET, lepton):
         return math.sqrt(2*lepton.Pt()*MET.pt*(1-math.cos(lepton.Phi()-MET.phi)))
+
+def M1T(lep, tau, MET):
+    leptau_p4 = lep.p4() + tau.p4()
+    leptau_pt2 = leptau_p4.Perp2()
+    leptau_px = leptau_p4.Px()
+    leptau_py = leptau_p4.Py()
+    leptau_mass2 = leptau_p4.M2()
+    leptau_et = sqrt(leptau_mass2 + leptau_pt2)
+
+    MET_px = MET.pt*TMath.Cos(MET.phi)
+    MET_py = MET.pt*TMath.Sin(MET.phi)
+
+    sys_et2 = squared(leptau_et + MET.pt)
+    sys_pt2 = squared(leptau_px + MET_px) + squared(leptau_py + MET_py)
+    M1T2 = sys_et2 - sys_pt2
+    sign_M1T2 = M1T2/abs(M1T2)
+
+    return sign_M1T2*sqrt(sign_M1T2*M1T2)
+
+def Mo1(lep, tau, MET):
+    leptau_p4 = lep.p4() + tau.p4()
+    lep_pt = lep.pt
+    tau_pt = tau.pt
+
+    leptau_px = leptau_p4.Px()
+    leptau_py = leptau_p4.Py()
+
+    MET_px = MET.pt*TMath.Cos(MET.phi)
+    MET_py = MET.pt*TMath.Sin(MET.phi)
+
+    sys_eo2 = squared(lep_pt + tau_pt + MET.pt)
+    sys_pt2 = squared(leptau_px + MET_px) + squared(leptau_py + MET_py)
+    Mo12 = sys_eo2 - sys_pt2
+    sign_Mo12 = Mo12/abs(Mo12)
+
+    return sign_Mo12*sqrt(sign_Mo12*Mo12)
 
 def Zeppenfeld(lep_eta, tau_eta, ljet_eta, sljet_eta):
     zepp_lepjj = lep_eta - 0.5*(ljet_eta+sljet_eta)

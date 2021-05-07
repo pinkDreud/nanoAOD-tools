@@ -377,7 +377,9 @@ var_list.append(MET_phi)
 #inv and transv masses
 m_jjtau = array.array('f', [-999.])#
 m_jjtaulep = array.array('f', [-999.])#
-m_jj                         =   array.array('f', [-999.])
+m_jj                        =   array.array('f', [-999.])
+m_1T                        =   array.array('f', [-999.])
+m_o1                        =   array.array('f', [-999.])
 m_taulep                    =   array.array('f', [-999.])
 mT_lep_MET                  =   array.array('f', [-999.])
 mT_tau_MET                  =   array.array('f', [-999.])
@@ -385,6 +387,8 @@ mT_leptau_MET               =   array.array('f', [-999.])
 var_list.append(m_jjtau)
 var_list.append(m_jjtaulep)
 var_list.append(m_jj)
+var_list.append(m_1T)
+var_list.append(m_o1)
 var_list.append(m_taulep)
 var_list.append(mT_lep_MET)
 var_list.append(mT_tau_MET)
@@ -570,6 +574,8 @@ systTree.branchTreesSysts(trees, "all", "MET_pt",               outTreeFile, MET
 systTree.branchTreesSysts(trees, "all", "MET_phi",              outTreeFile, MET_phi)
 #masses#
 systTree.branchTreesSysts(trees, "all", "m_jj",                  outTreeFile, m_jj)
+systTree.branchTreesSysts(trees, "all", "m_1T",                  outTreeFile, m_1T)
+systTree.branchTreesSysts(trees, "all", "m_o1",                  outTreeFile, m_o1)
 systTree.branchTreesSysts(trees, "all", "mT_lep_MET",                  outTreeFile, mT_lep_MET)
 systTree.branchTreesSysts(trees, "all", "mT_tau_MET",                  outTreeFile, mT_tau_MET)
 systTree.branchTreesSysts(trees, "all", "mT_leptau_MET",                  outTreeFile, mT_leptau_MET)
@@ -998,6 +1004,8 @@ for i in range(tree.GetEntries()):
 
     mT_tau_MET[0]=mTlepMet(met, GoodTau.p4())
     mT_leptau_MET[0]=mTlepMet(met, GoodTau.p4()+GoodLep.p4())
+    m_1T[0] = M1T(GoodLep, GoodTau, met)
+    m_o1[0] = Mo1(GoodLep, GoodTau, met)
     tau_DeepTau_WP[0] = GoodTau.idDeepTau2017v2p1VSjet*1000.**2. + GoodTau.idDeepTau2017v2p1VSmu*1000. + GoodTau.idDeepTau2017v2p1VSe
     if GoodTau.idDeepTau2017v2p1VSe+1 > 0.:
         tau_DeepTauVsEle_WP[0]  =   math.log(GoodTau.idDeepTau2017v2p1VSe+1, 2)#
