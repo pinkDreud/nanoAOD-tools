@@ -255,8 +255,14 @@ def SelectAndVetoTaus(taus, lepton):
     for i, tau in enumerate(taus):
         #print(i, "deltaR(tightlep):", deltaR(tau.eta, tau.phi, lepton.eta, lepton.phi), "DTvse:", tau.idDeepTau2017v2p1VSe, "DTvsmu:", tau.idDeepTau2017v2p1VSmu, "DTvsjet:", tau.idDeepTau2017v2p1VSjet, "tau pt:", tau.pt, "tau eta:", tau.eta)
         #print(deltaR(tau.eta, tau.phi, lepton.eta, lepton.phi)>DR_OVERLAP_CONE_TAU, tau.idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE, tau.idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU, tau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET_LOOSE, tau.pt>=PT_CUT_TAU, abs(tau.eta)<=ETA_CUT_TAU, tau.idDecayModeNewDMs)
-        if (tau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET_LOOSE and tau.idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and tau.idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and tau.idDecayModeNewDMs) and deltaR(tau.eta, tau.phi, lepton.eta, lepton.phi)>DR_OVERLAP_CONE_TAU and tau.pt>=PT_CUT_TAU and abs(tau.eta)<=ETA_CUT_TAU:
+        if abs(lepton.pdgId)==11:
+            cutloose_vsjet = ID_TAU_RECO_DEEPTAU_VSJET_LOOSE_ELE
+        elif abs(lepton.pdgId)==13:
+            cutloose_vsjet = ID_TAU_RECO_DEEPTAU_VSJET_LOOSE_MU
+
+        if (tau.idDeepTau2017v2p1VSjet>=cutloose_vsjet and tau.idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and tau.idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and tau.idDecayModeNewDMs) and deltaR(tau.eta, tau.phi, lepton.eta, lepton.phi)>DR_OVERLAP_CONE_TAU and tau.pt>=PT_CUT_TAU and abs(tau.eta)<=ETA_CUT_TAU:
             nTau+=1
+
             if tau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET:
                 idxl.append([i, "T"])
             else:
