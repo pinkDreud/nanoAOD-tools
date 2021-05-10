@@ -1323,7 +1323,6 @@ class_dict={
 
 class_list=[
     #WpWpJJ_EWK_2017,
-    WpWpJJ_QCD_2017,
     #VBS_SSWW_LL_SM_2017,
     #VBS_SSWW_TL_SM_2017,
     #VBS_SSWW_TT_SM_2017,
@@ -1334,9 +1333,10 @@ class_list=[
     VBS_SSWW_BSM_INT_2017,
     VBS_SSWW_BSM_SM_2017,
     VG_2017,
+    WpWpJJ_QCD_2017,
     TVX_2017,
-    WZ_2017,
     TTTo2L2Nu_2017,
+    WZ_2017,
     OtherWS_2017,
     ZZtoLep_2017,
     #ZZTo2L2Nu_2017,
