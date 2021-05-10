@@ -875,7 +875,7 @@ for year in years:
           #variables.append(variabile('tau_DeepTauVsEle_WP', '#tau DeepTauVsEle WP',  wzero+'*('+cutbase+')',  11, -0.5, 10.5))
           #variables.append(variabile('tau_DeepTauVsMu_WP', '#tau DeepTauVsMu WP',  wzero+'*('+cutbase+')',  11, -0.5, 10.5))
           #variables.append(variabile('tau_DeepTauVsJet_WP', '#tau DeepTauVsJet WP',  wzero+'*('+cutbase+')',  11, -0.5, 10.5))
-
+          
           bin_leadjet_pt = array("f", [0., 100., 200., 300., 400., 600., 1000., 1600.])
           nbin_leadjet_pt = len(bin_leadjet_pt)-1
           variables.append(variabile('leadjet_pt',  'Lead jet p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_leadjet_pt, bin_leadjet_pt))#30, 1500))
@@ -945,6 +945,10 @@ for year in years:
           variables.append(variabile('m_jjtaulep', 'invariant mass j_{1}j_{2}#tau l[GeV]',  wzero+'*('+cutbase+')', nbin_invm, bin_invm))# 20, 500, 2000))
           variables.append(variabile('m_taulep', 'invariant mass #tau l[GeV]',  wzero+'*('+cutbase+')', nbin_invm, bin_invm))# 20, 500, 2000))
 
+          bin_m1 = array("f", [0., 50., 100., 150., 200., 250., 300., 400., 500., 800.])
+          nbin_m1 = len(bin_m1) - 1 
+          variables.append(variabile('m_1T', 'M_{1T} [GeV]',  wzero+'*('+cutbase+')', nbin_m1, bin_m1))
+          variables.append(variabile('m_o1', 'M_{o1} [GeV]',  wzero+'*('+cutbase+')', nbin_m1, bin_m1))
 
           bin_mTs = array("f", [0., 25., 50., 75., 100., 125., 150., 200., 250., 300., 400., 500.])
           nbin_mTs = len(bin_mTs) - 1
@@ -984,7 +988,6 @@ for year in years:
           variables.append(variabile('ptRel_tauj2', 'relative p_{T} #tau j_{2}',  wzero+'*('+cutbase+')',  40, 0., 200.))
           variables.append(variabile('ptRel_lepj1', 'relative p_{T} l j_{1}',  wzero+'*('+cutbase+')', 40, 0., 200.))
           variables.append(variabile('ptRel_lepj2', 'relative p_{T} l j_{2}',  wzero+'*('+cutbase+')', 40, 0., 200.))
-
 
           for sample in dataset_new:
                print(sample)
