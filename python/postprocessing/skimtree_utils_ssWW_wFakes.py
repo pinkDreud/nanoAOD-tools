@@ -151,8 +151,10 @@ def FindSecondJet(jet, jetCollection, GoodTau, GoodMu):
                 return k
     return -1
 
-def get_ptrel(lepton, jet):
-    lepjet_tv = (jet.p4()+lepton.p4()).Vect()
+def get_ptrel(lepton, jet, taucorr=1.):
+    jet_p4 = ROOT.TLorentzVector()
+    jet_p4.SetPtEtaPhiM(jet.pt*taucorr, jet.eta, jet.phi, jet.mass)
+    lepjet_tv = (jet_p4+lepton.p4()).Vect()
     lep_tv = lepton.p4().Vect()
     ptrel = (lepjet_tv.Cross(lep_tv)).Mag()/(lepjet.Mag())
     return ptrel
@@ -382,8 +384,10 @@ def metCut(met):
 def mTlepMet(MET, lepton):
         return math.sqrt(2*lepton.Pt()*MET.pt*(1-math.cos(lepton.Phi()-MET.phi)))
 
-def M1T(lep, tau, MET):
-    leptau_p4 = lep.p4() + tau.p4()
+def M1T(lep, tau, MET, taucorr=1.):
+    tau_p4 = ROOT.TLorentzVector()
+    tau_p4.SetPtEtaPhiM(tau.pt*taucorr, tau.eta, tau.phi, tau.mass)
+    leptau_p4 = lep.p4() + tau_p4
     leptau_pt2 = leptau_p4.Perp2()
     leptau_px = leptau_p4.Px()
     leptau_py = leptau_p4.Py()
@@ -400,10 +404,12 @@ def M1T(lep, tau, MET):
 
     return sign_M1T2*sqrt(sign_M1T2*M1T2)
 
-def Mo1(lep, tau, MET):
-    leptau_p4 = lep.p4() + tau.p4()
+def Mo1(lep, tau, MET, taucorr=1.):
+    tau_p4 = ROOT.TLorentzVector()
+    tau_p4.SetPtEtaPhiM(tau.pt*taucorr, tau.eta, tau.phi, tau.mass)
+    leptau_p4 = lep.p4() + tau_p4
     lep_pt = lep.pt
-    tau_pt = tau.pt
+    tau_pt = tau.pt*taucorr
 
     leptau_px = leptau_p4.Px()
     leptau_py = leptau_p4.Py()
