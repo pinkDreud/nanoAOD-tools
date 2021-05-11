@@ -153,10 +153,10 @@ def FindSecondJet(jet, jetCollection, GoodTau, GoodMu):
 
 def get_ptrel(lepton, jet, taucorr=1.):
     jet_p4 = ROOT.TLorentzVector()
-    jet_p4.SetPtEtaPhiM(jet.pt*taucorr, jet.eta, jet.phi, jet.mass)
+    jet_p4.SetPtEtaPhiM(jet.pt*taucorr, jet.eta, jet.phi, jet.mass*taucorr)
     lepjet_tv = (jet_p4+lepton.p4()).Vect()
     lep_tv = lepton.p4().Vect()
-    ptrel = (lepjet_tv.Cross(lep_tv)).Mag()/(lepjet.Mag())
+    ptrel = (lepjet_tv.Cross(lep_tv)).Mag()/(lepjet_tv.Mag())
     return ptrel
 
 def SelectLepton(lepCollection, isMu): #isMu==True -> muons else Ele 
@@ -386,7 +386,7 @@ def mTlepMet(MET, lepton):
 
 def M1T(lep, tau, MET, taucorr=1.):
     tau_p4 = ROOT.TLorentzVector()
-    tau_p4.SetPtEtaPhiM(tau.pt*taucorr, tau.eta, tau.phi, tau.mass)
+    tau_p4.SetPtEtaPhiM(tau.pt*taucorr, tau.eta, tau.phi, tau.mass*taucorr)
     leptau_p4 = lep.p4() + tau_p4
     leptau_pt2 = leptau_p4.Perp2()
     leptau_px = leptau_p4.Px()
@@ -406,7 +406,7 @@ def M1T(lep, tau, MET, taucorr=1.):
 
 def Mo1(lep, tau, MET, taucorr=1.):
     tau_p4 = ROOT.TLorentzVector()
-    tau_p4.SetPtEtaPhiM(tau.pt*taucorr, tau.eta, tau.phi, tau.mass)
+    tau_p4.SetPtEtaPhiM(tau.pt*taucorr, tau.eta, tau.phi, tau.mass*taucorr)
     leptau_p4 = lep.p4() + tau_p4
     lep_pt = lep.pt
     tau_pt = tau.pt*taucorr
@@ -573,11 +573,6 @@ def trig_map_all(HLT, PV, year, runPeriod):
         print('Wrong year! Please enter 2016, 2017, or 2018')
    
     return (passMu and isGoodPV), (passEle and isGoodPV), (passHT and isGoodPV), noTrigger
-
-
-def get_ptrel(lepton, jet):
-    ptrel = ((jet.p4()-lepton.p4()).Vect().Cross(lepton.p4().Vect())).Mag()/(jet.p4().Vect().Mag())
-    return ptrel
 
 def print_hist(infile, plotpath, hist, option = "HIST", log = False, stack = False, title = ""):
     if not(isinstance(hist, list)):
