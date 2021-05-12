@@ -947,10 +947,9 @@ for year in years:
           variables.append(variabile('m_jjtaulep', 'invariant mass j_{1} j_{2} #tau l[GeV]',  wzero+'*('+cutbase+')', nbin_invm, bin_invm))# 20, 500, 2000))
 
           bin_invmtl = array("f", [0., 150., 300., 450., 600., 900., 1500.])
-               #bin_invm = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 900., 1000., 1100., 1200., 1400., 1600., 2000., 2500., 3500., 4500.])
-          nbin_invmtl = len(bin_invm) - 1 
-
-          variables.append(variabile('m_taulep', 'invariant mass #tau l[GeV]',  wzero+'*('+cutbase+')', nbin_invmtl, bin_invmtl))# 20, 500, 2000))
+          nbin_invmtl = len(bin_invmtl) - 1 
+          
+          variables.append(variabile('m_taulep', 'invariant mass #tau l[GeV]',  wzero+'*('+cutbase+')', nbin_invmtl, bin_invmtl))
 
           bin_m1 = array("f", [0., 50., 100., 150., 200., 250., 300., 400., 500., 600., 800., 1000.])
           nbin_m1 = len(bin_m1) - 1 
