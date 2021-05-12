@@ -49,6 +49,9 @@ effLumi_2017 = {
             },
         }
 
+sqrt = lambda x : TMath.Power(x, 0.5)
+squared = lambda x : TMath.Power(x, 2.)
+
 def lumiFinder(particleTrig, vTrigger):
     lumi=0
     for trigtype in effLumi_2017:
@@ -148,10 +151,12 @@ def FindSecondJet(jet, jetCollection, GoodTau, GoodMu):
                 return k
     return -1
 
-def get_ptrel(lepton, jet):
-    lepjet_tv = (jet.p4()+lepton.p4()).Vect()
+def get_ptrel(lepton, jet, taucorr=1.):
+    jet_p4 = ROOT.TLorentzVector()
+    jet_p4.SetPtEtaPhiM(jet.pt*taucorr, jet.eta, jet.phi, jet.mass*taucorr)
+    lepjet_tv = (jet_p4+lepton.p4()).Vect()
     lep_tv = lepton.p4().Vect()
-    ptrel = (lepjet_tv.Cross(lep_tv)).Mag()/(lepjet.Mag())
+    ptrel = (lepjet_tv.Cross(lep_tv)).Mag()/(lepjet_tv.Mag())
     return ptrel
 
 def SelectLepton(lepCollection, isMu): #isMu==True -> muons else Ele 
@@ -252,8 +257,14 @@ def SelectAndVetoTaus(taus, lepton):
     for i, tau in enumerate(taus):
         #print(i, "deltaR(tightlep):", deltaR(tau.eta, tau.phi, lepton.eta, lepton.phi), "DTvse:", tau.idDeepTau2017v2p1VSe, "DTvsmu:", tau.idDeepTau2017v2p1VSmu, "DTvsjet:", tau.idDeepTau2017v2p1VSjet, "tau pt:", tau.pt, "tau eta:", tau.eta)
         #print(deltaR(tau.eta, tau.phi, lepton.eta, lepton.phi)>DR_OVERLAP_CONE_TAU, tau.idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE, tau.idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU, tau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET_LOOSE, tau.pt>=PT_CUT_TAU, abs(tau.eta)<=ETA_CUT_TAU, tau.idDecayModeNewDMs)
-        if (tau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET_LOOSE and tau.idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and tau.idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and tau.idDecayModeNewDMs) and deltaR(tau.eta, tau.phi, lepton.eta, lepton.phi)>DR_OVERLAP_CONE_TAU and tau.pt>=PT_CUT_TAU and abs(tau.eta)<=ETA_CUT_TAU:
+        if abs(lepton.pdgId)==11:
+            cutloose_vsjet = ID_TAU_RECO_DEEPTAU_VSJET_LOOSE_ELE
+        elif abs(lepton.pdgId)==13:
+            cutloose_vsjet = ID_TAU_RECO_DEEPTAU_VSJET_LOOSE_MU
+
+        if (tau.idDeepTau2017v2p1VSjet>=cutloose_vsjet and tau.idDeepTau2017v2p1VSe>=ID_TAU_RECO_DEEPTAU_VSELE and tau.idDeepTau2017v2p1VSmu>=ID_TAU_RECO_DEEPTAU_VSMU and tau.idDecayModeNewDMs) and deltaR(tau.eta, tau.phi, lepton.eta, lepton.phi)>DR_OVERLAP_CONE_TAU and tau.pt>=PT_CUT_TAU and abs(tau.eta)<=ETA_CUT_TAU:
             nTau+=1
+
             if tau.idDeepTau2017v2p1VSjet>=ID_TAU_RECO_DEEPTAU_VSJET:
                 idxl.append([i, "T"])
             else:
@@ -372,6 +383,46 @@ def metCut(met):
 
 def mTlepMet(MET, lepton):
         return math.sqrt(2*lepton.Pt()*MET.pt*(1-math.cos(lepton.Phi()-MET.phi)))
+
+def M1T(lep, tau, MET, taucorr=1.):
+    tau_p4 = ROOT.TLorentzVector()
+    tau_p4.SetPtEtaPhiM(tau.pt*taucorr, tau.eta, tau.phi, tau.mass*taucorr)
+    leptau_p4 = lep.p4() + tau_p4
+    leptau_pt2 = leptau_p4.Perp2()
+    leptau_px = leptau_p4.Px()
+    leptau_py = leptau_p4.Py()
+    leptau_mass2 = leptau_p4.M2()
+    leptau_et = sqrt(leptau_mass2 + leptau_pt2)
+
+    MET_px = MET.pt*TMath.Cos(MET.phi)
+    MET_py = MET.pt*TMath.Sin(MET.phi)
+
+    sys_et2 = squared(leptau_et + MET.pt)
+    sys_pt2 = squared(leptau_px + MET_px) + squared(leptau_py + MET_py)
+    M1T2 = sys_et2 - sys_pt2
+    sign_M1T2 = M1T2/abs(M1T2)
+
+    return sign_M1T2*sqrt(sign_M1T2*M1T2)
+
+def Mo1(lep, tau, MET, taucorr=1.):
+    tau_p4 = ROOT.TLorentzVector()
+    tau_p4.SetPtEtaPhiM(tau.pt*taucorr, tau.eta, tau.phi, tau.mass*taucorr)
+    leptau_p4 = lep.p4() + tau_p4
+    lep_pt = lep.pt
+    tau_pt = tau.pt*taucorr
+
+    leptau_px = leptau_p4.Px()
+    leptau_py = leptau_p4.Py()
+
+    MET_px = MET.pt*TMath.Cos(MET.phi)
+    MET_py = MET.pt*TMath.Sin(MET.phi)
+
+    sys_eo2 = squared(lep_pt + tau_pt + MET.pt)
+    sys_pt2 = squared(leptau_px + MET_px) + squared(leptau_py + MET_py)
+    Mo12 = sys_eo2 - sys_pt2
+    sign_Mo12 = Mo12/abs(Mo12)
+
+    return sign_Mo12*sqrt(sign_Mo12*Mo12)
 
 def Zeppenfeld(lep_eta, tau_eta, ljet_eta, sljet_eta):
     zepp_lepjj = lep_eta - 0.5*(ljet_eta+sljet_eta)
@@ -522,11 +573,6 @@ def trig_map_all(HLT, PV, year, runPeriod):
         print('Wrong year! Please enter 2016, 2017, or 2018')
    
     return (passMu and isGoodPV), (passEle and isGoodPV), (passHT and isGoodPV), noTrigger
-
-
-def get_ptrel(lepton, jet):
-    ptrel = ((jet.p4()-lepton.p4()).Vect().Cross(lepton.p4().Vect())).Mag()/(jet.p4().Vect().Mag())
-    return ptrel
 
 def print_hist(infile, plotpath, hist, option = "HIST", log = False, stack = False, title = ""):
     if not(isinstance(hist, list)):

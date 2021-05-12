@@ -167,7 +167,7 @@ for prname, proc in class_dict.items():
             continue
         if os.path.exists(path+proc.label):
             if opt.rw:
-                print('Relaunching all the jobs for', sample.label)
+                print('Relaunching all the jobs for', proc.label)
                 os.system("rm -f "+ path + proc.label + "/*")
         if not AreAllCondored(proc.label):
             if opt.check:
@@ -219,7 +219,8 @@ if not opt.check:
     t.write("BTAG_ETA_CUT=   5\n")
     t.write("BTAG_ALGO   =   'DeepFlv'\n")
     t.write("BTAG_WP     =   'M'\n")
-    t.write("ID_TAU_RECO_DEEPTAU_VSJET_LOOSE = 4" + " #byDeepTau2017v2p1VSjet ID working points (deepTau2017v2p1): bitmask 1 = VVVLoose, 2 = VVLoose, 4 = VLoose, 8 = Loose, 16 = Medium, 32 = Tight, 64 = VTight, 128 = VVTight\n")
+    t.write("ID_TAU_RECO_DEEPTAU_VSJET_LOOSE_ELE = 8" + " #byDeepTau2017v2p1VSjet ID working points (deepTau2017v2p1): bitmask 1 = VVVLoose, 2 = VVLoose, 4 = VLoose, 8 = Loose, 16 = Medium, 32 = Tight, 64 = VTight, 128 = VVTight\n")
+    t.write("ID_TAU_RECO_DEEPTAU_VSJET_LOOSE_MU = 4" + " #byDeepTau2017v2p1VSjet ID working points (deepTau2017v2p1): bitmask 1 = VVVLoose, 2 = VVLoose, 4 = VLoose, 8 = Loose, 16 = Medium, 32 = Tight, 64 = VTight, 128 = VVTight\n")
     t.write("ID_TAU_RECO_DEEPTAU_VSJET=  " + vsJet_dict[opt.jetwp] + " #byDeepTau2017v2p1VSjet ID working points (deepTau2017v2p1): bitmask 1 = VVVLoose, 2 = VVLoose, 4 = VLoose, 8 = Loose, 16 = Medium, 32 = Tight, 64 = VTight, 128 = VVTight\n")
     t.write("ID_TAU_RECO_DEEPTAU_VSELE=  " + vsEle_dict[opt.elewp] + "  #byDeepTau2017v2p1VSe ID working points (deepTau2017v2p1): bitmask 1 = VVVLoose, 2 = VVLoose, 4 = VLoose, 8 = Loose, 16 = Medium, 32 = Tight, 64 = VTight, 128 = VVTight\n")
     t.write("ID_TAU_RECO_DEEPTAU_VSMU=   " + vsMu_dict[opt.muwp] + "  #byDeepTau2017v2p1VSmu ID working points (deepTau2017v2p1): bitmask 1 = VLoose, 2 = Loose, 4 = Medium, 8 = Tight\n")

@@ -269,6 +269,9 @@ event_Zeppenfeld_over_deltaEta_jj           =   array.array('f', [-999])
 var_list.append(event_Zeppenfeld)
 var_list.append(event_Zeppenfeld_over_deltaEta_jj)
 
+event_RT = array.array('f', [-999])
+var_list.append(event_RT)
+
 #tau leadTk                        #
 tauleadTk_ptOverTau     =   array.array('f', [-999.])#
 tauleadTk_deltaPhi      =   array.array('f', [-999.])#
@@ -377,7 +380,9 @@ var_list.append(MET_phi)
 #inv and transv masses
 m_jjtau = array.array('f', [-999.])#
 m_jjtaulep = array.array('f', [-999.])#
-m_jj                         =   array.array('f', [-999.])
+m_jj                        =   array.array('f', [-999.])
+m_1T                        =   array.array('f', [-999.])
+m_o1                        =   array.array('f', [-999.])
 m_taulep                    =   array.array('f', [-999.])
 mT_lep_MET                  =   array.array('f', [-999.])
 mT_tau_MET                  =   array.array('f', [-999.])
@@ -385,6 +390,8 @@ mT_leptau_MET               =   array.array('f', [-999.])
 var_list.append(m_jjtau)
 var_list.append(m_jjtaulep)
 var_list.append(m_jj)
+var_list.append(m_1T)
+var_list.append(m_o1)
 var_list.append(m_taulep)
 var_list.append(mT_lep_MET)
 var_list.append(mT_tau_MET)
@@ -570,6 +577,8 @@ systTree.branchTreesSysts(trees, "all", "MET_pt",               outTreeFile, MET
 systTree.branchTreesSysts(trees, "all", "MET_phi",              outTreeFile, MET_phi)
 #masses#
 systTree.branchTreesSysts(trees, "all", "m_jj",                  outTreeFile, m_jj)
+systTree.branchTreesSysts(trees, "all", "m_1T",                  outTreeFile, m_1T)
+systTree.branchTreesSysts(trees, "all", "m_o1",                  outTreeFile, m_o1)
 systTree.branchTreesSysts(trees, "all", "mT_lep_MET",                  outTreeFile, mT_lep_MET)
 systTree.branchTreesSysts(trees, "all", "mT_tau_MET",                  outTreeFile, mT_tau_MET)
 systTree.branchTreesSysts(trees, "all", "mT_leptau_MET",                  outTreeFile, mT_leptau_MET)
@@ -614,6 +623,7 @@ systTree.branchTreesSysts(trees, "all", "tau_Zeppenfeld",              outTreeFi
 systTree.branchTreesSysts(trees, "all", "tau_Zeppenfeld_over_deltaEta_jj",              outTreeFile, tau_Zeppenfeld_over_deltaEta_jj)#
 systTree.branchTreesSysts(trees, "all", "event_Zeppenfeld",              outTreeFile, event_Zeppenfeld)#
 systTree.branchTreesSysts(trees, "all", "event_Zeppenfeld_over_deltaEta_jj",              outTreeFile, event_Zeppenfeld_over_deltaEta_jj)#
+systTree.branchTreesSysts(trees, "all", "event_RT",              outTreeFile, event_RT)#
 #cut variables
 systTree.branchTreesSysts(trees, "all", "pass_lepton_selection",    outTreeFile, pass_lepton_selection)
 systTree.branchTreesSysts(trees, "all", "pass_lepton_iso",          outTreeFile, pass_lepton_iso)
@@ -701,7 +711,7 @@ for i in range(tree.GetEntries()):
     
     if Debug:
         print("\nevento n. " + str(i))
-        if i > 40000:
+        if i > 1000:
             break
     
     if i%500 == 0 and not Debug:#
@@ -995,9 +1005,7 @@ for i in range(tree.GetEntries()):
     #else:
     if isMC:
         tau_isPrompt[0] = GoodTau.genPartFlav
-
-    mT_tau_MET[0]=mTlepMet(met, GoodTau.p4())
-    mT_leptau_MET[0]=mTlepMet(met, GoodTau.p4()+GoodLep.p4())
+    
     tau_DeepTau_WP[0] = GoodTau.idDeepTau2017v2p1VSjet*1000.**2. + GoodTau.idDeepTau2017v2p1VSmu*1000. + GoodTau.idDeepTau2017v2p1VSe
     if GoodTau.idDeepTau2017v2p1VSe+1 > 0.:
         tau_DeepTauVsEle_WP[0]  =   math.log(GoodTau.idDeepTau2017v2p1VSe+1, 2)#
@@ -1019,11 +1027,10 @@ for i in range(tree.GetEntries()):
 
     tau_isolation[0]=   GoodTau.neutralIso
 
-    m_taulep[0]=(GoodTau.p4() + GoodLep.p4()).M()
+
 
     deltaEta_taulep[0] = GoodTau.eta - GoodLep.eta
     deltaTheta_taulep[0] = (GoodTau.p4() - GoodLep.p4()).CosTheta()
-    ptRel_taulep[0] = get_ptrel(GoodLep, GoodTau)
 
     tauleadTk_ptOverTau[0]  =   GoodTau.leadTkPtOverTauPt#
     tauleadTk_deltaPhi[0]   =   GoodTau.leadTkDeltaPhi#
@@ -1091,6 +1098,36 @@ for i in range(tree.GetEntries()):
         systTree.setWeightName("tau_vsmu_Down", copy.deepcopy(GoodTau_vsmu_Down))
     
         #print('pt, mass after tes&fes:', tau_pt[0], tau_mass[0])
+
+    if GoodTau.jetIdx > -1:
+        taujet = jets[GoodTau.jetIdx]
+        if isMC:
+            taujet_RelPt[0] = taujet.pt/(GoodTau.pt * fes*tes)
+        else:
+            taujet_RelPt[0] = taujet.pt/(GoodTau.pt)
+        taujet_deltaPhi[0] = deltaPhi(GoodTau, taujet)
+        taujet_deltaEta[0] = taujet.eta - GoodTau.eta
+        taujet_HadGamma[0] = taujet.chHEF - taujet.neHEF
+        taujet_EmGamma[0] = taujet.chEmEF - taujet.neEmEF
+        taujet_HEGamma[0] = taujet.chHEF - taujet.neHEF + taujet.chEmEF - taujet.neEmEF
+
+    GoodTau_p4 = ROOT.TLorentzVector()
+    if isMC:
+        GoodTau_p4.SetPtEtaPhiM(GoodTau.pt*fes*tes, GoodTau.eta, GoodTau.phi, GoodTau.mass*fes*tes)
+    else:
+        GoodTau_p4.SetPtEtaPhiM(GoodTau.pt, GoodTau.eta, GoodTau.phi, GoodTau.mass)
+
+    m_taulep[0]=(GoodTau_p4 + GoodLep.p4()).M()
+
+    mT_tau_MET[0]=mTlepMet(met, GoodTau_p4)
+    mT_leptau_MET[0]=mTlepMet(met, GoodTau_p4+GoodLep.p4())
+    if isMC:
+        m_1T[0] = M1T(GoodLep, GoodTau, met, fes*tes)
+        m_o1[0] = Mo1(GoodLep, GoodTau, met, fes*tes)
+    else:
+        m_1T[0] = M1T(GoodLep, GoodTau, met, 1.)
+        m_o1[0] = Mo1(GoodLep, GoodTau, met, 1.)
+
 
     #if not isMC:
     if lepton_LnTRegion[0]==1 and tau_LnTRegion[0]==0:
@@ -1169,19 +1206,25 @@ for i in range(tree.GetEntries()):
 
     #calculating deltaTheta                                                                                                      
     deltaTheta_jj[0]      =   (jet1.p4() - jet2.p4()).CosTheta()
-    deltaTheta_taulep[0]  =   (GoodTau.p4() - GoodLep.p4()).CosTheta()
-    deltaTheta_tauj1[0]   =   (GoodTau.p4() - jet1.p4()).CosTheta()
-    deltaTheta_tauj2[0]   =   (GoodTau.p4() - jet2.p4()).CosTheta()
+    deltaTheta_taulep[0]  =   (GoodTau_p4 - GoodLep.p4()).CosTheta()
+    deltaTheta_tauj1[0]   =   (GoodTau_p4 - jet1.p4()).CosTheta()
+    deltaTheta_tauj2[0]   =   (GoodTau_p4 - jet2.p4()).CosTheta()
     deltaTheta_lepj1[0]   =   (GoodLep.p4() - jet1.p4()).CosTheta()
     deltaTheta_lepj2[0]   =   (GoodLep.p4() - jet2.p4()).CosTheta()
 
+
     #calculating ptRel                                                                                                      
-    ptRel_jj[0]      =   get_ptrel(jet1, jet2)
-    ptRel_taulep[0]  =   get_ptrel(GoodTau, GoodLep)
-    ptRel_tauj1[0]   =   get_ptrel(GoodTau, jet1)
-    ptRel_tauj2[0]   =   get_ptrel(GoodTau, jet2)
-    ptRel_lepj1[0]   =   get_ptrel(GoodLep, jet1)
-    ptRel_lepj2[0]   =   get_ptrel(GoodLep, jet2)
+    ptRel_jj[0]      =   get_ptrel(jet1, jet2, 1.)
+    if isMC:
+        ptRel_taulep[0]  =   get_ptrel(GoodTau, GoodLep, (fes*tes))
+        ptRel_tauj1[0]   =   get_ptrel(GoodTau, jet1, (fes*tes))
+        ptRel_tauj2[0]   =   get_ptrel(GoodTau, jet2, (fes*tes))
+    else:
+        ptRel_taulep[0]  =   get_ptrel(GoodTau, GoodLep, 1.)
+        ptRel_tauj1[0]   =   get_ptrel(GoodTau, jet1, 1.)
+        ptRel_tauj2[0]   =   get_ptrel(GoodTau, jet2, 1.)
+    ptRel_lepj1[0]   =   get_ptrel(GoodLep, jet1, 1.)
+    ptRel_lepj2[0]   =   get_ptrel(GoodLep, jet2, 1.)
 
     lepton_Zeppenfeld[0], tau_Zeppenfeld[0], event_Zeppenfeld[0] = Zeppenfeld(lepton_eta[0], tau_eta[0], leadjet_eta[0], subleadjet_eta[0])
 
@@ -1228,12 +1271,17 @@ for i in range(tree.GetEntries()):
     if not JetCut(leadJet, subleadJet): pass_mjj_cut[0]=1
 
     m_jj[0]=(leadJet + subleadJet).M()
-    m_jjtau[0]=(leadJet + subleadJet + GoodTau.p4()).M()
-    m_jjtaulep[0]=(leadJet + subleadJet + GoodTau.p4() + GoodLep.p4()).M()
+    m_jjtau[0]=(leadJet + subleadJet + GoodTau_p4).M()
+    m_jjtaulep[0]=(leadJet + subleadJet + GoodTau_p4 + GoodLep.p4()).M()
 
     lepton_Zeppenfeld_over_deltaEta_jj[0] = lepton_Zeppenfeld[0]/deltaEta_jj[0]
     tau_Zeppenfeld_over_deltaEta_jj[0] = tau_Zeppenfeld[0]/deltaEta_jj[0]
     lepton_Zeppenfeld_over_deltaEta_jj[0] = event_Zeppenfeld[0]/deltaEta_jj[0]
+
+    if isMC:
+        event_RT[0] = (GoodLep.pt * GoodTau.pt*(fes*tes)) / (jet1.pt * jet2.pt)
+    else:
+        event_RT[0] = (GoodLep.pt * GoodTau.pt) / (jet1.pt * jet2.pt)
 
     #if (SingleEle or SingleMu) and pass_lepton_iso[0]==1 and pass_tau_vsJetWP[0]==1 and  pass_lepton_selection[0]==1 and pass_lepton_veto[0]==1 and pass_tau_selection[0]==1 and pass_charge_selection[0]==1 and pass_jet_selection[0]==1 and pass_b_veto[0]==1 and pass_mjj_cut[0]==1: Cut_dict[8][1]+=1
 
