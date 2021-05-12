@@ -829,7 +829,7 @@ for year in years:
           wzero = 'w_nominal*PFSF*puSF*lepSF*tau_vsjet_SF*tau_vsele_SF*tau_vsmu_SF'
           cutbase = cut_dict[lep]
 
-
+          '''
           variables.append(variabile('BDT_output', 'BDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
           variables.append(variabile('BDT_output_ele', 'eleBDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
           variables.append(variabile('BDT_output_mu', '#muBDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
@@ -886,7 +886,7 @@ for year in years:
 
           variables.append(variabile('leadjet_eta', 'Lead jet #eta',  wzero+'*('+cutbase+')', 20, -5., 5.))
           variables.append(variabile('leadjet_phi', 'Lead jet #Phi',  wzero+'*('+cutbase+')',  14, -3.50, 3.50))
-
+          '''
           '''
           bin_ak8leadjet_pt = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 1200., 1600.])
           nbin_ak8leadjet_pt = len(bin_ak8leadjet_pt)-1
@@ -916,7 +916,7 @@ for year in years:
           variables.append(variabile('AK8subleadjet_tau32', 'AK8 Sublead jet #tau_{32}',  wzero+'*('+cutbase+')',  20, 0., 1.))
           variables.append(variabile('AK8subleadjet_tau43', 'AK8 Sublead jet #tau_{43}',  wzero+'*('+cutbase+')',  20, 0., 1.))
           '''
-
+          '''
           bin_subleadjet_pt = array("f", [0., 100., 250., 500., 800.])
           nbin_subleadjet_pt = len(bin_subleadjet_pt) - 1
           variables.append(variabile('subleadjet_pt',  'Sublead jet p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_subleadjet_pt, bin_subleadjet_pt))#40, 30, 1000))
@@ -948,13 +948,13 @@ for year in years:
           variables.append(variabile('m_jjtau', 'invariant mass j_{1}j_{2}#tau [GeV]',  wzero+'*('+cutbase+')', nbin_invm, bin_invm))# 20, 500, 2000))
           variables.append(variabile('m_jjtaulep', 'invariant mass j_{1}j_{2}#tau l[GeV]',  wzero+'*('+cutbase+')', nbin_invm, bin_invm))# 20, 500, 2000))
           variables.append(variabile('m_taulep', 'invariant mass #tau l[GeV]',  wzero+'*('+cutbase+')', nbin_invm, bin_invm))# 20, 500, 2000))
-
+          '''
           bin_m1 = array("f", [0., 50., 100., 150., 200., 250., 300., 400., 500., 600., 800., 1000.])
           nbin_m1 = len(bin_m1) - 1 
           variables.append(variabile('m_1T', 'M_{1T} [GeV]',  wzero+'*('+cutbase+')', nbin_m1, bin_m1))
           variables.append(variabile('m_o1', 'M_{o1} [GeV]',  wzero+'*('+cutbase+')', nbin_m1, bin_m1))
-
-          bin_mTs = array("f", [0., 25., 50., 75., 100., 125., 150., 200., 250., 300., 400., 500.])
+          '''
+          bin_mTs = array("f", [0., 25., 50., 75., 100., 125., 150., 200., 250., 300., 500., 800.])
           nbin_mTs = len(bin_mTs) - 1
 
           variables.append(variabile('mT_lep_MET', 'M_{T}(lep, MET) [GeV]',  wzero+'*('+cutbase+')', nbin_mTs, bin_mTs))
@@ -972,27 +972,27 @@ for year in years:
           variables.append(variabile('deltaPhi_lepj1', '#Delta #phi_{l j_{1}}',  wzero+'*('+cutbase+')', 16, -4., 4.))
           variables.append(variabile('deltaPhi_lepj2', '#Delta #phi_{l j_{2}}',  wzero+'*('+cutbase+')', 16, -4., 4.))
 
-          variables.append(variabile('deltaEta_jj', '#Delta #eta_{jj}',  wzero+'*('+cutbase+')',  32, -8., 8.))
-          variables.append(variabile('deltaEta_taulep', '#Delta #eta_{#tau l}',  wzero+'*('+cutbase+')',  32, -8., 8.))
-          variables.append(variabile('deltaEta_tauj1', '#Delta #eta_{#tau j_{1}}',  wzero+'*('+cutbase+')',  32, -8., 8.))
-          variables.append(variabile('deltaEta_tauj2', '#Delta #eta_{#tau j_{2}}',  wzero+'*('+cutbase+')',  32, -8., 8.))
-          variables.append(variabile('deltaEta_lepj1', '#Delta #eta_{l j_{1}}',  wzero+'*('+cutbase+')', 32, -8., 8.))
-          variables.append(variabile('deltaEta_lepj2', '#Delta #eta_{l j_{2}}',  wzero+'*('+cutbase+')', 32, -8., 8.))
+          variables.append(variabile('deltaEta_jj', '#Delta #eta_{jj}',  wzero+'*('+cutbase+')',  16, -8., 8.))
+          variables.append(variabile('deltaEta_taulep', '#Delta #eta_{#tau l}',  wzero+'*('+cutbase+')',  16, -8., 8.))
+          variables.append(variabile('deltaEta_tauj1', '#Delta #eta_{#tau j_{1}}',  wzero+'*('+cutbase+')',  16, -8., 8.))
+          variables.append(variabile('deltaEta_tauj2', '#Delta #eta_{#tau j_{2}}',  wzero+'*('+cutbase+')',  16, -8., 8.))
+          variables.append(variabile('deltaEta_lepj1', '#Delta #eta_{l j_{1}}',  wzero+'*('+cutbase+')', 16, -8., 8.))
+          variables.append(variabile('deltaEta_lepj2', '#Delta #eta_{l j_{2}}',  wzero+'*('+cutbase+')', 16, -8., 8.))
 
-          variables.append(variabile('deltaTheta_jj', 'cos(#Delta#theta_{jj})',  wzero+'*('+cutbase+')',  20, -1., 1.))
-          variables.append(variabile('deltaTheta_taulep', 'cos(#Delta#theta_{#tau l})',  wzero+'*('+cutbase+')',  20, -1., 1.))
-          variables.append(variabile('deltaTheta_tauj1', 'cos(#Delta#theta_{#tau j_{1}})',  wzero+'*('+cutbase+')',  20, -1., 1.))
-          variables.append(variabile('deltaTheta_tauj2', 'cos(#Delta#theta_{#tau j_{2}})',  wzero+'*('+cutbase+')',  20, -1., 1.))
-          variables.append(variabile('deltaTheta_lepj1', 'cos(#Delta#theta_{l j_{1}})',  wzero+'*('+cutbase+')', 20, -1., 1.))
-          variables.append(variabile('deltaTheta_lepj2', 'cos(#Delta#theta_{l j_{2}})',  wzero+'*('+cutbase+')', 20, -1., 1.))
+          variables.append(variabile('deltaTheta_jj', 'cos(#Delta#theta_{jj})',  wzero+'*('+cutbase+')',  10, -1., 1.))
+          variables.append(variabile('deltaTheta_taulep', 'cos(#Delta#theta_{#tau l})',  wzero+'*('+cutbase+')',  10, -1., 1.))
+          variables.append(variabile('deltaTheta_tauj1', 'cos(#Delta#theta_{#tau j_{1}})',  wzero+'*('+cutbase+')',  10, -1., 1.))
+          variables.append(variabile('deltaTheta_tauj2', 'cos(#Delta#theta_{#tau j_{2}})',  wzero+'*('+cutbase+')',  10, -1., 1.))
+          variables.append(variabile('deltaTheta_lepj1', 'cos(#Delta#theta_{l j_{1}})',  wzero+'*('+cutbase+')', 10, -1., 1.))
+          variables.append(variabile('deltaTheta_lepj2', 'cos(#Delta#theta_{l j_{2}})',  wzero+'*('+cutbase+')', 10, -1., 1.))
 
-          variables.append(variabile('ptRel_jj', 'relative p_{T} j_{1} j_{2}',  wzero+'*('+cutbase+')',  30, 0., 300.))
-          variables.append(variabile('ptRel_taulep', 'relative p_{T} #tau l',  wzero+'*('+cutbase+')',  30, 0., 300.))
-          variables.append(variabile('ptRel_tauj1', 'relative p_{T} #tau j_{1}',  wzero+'*('+cutbase+')',  30, 0., 300.))
-          variables.append(variabile('ptRel_tauj2', 'relative p_{T} #tau j_{2}',  wzero+'*('+cutbase+')',  30, 0., 300.))
-          variables.append(variabile('ptRel_lepj1', 'relative p_{T} l j_{1}',  wzero+'*('+cutbase+')', 30, 0., 300.))
-          variables.append(variabile('ptRel_lepj2', 'relative p_{T} l j_{2}',  wzero+'*('+cutbase+')', 30, 0., 300.))
-
+          variables.append(variabile('ptRel_jj', 'relative p_{T} j_{1} j_{2}',  wzero+'*('+cutbase+')',  15, 0., 300.))
+          variables.append(variabile('ptRel_taulep', 'relative p_{T} #tau l',  wzero+'*('+cutbase+')',  15, 0., 300.))
+          variables.append(variabile('ptRel_tauj1', 'relative p_{T} #tau j_{1}',  wzero+'*('+cutbase+')',  15, 0., 300.))
+          variables.append(variabile('ptRel_tauj2', 'relative p_{T} #tau j_{2}',  wzero+'*('+cutbase+')',  15, 0., 300.))
+          variables.append(variabile('ptRel_lepj1', 'relative p_{T} l j_{1}',  wzero+'*('+cutbase+')', 15, 0., 300.))
+          variables.append(variabile('ptRel_lepj2', 'relative p_{T} l j_{2}',  wzero+'*('+cutbase+')', 15, 0., 300.))
+          '''
           for sample in dataset_new:
                print(sample)
                if ('DataHT' in sample.label or 'DataMET' in sample.label) and not opt.folder.startswith("CTHT"):# or "WJets" in sample.label:
