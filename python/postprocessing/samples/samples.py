@@ -763,6 +763,11 @@ VBS_SSWW_BSM_SM_2017 = sample(ROOT.kGreen+2, 1, 1001, "VBS ssWW (BSM+SM+INT)", "
 VBS_SSWW_BSM_SM_2017.year = 2017
 VBS_SSWW_BSM_SM_2017.components = [VBS_SSWW_cHW_BSM_2017, VBS_SSWW_cHW_INT_2017, VBS_SSWW_cW_BSM_2017, VBS_SSWW_cW_INT_2017, VBS_SSWW_cW_cHW_2017, VBS_SSWW_LL_SM_2017, VBS_SSWW_TL_SM_2017, VBS_SSWW_TT_SM_2017]
 
+DHiggsToWW_2017 = sample(ROOT.kAzure, 1, 1001, "m_{H} = 200 m_{X} = 150 m_{Z'} = 2e3", "DHiggsToWW_2017")
+DHiggsToWW_2017.sigma = 0.0002014
+DHiggsToWW_2017.year = 2017
+DHiggsToWW_2017.dataset = "/DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_150_mZp_2000_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v2/NANOAODSIM"
+
 ###################################################################################################################################################################
 ############################################################                                           ############################################################
 ############################################################                    2018                   ############################################################
@@ -1255,6 +1260,7 @@ sample_dict={
     'VBS_SSWW_cW_cHW_2017':VBS_SSWW_cW_cHW_2017,
     'VBS_SSWW_BSM_INT_2017':VBS_SSWW_BSM_INT_2017,
     'VBS_SSWW_BSM_SM_2017':VBS_SSWW_BSM_SM_2017,
+    'DHiggsToWW_2017':DHiggsToWW_2017,
     ### fake contributions form here...
     'QCD_2017':QCD_2017, 'QCDHT_100to200_2017':QCDHT_100to200_2017, 'QCDHT_200to300_2017':QCDHT_200to300_2017, 'QCDHT_300to500_2017':QCDHT_300to500_2017, 'QCDHT_500to700_2017':QCDHT_500to700_2017, 'QCDHT_700to1000_2017':QCDHT_700to1000_2017, 'QCDHT_1000to1500_2017':QCDHT_1000to1500_2017, 'QCDHT_1500to2000_2017':QCDHT_1500to2000_2017, 'QCDHT_2000toInf_2017':QCDHT_2000toInf_2017,
     'ZZtoLep_2017':ZZtoLep_2017, 'ZZTo2L2Nu_2017':ZZTo2L2Nu_2017, 'ZZJJTo4L_EWK_2017':ZZJJTo4L_EWK_2017, 'ZZJJTo4L_QCD_2017':ZZJJTo4L_QCD_2017, 'GluGluToContinToZZTo2e2nu_2017':GluGluToContinToZZTo2e2nu_2017, 'GluGluToContinToZZTo2e2mu_2017':GluGluToContinToZZTo2e2mu_2017, 'GluGluToContinToZZTo2e2tau_2017':GluGluToContinToZZTo2e2tau_2017, 'GluGluToContinToZZTo2mu2nu_2017':GluGluToContinToZZTo2mu2nu_2017, 'GluGluToContinToZZTo2mu2tau_2017':GluGluToContinToZZTo2mu2tau_2017, 'GluGluToContinToZZTo4e_2017':GluGluToContinToZZTo4e_2017, 'GluGluToContinToZZTo4mu_2017':GluGluToContinToZZTo4mu_2017, 'GluGluToContinToZZTo4tau_2017':GluGluToContinToZZTo4tau_2017,

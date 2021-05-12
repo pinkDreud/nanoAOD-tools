@@ -946,7 +946,7 @@ for year in years:
           variables.append(variabile('m_jjtau', 'invariant mass j_{1} j_{2}#tau [GeV]',  wzero+'*('+cutbase+')', nbin_invm, bin_invm))# 20, 500, 2000))
           variables.append(variabile('m_jjtaulep', 'invariant mass j_{1} j_{2} #tau l[GeV]',  wzero+'*('+cutbase+')', nbin_invm, bin_invm))# 20, 500, 2000))
 
-          bin_invmtl = array("f", [0., 150., 300., 450., 600., 900., 1500.])
+          bin_invmtl = array("f", [0., 150., 300., 450., 600., 1000.])
           nbin_invmtl = len(bin_invmtl) - 1 
           
           variables.append(variabile('m_taulep', 'invariant mass #tau l[GeV]',  wzero+'*('+cutbase+')', nbin_invmtl, bin_invmtl))
@@ -981,12 +981,15 @@ for year in years:
           variables.append(variabile('deltaEta_lepj1', '#Delta #eta_{l j_{1}}',  wzero+'*('+cutbase+')', 16, -8., 8.))
           variables.append(variabile('deltaEta_lepj2', '#Delta #eta_{l j_{2}}',  wzero+'*('+cutbase+')', 16, -8., 8.))
 
-          variables.append(variabile('deltaTheta_jj', 'cos(#Delta#theta_{jj})',  wzero+'*('+cutbase+')',  10, -1., 1.))
-          variables.append(variabile('deltaTheta_taulep', 'cos(#Delta#theta_{#tau l})',  wzero+'*('+cutbase+')',  10, -1., 1.))
-          variables.append(variabile('deltaTheta_tauj1', 'cos(#Delta#theta_{#tau j_{1}})',  wzero+'*('+cutbase+')',  10, -1., 1.))
-          variables.append(variabile('deltaTheta_tauj2', 'cos(#Delta#theta_{#tau j_{2}})',  wzero+'*('+cutbase+')',  10, -1., 1.))
-          variables.append(variabile('deltaTheta_lepj1', 'cos(#Delta#theta_{l j_{1}})',  wzero+'*('+cutbase+')', 10, -1., 1.))
-          variables.append(variabile('deltaTheta_lepj2', 'cos(#Delta#theta_{l j_{2}})',  wzero+'*('+cutbase+')', 10, -1., 1.))
+          bin_deltaeta_jj = array("f", [-1., -0.8, -0.4., 0.4., 0.8., 1.])
+          nbin_deltaeta_jj = len(bin_deltaeta_jj) - 1
+
+          variables.append(variabile('deltaTheta_jj', 'cos(#Delta#theta_{jj})',  wzero+'*('+cutbase+')',  nbin_deltaeta_jj, bin_deltaeta_jj))
+          variables.append(variabile('deltaTheta_taulep', 'cos(#Delta#theta_{#tau l})',  wzero+'*('+cutbase+')',  10, 0., 1.))
+          variables.append(variabile('deltaTheta_tauj1', 'cos(#Delta#theta_{#tau j_{1}})',  wzero+'*('+cutbase+')',  10, 0., 1.))
+          variables.append(variabile('deltaTheta_tauj2', 'cos(#Delta#theta_{#tau j_{2}})',  wzero+'*('+cutbase+')',  10, 0., 1.))
+          variables.append(variabile('deltaTheta_lepj1', 'cos(#Delta#theta_{l j_{1}})',  wzero+'*('+cutbase+')', 10, 0., 1.))
+          variables.append(variabile('deltaTheta_lepj2', 'cos(#Delta#theta_{l j_{2}})',  wzero+'*('+cutbase+')', 10, 0., 1.))
 
           variables.append(variabile('ptRel_jj', 'relative p_{T} j_{1} j_{2}',  wzero+'*('+cutbase+')',  15, 0., 300.))
           variables.append(variabile('ptRel_taulep', 'relative p_{T} #tau l',  wzero+'*('+cutbase+')',  15, 0., 300.))
