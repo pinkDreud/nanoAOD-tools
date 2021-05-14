@@ -687,7 +687,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      f1.SetLineStyle(ROOT.kDashed)
      f1.Draw("same")
      
-     ratio.GetYaxis().SetTitle("Data / MC")
+     ratio.GetYaxis().SetTitle("Data / Bkg")
      ratio.GetYaxis().SetNdivisions(503)
      ratio.GetXaxis().SetLabelFont(42)
      ratio.GetYaxis().SetLabelFont(42)
