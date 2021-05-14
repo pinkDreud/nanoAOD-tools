@@ -1294,6 +1294,7 @@ sample_dict={
 }
 
 class_dict={
+    'DHiggsToWW_2017':DHiggsToWW_2017,
     'WpWpJJ_EWK_2017':WpWpJJ_EWK_2017,
     'WpWpJJ_QCD_2017':WpWpJJ_QCD_2017,
     'VBS_SSWW_SM_2017':VBS_SSWW_SM_2017,
