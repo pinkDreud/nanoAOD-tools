@@ -991,14 +991,17 @@ for year in years:
           variables.append(variabile('deltaTheta_lepj1', 'cos(#Delta#theta_{l j_{1}})',  wzero+'*('+cutbase+')', 10, 0., 1.))
           variables.append(variabile('deltaTheta_lepj2', 'cos(#Delta#theta_{l j_{2}})',  wzero+'*('+cutbase+')', 10, 0., 1.))
 
-          variables.append(variabile('ptRel_jj', 'relative p_{T} j_{1} j_{2}',  wzero+'*('+cutbase+')',  15, 0., 300.))
-          variables.append(variabile('ptRel_taulep', 'relative p_{T} #tau l',  wzero+'*('+cutbase+')',  15, 0., 300.))
-          variables.append(variabile('ptRel_tauj1', 'relative p_{T} #tau j_{1}',  wzero+'*('+cutbase+')',  15, 0., 300.))
-          variables.append(variabile('ptRel_tauj2', 'relative p_{T} #tau j_{2}',  wzero+'*('+cutbase+')',  15, 0., 300.))
-          variables.append(variabile('ptRel_lepj1', 'relative p_{T} l j_{1}',  wzero+'*('+cutbase+')', 15, 0., 300.))
-          variables.append(variabile('ptRel_lepj2', 'relative p_{T} l j_{2}',  wzero+'*('+cutbase+')', 15, 0., 300.))
+          bin_pTrel = array("f", [0., 25., 50., 75., 100., 125, 150., 200., 250., 300., 400., 500.])
+          nbin_ptRel = len(bin_ptRel) - 1
 
-          variables.append(variabile('event_RT', 'R_{T}',  wzero+'*('+cutbase+')', 20, 0., 2.))
+          variables.append(variabile('ptRel_jj', 'relative p_{T} j_{1} j_{2}',  wzero+'*('+cutbase+')', nbin_pTrel, bin_pTrel))
+          variables.append(variabile('ptRel_taulep', 'relative p_{T} #tau l',  wzero+'*('+cutbase+')', nbin_pTrel, bin_pTrel))
+          variables.append(variabile('ptRel_tauj1', 'relative p_{T} #tau j_{1}',  wzero+'*('+cutbase+')', nbin_pTrel, bin_pTrel))
+          variables.append(variabile('ptRel_tauj2', 'relative p_{T} #tau j_{2}',  wzero+'*('+cutbase+')', nbin_pTrel, bin_pTrel))
+          variables.append(variabile('ptRel_lepj1', 'relative p_{T} l j_{1}',  wzero+'*('+cutbase+')', nbin_pTrel, bin_pTrel))
+          variables.append(variabile('ptRel_lepj2', 'relative p_{T} l j_{2}',  wzero+'*('+cutbase+')', nbin_pTrel, bin_pTrel))
+
+          variables.append(variabile('event_RT', 'R_{T}',  wzero+'*('+cutbase+')', 25, 0., 2.5))
 
           for sample in dataset_new:
                print(sample)
