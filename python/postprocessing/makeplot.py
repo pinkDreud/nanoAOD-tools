@@ -27,6 +27,10 @@ parser.add_option('--mertree', dest='mertree', default = False, action='store_tr
 parser.add_option('--lumi', dest='lumi', default = False, action='store_true', help='Default do not write the normalization weights')
 parser.add_option('--sel', dest='sel', default = False, action='store_true', help='Default do not apply any selection')
 parser.add_option('--bveto', dest='bveto', default = False, action='store_true', help='Default do not apply any selection')
+parser.add_option('--sr', dest='sr', default = False, action='store_true', help='Default do not apply any selection')
+parser.add_option('--bdt', dest='bdt', default = False, action='store_true', help='Default do not apply any selection')
+parser.add_option('--ebdt', dest='ebdt', default = False, action='store_true', help='Default do not apply any selection')
+parser.add_option('--mubdt', dest='mubdt', default = False, action='store_true', help='Default do not apply any selection')
 parser.add_option('-p', '--plot', dest='plot', default = False, action='store_true', help='Default make no plots')
 parser.add_option('-s', '--stack', dest='stack', default = False, action='store_true', help='Default make no stacks')
 parser.add_option('-N', '--notstacked', dest='tostack', default = True, action='store_false', help='Default make plots stacked')
@@ -81,6 +85,16 @@ if opt.bveto:
      cut_tag = 'selection_upto_bveto'
      if opt.cut != "1.":
           cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut) 
+
+elif opt.sr:
+     cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_upToBVeto==1&&m_jj>500.&&MET_pt>40.)*(" + cut + ")", 
+                 'electron':"(abs(lepton_pdgid)==11&&pass_upToBVeto==1&&m_jj>500.&&MET_pt>40.)*(" + cut + ")", 
+                 'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_upToBVeto==1&&m_jj>500.&&MET_pt>40.)*(" + cut + ")", 
+          }
+     cut_tag = 'SR'
+     if opt.cut != "1.":
+          cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut) 
+
 elif opt.ttbar:
      cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.)*(" + cut + ")", 
                  'electron':"(abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.)*(" + cut + ")", 
@@ -112,6 +126,38 @@ else:
                  'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&(" + cut + ")",
      }
      cut_tag = cutToTag(opt.cut)
+
+if opt.bdt or opt.ebdt or opt.mubdt:
+    bdt_cut = "*(BDT_output"
+    if opt.ebdt:
+        bdt_cut = bdt_cut + "_ele"
+    elif opt.mubdt:
+        bdt_cut = bdt_cut + "_mu"
+
+    tresh_bdt = ""
+    if opt.bdt:
+        tresh_bdt = "-0.425"
+    elif opt.ebdt:
+        tresh_bdt = "-0.536"
+    elif opt.mubdt:
+        tresh_bdt = "-0.399"
+
+    sign_bdt = ""
+    if opt.bveto or opt.sr:
+        sign_bdt = ">"
+    elif opt.ttbar or opt.wjets:
+        sign_bdt = "<"
+
+    bdt_cut = bdt_cut + sign_bdt + tresh_bdt + ")"
+
+    for k, v in cut_dict.items():
+        cut_dict[k] = v + bdt_cut
+
+    if opt.bdt:
+        cut_tag = cut_tag + "_BDTcut"
+    elif opt.ebdt or opt.mubdt:
+        cut_tag = cut_tag + "_lepBDTcut"        
+
 
 lumi = {'2016': 35.9, "2017": 41.53, "2018": 59.7}
 
@@ -370,9 +416,9 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
 
      h1.SetBinContent(1, h1.GetBinContent(0) + h1.GetBinContent(1))
      h1.SetBinError(1, math.sqrt(pow(h1.GetBinError(0),2) + pow(h1.GetBinError(1),2)))
-     if not (opt.blinded and (variable._name == 'MET_pt' or variable._name == 'm_jj')):
-          h1.SetBinContent(nbins, h1.GetBinContent(nbins) + h1.GetBinContent(nbins+1))
-          h1.SetBinError(nbins, math.sqrt(pow(h1.GetBinError(nbins),2) + pow(h1.GetBinError(nbins+1),2)))
+     #if not (opt.blinded and (variable._name == 'MET_pt' or variable._name == 'm_jj')):
+     h1.SetBinContent(nbins, h1.GetBinContent(nbins) + h1.GetBinContent(nbins+1))
+     h1.SetBinError(nbins, math.sqrt(pow(h1.GetBinError(nbins),2) + pow(h1.GetBinError(nbins+1),2)))
 
      for bidx in range(nbins):          
           bidx_l = bidx + 1
@@ -828,7 +874,7 @@ for year in years:
 
           wzero = 'w_nominal*PFSF*puSF*lepSF*tau_vsjet_SF*tau_vsele_SF*tau_vsmu_SF'
           cutbase = cut_dict[lep]
-
+          '''
           variables.append(variabile('BDT_output', 'BDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
           variables.append(variabile('BDT_output_ele', 'eleBDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
           variables.append(variabile('BDT_output_mu', '#muBDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
@@ -885,7 +931,7 @@ for year in years:
 
           variables.append(variabile('leadjet_eta', 'Lead jet #eta',  wzero+'*('+cutbase+')', 20, -5., 5.))
           variables.append(variabile('leadjet_phi', 'Lead jet #Phi',  wzero+'*('+cutbase+')',  14, -3.50, 3.50))
-
+          '''
           '''
           bin_ak8leadjet_pt = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 1200., 1600.])
           nbin_ak8leadjet_pt = len(bin_ak8leadjet_pt)-1
@@ -915,7 +961,7 @@ for year in years:
           variables.append(variabile('AK8subleadjet_tau32', 'AK8 Sublead jet #tau_{32}',  wzero+'*('+cutbase+')',  20, 0., 1.))
           variables.append(variabile('AK8subleadjet_tau43', 'AK8 Sublead jet #tau_{43}',  wzero+'*('+cutbase+')',  20, 0., 1.))
           '''
-
+          '''
           bin_subleadjet_pt = array("f", [0., 100., 250., 500.])
           nbin_subleadjet_pt = len(bin_subleadjet_pt) - 1
           variables.append(variabile('subleadjet_pt', 'Sublead jet p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_subleadjet_pt, bin_subleadjet_pt))#40, 30, 1000))
@@ -931,7 +977,7 @@ for year in years:
                bin_metpt = array("f", [0., 20., 50., 100., 150., 200., 300., 500.])
           nbin_metpt = len(bin_metpt) - 1
           variables.append(variabile('MET_pt', 'p_{T}^{miss} [GeV]',  wzero+'*('+cutbase+')', nbin_metpt, bin_metpt))
-
+          '''
           if opt.blinded:
                bin_mjj = array("f", [0., 100., 200., 300., 400., 500.])#, 600., 700., 800., 900., 1000., 1100., 1200., 1400., 1600., 2000., 2500., 3500., 4500.])
           else:
@@ -939,7 +985,7 @@ for year in years:
                #bin_mjj = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 900., 1000., 1100., 1200., 1400., 1600., 2000., 2500., 3500., 4500.])
           nbin_mjj = len(bin_mjj) - 1 
           variables.append(variabile('m_jj', 'invariant mass j_{1} j_{2} [GeV]',  wzero+'*('+cutbase+')', nbin_mjj, bin_mjj))# 20, 500, 2000))
-
+          '''
           bin_invm = array("f", [0., 150., 300., 450., 600., 750., 900., 1200., 1500., 1800., 2100., 3000., 4500.])
                #bin_invm = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 900., 1000., 1100., 1200., 1400., 1600., 2000., 2500., 3500., 4500.])
           nbin_invm = len(bin_invm) - 1 
@@ -1002,6 +1048,7 @@ for year in years:
           variables.append(variabile('ptRel_lepj2', 'relative p_{T} l j_{2}',  wzero+'*('+cutbase+')', nbin_ptRel, bin_ptRel))
 
           variables.append(variabile('event_RT', 'R_{T}',  wzero+'*('+cutbase+')', 25, 0., 2.5))
+          '''
 
           for sample in dataset_new:
                print(sample)
