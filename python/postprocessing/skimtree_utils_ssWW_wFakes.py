@@ -513,7 +513,7 @@ def trig_map(HLT, PV, year, runPeriod):
     elif(year == 2017):#and runPeriod != 'B'):
         if(HLT.IsoMu27 or HLT.Mu50):#HLT.IsoMu24 or 
             passMu = True
-        if(HLT.Ele35_WPTight_Gsf or HLT.Ele32_WPTight_Gsf_L1DoubleEG):# or HLT.Photon200):#HLT.Ele27_WPTight_Gsf or 
+        if(HLT.Ele35_WPTight_Gsf or HLT.Ele32_WPTight_Gsf_L1DoubleEG or HLT.Photon200):#HLT.Ele27_WPTight_Gsf or 
             passEle = True  
         if(HLT.PFHT250 or HLT.PFHT350 or HLT.PFHT370 or HLT.PFHT430 or HLT.PFHT510 or HLT.PFHT590 or HLT.PFHT680 or HLT.PFHT780 or HLT.PFHT890):
             passHT = True
