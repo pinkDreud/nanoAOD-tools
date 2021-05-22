@@ -381,11 +381,13 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
 
      h1.Sumw2()
      
-     if 'MC' in variable._name:
-          cut = cut + "*(" + str(variable._name) + "!-100.)"
+     if not variable._name == 'countings':
+         if 'MC' in variable._name:
+             cut = cut + "*(" + str(variable._name) + "!-100.)"
+         else:
+             cut = cut + "*(" + str(variable._name) + ">-10.)"
      else:
-          cut = cut + "*(" + str(variable._name) + ">-10.)"
-          
+         cut = cut + '*(1.)'
      #if "WpWpJJ_EWK" in sample.label or 'VBS_SSWW' in sample.label:
           #cut = cut + "*10."
 
@@ -404,21 +406,19 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
             if(channel == "WJets_ext" and lep.startswith("electron")):
                 taglio = variable._taglio+"*w_nominal*(abs(w)<10)"
      '''
-     #print treename
-     #TODO: remove events_all which is hardcoded
 
-     f1.Get("events_all").Project(histoname,variable._name,cut)
-
-     #ftree = copy.deepcopy(f1.events_all)
-     #if not 'Data' in sample.label:
-     #     h1.Scale((7.5)/35.89)
-     #ftree.Project(histoname,variable._name,cut)
+     if variable._name == 'countings':
+         print("name", variable._name, "histname:", h1.GetName())
+         f1.Get("events_all").Project(histoname,"m_jj",cut)
+     else:
+         f1.Get("events_all").Project(histoname,variable._name,cut)
 
      h1.SetBinContent(1, h1.GetBinContent(0) + h1.GetBinContent(1))
      h1.SetBinError(1, math.sqrt(pow(h1.GetBinError(0),2) + pow(h1.GetBinError(1),2)))
      #if not (opt.blinded and (variable._name == 'MET_pt' or variable._name == 'm_jj')):
      h1.SetBinContent(nbins, h1.GetBinContent(nbins) + h1.GetBinContent(nbins+1))
      h1.SetBinError(nbins, math.sqrt(pow(h1.GetBinError(nbins),2) + pow(h1.GetBinError(nbins+1),2)))
+
 
      for bidx in range(nbins):          
           bidx_l = bidx + 1
@@ -435,7 +435,8 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
 
           countf.write("\n[" + minedge + ", " + maxedge +")\t" + bincont + "\t" + binerrcont)
 
-     print(h1.Integral())
+     print("int:", h1.Integral())
+     #print(h1.Integral())
      for i in range(0, nbins+1):
           content = h1.GetBinContent(i)
           if(content<0.):
@@ -865,9 +866,12 @@ for year in years:
           wzero = 'w_nominal*PFSF*puSF*lepSF*tau_vsjet_SF*tau_vsele_SF*tau_vsmu_SF'
           cutbase = cut_dict[lep]
 
+          variables.append(variabile('countings', 'countings', wzero+'*('+cutbase+')', 1, -0.5, 0.5))
+
           variables.append(variabile('BDT_output', 'BDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
           variables.append(variabile('BDT_output_ele', 'eleBDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
           variables.append(variabile('BDT_output_mu', '#muBDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
+
           variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cutbase+')', 20, -5., 5.))
 
           variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cutbase+')', 14, -3.50, 3.50))
@@ -876,7 +880,7 @@ for year in years:
           bin_lepton_pt = array("f", [0., 30., 45., 60., 80., 100., 200., 300., 500., 800.])
           nbin_lepton_pt = len(bin_lepton_pt)-1
           variables.append(variabile('lepton_pt',  'Lepton p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_lepton_pt, bin_lepton_pt))#30, 1500))
-          
+
           #variables.append(variabile('lepton_pdgid', 'lepton pdgid',  wzero+'*('+cutbase+')', 31, -15.5, 15.5))
           #variables.append(variabile('lepton_pfRelIso04', 'lepton rel iso',  wzero+'*('+cutbase+')', 15, 0, 0.15))
           #variables.append(variabile('lepton_Zeppenfeld', 'lepton Zeppenfeld',  wzero+'*('+cutbase+')', 24, -6, 6))
@@ -889,6 +893,7 @@ for year in years:
           bin_taupt = array("f", [0., 50., 100., 200., 300., 500.])
           nbin_taupt = len(bin_taupt) - 1
           variables.append(variabile('tau_pt',  '#tau p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_taupt, bin_taupt))
+
           variables.append(variabile('tau_eta', '#tau #eta',  wzero+'*('+cutbase+')', 12, -3., 3.))
           #variables.append(variabile('tau_Zeppenfeld', '#tau Zeppenfeld',  wzero+'*('+cutbase+')', 20, -5, 5))
           variables.append(variabile('tau_Zeppenfeld_over_deltaEta_jj', 'z_{#tau}',  wzero+'*('+cutbase+')', 12, -1.5, 1.5))
@@ -967,6 +972,7 @@ for year in years:
                bin_metpt = array("f", [0., 20., 50., 100., 150., 200., 300., 500.])
           nbin_metpt = len(bin_metpt) - 1
           variables.append(variabile('MET_pt', 'p_{T}^{miss} [GeV]',  wzero+'*('+cutbase+')', nbin_metpt, bin_metpt))
+
 
           if opt.blinded:
                bin_mjj = array("f", [0., 100., 200., 300., 400., 500.])#, 600., 700., 800., 900., 1000., 1100., 1200., 1400., 1600., 2000., 2500., 3500., 4500.])
