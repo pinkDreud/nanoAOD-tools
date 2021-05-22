@@ -483,7 +483,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      if opt.wfake != 'nofake':
           stackname += "_wFakes_" + str(opt.wfake.split('_')[0])
           canvasname += "_wFakes_" + str(opt.wfake.split('_')[0])
-     if("selection_AND_best_Wpjet_isbtag_AND_best_topjet_isbtag" in cut_tag_ ) or ("selection_AND_best_topjet_isbtag_AND_best_Wpjet_isbtag" in cut_tag_ ):
+     if opt.sr:
           blind = True
      stack = ROOT.THStack(stackname, variabile_._name)
      leg_stack = ROOT.TLegend(0.33,0.62,0.91,0.87)
