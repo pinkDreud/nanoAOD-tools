@@ -381,19 +381,6 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
 
      h1.Sumw2()
      
-     if not variable._name == 'countings':
-         if 'MC' in variable._name:
-             cut = cut + "*(" + str(variable._name) + "!-100.)"
-         else:
-             cut = cut + "*(" + str(variable._name) + ">-10.)"
-     else:
-         cut = cut + '*(1.)'
-     #if "WpWpJJ_EWK" in sample.label or 'VBS_SSWW' in sample.label:
-          #cut = cut + "*10."
-
-     print(str(cut))
-     foutput = pathplot + sample.label + "_" + lep + ".root"
-
      '''
      else:
           if(syst==""):
@@ -406,12 +393,36 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
             if(channel == "WJets_ext" and lep.startswith("electron")):
                 taglio = variable._taglio+"*w_nominal*(abs(w)<10)"
      '''
-
+     vartoproject = ''
      if variable._name == 'countings':
          print("name", variable._name, "histname:", h1.GetName())
-         f1.Get("events_all").Project(histoname,"m_jj",cut)
+         vartoproject = 'm_jj'
+         #f1.Get("events_all").Project(histoname,"m_jj",cut)
+     elif variable._name.startswith("lepBDT_"):
+         vartoproject = "BDT_output_"
+         if lep == 'muon':
+             vartoproject = vartoproject + "mu"
+         elif lep == 'electron':
+             vartoproject = vartoproject + "ele"
+         elif lep == 'incl':
+             vartoproject = "BDT_output_ele*(abs(lepton_pdgid)==11)+BDT_output_mu*(abs(lepton_pdgid)==13)"
      else:
-         f1.Get("events_all").Project(histoname,variable._name,cut)
+         vartoproject = variable._name
+
+     #if not variable._name == 'countings':
+     if 'MC' in variable._name:
+         cut = cut + "*(" + str(vartoproject) + "!-100.)"
+     else:
+         cut = cut + "*(" + str(vartoproject) + ">-10.)"
+     #else:
+         #cut = cut + '*(1.)'
+     #if "WpWpJJ_EWK" in sample.label or 'VBS_SSWW' in sample.label:
+          #cut = cut + "*10."
+
+     print(str(cut))
+     foutput = pathplot + sample.label + "_" + lep + ".root"
+
+     f1.Get("events_all").Project(histoname,vartoproject,cut)
 
      h1.SetBinContent(1, h1.GetBinContent(0) + h1.GetBinContent(1))
      h1.SetBinError(1, math.sqrt(pow(h1.GetBinError(0),2) + pow(h1.GetBinError(1),2)))
@@ -865,13 +876,15 @@ for year in years:
 
           wzero = 'w_nominal*PFSF*puSF*lepSF*tau_vsjet_SF*tau_vsele_SF*tau_vsmu_SF'
           cutbase = cut_dict[lep]
-
+          '''
           variables.append(variabile('countings', 'countings', wzero+'*('+cutbase+')', 1, -0.5, 0.5))
+          '''
+          variables.append(variabile('BDT_output', 'BDT output', wzero+'*('+cutbase+')', 10, -5., 5.))
+          variables.append(variabile('BDT_output_ele', 'eleBDT output', wzero+'*('+cutbase+')', 10, -5., 5.))
+          variables.append(variabile('BDT_output_mu', '#muBDT output', wzero+'*('+cutbase+')', 10, -5., 5.))
 
-          variables.append(variabile('BDT_output', 'BDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
-          variables.append(variabile('BDT_output_ele', 'eleBDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
-          variables.append(variabile('BDT_output_mu', '#muBDT output', wzero+'*('+cutbase+')', 30, -10., 20.))
-
+          variables.append(variabile('lepBDT_output', '#ellBDT output', wzero+'*('+cutbase+')', 10, -5., 5.))
+          '''
           variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cutbase+')', 20, -5., 5.))
 
           variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cutbase+')', 14, -3.50, 3.50))
@@ -926,7 +939,7 @@ for year in years:
 
           variables.append(variabile('leadjet_eta', 'Lead jet #eta',  wzero+'*('+cutbase+')', 20, -5., 5.))
           variables.append(variabile('leadjet_phi', 'Lead jet #Phi',  wzero+'*('+cutbase+')',  14, -3.50, 3.50))
-
+          '''
           '''
           bin_ak8leadjet_pt = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 1200., 1600.])
           nbin_ak8leadjet_pt = len(bin_ak8leadjet_pt)-1
@@ -956,7 +969,7 @@ for year in years:
           variables.append(variabile('AK8subleadjet_tau32', 'AK8 Sublead jet #tau_{32}',  wzero+'*('+cutbase+')',  20, 0., 1.))
           variables.append(variabile('AK8subleadjet_tau43', 'AK8 Sublead jet #tau_{43}',  wzero+'*('+cutbase+')',  20, 0., 1.))
           '''
-
+          '''
           bin_subleadjet_pt = array("f", [0., 100., 250., 500.])
           nbin_subleadjet_pt = len(bin_subleadjet_pt) - 1
           variables.append(variabile('subleadjet_pt', 'Sublead jet p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_subleadjet_pt, bin_subleadjet_pt))#40, 30, 1000))
@@ -1044,7 +1057,7 @@ for year in years:
           variables.append(variabile('ptRel_lepj2', 'relative p_{T} l j_{2}',  wzero+'*('+cutbase+')', nbin_ptRel, bin_ptRel))
 
           variables.append(variabile('event_RT', 'R_{T}',  wzero+'*('+cutbase+')', 25, 0., 2.5))
-
+          '''
 
           for sample in dataset_new:
                print(sample)
