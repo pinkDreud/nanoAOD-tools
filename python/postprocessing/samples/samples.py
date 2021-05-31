@@ -776,6 +776,27 @@ DHiggsToWW_2017.sigma = 0.0002014
 DHiggsToWW_2017.year = 2017
 DHiggsToWW_2017.dataset = "/DarkHiggs_MonoHs_HsToWWTo2l2nu_mhs_200_mx_150_mZp_2000_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
 
+####################### for likelihood scan ###############################################
+sm_2017 = sample(ROOT.kRed+2, 1, 1001, "VBS ssWW SM", "sm_2017")
+sm_2017.year = 2017
+sm_2017.components = [VBS_SSWW_LL_SM_2017, VBS_SSWW_TL_SM_2017, VBS_SSWW_TT_SM_2017]
+
+sm_lin_quad_cW_2017 = sample(ROOT.kGreen+2, 1, 1001, "VBS ssWW (c_{W} + SM + INT)", "sm_lin_quad_cW_2017")
+sm_lin_quad_cW_2017.year = 2017
+sm_lin_quad_cW_2017.components = [VBS_SSWW_cW_BSM_2017, VBS_SSWW_cW_INT_2017, VBS_SSWW_LL_SM_2017, VBS_SSWW_TL_SM_2017, VBS_SSWW_TT_SM_2017]
+
+quad_cW_2017 = sample(ROOT.kMagenta+1, 1, 1001, "VBS ssWW c_{W} (BSM+INT)", "quad_cW_2017")
+quad_cW_2017.year = 2017
+quad_cW_2017.components = [VBS_SSWW_cW_BSM_2017]
+
+sm_lin_quad_cHW_2017 = sample(ROOT.kGreen+2, 1, 1001, "VBS ssWW (c_{W} + SM + INT)", "sm_lin_quad_cHW_2017")
+sm_lin_quad_cHW_2017.year = 2017
+sm_lin_quad_cHW_2017.components = [VBS_SSWW_cHW_BSM_2017, VBS_SSWW_cHW_INT_2017, VBS_SSWW_LL_SM_2017, VBS_SSWW_TL_SM_2017, VBS_SSWW_TT_SM_2017]
+
+quad_cHW_2017 = sample(ROOT.kMagenta+1, 1, 1001, "VBS ssWW c_{W} (BSM+INT)", "quad_cHW_2017")
+quad_cHW_2017.year = 2017
+quad_cHW_2017.components = [VBS_SSWW_cHW_BSM_2017]
+
 ###################################################################################################################################################################
 ############################################################                                           ############################################################
 ############################################################                    2018                   ############################################################
@@ -1271,6 +1292,11 @@ sample_dict={
     'VBS_SSWW_cHW_SM_2017':VBS_SSWW_cHW_SM_2017,
     'VBS_SSWW_cW_SM_2017':VBS_SSWW_cW_SM_2017,
     'DHiggsToWW_2017':DHiggsToWW_2017,
+    'sm_2017':sm_2017,
+    'sm_lin_quad_cW_2017':sm_lin_quad_cW_2017,
+    'quad_cW_2017':quad_cW_2017,
+    'sm_lin_quad_cHW_2017':sm_lin_quad_cHW_2017,
+    'quad_cHW_2017':quad_cHW_2017,
     ### fake contributions form here...
     'QCD_2017':QCD_2017, 'QCDHT_100to200_2017':QCDHT_100to200_2017, 'QCDHT_200to300_2017':QCDHT_200to300_2017, 'QCDHT_300to500_2017':QCDHT_300to500_2017, 'QCDHT_500to700_2017':QCDHT_500to700_2017, 'QCDHT_700to1000_2017':QCDHT_700to1000_2017, 'QCDHT_1000to1500_2017':QCDHT_1000to1500_2017, 'QCDHT_1500to2000_2017':QCDHT_1500to2000_2017, 'QCDHT_2000toInf_2017':QCDHT_2000toInf_2017,
     'ZZtoLep_2017':ZZtoLep_2017, 'ZZTo2L2Nu_2017':ZZTo2L2Nu_2017, 'ZZJJTo4L_EWK_2017':ZZJJTo4L_EWK_2017, 'ZZJJTo4L_QCD_2017':ZZJJTo4L_QCD_2017, 'GluGluToContinToZZTo2e2nu_2017':GluGluToContinToZZTo2e2nu_2017, 'GluGluToContinToZZTo2e2mu_2017':GluGluToContinToZZTo2e2mu_2017, 'GluGluToContinToZZTo2e2tau_2017':GluGluToContinToZZTo2e2tau_2017, 'GluGluToContinToZZTo2mu2nu_2017':GluGluToContinToZZTo2mu2nu_2017, 'GluGluToContinToZZTo2mu2tau_2017':GluGluToContinToZZTo2mu2tau_2017, 'GluGluToContinToZZTo4e_2017':GluGluToContinToZZTo4e_2017, 'GluGluToContinToZZTo4mu_2017':GluGluToContinToZZTo4mu_2017, 'GluGluToContinToZZTo4tau_2017':GluGluToContinToZZTo4tau_2017,
@@ -1305,7 +1331,7 @@ sample_dict={
 
 class_dict={
     #'DHiggsToWW_2017':DHiggsToWW_2017,
-    'WpWpJJ_EWK_2017':WpWpJJ_EWK_2017,
+    #'WpWpJJ_EWK_2017':WpWpJJ_EWK_2017,
     'WpWpJJ_QCD_2017':WpWpJJ_QCD_2017,
     #'VBS_SSWW_SM_2017':VBS_SSWW_SM_2017,
     #'VBS_SSWW_cHW_2017':VBS_SSWW_cHW_2017,
@@ -1315,13 +1341,18 @@ class_dict={
     'VBS_SSWW_BSM_SM_2017':VBS_SSWW_BSM_SM_2017,
     #'VBS_SSWW_cHW_SM_2017':VBS_SSWW_cHW_SM_2017,
     #'VBS_SSWW_cW_SM_2017':VBS_SSWW_cW_SM_2017,
+    'sm_2017':sm_2017,
+    'sm_lin_quad_cW_2017':sm_lin_quad_cW_2017,
+    'quad_cW_2017':quad_cW_2017,
+    'sm_lin_quad_cHW_2017':sm_lin_quad_cHW_2017,
+    'quad_cHW_2017':quad_cHW_2017,
     ### fake contributions from here...
-    #'QCD_2017':QCD_2017,
+    'QCD_2017':QCD_2017,
     'ZZtoLep_2017':ZZtoLep_2017,
-    #'TT_2017':TT_2017,
+    'TT_2017':TT_2017,
     'WJets_2017':WJets_2017,
     #'WJets_Fake_2017':WJets_Fake_2017,
-    #'DYJetsToLL_2017':DYJetsToLL_2017,
+    'DYJetsToLL_2017':DYJetsToLL_2017,
     #'DYJetsToLL_Fake_2017':DYJetsToLL_Fake_2017,
     #'DYJetsM_2017':DYJetsM_2017,
     # to here
@@ -1341,53 +1372,57 @@ class_dict={
 }
 
 class_list=[
-    #WpWpJJ_EWK_2017,
+    ##WpWpJJ_EWK_2017,
     #VBS_SSWW_LL_SM_2017,
     #VBS_SSWW_TL_SM_2017,
     #VBS_SSWW_TT_SM_2017,
-    VBS_SSWW_SM_2017,
-    #VBS_SSWW_cHW_SM_2017,
-    #VBS_SSWW_cW_SM_2017,
-    #VBS_SSWW_cHW_2017,
-    #VBS_SSWW_cW_2017,
-    #VBS_SSWW_cW_cHW_2017,
-    VBS_SSWW_BSM_INT_2017,
-    VBS_SSWW_BSM_SM_2017,
-    VG_2017,
-    WpWpJJ_QCD_2017,
-    TVX_2017,
-    TTTo2L2Nu_2017,
-    WZ_2017,
-    OtherWS_2017,
-    ZZtoLep_2017,
-    #ZZTo2L2Nu_2017,
-    #ZZJJTo4L_EWK_2017,
-    #ZZJJTo4L_QCD_2017,
-    #GluGluToContinToZZTo2e2nu_2017,
-    #GluGluToContinToZZTo2e2mu_2017,
-    #GluGluToContinToZZTo2e2tau_2017,
-    #GluGluToContinToZZTo2mu2nu_2017,
-    #GluGluToContinToZZTo2mu2tau_2017,
-    #GluGluToContinToZZTo4e_2017,
-    #GluGluToContinToZZTo4mu_2017,
-    #Other_2017,
-    #WrongSign_2017, 
-    #DYJetsToLL_2017,
-    #DYJetsToLL_Fake_2017,
-    #DYJetsM_2017,
-    #TT_2017,
-    #QCD_2017,
-    #WJets_2017,
-    ##WJets_Fake_2017,
-    FakeMu_2017,
-    FakeMuPromptTau_2017,
-    PromptMuFakeTau_2017,
-    FakeMuFakeTau_2017,
-    DataMu_2017,
-    FakeEle_2017,
-    FakeEleFakeTau_2017,
-    FakeElePromptTau_2017,
-    PromptEleFakeTau_2017,
-    DataEle_2017,
+    #VBS_SSWW_SM_2017,
+    ##VBS_SSWW_cHW_SM_2017,
+    ##VBS_SSWW_cW_SM_2017,
+    ##VBS_SSWW_cHW_2017,
+    ##VBS_SSWW_cW_2017,
+    ##VBS_SSWW_cW_cHW_2017,
+    #VBS_SSWW_BSM_INT_2017,
+    #VBS_SSWW_BSM_SM_2017,
+    sm_2017,
+    sm_lin_quad_cW_2017,
+    quad_cW_2017,
+    sm_lin_quad_cHW_2017,
+    quad_cHW_2017,
+    #VG_2017,
+    #WpWpJJ_QCD_2017,
+    #TVX_2017,
+    #TTTo2L2Nu_2017,
+    #WZ_2017,
+    #OtherWS_2017,
+    #ZZtoLep_2017,
+    ##ZZTo2L2Nu_2017,
+    ##ZZJJTo4L_EWK_2017,
+    ##ZZJJTo4L_QCD_2017,
+    ##GluGluToContinToZZTo2e2nu_2017,
+    ##GluGluToContinToZZTo2e2mu_2017,
+    ##GluGluToContinToZZTo2e2tau_2017,
+    ##GluGluToContinToZZTo2mu2nu_2017,
+    ##GluGluToContinToZZTo2mu2tau_2017,
+    ##GluGluToContinToZZTo4e_2017,
+    ##GluGluToContinToZZTo4mu_2017,
+    ##Other_2017,
+    ##WrongSign_2017, 
+    ##DYJetsToLL_2017,
+    ##DYJetsToLL_Fake_2017,
+    ##DYJetsM_2017,
+    ##TT_2017,
+    ##QCD_2017,
+    ##WJets_2017,
+    #FakeMu_2017,
+    #FakeMuPromptTau_2017,
+    #PromptMuFakeTau_2017,
+    #FakeMuFakeTau_2017,
+    #DataMu_2017,
+    #FakeEle_2017,
+    #FakeEleFakeTau_2017,
+    #FakeElePromptTau_2017,
+    #PromptEleFakeTau_2017,
+    #DataEle_2017,
     #DataHT_2017,
     ]

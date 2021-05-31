@@ -345,7 +345,6 @@ def LepVetoOneCollection(GoodLepton, collection, relIsoCut, ptCut, etaCut, isMu)
 def LepVeto(GoodLepton, ElectronCollection, MuonCollection):
     eleveto = LepVetoOneCollection(GoodLepton, ElectronCollection, REL_ISO_CUT_LEP_VETO_ELE, PT_CUT_LEP_VETO_ELE, ETA_CUT_LEP_VETO_ELE, False)
     muveto = LepVetoOneCollection(GoodLepton, MuonCollection, REL_ISO_CUT_LEP_VETO_MU, PT_CUT_LEP_VETO_MU, ETA_CUT_LEP_VETO_MU, True)
-    print("eleveto:", eleveto, "muveto:", muveto)
     return bool(eleveto and muveto)
 
 #semplifica la macro

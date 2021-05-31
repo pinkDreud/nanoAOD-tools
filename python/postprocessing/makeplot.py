@@ -46,6 +46,7 @@ parser.add_option('--count', dest='count', default = False, action='store_true',
 parser.add_option('--HT', dest='HT', default = False, action='store_true', help='Enable CTHT')
 parser.add_option('--wfake', dest='wfake', type='string', default = 'nofake', help='Enable stackplots with data-driven fake leptons, default disabled')
 parser.add_option('--wjets', dest='wjets', default = False, action='store_true', help='Enable WJets CR, default disabled')
+parser.add_option('--qcd', dest='qcd', default = False, action='store_true', help='Enable QCD CR, default disabled')
 parser.add_option('--blinded', dest='blinded', default = False, action='store_true', help='Activate blinding')
 parser.add_option('--signal', dest='signal', default = False, action='store_true', help='Activate only signal')
 #parser.add_option('--model', dest='model', default = '/eos/user/t/ttedesch/SWAN_projects/VBS_ML/gradBDT.p', type='string', help='Path to ML model')
@@ -109,6 +110,14 @@ elif opt.wjets:
                  'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&MET_pt<=50.&&mT_lep_MET>50.)*(" + cut + ")",
           }
      cut_tag = 'wjets_CR'
+     if opt.cut != "1.":
+          cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut)           
+elif opt.qcd:
+     cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&MET_pt<=50.&&mT_lep_MET<50.)*(" + cut + ")", 
+                 'electron':"(abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&MET_pt<=50.&&mT_lep_MET<50.)*(" + cut + ")",
+                 'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&MET_pt<=50.&&mT_lep_MET<50.)*(" + cut + ")",
+          }
+     cut_tag = 'QCD_CR'
      if opt.cut != "1.":
           cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut)           
 elif opt.sel:
@@ -198,14 +207,14 @@ def mergepart(dataset):
                # insert BDT output value into merged file
                print("Processing events with Tommaso's BDT...")
                file_path = filerepo + sample.label + "/"  + sample.label + "_merged.root"
-               print(file_path)
+               #print(file_path)
           
                model_path = opt.model
                model_ele_path = opt.model_ele
                model_mu_path = opt.model_mu
-               print(model_path)
-               print(model_ele_path)
-               print(model_mu_path)
+               #print(model_path)
+               #print(model_ele_path)
+               #print(model_mu_path)
 
                # load model 
                file = open(model_path,'rb')
@@ -291,7 +300,7 @@ def lumi_writer(dataset, lumi):
           samples = [sample for sample in dataset.components]# Method exists and was used.
      else:
           samples.append(dataset)
-     print(samples)
+     #print(samples)
      for sample in samples:
           if not ('Data' in sample.label):# or 'TT_dilep' in sample.label):
                infile =  ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + "_merged.root")
@@ -311,12 +320,12 @@ def lumi_writer(dataset, lumi):
                if isthere_pdf:# ("WZ" in sample.label):
                     h_pdfw_tmp = ROOT.TH1F(infile.Get("h_PDFweight"))
                     nbins = h_pdfw_tmp.GetXaxis().GetNbins()
-                    print(nbins)
+                    #print(nbins)
                     w_PDF = array('f', [0.]*nbins)
                else:
                     w_PDF = array('f', [1.])
                     
-               print(len(w_PDF))
+               print('len w_PDF:', len(w_PDF))
                tree_new.Branch('w_PDF', w_PDF, 'w_PDF[' + str(int(len(w_PDF))) + ']/F')
                
                for event in range(0, tree.GetEntries()):
@@ -373,7 +382,7 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
      nbins = variable._nbins
      histoname = "h_" + reg + "_" + variable._name + "_" + cut_tag
 
-     print(variable._iscustom)
+     #print(variable._iscustom)
      if not variable._iscustom:
           h1 = ROOT.TH1F(histoname, variable._name + "_" + reg, variable._nbins, variable._xmin, variable._xmax)
      else:
@@ -419,7 +428,7 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
      #if "WpWpJJ_EWK" in sample.label or 'VBS_SSWW' in sample.label:
           #cut = cut + "*10."
 
-     print(str(cut))
+     print('cut:', str(cut))
      foutput = pathplot + sample.label + "_" + lep + ".root"
 
      f1.Get("events_all").Project(histoname,vartoproject,cut)
@@ -876,7 +885,7 @@ for year in years:
 
           wzero = 'w_nominal*PFSF*puSF*lepSF*tau_vsjet_SF*tau_vsele_SF*tau_vsmu_SF'
           cutbase = cut_dict[lep]
-          '''
+
           variables.append(variabile('countings', 'countings', wzero+'*('+cutbase+')', 1, -0.5, 0.5))
 
           variables.append(variabile('BDT_output', 'BDT output', wzero+'*('+cutbase+')', 8, -2., 2.))
@@ -884,7 +893,7 @@ for year in years:
           variables.append(variabile('BDT_output_mu', '#muBDT output', wzero+'*('+cutbase+')', 8, -2., 2.))
 
           variables.append(variabile('lepBDT_output', 'lepBDT output', wzero+'*('+cutbase+')', 8, -2., 2.))
-
+          '''
           variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cutbase+')', 20, -5., 5.))
 
           variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cutbase+')', 14, -3.50, 3.50))
@@ -985,8 +994,8 @@ for year in years:
                bin_metpt = array("f", [0., 20., 50., 100., 150., 200., 300., 500.])
           nbin_metpt = len(bin_metpt) - 1
           variables.append(variabile('MET_pt', 'p_{T}^{miss} [GeV]',  wzero+'*('+cutbase+')', nbin_metpt, bin_metpt))
-
-
+          
+          '''
           if opt.sr:
                bin_mjj = array("f", [500., 600., 800., 1000., 1200., 2000.])
           else:
@@ -994,7 +1003,7 @@ for year in years:
                #bin_mjj = array("f", [0., 100., 200., 300., 400., 500., 600., 700., 800., 900., 1000., 1100., 1200., 1400., 1600., 2000., 2500., 3500., 4500.])
           nbin_mjj = len(bin_mjj) - 1 
           variables.append(variabile('m_jj', 'invariant mass j_{1} j_{2} [GeV]',  wzero+'*('+cutbase+')', nbin_mjj, bin_mjj))# 20, 500, 2000))
-          '''
+
           if not opt.sr:
               bin_invm = array("f", [0., 150., 300., 450., 600., 750., 900., 1200., 1500., 2000.])
           else:
@@ -1002,17 +1011,17 @@ for year in years:
           nbin_invm = len(bin_invm) - 1 
           variables.append(variabile('m_jjtau', 'invariant mass j_{1} j_{2}#tau [GeV]',  wzero+'*('+cutbase+')', nbin_invm, bin_invm))# 20, 500, 2000))
           variables.append(variabile('m_jjtaulep', 'invariant mass j_{1} j_{2} #tau l[GeV]',  wzero+'*('+cutbase+')', nbin_invm, bin_invm))# 20, 500, 2000))
-          '''
+
           bin_invmtl = array("f", [0., 50., 100., 150., 200., 300., 500.])#, 1000.])
           nbin_invmtl = len(bin_invmtl) - 1 
           
           variables.append(variabile('m_taulep', 'invariant mass #tau l[GeV]',  wzero+'*('+cutbase+')', nbin_invmtl, bin_invmtl))
-          '''
+
           bin_m1 = array("f", [0., 150., 300., 500., 1000.])
           nbin_m1 = len(bin_m1) - 1 
           variables.append(variabile('m_1T', 'M_{1T} [GeV]',  wzero+'*('+cutbase+')', nbin_m1, bin_m1))
           variables.append(variabile('m_o1', 'M_{o1} [GeV]',  wzero+'*('+cutbase+')', nbin_m1, bin_m1))
-          '''
+
           bin_mTs = array("f", [0., 25., 50., 75., 100., 125., 150., 200., 300., 500.])
           nbin_mTs = len(bin_mTs) - 1
 
@@ -1020,7 +1029,7 @@ for year in years:
           variables.append(variabile('mT_tau_MET', 'M_{T}(#tau, MET) [GeV]',  wzero+'*('+cutbase+')', nbin_mTs, bin_mTs))
           variables.append(variabile('mT_leptau_MET', 'M_{T}(lep, #tau, MET) [GeV]',  wzero+'*('+cutbase+')', nbin_mTs, bin_mTs))
 
-
+          '''
           bin_deltaeta_jj = array("f", [0., 0.5, 1., 1.5, 2., 2.5, 3., 3.5, 4., 4.5, 5., 5.5, 6., 6.5, 7., 8., 9., 10.])
           nbin_deltaeta_jj = len(bin_deltaeta_jj) - 1
           variables.append(variabile('deltaEta_jj', '#Delta #eta_{jj}',  wzero+'*('+cutbase+')', nbin_deltaeta_jj, bin_deltaeta_jj))#20, 0, 10))
