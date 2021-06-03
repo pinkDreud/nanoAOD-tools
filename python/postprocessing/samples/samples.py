@@ -771,6 +771,11 @@ VBS_SSWW_cW_SM_2017 = sample(ROOT.kGreen+2, 1, 1001, "VBS ssWW (c_{W} + SM + INT
 VBS_SSWW_cW_SM_2017.year = 2017
 VBS_SSWW_cW_SM_2017.components = [VBS_SSWW_cW_BSM_2017, VBS_SSWW_cW_INT_2017, VBS_SSWW_LL_SM_2017, VBS_SSWW_TL_SM_2017, VBS_SSWW_TT_SM_2017]
 
+VBS_SSWW_aQGC_2017 = sample(ROOT.kGreen+4, 1, 1001, "VBS ssWW dim-8 EFT", "VBS_SSWW_aQGC_2017")
+VBS_SSWW_aQGC_2017.sigma = 0.1191
+VBS_SSWW_aQGC_2017.year = 2017
+VBS_SSWW_aQGC_2017.dataset = "/WWJJ_SS_WToLNu_EWK_aQGC-FT-FS-FM_TuneCP5_13TeV_madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+
 DHiggsToWW_2017 = sample(ROOT.kAzure, 1, 1001, "m_{H} = 200 m_{X} = 150 m_{Z'} = 2e3", "DHiggsToWW_2017")
 DHiggsToWW_2017.sigma = 0.0002014
 DHiggsToWW_2017.year = 2017

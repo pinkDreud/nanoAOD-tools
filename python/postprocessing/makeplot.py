@@ -475,6 +475,8 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
 def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      #os.system('set LD_PRELOAD=libtcmalloc.so')
 
+     cmsreg = reg_.replace("htau", "#tau_{h}")
+
      blind = False
      infile = {}
      histo = []
@@ -695,14 +697,14 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      elif str(lep_).strip('[]') == "electron":
           lep_tag = "e+"
      else:
-          lep_tag = "incl."
+          lep_tag = "lep.+"
          
      print("lep_tag: ", lep_tag)
      lumi_sqrtS = "%s fb^{-1}  (13 TeV)"%(lumi)
      
      iPeriod = 0
      iPos = 11
-     CMS_lumi(pad1, lumi_sqrtS, iPos, lep_tag+str(reg_))
+     CMS_lumi(pad1, lumi_sqrtS, iPos, lep_tag+str(cmsreg))
      hratio = stack.GetStack().Last()
      
      c1.cd()
@@ -1088,13 +1090,13 @@ for year in years:
                                    tmp_f.close()
                          if (("GenPart" in var._name) or ("MC_" in var._name)) and "Data" in sample.label:
                               continue
-                         plot(lep, 'jets', var, sample, cut_tag, "")
+                         plot(lep, 'htau', var, sample, cut_tag, "")
 
           if(opt.stack):
                for var in variables:
                     print(var._xmax)
                     #os.system('set LD_PRELOAD=libtcmalloc.so')
-                    makestack(lep, 'jets', var, dataset_new, cut_tag, "", lumi[str(year)])
+                    makestack(lep, 'htau', var, dataset_new, cut_tag, "", lumi[str(year)])
                     #os.system('set LD_PRELOAD=libtcmalloc.so')
 
           if lep == 'muon':
