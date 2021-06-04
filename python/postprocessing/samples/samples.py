@@ -1296,6 +1296,7 @@ sample_dict={
     'VBS_SSWW_BSM_SM_2017':VBS_SSWW_BSM_SM_2017,
     'VBS_SSWW_cHW_SM_2017':VBS_SSWW_cHW_SM_2017,
     'VBS_SSWW_cW_SM_2017':VBS_SSWW_cW_SM_2017,
+    'VBS_SSWW_aQGC_2017':VBS_SSWW_aQGC_2017,
     'DHiggsToWW_2017':DHiggsToWW_2017,
     'sm_2017':sm_2017,
     'sm_lin_quad_cW_2017':sm_lin_quad_cW_2017,
