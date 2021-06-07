@@ -1380,48 +1380,58 @@ sample_dict={
 
 }
 
-class_dict={
-    #'DHiggsToWW_2017':DHiggsToWW_2017,
-    #'WpWpJJ_EWK_2017':WpWpJJ_EWK_2017,
+condor_dict={
     'WpWpJJ_QCD_2017':WpWpJJ_QCD_2017,
-    #'VBS_SSWW_SM_2017':VBS_SSWW_SM_2017,
-    #'VBS_SSWW_cHW_2017':VBS_SSWW_cHW_2017,
-    #'VBS_SSWW_cW_2017':VBS_SSWW_cW_2017,
-    #'VBS_SSWW_cW_cHW_2017':VBS_SSWW_cW_cHW_2017,
-    'VBS_SSWW_DIM6_2017':VBS_SSWW_DIM6_2017,
     'VBS_SSWW_DIM6_SM_2017':VBS_SSWW_DIM6_SM_2017,
-    #'VBS_SSWW_cHW_SM_2017':VBS_SSWW_cHW_SM_2017,
-    #'VBS_SSWW_cW_SM_2017':VBS_SSWW_cW_SM_2017,
-    'sm_2017':sm_2017,
-    'sm_lin_quad_cW_2017':sm_lin_quad_cW_2017,
-    'quad_cW_2017':quad_cW_2017,
-    'sm_lin_quad_cHW_2017':sm_lin_quad_cHW_2017,
-    'quad_cHW_2017':quad_cHW_2017,
     'VBS_SSWW_aQGC_2017':VBS_SSWW_aQGC_2017,
-    #'VBS_SSWW_DIM8_FS0_2017':VBS_SSWW_DIM8_FS0_2017,
     ### fake contributions from here...
     'QCD_2017':QCD_2017,
     'ZZtoLep_2017':ZZtoLep_2017,
     'TT_2017':TT_2017,
     'WJets_2017':WJets_2017,
-    #'WJets_Fake_2017':WJets_Fake_2017,
     'DYJetsToLL_2017':DYJetsToLL_2017,
-    #'DYJetsToLL_Fake_2017':DYJetsToLL_Fake_2017,
-    #'DYJetsM_2017':DYJetsM_2017,
     # to here
     'VG_2017':VG_2017,
     'TVX_2017':TVX_2017,
-    #'WrongSign_2017': WrongSign_2017,
-    #'Other_2017':Other_2017,
     'OtherWS_2017':OtherWS_2017,
     'TTTo2L2Nu_2017':TTTo2L2Nu_2017,
     'WZ_2017':WZ_2017,
     'DataMu_2017':DataMu_2017,
     'DataEle_2017':DataEle_2017,
     #'DataHT_2017':DataHT_2017,
-    #'DataMET_2017':DataMET_2017,
-    #'FakeEle_2017': FakeEle_2017,
-    #'FakeMu_2017': FakeMu_2017,
+}
+
+merge_dict={
+    'WpWpJJ_QCD_2017':WpWpJJ_QCD_2017,
+    'VBS_SSWW_SM_2017':VBS_SSWW_SM_2017,
+    'VBS_SSWW_cHW_2017':VBS_SSWW_cHW_2017,
+    'VBS_SSWW_cW_2017':VBS_SSWW_cW_2017,
+    #'VBS_SSWW_cW_cHW_2017':VBS_SSWW_cW_cHW_2017,
+    'VBS_SSWW_DIM6_2017':VBS_SSWW_DIM6_2017,
+    'VBS_SSWW_DIM6_SM_2017':VBS_SSWW_DIM6_SM_2017,
+    'VBS_SSWW_cHW_SM_2017':VBS_SSWW_cHW_SM_2017,
+    'VBS_SSWW_cW_SM_2017':VBS_SSWW_cW_SM_2017,
+    'sm_2017':sm_2017,
+    'sm_lin_quad_cW_2017':sm_lin_quad_cW_2017,
+    'quad_cW_2017':quad_cW_2017,
+    'sm_lin_quad_cHW_2017':sm_lin_quad_cHW_2017,
+    'quad_cHW_2017':quad_cHW_2017,
+    'VBS_SSWW_aQGC_2017':VBS_SSWW_aQGC_2017,
+    ### fake contributions from here...
+    'QCD_2017':QCD_2017,
+    'ZZtoLep_2017':ZZtoLep_2017,
+    'TT_2017':TT_2017,
+    'WJets_2017':WJets_2017,
+    'DYJetsToLL_2017':DYJetsToLL_2017,
+    # to here
+    'VG_2017':VG_2017,
+    'TVX_2017':TVX_2017,
+    'OtherWS_2017':OtherWS_2017,
+    'TTTo2L2Nu_2017':TTTo2L2Nu_2017,
+    'WZ_2017':WZ_2017,
+    'DataMu_2017':DataMu_2017,
+    'DataEle_2017':DataEle_2017,
+    #'DataHT_2017':DataHT_2017,
 }
 
 class_list=[

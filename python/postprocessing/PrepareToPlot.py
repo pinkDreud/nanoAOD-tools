@@ -83,7 +83,7 @@ def AreAllCondored(samplename):
 #exsamples = [d for d in os.listdir(path+dirn) if os.path.isdir(path+dirn+"/"+d)]
 #print exsamples
 
-for k, v in class_dict.items():
+for k, v in merge_dict.items():
     ismerged = False
     doesexist = []
     merging = []
