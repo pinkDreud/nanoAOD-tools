@@ -1,10 +1,1 @@
-python submit_condor.py -d WpWpJJ_EWK_2017  -f v70 --wpjet VT --wpele VL --wpmu T
-python submit_condor.py -d QCDHT_100to200_2017  -f v70 --wpjet VT --wpele VL --wpmu T
-python submit_condor.py -d QCDHT_200to300_2017  -f v70 --wpjet VT --wpele VL --wpmu T
-python submit_condor.py -d QCDHT_300to500_2017  -f v70 --wpjet VT --wpele VL --wpmu T
-python submit_condor.py -d QCDHT_500to700_2017  -f v70 --wpjet VT --wpele VL --wpmu T
-python submit_condor.py -d QCDHT_700to1000_2017  -f v70 --wpjet VT --wpele VL --wpmu T
-python submit_condor.py -d QCDHT_1000to1500_2017  -f v70 --wpjet VT --wpele VL --wpmu T
-python submit_condor.py -d QCDHT_1500to2000_2017  -f v70 --wpjet VT --wpele VL --wpmu T
-python submit_condor.py -d QCDHT_2000toInf_2017  -f v70 --wpjet VT --wpele VL --wpmu T
-python submit_condor.py -d ZZJJTo4L_QCD_2017  -f v70 --wpjet VT --wpele VL --wpmu T
+python submit_condor.py -d VBS_SSWW_aQGC_2017  -f v70 --wpjet VT --wpele VL --wpmu T

@@ -99,6 +99,7 @@ username = str(os.environ.get('USER'))
 inituser = str(os.environ.get('USER')[0])
 
 print(username)
+print(opt.dat)
 
 if opt.fold == '':
     folder = "Eff_Jet" + opt.jetwp + "_Mu" + opt.muwp + "_Ele" + opt.elewp
@@ -122,7 +123,7 @@ dirlist = [dirs for dirs in os.listdir(path) if os.path.isdir(path+dirs)]
 #print(class_dict.items())
 
 for prname, proc in class_dict.items():
-    
+
     if opt.year not in prname:
         continue
     if "Fake" in prname or prname.startswith("DataMET") or prname.startswith('DataHT') or '_BSM_INT_' in prname or prname.startswith('TT_') or prname.startswith('DY'):
@@ -159,6 +160,7 @@ for prname, proc in class_dict.items():
                 print(sample.label, " completely condored")
 
     else:
+
         if opt.dat != 'all':
             if not prname.startswith(opt.dat):
                 continue

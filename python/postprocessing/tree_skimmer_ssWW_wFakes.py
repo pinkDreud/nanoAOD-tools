@@ -20,6 +20,7 @@ import copy
 from array import array
 from skimtree_utils_ssWW_wFakes import *
 from TauIDSFTool import TauIDSFTool, TauESTool, TauFESTool, campaigns
+from EFTOperator_dict import *
 
 vsJet = {"VVVL": 'VVVLoose',
          "VVL": 'VVLoose',
@@ -110,6 +111,10 @@ if ('Data' in sample.label):
 
 MCReco = MCReco * isMC
 
+IsDim8 = False
+if 'aQGC' in sample.label:
+    IsDim8 = True
+
 #Cut_dict = {}
 
 #if Debug:
@@ -183,13 +188,47 @@ systTree.setWeightName("FESDown",1.)
 #++++++++++++++++++++++++++++++++++
 #++     variables to branch      ++
 #++++++++++++++++++++++++++++++++++
+var_list = []
+#++++++++++++++++++++++++++++++++++
+#++        dim8 operator         ++
+#++++++++++++++++++++++++++++++++++
+
+if IsDim8:
+    w_dim8 = []
+    w_FS0               =   array.array('f', [-999., -999.])
+    w_dim8.append(w_FS0)
+    var_list.append(w_FS0)
+    w_FS1               =   array.array('f', [-999., -999.])
+    w_dim8.append(w_FS1)
+    var_list.append(w_FS1)
+    w_FM0               =   array.array('f', [-999., -999.])
+    w_dim8.append(w_FM0)
+    var_list.append(w_FM0)
+    w_FM1               =   array.array('f', [-999., -999.])
+    w_dim8.append(w_FM1)
+    var_list.append(w_FM1)
+    w_FM6               =   array.array('f', [-999., -999.])
+    w_dim8.append(w_FM6)
+    var_list.append(w_FM6)
+    w_FM7               =   array.array('f', [-999., -999.])
+    w_dim8.append(w_FM7)
+    var_list.append(w_FM7)
+    w_FT0               =   array.array('f', [-999., -999.])
+    w_dim8.append(w_FT0)
+    var_list.append(w_FT0)
+    w_FT1               =   array.array('f', [-999., -999.])
+    w_dim8.append(w_FT1)
+    var_list.append(w_FT1)
+    w_FT2               =   array.array('f', [-999., -999.])
+    w_dim8.append(w_FT2)
+    var_list.append(w_FT2)
 
 #++++++++++++++++++++++++++++++++++
 #++         All category         ++
 #++++++++++++++++++++++++++++++++++
 
 #ssWW variables
-var_list = []
+
 #lepton#
 lepton_pt               =   array.array('f', [-999.])
 lepton_eta              =   array.array('f', [-999.])
@@ -489,9 +528,14 @@ var_list.append(pass_upToBVeto)
 #var_list.append(pass_upToBVeto_ML)#
 var_list.append(pass_everyCut)
 
-#wieghts#
+#weights#
 w_PDF_all = array.array('f', [0.]*110)#
 w_nominal_all = array.array('f', [0.])
+
+#w_dim8
+if IsDim8:
+    for opi, opn in enumerate(EFT_operator_names):
+        systTree.branchTreesSysts(trees, "all", "w_"+opn,            outTreeFile, w_dim8[opi])
 
 #branches added for ssWW analysis
 #lepton
@@ -739,6 +783,9 @@ for i in range(tree.GetEntries()):
         genpart = Collection(event, "GenPart")
         if not ("WZ" in sample.label or "WWTo2L2Nu_DoubleScattering"):
             LHE = Collection(event, "LHEPart")
+        if IsDim8:
+            LHEDim8 = Collection(event, "LHEReweightingWeight")
+
     chain.GetEntry(i)
     #++++++++++++++++++++++++++++++++++
     #++      defining variables      ++
@@ -1165,8 +1212,8 @@ for i in range(tree.GetEntries()):
     outputJetSel=SelectJet(list(jets), GoodTau, GoodLep)
     
     if outputJetSel==-999:
-        systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
-        systTree.fillTreesSysts(trees, "all")
+        #systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
+        #systTree.fillTreesSysts(trees, "all")
         continue  
 
     jet1, jet2 = outputJetSel
@@ -1323,6 +1370,13 @@ for i in range(tree.GetEntries()):
             h_eff_ele.Fill('Veto Ele', 1)
     '''
     systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
+    if IsDim8:
+        for opi, opn in enumerate(EFT_operator_names):
+            idxH = EFT_operator[opn]["H"]
+            idxL = EFT_operator[opn]["L"]
+            w_dim8[opi][0] = copy.deepcopy(LHEitem(LHEDim8[idxL]))
+            w_dim8[opi][1] = copy.deepcopy(LHEitem(LHEDim8[idxH]))
+            
     systTree.fillTreesSysts(trees, "all")
 
 #trees[0].Print()

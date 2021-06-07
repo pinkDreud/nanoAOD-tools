@@ -1,4 +1,4 @@
-EF_operator_names = ["FS0", "FS1", "FM0", "FM1", "FM6", "FM7", "FT0", "FT1", "FT2"]
+EFT_operator_names = ["FS0", "FS1", "FM0", "FM1", "FM6", "FM7", "FT0", "FT1", "FT2"]
 
 EFT_operator = {
   "FS0":{

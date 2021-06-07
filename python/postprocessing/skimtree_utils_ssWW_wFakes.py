@@ -51,6 +51,7 @@ effLumi_2017 = {
 
 sqrt = lambda x : TMath.Power(x, 0.5)
 squared = lambda x : TMath.Power(x, 2.)
+LHEitem = lambda x : x.__getattr__("")
 
 def lumiFinder(particleTrig, vTrigger):
     lumi=0
@@ -1181,7 +1182,7 @@ class Object:
     """Class that allows seeing a set branches plus possibly an index as an Object"""
     def __init__(self,event,prefix,index=None):
         self._event = event
-        if not (prefix == 'LHEPdfWeight' or prefix == 'LHEScaleWeight' or prefix == 'PSWeight'):
+        if not (prefix == 'LHEPdfWeight' or prefix == 'LHEScaleWeight' or prefix == 'PSWeight' or prefix == 'LHEReweightingWeight'):
             self._prefix = prefix+"_"
         else:
             self._prefix = prefix

@@ -512,7 +512,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      leg_stack = ROOT.TLegend(0.33,0.62,0.91,0.87)
      signal = False
 
-     print(samples_)
+     #print(samples_)
      for s in samples_:
           if opt.wfake != 'nofake':
                if s.label.startswith('WJets') or s.label.startswith('QCD') or s.label.startswith('DY') or s.label.startswith('TT_'):
@@ -527,7 +527,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
                     continue
           if('WpWpJJ_EWK' in s.label or 'VBS_SSWW' in s.label) and not opt.signal:
                signal = True
-          print(s.label)
+          #print(s.label)
           if(syst_ == ""):
                #outfile = plotrepo + "stack_" + str(lep_).strip('[]') + ".root"
                infile[s.label] = ROOT.TFile.Open(pathplot + s.label + "_" + lep + ".root")
@@ -645,22 +645,22 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
           stack.Draw("HIST NOSTACK")
      if not variabile_._iscustom:
           step = float(variabile_._xmax - variabile_._xmin)/float(variabile_._nbins)
-          print(str(step))
+          #print(str(step))
           if "GeV" in variabile_._title:
                if step.is_integer():
-                    ytitle = "Events"#/ %.0f GeV" %step
+                    ytitle = "Events/ %.0f GeV" %step
                else:
-                    ytitle = "Events"# / %.2f GeV" %step
+                    ytitle = "Events / %.2f GeV" %step
           else:
                if step.is_integer():
-                    ytitle = "Events"# / %.0f units" %step
+                    ytitle = "Events / %.0f units" %step
                else:
-                    ytitle = "Events"# / %.2f units" %step
+                    ytitle = "Events / %.2f units" %step
      else:
           if "GeV" in variabile_._title:
-               ytitle = "Events"# / GeV"
+               ytitle = "Events / GeV"
           else:
-               ytitle = "Events"# / a.u"
+               ytitle = "Events / a.u"
      
      print(stack)
      stack.GetYaxis().SetTitle(ytitle)
@@ -814,20 +814,20 @@ leptons = opt.lep.split(',')
 #dataset_dict = {'2016':[],'2017':[],'2018':[]}
 dataset_dict = {'2017':[],'2018':[]}
 
-print(class_list)
+#print(class_list)
 
 if(opt.dat != 'all'):
      print(opt.dat)
      if not(opt.dat in sample_dict.keys()):
           print("dataset not found!")
           print(sample_dict.keys())
-     print(opt.dat)
+     #print(opt.dat)
      if 'DataMET' in str(opt.dat):
           raise Exception("Not interesting dataset")
      elif not opt.folder.startswith('CTHT') and 'DataHT' in str(opt.dat) and (opt.plot or opt.stack):
           raise Exception("Not interesting dataset")
      dataset_names = opt.dat.strip('[]').split(',')
-     print(dataset_names)
+     #print(dataset_names)
      samples = []
      [samples.append(sample_dict[dataset_name]) for dataset_name in dataset_names]
      [dataset_dict[str(sample.year)].append(sample) for sample in samples]
