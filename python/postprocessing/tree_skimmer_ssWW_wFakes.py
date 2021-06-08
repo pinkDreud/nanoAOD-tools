@@ -22,6 +22,12 @@ from skimtree_utils_ssWW_wFakes import *
 from TauIDSFTool import TauIDSFTool, TauESTool, TauFESTool, campaigns
 from EFTOperator_dict import *
 
+dim8_points = [
+    "20",
+    "10",
+    "0",
+]
+
 vsJet = {"VVVL": 'VVVLoose',
          "VVL": 'VVLoose',
          "VL": 'VLoose',
@@ -112,7 +118,7 @@ if ('Data' in sample.label):
 MCReco = MCReco * isMC
 
 IsDim8 = False
-if 'aQGC' in sample.label:
+if 'aQGC' in sample.name:
     IsDim8 = True
 
 #Cut_dict = {}
@@ -1371,7 +1377,10 @@ for i in range(tree.GetEntries()):
     '''
     systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
     if IsDim8:
+        opname = ""
+        opmag = 0
         for opi, opn in enumerate(EFT_operator_names):
+            
             idxH = EFT_operator[opn]["H"]
             idxL = EFT_operator[opn]["L"]
             w_dim8[opi][0] = copy.deepcopy(LHEitem(LHEDim8[idxL]))

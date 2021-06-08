@@ -11,7 +11,7 @@ class sample:
         self.fill = fill
         self.leglabel = leglabel
         self.label = label
-        if name = "":
+        if name == "":
             self.name = label
         else:
             self.name = name
