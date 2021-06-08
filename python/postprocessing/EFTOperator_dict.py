@@ -1,3 +1,5 @@
+#default value for anoinput 12 (FT1) is 2 TeV-4 --> no weighting for this value of the coefficient
+
 EFT_operator_names = ["FS0", "FS1", "FM0", "FM1", "FM6", "FM7", "FT0", "FT1", "FT2"]
 
 EFT_idx = {
@@ -13,6 +15,8 @@ EFT_idx = {
     "+20": 9, #weight for the highest value of the EFT coefficient operator in the LHEReweightingWeight array (20 TeV-4)
     "+25": 10, #weight for the highest value of the EFT coefficient operator in the LHEReweightingWeight array (25 TeV-4)
 }
+
+
 
 EFT_operator = {
   "FS0":{
