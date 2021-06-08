@@ -27,15 +27,15 @@ def DoesSampleExist(samplename):
     else:
         return True
                 
-def AreAllCondored(samplename):
-    storelist = [line for line in open("../../crab/macros/files/"+samplename+".txt")]
+def AreAllCondored(crabname, condorname):
+    storelist = [line for line in open("../../crab/macros/files/"+crabname+".txt")]
 
-    condoredlist = CondoredList(samplename)
+    condoredlist = CondoredList(condorname)
 
-    if samplename+"_merged.root" in condoredlist:
-        condoredlist.remove(samplename+"_merged.root")
-    if samplename+".root" in condoredlist:
-        condoredlist.remove(samplename+".root")
+    if condorname+"_merged.root" in condoredlist:
+        condoredlist.remove(condorname+"_merged.root")
+    if condorname+".root" in condoredlist:
+        condoredlist.remove(condorname+".root")
 
     lenstore = len(storelist)
 
@@ -140,14 +140,14 @@ for prname, proc in condor_dict.items():
             if opt.dat != 'all':
                 if not (str(sample.label).startswith(opt.dat) or prname.startswith(opt.dat)):
                     continue
-            if not DoesSampleExist(sample.label):
+            if not DoesSampleExist(sample.name):
                 continue
                 #if sample.label in dirlist:
             if os.path.exists(path+sample.label):
                 if opt.rw:
                     print('Relaunching all the jobs for', sample.label)
                     os.system("rm -r "+ path + sample.label + "/*")
-            if not AreAllCondored(sample.label):
+            if not AreAllCondored(sample.name, sample.label):
                 if opt.check:
                     print(sample.label, "not completely condored")
                 else:
@@ -165,13 +165,13 @@ for prname, proc in condor_dict.items():
             if not prname.startswith(opt.dat):
                 continue
 
-        if not DoesSampleExist(prname):
+        if not DoesSampleExist(proc.name):
             continue
         if os.path.exists(path+proc.label):
             if opt.rw:
                 print('Relaunching all the jobs for', proc.label)
                 os.system("rm -f "+ path + proc.label + "/*")
-        if not AreAllCondored(proc.label):
+        if not AreAllCondored(proc.name, proc.label):
             if opt.check:
                 print(proc.label, "not completely condored")
             else:

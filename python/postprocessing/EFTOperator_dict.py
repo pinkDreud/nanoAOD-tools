@@ -1,58 +1,63 @@
 EFT_operator_names = ["FS0", "FS1", "FM0", "FM1", "FM6", "FM7", "FT0", "FT1", "FT2"]
 
+EFT_idx = {
+    "-25": 0,  #weight for lowest value of the EFT coefficient operator in the LHEReweightingWeight array (-25 TeV-4)
+    "-20": 1,  #weight for lowest value of the EFT coefficient operator in the LHEReweightingWeight array (-20 TeV-4)
+    "-15": 2,  #weight for lowest value of the EFT coefficient operator in the LHEReweightingWeight array (-15 TeV-4)
+    "-10": 3,  #weight for lowest value of the EFT coefficient operator in the LHEReweightingWeight array (-10 TeV-4)
+    "-5": 4,  #weight for lowest value of the EFT coefficient operator in the LHEReweightingWeight array (-5 TeV-4)
+    "0": 5,  #weight for lowest value of the EFT coefficient operator in the LHEReweightingWeight array (0 TeV-4)
+    "+5": 6, #weight for the highest value of the EFT coefficient operator in the LHEReweightingWeight array (5 TeV-4)
+    "+10": 7, #weight for the highest value of the EFT coefficient operator in the LHEReweightingWeight array (10 TeV-4)
+    "+15": 8, #weight for the highest value of the EFT coefficient operator in the LHEReweightingWeight array (15 TeV-4)
+    "+20": 9, #weight for the highest value of the EFT coefficient operator in the LHEReweightingWeight array (20 TeV-4)
+    "+25": 10, #weight for the highest value of the EFT coefficient operator in the LHEReweightingWeight array (25 TeV-4)
+}
+
 EFT_operator = {
   "FS0":{
-    "L": 0,  #weight for lowest value of the EFT coefficient operator in the LHEReweightingWeight array (-25 TeV-4)
-    "H": 10, #weight for the highest value of the EFT coefficient operator in the LHEReweightingWeight array (25 TeV-4)
     "anoInput_number": 1,
+    "idx": 1,
     "name": "FS0",
   },
   "FS1":{
-    "L": 11,
-    "H": 21,
     "anoInput_number": 2,
+    "idx": 2,
     "name": "FS1",
   },
   "FM0":{
-    "L": 22,
-    "H": 32,
     "anoInput_number": 3,
+    "idx": 3,
     "name": "FM0",
   },
   "FM1":{
-    "L": 33,
-    "H": 43,
     "anoInput_number": 4,
+    "idx": 4,
     "name": "FM1",
   },
   "FM6":{
-    "L": 44,
-    "H": 54,
     "anoInput_number": 9,
+    "idx": 5,
     "name": "FM6",
   },
   "FM7":{
-    "L": 55,
-    "H": 65,
     "anoInput_number": 10,
+    "idx": 6,
     "name": "FM7",
   },
   "FT0":{
-    "L": 66,
-    "H": 76,
     "anoInput_number": 11,
+    "idx": 7,
     "name": "FT0",
   },
   "FT1":{
-    "L": 77,
-    "H": 87,
     "anoInput_number": 12,
+    "idx": 8,
     "name": "FT1",
   },
   "FT2":{
-    "L": 88,
-    "H": 98,
     "anoInput_number": 13,
+    "idx": 9,
     "name": "FT2",
   },
 }

@@ -41,24 +41,36 @@ path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + ofolder + "/
 Debug = opt.check # True # False #
 split = 50
 
+def CondoredList(samplename):
+    try:
+        condlist = os.listdir(path+samplename)
+    except:
+        condlist = []
+
+    if len(condlist) > 0:
+        for condfile in condlist:
+            if not samplename.startswith('DY') and os.stat(path+samplename+"/"+condfile).st_size < 1024.:
+                print("Something went wrong during condoring", samplename, "fix it and relaunch")
+                os.system("rm -r "+ path + samplename + "/*")
+                return CondoredList(samplename)
+
+    return condlist
+
 def DoesSampleExist(samplename):
-    if samplename+".txt" not in os.listdir(crabpath):
+    if samplename+".txt" not in os.listdir("../../crab/macros/files/"):
         return False
     else:
         return True
 
-def AreAllCondored(samplename):
-    storelist = [line for line in open(crabpath+samplename+".txt")]
+def AreAllCondored(crabname, condorname):
+    storelist = [line for line in open("../../crab/macros/files/"+crabname+".txt")]
 
-    try:
-        condoredlist = os.listdir(path+samplename)
-    except:
-        condoredlist = []
+    condoredlist = CondoredList(condorname)
 
-    if samplename+"_merged.root" in condoredlist:
-        condoredlist.remove(samplename+"_merged.root")
-    if samplename+".root" in condoredlist:
-        condoredlist.remove(samplename+".root")
+    if condorname+"_merged.root" in condoredlist:
+        condoredlist.remove(condorname+"_merged.root")
+    if condorname+".root" in condoredlist:
+        condoredlist.remove(condorname+".root")
 
     lenstore = len(storelist)
 
@@ -73,7 +85,7 @@ def AreAllCondored(samplename):
         return False
     elif lenstore==0 and len(condoredlist)==0:
         print("Warning for", samplename, "False flag for crabbed files! need to recrab them")
-        return False
+        return True
     else:
         return True
 
@@ -120,11 +132,11 @@ for k, v in merge_dict.items():
                 if not str(c.label).startswith(opt.dat):
                     if not k.startswith(opt.dat):
                         continue
-            if not DoesSampleExist(c.label):
+            if not DoesSampleExist(c.name):
                 print(c.label, "not crabbed yet")
                 continue
             cpath = path + c.label + "/"
-            if not AreAllCondored(c.label):
+            if not AreAllCondored(c.name, c.label):
             #if not os.path.exists(cpath):
                 print(c.label + " not condorly produced yet")
                 continue
@@ -176,10 +188,10 @@ for k, v in merge_dict.items():
         if opt.dat != 'all':
             if not k.startswith(opt.dat):
                 continue
-        if not DoesSampleExist(k):
+        if not DoesSampleExist(v.name):
             print(k + " not crabbed yet")
             continue
-        if not AreAllCondored(k):
+        if not AreAllCondored(v.name, v.label):
         #if not os.path.exists(kpath+k):
             print(k + " not condored at all yet")
             continue
