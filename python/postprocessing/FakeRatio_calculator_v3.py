@@ -7,7 +7,7 @@ import copy
 import datetime
 import time
 from FakeRatio_utils_dev import *
-from PhysicsTools.NanoAODTools.postprocessing.samples.samples import *
+#from samples.samples import *
 
 
 usage = 'python FakeRatio_calculator_v3.py -b --met 50 --mt 50 --inf FR_24Gen_Ele --trig Ele'
@@ -20,11 +20,11 @@ parser.add_option('--onlybkg', dest='onlybkg', default = False,action='store_tru
 parser.add_option('-d', '--debug', dest='debug', default = False, action='store_true', help='Debug mode, only runs in a file for 10000 events')
 parser.add_option('--trig', dest='trig', type=str, default = 'all', help='trigger used, default all')
 parser.add_option('--inf', dest='infolder', type=str, default = '', help='Please enter an input folder folder, default FR_v10/Ele')
-
+parser.add_option('--user', dest='user', type=str, default = 'mmagheri', help='Enter user, default mmagheri')
 (opt, args) = parser.parse_args()
 
 
-input_folder = '/eos/user/m/mmagheri/VBS/nosynch/' + opt.infolder + '/'
+input_folder = '/eos/user/'+ opt.user[0]+ '/'+opt.user+'/VBS/nosynch/' + opt.infolder + '/'
 print(input_folder)
 
 if not os.path.isdir(input_folder): raise NameError('ERROR, directory not found')
@@ -143,7 +143,7 @@ time  = datetime.datetime.now()
 
 print('Today is :' + str(today) + ' and the time is: '+ str(time))
 
-outdir = 'FakeRatio_calcs_19Mar/' + opt.infolder + '/'
+outdir = 'FakeRatio_calcs/' + opt.infolder + '/'
 
 if not os.path.isdir(outdir):
     try:
