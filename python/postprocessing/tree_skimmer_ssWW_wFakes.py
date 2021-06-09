@@ -1362,33 +1362,50 @@ for i in range(tree.GetEntries()):
             if ("_" + opn + "_") in sample.label:
                 opmax = EFT_operator[opn]["max"]
                 step = opmax/5.
-                print(opn, opmax, step)
-                '''
+
                 for eidx in range(11):
                     epoint = opmax - step * eidx
                     IsZero = (epoint == 0.)
                     str_epoint = "_" + str(epoint).replace(".0", "").replace(".", "p") + "_"
+
+
+
                     if str_epoint in sample.label:
-                        idxL = int((EFT_operator[opn]["idx"] - 1)*11 + eidx)
-                        idxH = int((EFT_operator[opn]["idx"])*10 - eidx)
-                        if IsZero and idxL != idxH:
+                        print("opn:", opn, "opmax:", opmax, "step:", step, "epoint:", epoint)
+                        print('index:', EFT_operator[opn]["idx"], 'eidx:', eidx)
+                        idxpos = int((EFT_operator[opn]["idx"])*11 - (eidx + 1))
+                        idxneg = int((EFT_operator[opn]["idx"] - 1)*11 + eidx)
+                        if IsZero and idxneg != idxpos:
                             print("Something went wrong with dim8 weights assignment")
-                            break
-                        wpos = LHEitem(LHEDim8[idxH])
-                        wneg = LHEitem(LHEDim8[idxL])
+                            #break
+                        wpos = LHEitem(LHEDim8[idxpos])
+                        wneg = LHEitem(LHEDim8[idxneg])
+                        print('idxneg:', idxneg, 'wneg:', wneg)
+                        print('idxpos:', idxpos, 'wpos:', wpos)
+
                         w_pos[0] = copy.deepcopy(wpos)
                         w_neg[0] = copy.deepcopy(wneg)
+
                         wsign = 0
                         kpow = 0
+                        print(sample.label, "_BSM_" in sample.label, "_0_" in sample.label, "_INT_" in sample.label)
                         if "_BSM_" in sample.label:#
+                            print("BSM")
                             wsign = +1.
                             kpow = 2.*(epoint**2.)
                         elif "_0_" in sample.label:
+                            print("0")
                             wsign = +1.
                             kpow = +2.
                         elif "_INT_" in sample.label:
+                            print("INT")
                             wsign = -1.
                             kpow = 2.*epoint
+                            
+                        print("wsign:", wsign, "kpow:", kpow)
+                        break
+                '''
+
                         w_coeff = (wpos + wsign * wneg) / kpow
                         w_dim8[0] = copy.deepcopy(w_coeff)
                         break
