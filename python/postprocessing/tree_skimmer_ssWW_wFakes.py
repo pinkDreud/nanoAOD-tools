@@ -200,35 +200,13 @@ var_list = []
 #++++++++++++++++++++++++++++++++++
 
 if IsDim8:
-    w_dim8 = []
-    w_FS0               =   array.array('f', [-999., -999.])
-    w_dim8.append(w_FS0)
-    var_list.append(w_FS0)
-    w_FS1               =   array.array('f', [-999., -999.])
-    w_dim8.append(w_FS1)
-    var_list.append(w_FS1)
-    w_FM0               =   array.array('f', [-999., -999.])
-    w_dim8.append(w_FM0)
-    var_list.append(w_FM0)
-    w_FM1               =   array.array('f', [-999., -999.])
-    w_dim8.append(w_FM1)
-    var_list.append(w_FM1)
-    w_FM6               =   array.array('f', [-999., -999.])
-    w_dim8.append(w_FM6)
-    var_list.append(w_FM6)
-    w_FM7               =   array.array('f', [-999., -999.])
-    w_dim8.append(w_FM7)
-    var_list.append(w_FM7)
-    w_FT0               =   array.array('f', [-999., -999.])
-    w_dim8.append(w_FT0)
-    var_list.append(w_FT0)
-    w_FT1               =   array.array('f', [-999., -999.])
-    w_dim8.append(w_FT1)
-    var_list.append(w_FT1)
-    w_FT2               =   array.array('f', [-999., -999.])
-    w_dim8.append(w_FT2)
-    var_list.append(w_FT2)
-
+    w_dim8             =   array.array('f', [-999., -999.])
+    w_neg              =   array.array('f', [-999., -999.])
+    w_pos              =   array.array('f', [-999., -999.])
+    var_list.append(w_dim8)
+    var_list.append(w_neg)
+    var_list.append(w_pos)
+    
 #++++++++++++++++++++++++++++++++++
 #++         All category         ++
 #++++++++++++++++++++++++++++++++++
@@ -540,8 +518,9 @@ w_nominal_all = array.array('f', [0.])
 
 #w_dim8
 if IsDim8:
-    for opi, opn in enumerate(EFT_operator_names):
-        systTree.branchTreesSysts(trees, "all", "w_"+opn,            outTreeFile, w_dim8[opi])
+    systTree.branchTreesSysts(trees, "all", "w_dim8",            outTreeFile, w_dim8)
+    systTree.branchTreesSysts(trees, "all", "w_pos",            outTreeFile, w_pos)
+    systTree.branchTreesSysts(trees, "all", "w_neg",            outTreeFile, w_neg)
 
 #branches added for ssWW analysis
 #lepton
@@ -1380,12 +1359,44 @@ for i in range(tree.GetEntries()):
         opname = ""
         opmag = 0
         for opi, opn in enumerate(EFT_operator_names):
-            
-            idxH = EFT_operator[opn]["H"]
-            idxL = EFT_operator[opn]["L"]
-            w_dim8[opi][0] = copy.deepcopy(LHEitem(LHEDim8[idxL]))
-            w_dim8[opi][1] = copy.deepcopy(LHEitem(LHEDim8[idxH]))
-            
+            if ("_" + opn + "_") in sample.label:
+                opmax = EFT_operator[opn]["max"]
+                step = opmax/5.
+                print(opn, opmax, step)
+                '''
+                for eidx in range(11):
+                    epoint = opmax - step * eidx
+                    IsZero = (epoint == 0.)
+                    str_epoint = "_" + str(epoint).replace(".0", "").replace(".", "p") + "_"
+                    if str_epoint in sample.label:
+                        idxL = int((EFT_operator[opn]["idx"] - 1)*11 + eidx)
+                        idxH = int((EFT_operator[opn]["idx"])*10 - eidx)
+                        if IsZero and idxL != idxH:
+                            print("Something went wrong with dim8 weights assignment")
+                            break
+                        wpos = LHEitem(LHEDim8[idxH])
+                        wneg = LHEitem(LHEDim8[idxL])
+                        w_pos[0] = copy.deepcopy(wpos)
+                        w_neg[0] = copy.deepcopy(wneg)
+                        wsign = 0
+                        kpow = 0
+                        if "_BSM_" in sample.label:#
+                            wsign = +1.
+                            kpow = 2.*(epoint**2.)
+                        elif "_0_" in sample.label:
+                            wsign = +1.
+                            kpow = +2.
+                        elif "_INT_" in sample.label:
+                            wsign = -1.
+                            kpow = 2.*epoint
+                        w_coeff = (wpos + wsign * wneg) / kpow
+                        w_dim8[0] = copy.deepcopy(w_coeff)
+                        break
+                
+                break
+                '''
+        break #da eliminare dopo il debugging    
+
     systTree.fillTreesSysts(trees, "all")
 
 #trees[0].Print()

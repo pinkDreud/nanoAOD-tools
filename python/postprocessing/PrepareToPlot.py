@@ -74,7 +74,7 @@ def AreAllCondored(crabname, condorname):
 
     lenstore = len(storelist)
 
-    if 'Data' in samplename:
+    if 'Data' in crabname:
         remainder = int(lenstore%split)
         lenstore = int(lenstore/split)
         if remainder > 0:
