@@ -200,9 +200,9 @@ var_list = []
 #++++++++++++++++++++++++++++++++++
 
 if IsDim8:
-    w_dim8             =   array.array('f', [-999., -999.])
-    w_neg              =   array.array('f', [-999., -999.])
-    w_pos              =   array.array('f', [-999., -999.])
+    w_dim8             =   array.array('f', [-999.])
+    w_neg              =   array.array('f', [-999.])
+    w_pos              =   array.array('f', [-999.])
     var_list.append(w_dim8)
     var_list.append(w_neg)
     var_list.append(w_pos)
@@ -1371,8 +1371,8 @@ for i in range(tree.GetEntries()):
 
 
                     if str_epoint in sample.label:
-                        print("opn:", opn, "opmax:", opmax, "step:", step, "epoint:", epoint)
-                        print('index:', EFT_operator[opn]["idx"], 'eidx:', eidx)
+                        #print("opn:", opn, "opmax:", opmax, "step:", step, "epoint:", epoint)
+                        #print('index:', EFT_operator[opn]["idx"], 'eidx:', eidx)
                         idxpos = int((EFT_operator[opn]["idx"])*11 - (eidx + 1))
                         idxneg = int((EFT_operator[opn]["idx"] - 1)*11 + eidx)
                         if IsZero and idxneg != idxpos:
@@ -1380,15 +1380,15 @@ for i in range(tree.GetEntries()):
                             #break
                         wpos = LHEitem(LHEDim8[idxpos])
                         wneg = LHEitem(LHEDim8[idxneg])
-                        print('idxneg:', idxneg, 'wneg:', wneg)
-                        print('idxpos:', idxpos, 'wpos:', wpos)
+                        #print('idxneg:', idxneg, 'wneg:', wneg)
+                        #print('idxpos:', idxpos, 'wpos:', wpos)
 
                         w_pos[0] = copy.deepcopy(wpos)
                         w_neg[0] = copy.deepcopy(wneg)
 
                         wsign = 0
                         kpow = 0
-                        print(sample.label, "_BSM_" in sample.label, "_0_" in sample.label, "_INT_" in sample.label)
+                        #print(sample.label, "_BSM_" in sample.label, "_0_" in sample.label, "_INT_" in sample.label)
                         if "_BSM_" in sample.label:#
                             print("BSM")
                             wsign = +1.
@@ -1402,17 +1402,16 @@ for i in range(tree.GetEntries()):
                             wsign = -1.
                             kpow = 2.*epoint
                             
-                        print("wsign:", wsign, "kpow:", kpow)
-                        break
-                '''
+                        #print("wsign:", wsign, "kpow:", kpow)
 
                         w_coeff = (wpos + wsign * wneg) / kpow
+                        #print("w_coeff:", w_coeff)
                         w_dim8[0] = copy.deepcopy(w_coeff)
+        
+
                         break
-                
                 break
-                '''
-        break #da eliminare dopo il debugging    
+        #print("w_dim8:", w_dim8[0])
 
     systTree.fillTreesSysts(trees, "all")
 
