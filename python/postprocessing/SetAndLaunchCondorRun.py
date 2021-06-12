@@ -126,7 +126,7 @@ for prname, proc in condor_dict.items():
 
     if opt.year not in prname:
         continue
-    if "Fake" in prname or prname.startswith("DataMET") or prname.startswith('DataHT') or '_BSM_INT_' in prname or prname.startswith('TT_') or prname.startswith('DY'):
+    if "Fake" in prname or prname.startswith("DataMET") or prname.startswith('DataHT') or '_BSM_INT_' in prname or prname.startswith('DY'):
         continue
         
     toLaunch = True

@@ -717,7 +717,7 @@ VBS_SSWW_cHW_INT_2017.dataset = "/VBS_SSWW_cHW_INT_TuneCP5_13TeV-madgraph-pythia
 
 VBS_SSWW_cHW_2017 = sample(ROOT.kMagenta+2, 1, 1001, "VBS ssWW c_{HW} (BSM+INT)", "VBS_SSWW_cHW_2017")
 VBS_SSWW_cHW_2017.year = 2017
-VBS_SSWW_cHW_2017.components = [VBS_SSWW_cHW_BSM_2017]#, VBS_SSWW_cHW_INT_2017]
+VBS_SSWW_cHW_2017.components = [VBS_SSWW_cHW_BSM_2017, VBS_SSWW_cHW_INT_2017]
 
 VBS_SSWW_cW_BSM_2017 = sample(ROOT.kMagenta+3, 1, 1001, "VBS ssWW c_{W} (only BSM)", "VBS_SSWW_cW_BSM_2017")
 VBS_SSWW_cW_BSM_2017.sigma = 0.002014
@@ -731,7 +731,7 @@ VBS_SSWW_cW_INT_2017.dataset = "/VBS_SSWW_cW_INT_TuneCP5_13TeV-madgraph-pythia8/
 
 VBS_SSWW_cW_2017 = sample(ROOT.kMagenta+1, 1, 1001, "VBS ssWW c_{W} (BSM+INT)", "VBS_SSWW_cW_2017")
 VBS_SSWW_cW_2017.year = 2017
-VBS_SSWW_cW_2017.components = [VBS_SSWW_cW_BSM_2017]#, VBS_SSWW_cW_INT_2017]
+VBS_SSWW_cW_2017.components = [VBS_SSWW_cW_BSM_2017, VBS_SSWW_cW_INT_2017]
 
 VBS_SSWW_cW_cHW_2017 = sample(ROOT.kAzure+3, 1, 1001, "VBS ssWW c_{HW} + c_{W}", "VBS_SSWW_cW_cHW_2017")
 VBS_SSWW_cW_cHW_2017.sigma = 0.002014
@@ -2384,11 +2384,12 @@ class_list=[
     VBS_SSWW_SM_2017,
     #VBS_SSWW_cHW_SM_2017,
     #VBS_SSWW_cW_SM_2017,
-    #VBS_SSWW_cHW_2017,
-    #VBS_SSWW_cW_2017,
+    VBS_SSWW_cHW_2017,
+    VBS_SSWW_cW_2017,
     ##VBS_SSWW_cW_cHW_2017,
     #VBS_SSWW_DIM6_2017,
     #VBS_SSWW_DIM6_SM_2017,
+    VBS_SSWW_aQGC_2017,
     #VBS_SSWW_FS0_25_SM_2017,
     #VBS_SSWW_FS0_5_SM_2017,
     #VBS_SSWW_FS1_50_SM_2017,

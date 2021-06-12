@@ -103,10 +103,12 @@ for k, v in merge_dict.items():
     kpath = path+k+"/"
 
     if opt.ct == '':
-        if k.startswith('TT_') or k.startswith('DY'):
+        if k.startswith('DY'):#k.startswith('TT_'):
             continue
+
+    #print(k)
     else:
-        if not (k.startswith('DataHT') or k.startswith('DY') or k.startswith('WJets') or k.startswith('TT_')):
+        if not (k.startswith('DataHT') or k.startswith('DY') or k.startswith('WJets')):# or k.startswith('TT_')):
             continue
 
     if k.startswith('Fake'):
@@ -127,6 +129,7 @@ for k, v in merge_dict.items():
         continue
 
     if hasattr(v, 'components'):
+        #print(k, k.startswith(opt.dat))
         for c in v.components:
             if opt.dat != 'all':
                 if not str(c.label).startswith(opt.dat):
