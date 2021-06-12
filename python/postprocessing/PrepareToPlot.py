@@ -8,6 +8,7 @@ parser = optparse.OptionParser(usage)
 parser.add_option('-y', dest='year', type=str, default = '2017', help='Please enter a year, default is 2017')
 parser.add_option('-f', dest='folder', type=str, default = 'v20', help='Please enter a folder, default is v4')
 parser.add_option('-c', dest='check', default = False, action = 'store_true', help='Default runs makeplot')
+parser.add_option('--rw', dest='rw', default = False, action = 'store_true', help='Default does not rewrite')
 parser.add_option('-d', dest='dat', type=str, default = 'all', help='Default is all')
 parser.add_option('--fake', dest='isfake', default = False, action = 'store_true', help='Default runs for analysis, true for fake ratio')
 parser.add_option('--ct', dest='ct', type=str, default = '', help='Default is analysis, otherwise specified CT')
@@ -145,8 +146,9 @@ for k, v in merge_dict.items():
                 continue
 
             doesexist.append(True)
-            if not os.path.exists(cpath+c.label+".root"):
-                if os.path.exists(cpath+c.label+"_merged.root"):
+
+            if not os.path.exists(cpath+c.label+".root") or opt.rw:
+                if os.path.exists(cpath+c.label+"_merged.root") or opt.rw:
                     if Debug:
                         print("rm -f " + cpath + c.label + "_merged.root")
                     else:
@@ -167,7 +169,7 @@ for k, v in merge_dict.items():
         #print len(doesexist), len(v.components)
         if len(doesexist) == len(v.components):
             if len(merging) == 0:
-                if os.path.exists(kpath+k+".root"):
+                if os.path.exists(kpath+k+".root") and not opt.rw:
                     print(k + " already merged")
                     samplemerge = False
                 else:
@@ -200,8 +202,8 @@ for k, v in merge_dict.items():
             continue
 
         doesexist.append(True)
-        if not os.path.exists(kpath+k+".root"):
-            if os.path.exists(kpath+k+"_merged.root"):
+        if not os.path.exists(kpath+k+".root") or opt.rw:
+            if os.path.exists(kpath+k+"_merged.root") or opt.rw:
                 if Debug:
                     print("rm -f " + kpath + k + "_merged.root")
                 else:
