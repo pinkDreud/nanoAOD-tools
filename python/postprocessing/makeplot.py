@@ -403,6 +403,10 @@ def lumi_writer(dataset, lumi):
 
 
 def plot(lep, reg, variable, sample, cut_tag, syst=""):
+     IsDim8 = False
+     if sample.label.startswith("VBS_SSWW_F"):
+         IsDim8 = True
+     print("IsDim8?:", IsDim8)
      print("in plot function")
      print("plotting ", variable._name, " for sample ", sample.label, " with cut ", cut_tag, "with FR", FRtag)#, " ", syst,
      ROOT.TH1.SetDefaultSumw2()
@@ -446,7 +450,10 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
           h1 = ROOT.TH1F(histoname, variable._name + "_" + reg, variable._nbins, variable._xmin)
 
      h1.Sumw2()
-     
+
+     if IsDim8:
+         cut = "(w_dim8[0])*" + cut
+
      '''
      else:
           if(syst==""):
@@ -905,7 +912,6 @@ else:
                if 'DataEle' in v.label or 'FakeEle' in v.label or 'PromptEle' in v.label:
                     continue
           dataset_dict[str(v.year)].append(v)
-
 for v in dataset_dict.values():
      print([o.label for o in v])
 #print(dataset_dict.keys())
@@ -947,11 +953,13 @@ for year in years:
 
           variables.append(variabile('countings', 'countings', wzero+'*('+cutbase+')', 1, -0.5, 0.5))
 
-          variables.append(variabile('BDT_output', 'BDT output', wzero+'*('+cutbase+')', 8, -2., 2.))
+          variables.append(variabile('BDT_output_SM', 'SM BDT output', wzero+'*('+cutbase+')', 8, -2., 2.))
+          variables.append(variabile('BDT_output_dim6', 'dim6 BDT output', wzero+'*('+cutbase+')', 8, -2., 2.))
+          variables.append(variabile('BDT_output_dim8', 'dim8 BDT output', wzero+'*('+cutbase+')', 8, -2., 2.))
           #variables.append(variabile('BDT_output_ele', 'eleBDT output', wzero+'*('+cutbase+')', 8, -2., 2.))
           #variables.append(variabile('BDT_output_mu', '#muBDT output', wzero+'*('+cutbase+')', 8, -2., 2.))
 
-          variables.append(variabile('lepBDT_output', 'lepBDT output', wzero+'*('+cutbase+')', 8, -2., 2.))
+          #variables.append(variabile('lepBDT_output', 'lepBDT output', wzero+'*('+cutbase+')', 8, -2., 2.))
 
           variables.append(variabile('lepton_eta', 'lepton #eta', wzero+'*('+cutbase+')', 20, -5., 5.))
           variables.append(variabile('lepton_phi', 'lepton #phi',  wzero+'*('+cutbase+')', 14, -3.50, 3.50))

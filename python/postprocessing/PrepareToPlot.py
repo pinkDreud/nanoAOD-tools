@@ -147,13 +147,24 @@ for k, v in merge_dict.items():
 
             doesexist.append(True)
 
+            partmerge = False
             if not os.path.exists(cpath+c.label+".root") or opt.rw:
+                partmerge = True
                 if os.path.exists(cpath+c.label+"_merged.root") or opt.rw:
                     if Debug:
                         print("rm -f " + cpath + c.label + "_merged.root")
                     else:
                         os.system("rm -f " + cpath + c.label + "_merged.root")
+
+            if partmerge:
                 print(c.label + " not merged so far")
+
+                if os.path.exists(cpath+c.label+".root"):
+                    if Debug:
+                        print("rm -f " + cpath + c.label + ".root")
+                    else:
+                        os.system("rm -f " + cpath + c.label + ".root")
+
                 print("Merging and luming " + c.label + "...")
                 merging.append(True)
                 if Debug:
@@ -202,12 +213,21 @@ for k, v in merge_dict.items():
             continue
 
         doesexist.append(True)
+        samplemerge = False
         if not os.path.exists(kpath+k+".root") or opt.rw:
+            samplemerge = True
             if os.path.exists(kpath+k+"_merged.root") or opt.rw:
                 if Debug:
                     print("rm -f " + kpath + k + "_merged.root")
                 else:
                     os.system("rm -f " + kpath + k + "_merged.root")
+
+        if samplemerge:
+            if os.path.exists(kpath+k+".root"):
+                if Debug:
+                    print("rm -f " + kpath + k + ".root")
+                else:
+                    os.system("rm -f " + kpath + k + ".root")
             print(k + " neither merged nor lumied so far")
             print("Merging and luming " + k + "...")
             if Debug:
