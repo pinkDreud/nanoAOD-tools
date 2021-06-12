@@ -51,9 +51,12 @@ parser.add_option('--qcd', dest='qcd', default = False, action='store_true', hel
 parser.add_option('--blinded', dest='blinded', default = False, action='store_true', help='Activate blinding')
 parser.add_option('--signal', dest='signal', default = False, action='store_true', help='Activate only signal')
 #parser.add_option('--model', dest='model', default = '/eos/user/t/ttedesch/SWAN_projects/VBS_ML/gradBDT.p', type='string', help='Path to ML model')
-parser.add_option('--model', dest='model', default = '/afs/cern.ch/user/t/ttedesch/public/gradBDT.p', type='string', help='Path to ML model for all events')
-parser.add_option('--model_ele', dest='model_ele', default = '/afs/cern.ch/user/t/ttedesch/public/gradBDT_ele.p', type='string', help='Path to ML model for electron events')
-parser.add_option('--model_mu', dest='model_mu', default = '/afs/cern.ch/user/t/ttedesch/public/gradBDT_mu.p', type='string', help='Path to ML model for muon events')
+#parser.add_option('--model', dest='model', default = '/afs/cern.ch/user/t/ttedesch/public/gradBDT.p', type='string', help='Path to ML model for all events')
+#parser.add_option('--model_ele', dest='model_ele', default = '/afs/cern.ch/user/t/ttedesch/public/gradBDT_ele.p', type='string', help='Path to ML model for electron events')
+#parser.add_option('--model_mu', dest='model_mu', default = '/afs/cern.ch/user/t/ttedesch/public/gradBDT_mu.p', type='string', help='Path to ML model for muon events')
+parser.add_option('--model_SM', dest='model_SM', default = '/afs/cern.ch/user/t/ttedesch/public/gradBDT_SM.p', type='string', help='Path to ML model for SM analysis')
+parser.add_option('--model_dim6', dest='model_dim6', default = '/afs/cern.ch/user/t/ttedesch/public/gradBDT_dim6.p', type='string', help='Path to ML model for dim6 analysis')
+parser.add_option('--model_dim8', dest='model_dim8', default = '/afs/cern.ch/user/t/ttedesch/public/gradBDT_dim8.p', type='string', help='Path to ML model for dim8 analysis')
 
 (opt, args) = parser.parse_args()
 #print (opt, args)
@@ -210,25 +213,41 @@ def mergepart(dataset):
                file_path = filerepo + sample.label + "/"  + sample.label + "_merged.root"
                #print(file_path)
           
-               model_path = opt.model
-               model_ele_path = opt.model_ele
-               model_mu_path = opt.model_mu
+               model_SM_path = opt.model_SM
+               model_dim6_path = opt.model_dim6
+               model_dim8_path = opt.model_dim8
+               #model_mu_path = opt.model_mu
+               #model_ele_path = opt.model_ele
+               #model_mu_path = opt.model_mu
                #print(model_path)
                #print(model_ele_path)
                #print(model_mu_path)
 
                # load model 
-               file = open(model_path,'rb')
-               clf = pickle.load(file)
+               file = open(model_SM_path,'rb')
+               clf_SM = pickle.load(file)
                file.close()
 
-               file = open(model_ele_path,'rb')
-               clf_ele = pickle.load(file)
+               file = open(model_dim6_path,'rb')
+               clf_dim6 = pickle.load(file)
                file.close()
                
-               file = open(model_mu_path,'rb')
-               clf_mu = pickle.load(file)
+               file = open(model_dim8_path,'rb')
+               clf_dim8 = pickle.load(file)
                file.close()
+               
+               # load model 
+               #file = open(model_path,'rb')
+               #clf = pickle.load(file)
+               #file.close()
+
+               #file = open(model_ele_path,'rb')
+               #clf_ele = pickle.load(file)
+               #file.close()
+               
+               #file = open(model_mu_path,'rb')
+               #clf_mu = pickle.load(file)
+               #file.close()
                
                # open root file
                file = uproot.open(file_path)
@@ -236,11 +255,35 @@ def mergepart(dataset):
                df = tree.arrays(library="pd")
                df = df.fillna(0)
                
+               '''
+               to_drop = ['w_nominal','lepSF[0]', 'lepUp[0]', 'lepDown[0]', 'puSF[0]', 'puUp[0]',
+              'puDown[0]', 'PFSF[0]', 'PFUp[0]', 'PFDown[0]', 'q2Up[0]', 'q2Down[0]','w_PDF[0]',
+              'SF_Fake[0]', 'tau_vsjet_SF[0]', 'tau_vsele_SF[0]', 'tau_vsmu_SF[0]', 'tau_vsjet_Up[0]', 'tau_vsjet_Down[0]', 'tau_vsele_Up[0]', 'tau_vsele_Down[0]', 'tau_vsmu_Up[0]', 'tau_vsmu_Down[0]',
+              'tauSF[0]','tauUp[0]','tauDown[0]','TESSF[0]','TESUp[0]','TESDown[0]','FESSF[0]','FESUp[0]','FESDown[0]',
+              'event_SFFake_vsjet2[0]', 'event_SFFake_vsjet4[0]','lepton_SFFake_vsjet2[0]', 'lepton_SFFake_vsjet4[0]', 'tau_SFFake_vsjet2[0]', 'tau_SFFake_vsjet4[0]',
+              'tau_DeepTau_WP[0]','tau_DeepTauVsJet_WP[0]', 'tau_DeepTauVsMu_WP[0]','tau_DeepTauVsEle_WP[0]', 
+              'HLT_effLumi[0]', 'pass_lepton_selection[0]','pass_tau_selection[0]', 'pass_tau_vsJetWP[0]','pass_jet_selection[0]', 'pass_upToBVeto[0]', 'pass_lepton_iso[0]','pass_lepton_veto[0]', 
+              'pass_charge_selection[0]', 'pass_b_veto[0]', 'pass_mjj_cut[0]','pass_MET_cut[0]', 'pass_everyCut[0]', 'nBJets[0]',
+              'event_Zeppenfeld[0]','tau_Zeppenfeld[0]','lepton_Zeppenfeld[0]', 
+              'lepton_LnTRegion[0]', 'tau_LnTRegion[0]',  'tau_isolation[0]', 'lepton_TightRegion[0]','tau_TightRegion[0]','tau_isPrompt[0]','lepton_isPrompt[0]', 
+              'tau_GenMatch[0]',
+              'leadjet_CSVv2_b[0]', 'subleadjet_CSVv2_b[0]',] 
+               '''
+
+
+
+               #X = df.drop(columns=to_drop)
+
                new_columns = []
                for i in df.columns:
                     new_columns.append(i.split('[')[0])
                df.columns = new_columns
+               
+               to_keep = ['lepton_pt', 'lepton_eta', 'lepton_phi', 'lepton_mass', 'lepton_pdgid', 'lepton_pfRelIso04', 'tau_pt', 'tau_eta', 'tau_phi', 'tau_mass', 'tau_DecayMode', 'tau_DeepTauVsEle_raw', 'tau_DeepTauVsMu_raw', 'tauleadTk_ptOverTau', 'tauleadTk_deltaPhi', 'tauleadTk_deltaEta', 'tauleadTk_Gamma', 'taujet_relpt', 'taujet_deltaPhi', 'taujet_deltaEta', 'taujet_HadGamma', 'taujet_EmGamma', 'taujet_HEGamma', 'leadjet_pt', 'leadjet_eta', 'leadjet_phi', 'leadjet_mass', 'leadjet_DeepFlv_b', 'leadjet_DeepCSVv2_b', 'AK8leadjet_pt', 'AK8leadjet_eta', 'AK8leadjet_phi', 'AK8leadjet_mass', 'AK8leadjet_tau21', 'AK8leadjet_tau32', 'AK8leadjet_tau43', 'leadjet_dRAK48', 'subleadjet_pt', 'subleadjet_eta', 'subleadjet_phi', 'subleadjet_mass', 'subleadjet_DeepFlv_b', 'subleadjet_DeepCSVv2_b', 'AK8subleadjet_pt', 'AK8subleadjet_eta', 'AK8subleadjet_phi', 'AK8subleadjet_mass', 'AK8subleadjet_tau21', 'AK8subleadjet_tau32', 'AK8subleadjet_tau43', 'subleadjet_dRAK48', 'nJets', 'MET_pt', 'MET_phi', 'm_jj', 'm_1T', 'm_o1', 'mT_lep_MET', 'mT_tau_MET', 'mT_leptau_MET', 'm_taulep', 'm_jjtau', 'm_jjtaulep', 'deltaPhi_jj', 'deltaPhi_taulep', 'deltaPhi_tauj1', 'deltaPhi_tauj2', 'deltaPhi_lepj1', 'deltaPhi_lepj2', 'deltaEta_jj', 'deltaEta_taulep', 'deltaEta_tauj1', 'deltaEta_tauj2', 'deltaEta_lepj1', 'deltaEta_lepj2', 'deltaTheta_jj', 'deltaTheta_taulep', 'deltaTheta_tauj1', 'deltaTheta_tauj2', 'deltaTheta_lepj1', 'deltaTheta_lepj2', 'ptRel_jj', 'ptRel_taulep', 'ptRel_tauj1', 'ptRel_tauj2', 'ptRel_lepj1', 'ptRel_lepj2', 'lepton_Zeppenfeld_over_deltaEta_jj', 'tau_Zeppenfeld_over_deltaEta_jj', 'event_Zeppenfeld_over_deltaEta_jj', 'event_RT']
 
+               X = df[to_keep].to_numpy()
+
+               '''
                X = df[['lepton_pt', 'lepton_eta', 'lepton_phi', 'lepton_mass', 'lepton_pdgid',
                         'lepton_pfRelIso04', 'tau_pt', 'tau_eta', 'tau_phi', 'tau_mass',
                         'tau_DeepTauVsEle_raw', 'tau_DeepTauVsMu_raw', 'leadjet_pt',
@@ -258,25 +301,38 @@ def mergepart(dataset):
                         'deltaPhi_tauj2', 'deltaPhi_lepj1', 'deltaPhi_lepj2', 'deltaEta_jj',
                         'lepton_Zeppenfeld', 'tau_Zeppenfeld', 'event_Zeppenfeld',
                         'pass_mjj_cut', 'pass_MET_cut', 'pass_everyCut']].to_numpy() 
+               '''
 
                # update root file with BDT branch
-               BDT_output_array = clf.decision_function(X)
-               BDT_output_ele_array = clf_ele.decision_function(X)
-               BDT_output_mu_array = clf_mu.decision_function(X)
+               BDT_output_SM_array = clf_SM.decision_function(X)
+               BDT_output_dim6_array = clf_dim6.decision_function(X)
+               BDT_output_dim8_array = clf_dim8.decision_function(X)
+               #BDT_output_array = clf.decision_function(X)
+               #BDT_output_ele_array = clf_ele.decision_function(X)
+               #BDT_output_mu_array = clf_mu.decision_function(X)
                myfile = ROOT.TFile(file_path, 'update')
                mytree = myfile.Get("events_all")
                listOfNewBranches = []
-               BDT_output   = array('d', [0.5] )
-               BDT_output_ele   = array('d', [0.5] )
-               BDT_output_mu   = array('d', [0.5] )
-               listOfNewBranches.append(mytree.Branch("BDT_output", BDT_output, "BDT_output/D") )
-               listOfNewBranches.append(mytree.Branch("BDT_output_ele", BDT_output_ele, "BDT_output_ele/D") )
-               listOfNewBranches.append(mytree.Branch("BDT_output_mu", BDT_output_mu, "BDT_output_mu/D") )
+               BDT_output_SM   = array('d', [0.5] )
+               BDT_output_dim6   = array('d', [0.5] )
+               BDT_output_dim8   = array('d', [0.5] )
+               #BDT_output   = array('d', [0.5] )
+               #BDT_output_ele   = array('d', [0.5] )
+               #BDT_output_mu   = array('d', [0.5] )
+               listOfNewBranches.append(mytree.Branch("BDT_output_SM", BDT_output_SM, "BDT_output_SM/D") )
+               listOfNewBranches.append(mytree.Branch("BDT_output_dim6", BDT_output_dim6, "BDT_output_dim6/D") )
+               listOfNewBranches.append(mytree.Branch("BDT_output_dim8", BDT_output_dim8, "BDT_output_dim8/D") )
+               #listOfNewBranches.append(mytree.Branch("BDT_output", BDT_output, "BDT_output/D") )
+               #listOfNewBranches.append(mytree.Branch("BDT_output_ele", BDT_output_ele, "BDT_output_ele/D") )
+               #listOfNewBranches.append(mytree.Branch("BDT_output_mu", BDT_output_mu, "BDT_output_mu/D") )
                numOfEvents = mytree.GetEntries()
                for n in range(numOfEvents):
-                    BDT_output[0] = BDT_output_array[n]
-                    BDT_output_ele[0] = BDT_output_ele_array[n]
-                    BDT_output_mu[0] = BDT_output_mu_array[n]
+                    BDT_output_SM[0] = BDT_output_SM_array[n]
+                    BDT_output_dim6[0] = BDT_output_dim6_array[n]
+                    BDT_output_dim8[0] = BDT_output_dim8_array[n]
+                    #BDT_output[0] = BDT_output_array[n]
+                    #BDT_output_ele[0] = BDT_output_ele_array[n]
+                    #BDT_output_mu[0] = BDT_output_mu_array[n]
                     #if n%1000 == 0:
                          #print(BDT_output[0])
                     mytree.GetEntry(n)
