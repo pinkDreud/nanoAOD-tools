@@ -698,7 +698,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      logscale = True # False #
      if(logscale):
           pad1.SetLogy()
-          stack.SetMaximum(maximum*1000)
+          stack.SetMaximum(maximum*10000)
      else:
           stack.SetMaximum(maximum*1.6)
      stack.SetMinimum(0.01)
