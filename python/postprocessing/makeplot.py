@@ -572,7 +572,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      if opt.sr:
           blind = True
      stack = ROOT.THStack(stackname, variabile_._name)
-     leg_stack = ROOT.TLegend(0.3,0.55,0.91,0.87)
+     leg_stack = ROOT.TLegend(0.32,0.58,0.93,0.87)
      signal = False
 
      #print(samples_)
