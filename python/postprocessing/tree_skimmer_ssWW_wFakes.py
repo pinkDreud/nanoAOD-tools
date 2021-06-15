@@ -932,7 +932,8 @@ for i in range(tree.GetEntries()):
     if indexGoodLep<0 or indexGoodLep>=len(leptons) or (lepton_TightRegion[0]<0 and lepton_LnTRegion[0]<0): 
         #systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
         #systTree.fillTreesSysts(trees, "all")
-        print("exiting at lepton selection (without saving)")
+        if Debug:
+            print("exiting at lepton selection (without saving)")
         continue
 
     if lepton_TightRegion[0]==1 or lepton_LnTRegion[0]==1:
@@ -1198,9 +1199,10 @@ for i in range(tree.GetEntries()):
     outputJetSel=SelectJet(list(jets), GoodTau, GoodLep)
     
     if outputJetSel==-999:
-        systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
-        systTree.fillTreesSysts(trees, "all")
-        print("exiting at jet selection (without saving)")
+        #systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
+        #systTree.fillTreesSysts(trees, "all")
+        if Debug:
+            print("exiting at jet selection (without saving)")
         continue  
 
     jet1, jet2 = outputJetSel
@@ -1415,7 +1417,8 @@ for i in range(tree.GetEntries()):
     
     systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
     systTree.fillTreesSysts(trees, "all")
-    print("exiting at the end of the event (saving)")
+    if Debug:
+        print("exiting at the end of the event (saving)")
 #trees[0].Print()
 outTreeFile.cd()
 if(isMC):
