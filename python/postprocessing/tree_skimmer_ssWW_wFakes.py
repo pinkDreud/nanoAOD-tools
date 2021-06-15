@@ -740,8 +740,8 @@ for i in range(tree.GetEntries()):
     
     if Debug:
         print("\nevento n. " + str(i))
-        if i > 1000:
-            break
+        #if i > 1000:
+            #break
     
     if i%500 == 0 and not Debug:#
         print("Event #", i+1, " out of ", tree.GetEntries())
@@ -932,6 +932,7 @@ for i in range(tree.GetEntries()):
     if indexGoodLep<0 or indexGoodLep>=len(leptons) or (lepton_TightRegion[0]<0 and lepton_LnTRegion[0]<0): 
         #systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
         #systTree.fillTreesSysts(trees, "all")
+        print("exiting at lepton selection (without saving)")
         continue
 
     if lepton_TightRegion[0]==1 or lepton_LnTRegion[0]==1:
@@ -1197,8 +1198,9 @@ for i in range(tree.GetEntries()):
     outputJetSel=SelectJet(list(jets), GoodTau, GoodLep)
     
     if outputJetSel==-999:
-        #systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
-        #systTree.fillTreesSysts(trees, "all")
+        systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
+        systTree.fillTreesSysts(trees, "all")
+        print("exiting at jet selection (without saving)")
         continue  
 
     jet1, jet2 = outputJetSel
@@ -1354,7 +1356,7 @@ for i in range(tree.GetEntries()):
         if len(VetoEle) == 0:
             h_eff_ele.Fill('Veto Ele', 1)
     '''
-    systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
+    
     if IsDim8:
         opname = ""
         opmag = 0
@@ -1367,8 +1369,6 @@ for i in range(tree.GetEntries()):
                     epoint = opmax - step * eidx
                     IsZero = (epoint == 0.)
                     str_epoint = "_" + str(epoint).replace(".0", "").replace(".", "p") + "_"
-
-
 
                     if str_epoint in sample.label:
                         #print("opn:", opn, "opmax:", opmax, "step:", step, "epoint:", epoint)
@@ -1412,9 +1412,10 @@ for i in range(tree.GetEntries()):
                         break
                 break
         #print("w_dim8:", w_dim8[0])
-
+    
+    systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
     systTree.fillTreesSysts(trees, "all")
-
+    print("exiting at the end of the event (saving)")
 #trees[0].Print()
 outTreeFile.cd()
 if(isMC):

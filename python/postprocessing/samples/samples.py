@@ -2388,7 +2388,7 @@ condor_dict={
     'VBS_SSWW_FT2_2p5_SM_2017':VBS_SSWW_FT2_2p5_SM_2017,
     'VBS_SSWW_FT2_0p5_SM_2017':VBS_SSWW_FT2_0p5_SM_2017,
     'VBS_SSWW_FT2_0_2017':VBS_SSWW_FT2_0_2017,
-    #'VBS_SSWW_aQGC_2017':VBS_SSWW_aQGC_2017,
+    'VBS_SSWW_aQGC_2017':VBS_SSWW_aQGC_2017,
     ### fake contributions from here...
     'QCD_2017':QCD_2017,
     'ZZtoLep_2017':ZZtoLep_2017,

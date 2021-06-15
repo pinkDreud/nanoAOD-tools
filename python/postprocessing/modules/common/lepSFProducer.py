@@ -42,7 +42,7 @@ class lepSFProducer(Module):
             mu_f = ["Mu_RunABCD_SF_ID_2018_syst.root"]
             mu_h = ["NUM_TightID_DEN_TrackerMuons_pt_abseta_syst"]
 
-        if electronSelectionTag == "NoIsoMVA90_2018":
+        if electronSelectionTag == "IsoMVA90_2018":
             el_f = ["EGM2D_RECO_SF_2018.root", "2018_ElectronMVA90noiso.root"]
             el_h = ["EGamma_SF2D", "EGamma_SF2D"]
 
