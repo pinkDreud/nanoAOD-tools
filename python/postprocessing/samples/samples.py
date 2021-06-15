@@ -1402,7 +1402,7 @@ VBFHToWWTo2L2Nu_2018.dataset = "/VBFHToWWTo2L2Nu_M125_13TeV_powheg2_JHUGenV714_p
 VBFHToTauTau_2018 = sample(ROOT.kAzure-9, 1, 1001, "VBFHToTauTau", "VBFHToTauTau_2018")
 VBFHToTauTau_2018.sigma =  3.879#pb
 VBFHToTauTau_2018.year = 2018
-VBFHToTauTau_2018.dataset = "/VBFHToTauTau_M125_13TeV_powheg_pythia8"+tag_2018+"ext1-v1/NANOAODSIM"
+VBFHToTauTau_2018.dataset = "/VBFHToTauTau_M125_13TeV_powheg_pythia8"+tag1_2018+"_ext1-v1/NANOAODSIM"
 
 ttHToNonbb_2018 = sample(ROOT.kAzure-9, 1, 1001, "ttHToNonbb", "ttHToNonbb_2018")
 ttHToNonbb_2018.sigma =  0.5269#pb
