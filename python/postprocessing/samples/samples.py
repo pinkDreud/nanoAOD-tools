@@ -2624,16 +2624,13 @@ sample_dict={
     'TTTo2L2Nu_2018':TTTo2L2Nu_2018,
     'WZ_2018':WZ_2018,
     'FakeMu_2018':FakeMu_2018,
-    'DataMu_2018':DataMu_2018, 'DataMuB_2018':DataMuB_2018, 'DataMuC_2018':DataMuC_2018, 'DataMuD_2018':DataMuD_2018, 'DataMuE_2018':DataMuE_2018, 'DataMuF_2018':DataMuF_2018, 'DataMuFake_2018': DataMuFake_2018,
+    'DataMu_2018':DataMu_2018, 'DataMuA_2018':DataMuA_2018, 'DataMuB_2018':DataMuB_2018, 'DataMuC_2018':DataMuC_2018, 'DataMuD_2018':DataMuD_2018,
     'FakeEle_2018':FakeEle_2018,
     'FakeMuPromptTau_2018':FakeMuPromptTau_2018, 'PromptMuFakeTau_2018':PromptMuFakeTau_2018, 'FakeMuFakeTau_2018':FakeMuFakeTau_2018,
-    'DataEle_2018':DataEle_2018, 'DataEleB_2018':DataEleB_2018, 'DataEleC_2018':DataEleC_2018, 'DataEleD_2018':DataEleD_2018, 'DataEleE_2018':DataEleE_2018, 'DataEleF_2018':DataEleF_2018, 'DataEleFake_2018': DataEleFake_2018, 'MCFake_2018': MCFake_2018,
+    'DataEle_2018':DataEle_2018, 'DataEleA_2018':DataEleA_2018, 'DataEleB_2018':DataEleB_2018, 'DataEleC_2018':DataEleC_2018, 'DataEleD_2018':DataEleD_2018,
     'FakeElePromptTau_2018':FakeElePromptTau_2018, 'PromptEleFakeTau_2018':PromptEleFakeTau_2018, 'FakeEleFakeTau_2018':FakeEleFakeTau_2018,
-    'DataTau_2018':DataTau_2018, 'DataTauB_2018':DataTauB_2018, 'DataTauC_2018':DataTauC_2018, 'DataTauD_2018':DataTauD_2018, 'DataTauE_2018':DataTauE_2018, 'DataTauF_2018':DataTauF_2018, 'DataTauFake_2018': DataTauFake_2018,
-    'DataHT_2018':DataHT_2018, 'DataHTnoB_2018':DataHTnoB_2018, 'DataHTB_2018':DataHTB_2018, 'DataHTC_2018':DataHTC_2018, 'DataHTD_2018':DataHTD_2018, 'DataHTE_2018':DataHTE_2018, 'DataHTF_2018':DataHTF_2018,
-    'DataMET_2018':DataMET_2018, 'DataMETB_2018':DataMETB_2018, 'DataMETC_2018':DataMETC_2018, 'DataMETD_2018':DataMETD_2018, 'DataMETE_2018':DataMETE_2018, 'DataMETF_2018':DataMETF_2018,
-
-    'SampleEleFake_2018': SampleEleFake_2018, 'SampleMuFake_2018': SampleMuFake_2018, 'SampleHTFake_2018': SampleHTFake_2018,
+    'DataHT_2018':DataHT_2018, 'DataHTA_2018':DataHTA_2018, 'DataHTB_2018':DataHTB_2018, 'DataHTC_2018':DataHTC_2018, 'DataHTD_2018':DataHTD_2018,
+    #'SampleEleFake_2018': SampleEleFake_2018, 'SampleMuFake_2018': SampleMuFake_2018, 'SampleHTFake_2018': SampleHTFake_2018,
 
 }
 
