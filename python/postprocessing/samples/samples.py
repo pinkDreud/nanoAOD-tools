@@ -2217,6 +2217,7 @@ DataHTF_2017.dataset = '/JetHT/Run2017F-'+tag_data + '-v1/NANOAOD'
 DataHT_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataHT_2017")
 DataHT_2017.year = 2017
 DataHT_2017.components = [DataHTB_2017, DataHTC_2017, DataHTD_2017, DataHTE_2017, DataHTF_2017]
+
 DataHTnoB_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "DataHT_2017")
 DataHTnoB_2017.year = 2017
 DataHTnoB_2017.components = [DataHTC_2017, DataHTD_2017, DataHTE_2017, DataHTF_2017]
@@ -2340,6 +2341,38 @@ DataHTD_2018.dataset = '/JetHT/Run2018D-'+tag_data + '_v2/NANOAOD'
 DataHT_2018 = sample(ROOT.kBlack, 1, 1001, "Data", "DataHT_2018")
 DataHT_2018.year = 2018
 DataHT_2018.components = [DataHTA_2018, DataHTB_2018, DataHTC_2018, DataHTD_2018]
+
+FakeElePromptTau_2018 = sample(ROOT.kGray+1, 1, 1001, "Fake e Prompt #tau", "FakeElePromptTau_2018")
+FakeElePromptTau_2018.year = 2018
+FakeElePromptTau_2018.components = [DataEle_2018, DataHT_2018, WJets_2018, DYJetsToLL_2018]
+
+PromptEleFakeTau_2018 = sample(ROOT.kGray+2, 1, 1001, "Prompt e Fake #tau", "PromptEleFakeTau_2018")
+PromptEleFakeTau_2018.year = 2018
+PromptEleFakeTau_2018.components = [DataEle_2018, DataHT_2018, WJets_2018, DYJetsToLL_2018]
+
+FakeEleFakeTau_2018 = sample(ROOT.kGray+3, 1, 1001, "Fake e Fake #tau", "FakeEleFakeTau_2018")
+FakeEleFakeTau_2018.year = 2018
+FakeEleFakeTau_2018.components = [DataEle_2018, DataHT_2018, WJets_2018, DYJetsToLL_2018]
+
+FakeEle_2018 = sample(ROOT.kGray, 1, 1001, "Fake Leptons", "FakeEle_2018")
+FakeEle_2018.year = 2018
+FakeEle_2018.components = [DataEle_2018, DataHT_2018, WJets_2018, DYJetsToLL_2018]
+
+FakeMuPromptTau_2018 = sample(ROOT.kGray+1, 1, 1001, "Fake #mu Prompt #tau", "FakeMuPromptTau_2018")
+FakeMuPromptTau_2018.year = 2018
+FakeMuPromptTau_2018.components = [DataMu_2018, DataHT_2018, WJets_2018, DYJetsToLL_2018]
+
+PromptMuFakeTau_2018 = sample(ROOT.kGray+2, 1, 1001, "Prompt #mu Fake #tau", "PromptMuFakeTau_2018")
+PromptMuFakeTau_2018.year = 2018
+PromptMuFakeTau_2018.components = [DataMu_2018, DataHT_2018, WJets_2018, DYJetsToLL_2018]
+
+FakeMuFakeTau_2018 = sample(ROOT.kGray+3, 1, 1001, "Fake #mu Fake #tau", "FakeMuFakeTau_2018")
+FakeMuFakeTau_2018.year = 2018
+FakeMuFakeTau_2018.components = [DataMu_2018, DataHT_2018, WJets_2018, DYJetsToLL_2018]
+
+FakeMu_2018 = sample(ROOT.kGray, 1, 1001, "Fake Leptons", "FakeMu_2018")
+FakeMu_2018.year = 2018
+FakeMu_2018.components = [DataMu_2018, DataHT_2018, WJets_2018, DYJetsToLL_2018]
 
 
 sample_dict={
