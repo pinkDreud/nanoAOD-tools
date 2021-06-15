@@ -133,42 +133,42 @@ WpWpJJ_QCD_2016.dataset = "/WpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8/" + t
 ################################ QCD ################################
 QCDHT_100to200_2017 = sample(ROOT.kGray, 1, 1001, "QCD", "QCDHT_100to200_2017")
 QCDHT_100to200_2017.year = 2017
-QCDHT_100to200_2017.dataset = "/QCD_HT100to200_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+QCDHT_100to200_2017.dataset = "/QCD_HT100to200_BGenFilter_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
 QCDHT_100to200_2017.sigma = 23700000.0 #pb                                                     
 
 QCDHT_200to300_2017 = sample(ROOT.kGray, 1, 1001, "QCD", "QCDHT_200to300_2017")
 QCDHT_200to300_2017.year = 2017
-QCDHT_200to300_2017.dataset = "/QCD_HT200to300_TuneCP5_13TeV-madgraph-pythia8/" + tag2_2017 + "-v1/NANOAODSIM"
+QCDHT_200to300_2017.dataset = "/QCD_HT200to300_BGenFilter_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
 QCDHT_200to300_2017.sigma = 1547000.0 #pb                                                     
 
 QCDHT_300to500_2017 = sample(ROOT.kGray, 1, 1001, "QCD", "QCDHT_300to500_2017")
 QCDHT_300to500_2017.year = 2017
-QCDHT_300to500_2017.dataset = "/QCD_HT300to500_TuneCP5_13TeV-madgraph-pythia8/" + tag2_2017 + "-v1/NANOAODSIM"
+QCDHT_300to500_2017.dataset = "/QCD_HT300to500_BGenFilter_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
 QCDHT_300to500_2017.sigma = 322600.0 #pb                                                    
 
 QCDHT_500to700_2017 = sample(ROOT.kGray, 1, 1001, "QCD", "QCDHT_500to700_2017")
 QCDHT_500to700_2017.year = 2017
-QCDHT_500to700_2017.dataset = "/QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+QCDHT_500to700_2017.dataset = "/QCD_HT500to700_BGenFilter_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
 QCDHT_500to700_2017.sigma = 29980.0 #pb                                                     
 
 QCDHT_700to1000_2017 = sample(ROOT.kGray, 1, 1001, "QCD", "QCDHT_700to1000_2017")
 QCDHT_700to1000_2017.year = 2017
-QCDHT_700to1000_2017.dataset = "/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8/" + tag2_2017 + "-v1/NANOAODSIM"
+QCDHT_700to1000_2017.dataset = "/QCD_HT700to1000_BGenFilter_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
 QCDHT_700to1000_2017.sigma = 6334.0 #pb                                                     
 
 QCDHT_1000to1500_2017 = sample(ROOT.kGray, 1, 1001, "QCD", "QCDHT_1000to1500_2017")
 QCDHT_1000to1500_2017.year = 2017
-QCDHT_1000to1500_2017.dataset = "/QCD_HT1000to1500_TuneCP5_13TeV-madgraph-pythia8/" + tag2_2017 + "-v1/NANOAODSIM"
+QCDHT_1000to1500_2017.dataset = "/QCD_HT1000to1500_BGenFilter_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
 QCDHT_1000to1500_2017.sigma = 1088.0 #pb                                                     
 
 QCDHT_1500to2000_2017 = sample(ROOT.kGray, 1, 1001, "QCD", "QCDHT_1500to2000_2017")
 QCDHT_1500to2000_2017.year = 2017
-QCDHT_1500to2000_2017.dataset = "/QCD_HT1500to2000_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+QCDHT_1500to2000_2017.dataset = "/QCD_HT1500to2000_BGenFilter_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
 QCDHT_1500to2000_2017.sigma = 99.11 #pb                                                     
 
 QCDHT_2000toInf_2017 = sample(ROOT.kGray, 1, 1001, "QCD", "QCDHT_2000toInf_2017")
 QCDHT_2000toInf_2017.year = 2017
-QCDHT_2000toInf_2017.dataset = "/QCD_HT2000toInf_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
+QCDHT_2000toInf_2017.dataset = "/QCD_HT2000toInf_BGenFilter_TuneCP5_13TeV-madgraph-pythia8/" + tag_2017 + "-v1/NANOAODSIM"
 QCDHT_2000toInf_2017.sigma = 20.23 #pb                                                     
 
 QCD_2017 = sample(ROOT.kGray, 1, 1001, "QCD", "QCD_2017")
@@ -1123,6 +1123,51 @@ quad_cHW_2017.components = [VBS_SSWW_cHW_BSM_2017]
 ############################################################                    2018                   ############################################################
 ############################################################                                           ############################################################
 ###################################################################################################################################################################
+################################ QCD ################################
+QCDHT_100to200_2018 = sample(ROOT.kGray, 1, 1001, "QCD", "QCDHT_100to200_2018")
+QCDHT_100to200_2018.sigma = 347700 #pb
+QCDHT_100to200_2018.year = 2018
+QCDHT_100to200_2018.dataset = "/QCD_HT100to200_BGenFilter_TuneCP5_13TeV-madgraphMLM-pythia8/"+tag_2018+"-v1/NANOAODSIM"
+
+QCDHT_200to300_2018 = sample(ROOT.kGray, 1, 1001, "QCD", "QCDHT_200to300_2018")
+QCDHT_200to300_2018.sigma = 347700 #pb
+QCDHT_200to300_2018.year = 2018
+QCDHT_200to300_2018.dataset = "/QCD_HT200to300_BGenFilter_TuneCP5_13TeV-madgraphMLM-pythia8/"+tag_2018+"-v1/NANOAODSIM"
+
+QCDHT_300to500_2018 = sample(ROOT.kGray, 1, 1001, "QCD", "QCDHT_300to500_2018")
+QCDHT_300to500_2018.sigma = 347700 #pb
+QCDHT_300to500_2018.year = 2018
+QCDHT_300to500_2018.dataset = "/QCD_HT300to500_BGenFilter_TuneCP5_13TeV-madgraphMLM-pythia8/"+tag_2018+"-v1/NANOAODSIM"
+
+QCDHT_500to700_2018 = sample(ROOT.kGray, 1, 1001, "QCD", "QCDHT_500to700_2018")
+QCDHT_500to700_2018.sigma = 32100 #pb
+QCDHT_500to700_2018.year = 2018
+QCDHT_500to700_2018.dataset = "/QCD_HT500to700_BGenFilter_TuneCP5_13TeV-madgraphMLM-pythia8/"+tag_2018+"-v1/NANOAODSIM"
+
+QCDHT_700to1000_2018 = sample(ROOT.kGray, 1, 1001, "QCD", "QCDHT_700to1000_2018")
+QCDHT_700to1000_2018.sigma = 6831 #pb
+QCDHT_700to1000_2018.year = 2018
+QCDHT_700to1000_2018.dataset = "/QCD_HT700to1000_BGenFilter_TuneCP5_13TeV-madgraphMLM-pythia8/"+tag_2018+"-v1/NANOAODSIM"
+
+QCDHT_1000to1500_2018 = sample(ROOT.kGray, 1, 1001, "QCD", "QCDHT_1000to1500_2018")
+QCDHT_1000to1500_2018.sigma = 1207 #pb
+QCDHT_1000to1500_2018.year = 2018
+QCDHT_1000to1500_2018.dataset = "/QCD_HT1000to1500_BGenFilter_TuneCP5_13TeV-madgraphMLM-pythia8/"+tag_2018+"-v1/NANOAODSIM"
+
+QCDHT_1500to2000_2018 = sample(ROOT.kGray, 1, 1001, "QCD", "QCDHT_1500to2000_2018")
+QCDHT_1500to2000_2018.sigma = 119.9 #pb
+QCDHT_1500to2000_2018.year = 2018
+QCDHT_1500to2000_2018.dataset = "/QCD_HT1500to2000_BGenFilter_TuneCP5_13TeV-madgraphMLM-pythia8/"+tag_2018+"-v1/NANOAODSIM"
+
+QCDHT_2000toInf_2018 = sample(ROOT.kGray, 1, 1001, "QCD", "QCDHT_2000toInf_2018")
+QCDHT_2000toInf_2018.sigma = 25.24 #pb
+QCDHT_2000toInf_2018.year = 2018
+QCDHT_2000toInf_2018.dataset = "/QCD_HT2000toInf_BGenFilter_TuneCP5_13TeV-madgraphMLM-pythia8/"+tag_2018+"-v1/NANOAODSIM"
+
+QCD_2018 = sample(ROOT.kGray, 1, 1001, "QCD", "QCD_2018")
+QCD_2018.year = 2018
+QCD_2018.components = [QCDHT_100to200_2018, QCDHT_200to300_2018, QCDHT_300to500_2018, QCDHT_500to700_2018, QCDHT_700to1000_2018, QCDHT_1000to1500_2018, QCDHT_1500to2000_2018, QCDHT_2000toInf_2018]
+
 ################################ ZZ ################################
 ZZTo2L2Nu_2018 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "ZZTo2L2Nu_2018")
 ZZTo2L2Nu_2018.year = 2018
