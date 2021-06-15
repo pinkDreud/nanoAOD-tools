@@ -24,7 +24,7 @@ class MET_HLT_Filter(Module):
         elif(self.year == 2017):
             good_HLT = (HLT.IsoMu27 or HLT.Mu50 or HLT.Ele35_WPTight_Gsf or HLT.Ele32_WPTight_Gsf_L1DoubleEG or HLT.Photon200)# or HLT.PFHT250 or HLT.PFHT350)
         elif(self.year == 2018):
-            good_HLT = HLT.IsoMu24 or HLT.Ele32_WPTight_Gsf_L1DoubleEG
+            good_HLT = (HLT.IsoMu27 or HLT.Mu50 or HLT.Ele35_WPTight_Gsf or HLT.Ele32_WPTight_Gsf_L1DoubleEG or HLT.Photon200)# or HLT.PFHT250 or HLT.PFHT350)
         else:
             print("Please specify the year: possible choices are 2016, 2017 or 2018")
         return good_MET and good_HLT
