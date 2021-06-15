@@ -1280,12 +1280,12 @@ TTWJetsToQQ_2018.dataset = "/TTWJetsToQQ_TuneCP5_13TeV-amcatnloFXFX-madspin-pyth
 TTWJetsToLNu_2018 = sample(ROOT.kRed-2, 1, 1001, "t#bar{t}W+jets to #ell#nu ", "TTWJetsToLNu_2018")
 TTWJetsToLNu_2018.sigma = 0.2149
 TTWJetsToLNu_2018.year = 2018
-TTWJetsToLNu_2018.dataset = "/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/"+tag_2018+"ext1-v1/NANOAODSIM"
+TTWJetsToLNu_2018.dataset = "/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/"+tag_2018+"_ext1-v1/NANOAODSIM"
 
 tZq_ll_4f_2018 = sample(ROOT.kRed-2, 1, 1001, "tZq to #ell#ell ", "tZq_ll_4f_2018")
 tZq_ll_4f_2018.sigma = 0.07358
 tZq_ll_4f_2018.year = 2018
-tZq_ll_4f_2018.dataset = "/tZq_ll_4f_ckm_NLO_TuneCP5_13TeV-madgraph-pythia8/"+tag_2018+"ext1-v1/NANOAODSIM"
+tZq_ll_4f_2018.dataset = "/tZq_ll_4f_ckm_NLO_TuneCP5_13TeV-madgraph-pythia8/"+tag_2018+"_ext1-v1/NANOAODSIM"
 
 TVX_2018 = sample(ROOT.kCyan-7, 1, 1001, "tVX", "TVX_2018")
 TVX_2018.year = 2018
@@ -1367,12 +1367,12 @@ TTTo2L2Nu_2018.dataset = "/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/"+tag_2018+"-v
 STtW_top_2018 = sample(ROOT.kAzure-9, 1, 1001, "single t", "STtW_top_2018")
 STtW_top_2018.sigma =  34.91#pb
 STtW_top_2018.year = 2018
-STtW_top_2018.dataset = "/ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8/"+tag_2018+"ext1-v1/NANOAODSIM"
+STtW_top_2018.dataset = "/ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8/"+tag_2018+"_ext1-v1/NANOAODSIM"
 
 STtW_antitop_2018 = sample(ROOT.kAzure-9, 1, 1001, "single t", "STtW_antitop_2018")
 STtW_antitop_2018.sigma =  34.97#pb
 STtW_antitop_2018.year = 2018
-STtW_antitop_2018.dataset = "/ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8/"+tag_2018+"ext1-v1/NANOAODSIM"
+STtW_antitop_2018.dataset = "/ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8/"+tag_2018+"_ext1-v1/NANOAODSIM"
 
 GluGluHToWWTo2L2Nu_2018 = sample(ROOT.kAzure-9, 1, 1001, "GluGluHToWWTo2L2Nu", "GluGluHToWWTo2L2Nu_2018")
 GluGluHToWWTo2L2Nu_2018.sigma =  28.87#pb
@@ -1435,7 +1435,7 @@ WWTo2L2Nu_DoubleScattering_2018.dataset = "/WWTo2L2Nu_DoubleScattering_13TeV-pyt
 WWW_4F_2018 = sample(ROOT.kOrange-4, 1, 1001, "WWW_4F", "WWW_4F_2018")
 WWW_4F_2018.sigma =  0.2086#pb
 WWW_4F_2018.year = 2018
-WWW_4F_2018.dataset = "/WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8/"+tag_2018+"ext1-v1/NANOAODSIM"
+WWW_4F_2018.dataset = "/WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8/"+tag_2018+"_ext1-v1/NANOAODSIM"
 
 WWZTo3L1Nu2Q_2018 = sample(ROOT.kOrange-4, 1, 1001, "WWZTo3L1Nu2Q", "WWZTo3L1Nu2Q_2018")
 WWZTo3L1Nu2Q_2018.sigma =  0.008039#pb
@@ -1446,18 +1446,18 @@ WWZTo3L1Nu2Q_2018.dataset = "/WWZTo3L1Nu2Q_4f_TuneCP5_13TeV_amcatnlo_pythia8/"+t
 WZZ_2018 = sample(ROOT.kOrange-4, 1, 1001, "WZZ", "WZZ_2018")
 WZZ_2018.sigma =  0.05565#pb
 WZZ_2018.year = 2018
-WZZ_2018.dataset = "/WZZ_TuneCP5_13TeV-amcatnlo-pythia8/"+tag_2018+"ext1-v1/NANOAODSIM"
+WZZ_2018.dataset = "/WZZ_TuneCP5_13TeV-amcatnlo-pythia8/"+tag_2018+"_ext1-v1/NANOAODSIM"
 
 
 ZZZ_2018 = sample(ROOT.kOrange-4, 1, 1001, "ZZZ", "ZZZ_2018")
 ZZZ_2018.sigma =  0.013989#pb
 ZZZ_2018.year = 2018
-ZZZ_2018.dataset = "/ZZZ_TuneCP5_13TeV-amcatnlo-pythia8/"+tag_2018+"ext1-v1/NANOAODSIM"
+ZZZ_2018.dataset = "/ZZZ_TuneCP5_13TeV-amcatnlo-pythia8/"+tag_2018+"_ext1-v1/NANOAODSIM"
 
 WWG_2018 = sample(ROOT.kOrange-4, 1, 1001, "WWG", "WWG_2018")
 WWG_2018.sigma =  0.2147#pb
 WWG_2018.year = 2018
-WWG_2018.dataset = "/WWG_TuneCP5_13TeV-amcatnlo-pythia8/"+tag_2018+"ext1-v1/NANOAODSIM"
+WWG_2018.dataset = "/WWG_TuneCP5_13TeV-amcatnlo-pythia8/"+tag_2018+"_ext1-v1/NANOAODSIM"
 
 Other_2018 = sample(ROOT.kOrange-4, 1, 1001, "Other", "Other_2018")
 Other_2018.year = 2018
