@@ -215,15 +215,15 @@ for sample in samples:
         print("Submitting crab jobs...")
         os.system("crab submit -c crab_cfg.py")
 
-    if purge:
-        print("Purging crab jobs...")
-        os.system("crab purge -d crab_" + sample.label)
-        os.system("rm -rf crab_" + sample.label)
-
     if kill:
         print("Killing crab jobs...")
         os.system("crab kill -d crab_" + sample.label)
         #os.system("rm -rf crab_" + sample.label)
+
+    if purge:
+        print("Purging crab jobs...")
+        os.system("crab purge -d crab_" + sample.label)
+        os.system("rm -rf crab_" + sample.label)
 
     if resubmit:
         print("Resubmitting crab jobs...")
