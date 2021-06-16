@@ -1171,7 +1171,7 @@ QCD_2018.components = [QCDHT_100to200_2018, QCDHT_200to300_2018, QCDHT_300to500_
 ################################ ZZ ################################
 ZZTo2L2Nu_2018 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "ZZTo2L2Nu_2018")
 ZZTo2L2Nu_2018.year = 2018
-ZZTo2L2Nu_2018.dataset = "/ZZTo2L2Nu_13TeV_powheg_pythia8/" + tag_2018 + "-v1/NANOAODSIM"
+ZZTo2L2Nu_2018.dataset = "/ZZTo2L2Nu_TuneCP5_13TeV_powheg_pythia8/" + tag_2018 + "_ext1-v1/NANOAODSIM"
 ZZTo2L2Nu_2018.sigma = 0.5644 #pb                                                     
 
 ZZJJTo4L_EWK_2018 = sample(ROOT.kGray+2, 1, 1001, "ZZ", "ZZJJTo4L_EWK_2018")
