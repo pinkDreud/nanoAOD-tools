@@ -1387,7 +1387,7 @@ GluGluHToZZTo2L2Q_2018.dataset = "/GluGluHToZZTo2L2Q_M125_13TeV_powheg2_JHUGenV7
 GluGluHToZZTo4L_2018 = sample(ROOT.kAzure-9, 1, 1001, "GluGluHToZZTo4L", "GluGluHToZZTo4L_2018")
 GluGluHToZZTo4L_2018.sigma =  28.87#pb
 GluGluHToZZTo4L_2018.year = 2018
-GluGluHToZZTo4L_2018.dataset = "/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUGenV7011_pythia8/"+tag_2018+"_ext3-v1/NANOAODSIM"
+GluGluHToZZTo4L_2018.dataset = "/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUGenV7011_pythia8/"+tag_2018+"-v1/NANOAODSIM"
 
 GluGluHToTauTau_2018 = sample(ROOT.kAzure-9, 1, 1001, "GluGluHToTauTau", "GluGluHToTauTau_2018")
 GluGluHToTauTau_2018.sigma =  30.52#pb
@@ -2636,6 +2636,7 @@ sample_dict={
 
 condor_dict={
     'WpWpJJ_QCD_2017':WpWpJJ_QCD_2017,
+    'VBS_SSWW_SM_2017':VBS_SSWW_SM_2017,
     'VBS_SSWW_DIM6_SM_2017':VBS_SSWW_DIM6_SM_2017,
     'VBS_SSWW_FS0_25_SM_2017':VBS_SSWW_FS0_25_SM_2017,
     'VBS_SSWW_FS0_5_SM_2017':VBS_SSWW_FS0_5_SM_2017,

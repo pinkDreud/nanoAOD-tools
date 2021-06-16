@@ -65,6 +65,7 @@ parser.add_option('--max', dest='maxj', type=int, default = 0, help='Please ente
 parser.add_option('-c', dest='check', default = False, action='store_true', help='Default executes condorrun')
 parser.add_option('-d', dest='dat', type=str, default = 'all', help='Default is all')
 parser.add_option('--rw', dest='rw', default = False, action='store_true', help='Rewrite the files if not are all condored for a specific sample')
+parser.add_option('--try', dest='tryy', default = False, action='store_true', help='Rewrite the files if not are all condored for a specific sample')
 parser.add_option('--nodata', dest='nodata', default = False, action='store_true', help='Not processing Data files')
 
 (opt, args) = parser.parse_args()
@@ -154,8 +155,10 @@ for prname, proc in condor_dict.items():
                     if os.path.exists(path+sample.label):
                         print("Setting jobs for missing condored files...")
                     print("Writing " + sample.label + " in csh...")
-                    f.write("python submit_condor.py -d " + sample.label+ " " + optstring)
-
+                    if not opt.tryy:
+                        f.write("python submit_condor.py -d " + sample.label+ " " + optstring)
+                    else:
+                        f.write("python submit_condor_try.py -d " + sample.label+ " " + optstring)
             else:
                 print(sample.label, " completely condored")
 
@@ -179,8 +182,10 @@ for prname, proc in condor_dict.items():
                         print("Setting jobs for missing condored files...")
 
                 print("Writing " + proc.label + " in csh...")  
-                f.write("python submit_condor.py -d " + proc.label+ " " + optstring)
-
+                if not opt.tryy:
+                    f.write("python submit_condor.py -d " + proc.label+ " " + optstring)
+                else:
+                    f.write("python submit_condor_try.py -d " + proc.label+ " " + optstring)
         else:
             print(proc.label, " completely condored")
 
