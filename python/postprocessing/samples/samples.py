@@ -1412,7 +1412,7 @@ ttHToNonbb_2018.dataset = "/ttHToNonbb_M125_TuneCP5_13TeV-powheg-pythia8/"+tag_2
 VHToNonbb_2018 = sample(ROOT.kAzure-9, 1, 1001, "VHToNonbb", "VHToNonbb_2018")
 VHToNonbb_2018.sigma =  2.127#pb
 VHToNonbb_2018.year = 2018
-VHToNonbb_2018.dataset = " /VHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8/"+tag_2018+"-v1/NANOAODSIM"
+VHToNonbb_2018.dataset = "/VHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8/"+tag_2018+"-v1/NANOAODSIM"
 
 WrongSign_2018 = sample(ROOT.kAzure-9, 1, 1001, "Leptonic t#bar{t} + WS", "WrongSign_2018")
 WrongSign_2018.year = 2018
