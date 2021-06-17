@@ -211,6 +211,8 @@ def mergepart(dataset):
                # insert BDT output value into merged file
                print("Processing events with Tommaso's BDT...")
                file_path = filerepo + sample.label + "/"  + sample.label + "_merged.root"
+               file_path_cp = filerepo + sample.label + "/"  + sample.label + "_merged_bu.root"
+               os.system("cp " + file_path + " " + file_path_cp)
                #print(file_path)
           
                model_SM_path = opt.model_SM
