@@ -32,6 +32,8 @@ wopstring = ''
 #else:
 #    wopstring = 'noprompt'
 
+print(opt.dat)
+
 def sub_writer(sample, n, files, folder):
     f = open("condor.sub", "w")
     f.write("Proxy_filename          = x509up\n")
@@ -57,6 +59,7 @@ if not(opt.dat in sample_dict.keys()):
     print(sample_dict.keys())
 dataset = sample_dict[opt.dat]
 samples = []
+
 
 if hasattr(dataset, 'components'): # How to check whether this exists or not
     samples = [sample for sample in dataset.components]# Method exists and was used.
@@ -90,6 +93,7 @@ for sample in samples:
         isMC = False
     if not os.path.exists(opath):#"/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/" + sample.label):
         os.makedirs(opath)#"/eos/home-" + inituser + "/" + username +"/VBS/nosynch/" + folder + "/" + sample.label)
+    print(sample.label, sample.name)
     f = open("../../crab/macros/files/" + sample.name + ".txt", "r")
     files_list = f.read().splitlines()
     print(str(len(files_list)))

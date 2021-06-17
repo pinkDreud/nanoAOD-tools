@@ -14,7 +14,7 @@ def CondoredList(samplename):
 
     if len(condlist) > 0:
         for condfile in condlist:
-            if not samplename.startswith('DY') and os.stat(path+samplename+"/"+condfile).st_size < 1024.:
+            if os.stat(path+samplename+"/"+condfile).st_size < 1024.:
                 print("Something went wrong during condoring", samplename, "fix it and relaunch")
                 os.system("rm -r "+ path + samplename + "/*")            
                 return CondoredList(samplename)
@@ -127,7 +127,7 @@ for prname, proc in condor_dict.items():
 
     if opt.year not in prname:
         continue
-    if "Fake" in prname or prname.startswith("DataMET") or prname.startswith('DataHT') or '_BSM_INT_' in prname or prname.startswith('DY'):
+    if "Fake" in prname or prname.startswith("DataMET") or prname.startswith('DataHT') or '_BSM_INT_' in prname:# or prname.startswith('DY'):
         continue
         
     toLaunch = True
@@ -141,6 +141,9 @@ for prname, proc in condor_dict.items():
             if opt.dat != 'all':
                 if not (str(sample.label).startswith(opt.dat) or prname.startswith(opt.dat)):
                     continue
+                else:
+                    print(sample.label)
+
             if not DoesSampleExist(sample.name):
                 continue
                 #if sample.label in dirlist:
@@ -167,6 +170,8 @@ for prname, proc in condor_dict.items():
         if opt.dat != 'all':
             if not prname.startswith(opt.dat):
                 continue
+            else:
+                print(prname)
 
         if not DoesSampleExist(proc.name):
             continue

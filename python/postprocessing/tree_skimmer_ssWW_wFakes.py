@@ -199,13 +199,13 @@ var_list = []
 #++        dim8 operator         ++
 #++++++++++++++++++++++++++++++++++
 
-#if IsDim8:
-w_dim8             =   array.array('f', [-999.])
-w_neg              =   array.array('f', [-999.])
-w_pos              =   array.array('f', [-999.])
-var_list.append(w_dim8)
-var_list.append(w_neg)
-var_list.append(w_pos)
+if IsDim8:
+    w_dim8             =   array.array('f', [-999.])
+    w_neg              =   array.array('f', [-999.])
+    w_pos              =   array.array('f', [-999.])
+    var_list.append(w_dim8)
+    var_list.append(w_neg)
+    var_list.append(w_pos)
     
 #++++++++++++++++++++++++++++++++++
 #++         All category         ++
@@ -489,7 +489,7 @@ pass_lepton_veto            =   array.array('i', [0])
 pass_tau_selection          =   array.array('i', [0])
 pass_tau_vsJetWP            =   array.array('i', [0])
 pass_charge_selection       =   array.array('i', [0])
-pass_jet_selection          =   Array.array('i', [0])
+pass_jet_selection          =   array.array('i', [0])
 pass_b_veto                 =   array.array('i', [0])
 pass_mjj_cut                =   array.array('i', [0])
 pass_MET_cut                =   array.array('i', [0])
@@ -517,11 +517,11 @@ w_PDF_all = array.array('f', [0.]*110)#
 w_nominal_all = array.array('f', [0.])
 
 #w_dim8
-#if IsDim8:
-systTree.branchTreesSysts(trees, "all", "w_dim8",            outTreeFile, w_dim8)
-systTree.branchTreesSysts(trees, "all", "w_pos",            outTreeFile, w_pos)
-systTree.branchTreesSysts(trees, "all", "w_neg",            outTreeFile, w_neg)
-
+if IsDim8:
+    systTree.branchTreesSysts(trees, "all", "w_dim8",            outTreeFile, w_dim8)
+    systTree.branchTreesSysts(trees, "all", "w_pos",            outTreeFile, w_pos)
+    systTree.branchTreesSysts(trees, "all", "w_neg",            outTreeFile, w_neg)
+    
 #branches added for ssWW analysis
 #lepton
 systTree.branchTreesSysts(trees, "all", "lepton_pt",            outTreeFile, lepton_pt)

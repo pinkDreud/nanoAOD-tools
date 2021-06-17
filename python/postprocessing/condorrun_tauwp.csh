@@ -1,1 +1,1 @@
-python submit_condor_try.py -d VBS_SSWW_TL_SM_2017  -f v95 --wpjet VT --wpele VL --wpmu T
+python submit_condor.py -d TT_SemiLep2017  -f v90 --wpjet VT --wpele VL --wpmu T
