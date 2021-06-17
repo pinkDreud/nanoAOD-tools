@@ -141,8 +141,6 @@ for prname, proc in condor_dict.items():
             if opt.dat != 'all':
                 if not (str(sample.label).startswith(opt.dat) or prname.startswith(opt.dat)):
                     continue
-                else:
-                    print(sample.label)
 
             if not DoesSampleExist(sample.name):
                 continue
@@ -170,8 +168,6 @@ for prname, proc in condor_dict.items():
         if opt.dat != 'all':
             if not prname.startswith(opt.dat):
                 continue
-            else:
-                print(prname)
 
         if not DoesSampleExist(proc.name):
             continue
