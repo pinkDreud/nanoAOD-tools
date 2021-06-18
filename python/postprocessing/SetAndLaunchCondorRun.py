@@ -67,6 +67,8 @@ parser.add_option('-d', dest='dat', type=str, default = 'all', help='Default is 
 parser.add_option('--rw', dest='rw', default = False, action='store_true', help='Rewrite the files if not are all condored for a specific sample')
 parser.add_option('--try', dest='tryy', default = False, action='store_true', help='Rewrite the files if not are all condored for a specific sample')
 parser.add_option('--nodata', dest='nodata', default = False, action='store_true', help='Not processing Data files')
+parser.add_option('--ch', dest='channel', type=str, default = 'ltau', help='Select final state, default is h_tau + lepton')
+
 
 (opt, args) = parser.parse_args()
 
@@ -105,14 +107,27 @@ print(opt.dat)
 if opt.fold == '':
     folder = "Eff_Jet" + opt.jetwp + "_Mu" + opt.muwp + "_Ele" + opt.elewp
 else:
-    folder = opt.fold
+    folder = opt.fold + "/" + opt.channel
 
-path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/"
+path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/" + opt.channel + "/"
+print(path)
+
+subpy = ""
+optstring = " -f " + folder # + " --wpjet " + str(opt.jetwp) + " --wpele " + str(opt.elewp) + " --wpmu " + str(opt.muwp)# + " --wop"
+
+if opt.tryy:
+    subpy = "submit_condor_try.py"
+    if opt.channel == "ltau":
+        optstring += " --wpjet " + str(opt.jetwp) + " --wpele " + str(opt.elewp) + " --wpmu " + str(opt.muwp)
+elif opt.channel == "ltau":
+    subpy = "submit_condor.py"
+    optstring += " --wpjet " + str(opt.jetwp) + " --wpele " + str(opt.elewp) + " --wpmu " + str(opt.muwp)
+elif opt.channel == "emu":
+    subpy = "diet_submit_condor.py"
 
 if not os.path.exists(path):
     os.makedirs(path)
 
-optstring = " -f " + folder + " --wpjet " + str(opt.jetwp) + " --wpele " + str(opt.elewp) + " --wpmu " + str(opt.muwp)# + " --wop"
 if opt.maxj > 0:
     optstring = optstring + " --max " + str(opt.maxj)
 optstring = optstring + "\n"
@@ -152,14 +167,12 @@ for prname, proc in condor_dict.items():
             if not AreAllCondored(sample.name, sample.label):
                 if opt.check:
                     print(sample.label, "not completely condored")
+                    print("python " + subpy + " -d " + sample.label+ " " + optstring)
                 else:
                     if os.path.exists(path+sample.label):
                         print("Setting jobs for missing condored files...")
                     print("Writing " + sample.label + " in csh...")
-                    if not opt.tryy:
-                        f.write("python submit_condor.py -d " + sample.label+ " " + optstring)
-                    else:
-                        f.write("python submit_condor_try.py -d " + sample.label+ " " + optstring)
+                    f.write("python " + subpy + " -d " + sample.label+ " " + optstring)
             else:
                 print(sample.label, " completely condored")
 
@@ -178,15 +191,14 @@ for prname, proc in condor_dict.items():
         if not AreAllCondored(proc.name, proc.label):
             if opt.check:
                 print(proc.label, "not completely condored")
+                print("python " + subpy + " -d " + proc.label + " " + optstring)
             else:
                 if os.path.exists(path+proc.label):
                         print("Setting jobs for missing condored files...")
 
                 print("Writing " + proc.label + " in csh...")  
-                if not opt.tryy:
-                    f.write("python submit_condor.py -d " + proc.label+ " " + optstring)
-                else:
-                    f.write("python submit_condor_try.py -d " + proc.label+ " " + optstring)
+                f.write("python " + subpy + " -d " + proc.label+ " " + optstring)
+
         else:
             print(proc.label, " completely condored")
 
