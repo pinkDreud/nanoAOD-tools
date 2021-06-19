@@ -59,7 +59,9 @@ def AreThereDuplicates(sample, isData, nev):
         maxEvents = tree.GetEntries()
         
     perc = 0
-
+    lepList = []
+    tauList = []
+        
     for i in range(maxEvents):
             
         if i*1.0/maxEvents*100 > perc: 
@@ -70,14 +72,11 @@ def AreThereDuplicates(sample, isData, nev):
         tau         = Object(event, "tau")
         met         = Object(event, "MET")
        
-        lepList = []
-        tauList = []
-        
         if lepton.pt <0 or tau.pt<0: continue
-
+        #print(lepList)
         thisLep = [lepton.pdgid, lepton.pt, lepton.eta, lepton.phi]
         thisTau = [tau.DecayMode, tau.pt, tau.eta, tau.phi]
-
+        
         if thisLep in lepList:
             print("We've found this exact lepton!", '\n', 'Insert 1/True if you want to search for the tau too, 0/False if you do not want')
             goForTau = Input()
@@ -94,5 +93,6 @@ def AreThereDuplicates(sample, isData, nev):
 
 
 AreThereDuplicates("/eos/home-a/apiccine/VBS/nosynch/v90/ltau/DataMuB_2017/DataMuB_2017_part0.root", True, 'all')
+#AreThereDuplicates("/eos/home-a/apiccine/VBS/nosynch/v90/ltau/DataMuB_2017/DataMuB_2017_part0.root", True, 10)
 
 
