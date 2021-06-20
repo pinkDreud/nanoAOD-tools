@@ -57,6 +57,8 @@ parser.add_option('--signal', dest='signal', default = False, action='store_true
 parser.add_option('--model_SM', dest='model_SM', default = '/afs/cern.ch/user/t/ttedesch/public/gradBDT_SM.p', type='string', help='Path to ML model for SM analysis')
 parser.add_option('--model_dim6', dest='model_dim6', default = '/afs/cern.ch/user/t/ttedesch/public/gradBDT_dim6.p', type='string', help='Path to ML model for dim6 analysis')
 parser.add_option('--model_dim8', dest='model_dim8', default = '/afs/cern.ch/user/t/ttedesch/public/gradBDT_dim8.p', type='string', help='Path to ML model for dim8 analysis')
+parser.add_option('--ch', dest='channel', type=str, default = 'ltau', help='Select final state, default is h_tau + lepton')
+
 
 (opt, args) = parser.parse_args()
 #print (opt, args)
@@ -66,10 +68,13 @@ def cutToTag(cut):
     newstring = cut.replace("-", "neg").replace(">=","_GE_").replace(">","_G_").replace(" ","").replace("&&","_AND_").replace("||","_OR_").replace("<=","_LE_").replace("<","_L_").replace(".","p").replace("(","").replace(")","").replace("==","_EQ_").replace("!=","_NEQ_").replace("=","_EQ_").replace("*","_AND_").replace("+","_OR_")
     return newstring
 
-folder = opt.folder
+folder = opt.folder + "/" + opt.channel
+pfolder = opt.folder
 
 filerepo = '/eos/home-'+opt.user[0]+'/'+opt.user+'/VBS/nosynch/' + folder + '/'
-plotrepo = '/eos/home-'+opt.user[0]+'/'+opt.user+'/VBS/nosynch/' + folder + '/'
+plotrepo = '/eos/home-'+opt.user[0]+'/'+opt.user+'/VBS/nosynch/' + pfolder + '/'
+
+print(filerepo, plotrepo)
 
 FRtag = opt.wfake.split("_")[-1]
 print("FRtag:", FRtag)
@@ -82,61 +87,68 @@ else:
 
 cut = opt.cut #default cut must be obvious, for example 1.
 
+if opt.channel=="ltau":
+    epdgstr = "lepton"
+    mpdgstr = "lepton"
+elif opt.channel=="emu":
+    epdgstr = "electron"
+    mpdgstr = "muon"
+
 if opt.bveto:
-     cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_upToBVeto==1)*(" + cut + ")", 
-                 'electron':"(abs(lepton_pdgid)==11&&pass_upToBVeto==1)*(" + cut + ")", 
-                 'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_upToBVeto==1)*(" + cut + ")", 
+     cut_dict = {'muon':"(abs(" + mpdgstr + "_pdgid)==13&&pass_upToBVeto==1)*(" + cut + ")", 
+                 'electron':"(abs(" + epdgstr + "_pdgid)==11&&pass_upToBVeto==1)*(" + cut + ")", 
+                 'incl':"((abs(" + mpdgstr + "_pdgid)==13||abs(" + epdgstr + "_pdgid)==11)&&pass_upToBVeto==1)*(" + cut + ")", 
           }
      cut_tag = 'selection_upto_bveto'
      if opt.cut != "1.":
           cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut) 
 
 elif opt.sr:
-     cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_upToBVeto==1&&m_jj>500.&&MET_pt>40.)*(" + cut + ")", 
-                 'electron':"(abs(lepton_pdgid)==11&&pass_upToBVeto==1&&m_jj>500.&&MET_pt>40.)*(" + cut + ")", 
-                 'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_upToBVeto==1&&m_jj>500.&&MET_pt>40.)*(" + cut + ")", 
+     cut_dict = {'muon':"(abs(" + mpdgstr + "_pdgid)==13&&pass_upToBVeto==1&&m_jj>500.&&MET_pt>40.)*(" + cut + ")", 
+                 'electron':"(abs(" + epdgstr + "_pdgid)==11&&pass_upToBVeto==1&&m_jj>500.&&MET_pt>40.)*(" + cut + ")", 
+                 'incl':"((abs(" + mpdgstr + "_pdgid)==13||abs(" + epdgstr + "_pdgid)==11)&&pass_upToBVeto==1&&m_jj>500.&&MET_pt>40.)*(" + cut + ")", 
           }
      cut_tag = 'SR'
      if opt.cut != "1.":
           cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut) 
 
 elif opt.ttbar:
-     cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&pass_jet_selection==1MET_pt>50.)*(" + cut + ")", 
-                 'electron':"(abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.)*(" + cut + ")", 
-                 'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&pass_jet_selection==1&&MET_pt>50.)*(" + cut + ")", 
+     cut_dict = {'muon':"(abs(" + mpdgstr + "_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&pass_jet_selection==1MET_pt>50.)*(" + cut + ")", 
+                 'electron':"(abs(" + epdgstr + "_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&MET_pt>50.)*(" + cut + ")", 
+                 'incl':"((abs(" + mpdgstr + "_pdgid)==13||abs(" + epdgstr + "_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==0&&pass_b_veto==0&&pass_jet_selection==1&&MET_pt>50.)*(" + cut + ")", 
           }
      cut_tag = 'ttbar_CR'
      if opt.cut != "1.":
           cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut)           
 elif opt.wjets:
-     cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&pass_jet_selection==1&&MET_pt<=50.&&mT_lep_MET>50.)*(" + cut + ")", 
-                 'electron':"(abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&pass_jet_selection==1&&MET_pt<=50.&&mT_lep_MET>50.)*(" + cut + ")",
-                 'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&pass_jet_selection==1&&MET_pt<=50.&&mT_lep_MET>50.)*(" + cut + ")",
+     cut_dict = {'muon':"(abs(" + mpdgstr + "_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&pass_jet_selection==1&&MET_pt<=50.&&mT_lep_MET>50.)*(" + cut + ")", 
+                 'electron':"(abs(" + epdgstr + "_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&pass_jet_selection==1&&MET_pt<=50.&&mT_lep_MET>50.)*(" + cut + ")",
+                 'incl':"((abs(" + mpdgstr + "_pdgid)==13||abs(" + epdgstr + "_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_b_veto==1&&pass_jet_selection==1&&MET_pt<=50.&&mT_lep_MET>50.)*(" + cut + ")",
           }
      cut_tag = 'wjets_CR'
      if opt.cut != "1.":
           cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut)           
 elif opt.qcd:
-     cut_dict = {'muon':"(abs(lepton_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&MET_pt<=50.&&mT_lep_MET<50.)*(" + cut + ")", 
-                 'electron':"(abs(lepton_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&MET_pt<=50.&&mT_lep_MET<50.)*(" + cut + ")",
-                 'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&MET_pt<=50.&&mT_lep_MET<50.)*(" + cut + ")",
+     cut_dict = {'muon':"(abs(" + mpdgstr + "_pdgid)==13&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&MET_pt<=50.&&mT_lep_MET<50.)*(" + cut + ")", 
+                 'electron':"(abs(" + epdgstr + "_pdgid)==11&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&MET_pt<=50.&&mT_lep_MET<50.)*(" + cut + ")",
+                 'incl':"((abs(" + mpdgstr + "_pdgid)==13||abs(" + epdgstr + "_pdgid)==11)&&pass_lepton_selection==1&&pass_tau_selection==1&&pass_lepton_veto==1&&pass_charge_selection==1&&pass_jet_selection==1&&MET_pt<=50.&&mT_lep_MET<50.)*(" + cut + ")",
           }
      cut_tag = 'QCD_CR'
      if opt.cut != "1.":
           cut_tag = cut_tag+ '_AND_' + cutToTag(opt.cut)           
 elif opt.sel:
-     cut_dict = {'muon':"(abs(lepton_pdgid)==13)*(" + cut + ")*(pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1)", 
-                 'electron':"(abs(lepton_pdgid)==11)*(" + cut + ")*(pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1)", 
-                 'incl':"((abs(lepton_pdgid)==13||abs(lepton_pdgid)==11))*(" + cut + ")*(pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1)", 
+     cut_dict = {'muon':"(abs(" + mpdgstr + "_pdgid)==13)*(" + cut + ")*(pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1)", 
+                 'electron':"(abs(" + epdgstr + "_pdgid)==11)*(" + cut + ")*(pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1)", 
+                 'incl':"((abs(" + mpdgstr + "_pdgid)==13||abs(" + epdgstr + "_pdgid)==11))*(" + cut + ")*(pass_lepton_selection==1&&pass_lepton_veto==1&&pass_tau_selection==1&&pass_charge_selection==1&&pass_jet_selection==1&&pass_b_veto==1&&pass_mjj_cut==1&&pass_MET_cut==1)", 
           }
      cut_tag = "selection"
      if opt.cut != "1.":
           cut_tag = cut_tag + '_AND_' + cutToTag(opt.cut) 
 
 else:
-     cut_dict = {'muon':"abs(lepton_pdgid)==13&&(" + cut + ")",
-                 'electron':"abs(lepton_pdgid)==11&&(" + cut + ")",
-                 'incl':"(abs(lepton_pdgid)==13||abs(lepton_pdgid)==11)&&(" + cut + ")",
+     cut_dict = {'muon':"abs(" + mpdgstr + "_pdgid)==13&&(" + cut + ")",
+                 'electron':"abs(" + epdgstr + "_pdgid)==11&&(" + cut + ")",
+                 'incl':"(abs(" + mpdgstr + "_pdgid)==13||abs(" + epdgstr + "_pdgid)==11)&&(" + cut + ")",
      }
      cut_tag = cutToTag(opt.cut)
 
@@ -206,7 +218,7 @@ def mergepart(dataset):
           check = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + "_merged.root ")
           print("Number of entries of the file %s are %s" %(filerepo + sample.label + "/"  + sample.label + "_merged.root", (check.Get("events_all")).GetEntries()))
 
-          if not folder.startswith('FR'):
+          if not folder.startswith('FR') and opt.channel=='ltau':
               
                # insert BDT output value into merged file
                print("Processing events with Tommaso's BDT...")
@@ -405,6 +417,7 @@ def lumi_writer(dataset, lumi):
 
 
 def plot(lep, reg, variable, sample, cut_tag, syst=""):
+     print("in plotf")
      IsDim8 = False
      if sample.label.startswith("VBS_SSWW_F"):
          IsDim8 = True
@@ -421,26 +434,33 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
           countf.write(sample.label)
           countf.write("\nBin\tContent\tError")
 
+     if opt.channel=="ltau":
+         l1fstr = "lepton"
+         l2fstr = "tau"
+     elif opt.channel=="emu":
+         l1fstr = "electron"
+         l2fstr = "muon"
+
      if 'Fake' in str(sample.label):
           if not opt.folder.startswith('CTHT'):
                f1 = ROOT.TFile.Open(filerepo + sample.components[0].label + "/"  + sample.components[0].label + ".root")
           else:
                f1 = ROOT.TFile.Open(filerepo + sample.components[1].label + "/"  + sample.components[1].label + ".root")
           if str(sample.label).startswith('FakeEle_') or str(sample.label).startswith('FakeMu_'):
-               cut = cutbase + "*(lepton_LnTRegion==1||tau_LnTRegion==1)*(event_SFFake_" + str(FRtag)  + ")*(event_SFFake_" + str(FRtag)  + ">-1.)"
+               cut = cutbase + "*(" + l1fstr + "_LnTRegion==1||" + l2fstr + "_LnTRegion==1)*(event_SFFake_" + str(FRtag)  + ")*(event_SFFake_" + str(FRtag)  + ">-1.)"
           elif str(sample.label).startswith('FakeElePromptTau') or str(sample.label).startswith('FakeMuPromptTau'):
-               cut = cutbase + "*(lepton_LnTRegion==1&&tau_LnTRegion==0)*(event_SFFake_" + str(FRtag)  + ")*(event_SFFake_" + str(FRtag)  + ">-1.)"
+               cut = cutbase + "*(" + l1fstr + "_LnTRegion==1&&" + l2fstr + "_LnTRegion==0)*(event_SFFake_" + str(FRtag)  + ")*(event_SFFake_" + str(FRtag)  + ">-1.)"
           elif str(sample.label).startswith('PromptEleFakeTau') or str(sample.label).startswith('PromptMuFakeTau'):
-               cut = cutbase + "*(lepton_LnTRegion==0&&tau_LnTRegion==1)*(event_SFFake_" + str(FRtag)  + ")*(event_SFFake_" + str(FRtag)  + ">-1.)"
+               cut = cutbase + "*(" + l1fstr + "_LnTRegion==0&&" + l2fstr + "_LnTRegion==1)*(event_SFFake_" + str(FRtag)  + ")*(event_SFFake_" + str(FRtag)  + ">-1.)"
           elif str(sample.label).startswith('FakeEleFakeTau') or str(sample.label).startswith('FakeMuFakeTau'):
-               cut = cutbase + "*(lepton_LnTRegion==1&&tau_LnTRegion==1)*(event_SFFake_" + str(FRtag)  + ")*(event_SFFake_" + str(FRtag)  + ">-1.)"
+               cut = cutbase + "*(" + l1fstr + "_LnTRegion==1&&" + l2fstr + "_LnTRegion==1)*(event_SFFake_" + str(FRtag)  + ")*(event_SFFake_" + str(FRtag)  + ">-1.)"
 
      else:
           f1 = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + ".root")
-          cut = cutbase + "*(lepton_TightRegion==1&&tau_TightRegion==1)"
+          cut = cutbase + "*(" + l1fstr + "_TightRegion==1&&" + l2fstr + "_TightRegion==1)"
 
      if not ('Fake' in str(sample.label) or 'Data' in str(sample.label)):
-        cut = cut + "*(lepton_isPrompt==1&&tau_isPrompt==5)"
+        cut = cut + "*(" + l1fstr + "_isPrompt==1&&" + l2fstr + "_isPrompt==5)"
 
      nbins = variable._nbins
      histoname = "h_" + reg + "_" + variable._name + "_" + cut_tag
@@ -954,7 +974,7 @@ for year in years:
           cutbase = cut_dict[lep]
 
           variables.append(variabile('countings', 'countings', wzero+'*('+cutbase+')', 1, -0.5, 0.5))
-
+          '''
           variables.append(variabile('BDT_output_SM', 'SM BDT output', wzero+'*('+cutbase+')', 8, -2., 2.))
           variables.append(variabile('BDT_output_dim6', 'dim6 BDT output', wzero+'*('+cutbase+')', 8, -2., 2.))
           variables.append(variabile('BDT_output_dim8', 'dim8 BDT output', wzero+'*('+cutbase+')', 8, -2., 2.))
@@ -1015,7 +1035,7 @@ for year in years:
           variables.append(variabile('leadjet_eta', 'Lead jet #eta',  wzero+'*('+cutbase+')', 10, -2.5, 2.5))
           variables.append(variabile('leadjet_phi', 'Lead jet #Phi',  wzero+'*('+cutbase+')',  14, -3.50, 3.50))
 
-          '''
+
           bin_ak8leadjet_pt = array("f", [0., 100., 200., 300., 400., 500., 600., 800., 1200.])
           nbin_ak8leadjet_pt = len(bin_ak8leadjet_pt)-1
           variables.append(variabile('AK8leadjet_pt',  'AK8 Lead jet p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_ak8leadjet_pt, bin_ak8leadjet_pt))#30, 1500))
@@ -1043,7 +1063,7 @@ for year in years:
           variables.append(variabile('AK8subleadjet_tau21', 'AK8 Sublead jet #tau_{21}',  wzero+'*('+cutbase+')',  10, 0., 1.))
           variables.append(variabile('AK8subleadjet_tau32', 'AK8 Sublead jet #tau_{32}',  wzero+'*('+cutbase+')',  10, 0., 1.))
           variables.append(variabile('AK8subleadjet_tau43', 'AK8 Sublead jet #tau_{43}',  wzero+'*('+cutbase+')',  10, 0., 1.))
-          '''
+
           bin_subleadjet_pt = array("f", [0., 100., 250., 500.])
           nbin_subleadjet_pt = len(bin_subleadjet_pt) - 1
           variables.append(variabile('subleadjet_pt', 'Sublead jet p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_subleadjet_pt, bin_subleadjet_pt))#40, 30, 1000))
@@ -1135,7 +1155,7 @@ for year in years:
           variables.append(variabile('ptRel_lepj2', 'relative p_{T} l j_{2}',  wzero+'*('+cutbase+')', nbin_ptRel, bin_ptRel))
 
           variables.append(variabile('event_RT', 'R_{T}',  wzero+'*('+cutbase+')', 30, 0., 3.))
-
+          '''
           for sample in dataset_new:
                print(sample)
                if ('DataHT' in sample.label or 'DataMET' in sample.label) and not opt.folder.startswith("CTHT"):# or "WJets" in sample.label:
@@ -1155,13 +1175,13 @@ for year in years:
                                    tmp_f.close()
                          if (("GenPart" in var._name) or ("MC_" in var._name)) and "Data" in sample.label:
                               continue
-                         plot(lep, 'htau', var, sample, cut_tag, "")
+                         plot(lep, opt.channel, var, sample, cut_tag, "")
 
           if(opt.stack):
                for var in variables:
                     print(var._xmax)
                     #os.system('set LD_PRELOAD=libtcmalloc.so')
-                    makestack(lep, 'htau', var, dataset_new, cut_tag, "", lumi[str(year)])
+                    makestack(lep, opt.channel, var, dataset_new, cut_tag, "", lumi[str(year)])
                     #os.system('set LD_PRELOAD=libtcmalloc.so')
 
           if lep == 'muon':

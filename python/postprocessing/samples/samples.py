@@ -928,7 +928,7 @@ VBS_SSWW_FM6_5_INT_2017 = sample(ROOT.kGreen+3, 1, 1001, "f_{m6}/#Lambda^{4} = 5
 VBS_SSWW_FM6_5_INT_2017.sigma = 0.1191
 VBS_SSWW_FM6_5_INT_2017.year = 2017
 
-VBS_SSWW_FM6_5_2017 = sample(ROOT.kGreen+3, 1, 1001, "f_{m6}/#Lambda^{4} = 5 TeV^{-4}", "VBS_SSWW_FM6_SM_2017", "VBS_SSWW_aQGC_2017")
+VBS_SSWW_FM6_5_2017 = sample(ROOT.kGreen+3, 1, 1001, "f_{m6}/#Lambda^{4} = 5 TeV^{-4}", "VBS_SSWW_FM6_5_2017", "VBS_SSWW_aQGC_2017")
 VBS_SSWW_FM6_5_2017.year = 2017
 VBS_SSWW_FM6_5_2017.components = [VBS_SSWW_FM6_5_BSM_2017, VBS_SSWW_FM6_5_INT_2017]
 

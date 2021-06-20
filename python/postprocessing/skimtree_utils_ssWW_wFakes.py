@@ -522,7 +522,7 @@ def trig_map(HLT, PV, year, runPeriod):
     elif(year == 2018):
         if(HLT.IsoMu27 and HLT.IsoMu30 and HLT.Mu50):
             passMu = True
-        if(HLT.Ele35_WPTight_Gsf or HLT.Ele32_WPTight_Gsf_L1DoubleEG or HLT.Photon200):#HLT.Ele27_WPTight_Gsf or 
+        if(HLT.Ele35_WPTight_Gsf or HLT.Ele32_WPTight_Gsf_L1DoubleEG):# or HLT.Photon200):#HLT.Ele27_WPTight_Gsf or 
             passEle = True  
         if not(passMu or passEle) and not isGoodPV:
             noTrigger = True
@@ -534,6 +534,7 @@ def trig_map(HLT, PV, year, runPeriod):
    
     return (passMu and isGoodPV), (passEle and isGoodPV), (passHT and isGoodPV), noTrigger
 
+'''
 def trig_map_all(HLT, PV, year, runPeriod):
     isGoodPV = True#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
     passMu = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
@@ -573,6 +574,7 @@ def trig_map_all(HLT, PV, year, runPeriod):
         print('Wrong year! Please enter 2016, 2017, or 2018')
    
     return (passMu and isGoodPV), (passEle and isGoodPV), (passHT and isGoodPV), noTrigger
+'''
 
 def print_hist(infile, plotpath, hist, option = "HIST", log = False, stack = False, title = ""):
     if not(isinstance(hist, list)):

@@ -875,26 +875,18 @@ for i in range(tree.GetEntries()):
     #print("passEle:", passEle, "\tpassMu:", passMu)
 
     if ElMu:
-        #if not isMC:
-            #if dataMu:
-                #SingleEle = False
-                #SingleMu = True
-            #elif dataEle:
-                #SingleEle = True
-                #SingleMu = False
-        if True:#else:
-            for mu in muons:
-                if abs(mu.pt)>HighestLepPt:
-                    HighestLepPt=copy.deepcopy(mu.pt)
-                    SingleEle = False
-                    SingleMu = True
-                    break
-            for ele in electrons:
-                if abs(ele.pt)>HighestLepPt:
-                    HighestLepPt=copy.deepcopy(ele.pt)
-                    SingleEle = True
-                    SingleMu = False
-                    break
+        for mu in muons:
+            if abs(mu.pt)>HighestLepPt:
+                HighestLepPt=copy.deepcopy(mu.pt)
+                SingleEle = False
+                SingleMu = True
+                break
+        for ele in electrons:
+            if abs(ele.pt)>HighestLepPt:
+                HighestLepPt=copy.deepcopy(ele.pt)
+                SingleEle = True
+                SingleMu = False
+                break
     
     leptons = None
 
