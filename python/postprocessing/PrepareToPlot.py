@@ -12,6 +12,7 @@ parser.add_option('--rw', dest='rw', default = False, action = 'store_true', hel
 parser.add_option('-d', dest='dat', type=str, default = 'all', help='Default is all')
 parser.add_option('--fake', dest='isfake', default = False, action = 'store_true', help='Default runs for analysis, true for fake ratio')
 parser.add_option('--ct', dest='ct', type=str, default = '', help='Default is analysis, otherwise specified CT')
+parser.add_option('--ch', dest='channel', type=str, default = 'ltau', help='Select final state, default is h_tau + lepton')
 
 (opt, args) = parser.parse_args()
 
@@ -32,10 +33,12 @@ ofolder = ''
 #if opt.ct != '':
     #ofolder += "CT" + opt.ct + "_"
 
-ofolder += opt.folder
+ofolder += opt.folder# + "/"
 
-path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + ofolder + "/"
 
+path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + ofolder + "/" + opt.channel + "/"
+
+print(path)
 #dirlist = [dirs for dirs in os.listdir(path) if os.path.isdir(path+dirs) and opt.folder in dirs]
 #datas = opt.dataset + "_" + opt.year
 
@@ -122,9 +125,9 @@ for k, v in merge_dict.items():
         
         if mergable:
             if Debug:
-                print("python3 makeplot.py -y ", opt.year, " --mertree -d " + k + " --folder ", ofolder)
+                print("python3 makeplot.py -y ", opt.year, " --mertree -d " + k + " --folder "+ ofolder + " --ch " + opt.channel)
             else:
-                os.system("python3 makeplot.py -y " + opt.year + " --mertree -d " + k + " --folder " + ofolder)
+                os.system("python3 makeplot.py -y " + opt.year + " --mertree -d " + k + " --folder " + ofolder + " --ch " + opt.channel)
         else:
             print(k, "not mergable")
         continue
@@ -168,9 +171,9 @@ for k, v in merge_dict.items():
                 print("Merging and luming " + c.label + "...")
                 merging.append(True)
                 if Debug:
-                    print("python3 makeplot.py -y " + opt.year + " --merpart --lumi -d " + c.label + " --folder " + ofolder)
+                    print("python3 makeplot.py -y " + opt.year + " --merpart --lumi -d " + c.label + " --folder " + ofolder + " --ch " + opt.channel)
                 else:
-                    os.system("python3 makeplot.py -y " + opt.year + " --merpart --lumi -d " + c.label + " --folder " + ofolder)
+                    os.system("python3 makeplot.py -y " + opt.year + " --merpart --lumi -d " + c.label + " --folder " + ofolder + " --ch " + opt.channel)
                 print("Merged and lumied!")
             else:
                 print(c.label + " is already merged and lumied")
@@ -195,9 +198,9 @@ for k, v in merge_dict.items():
                     else:
                         os.system("rm -f "+kpath+k+".root")
                 if Debug:
-                    print("python3 makeplot.py -y ", opt.year, " --mertree -d " + k + " --folder ", ofolder)
+                    print("python3 makeplot.py -y ", opt.year, " --mertree -d " + k + " --folder "+ ofolder + " --ch " + opt.channel)
                 else:
-                    os.system("python3 makeplot.py -y " + opt.year + " --mertree -d " + k + " --folder " + ofolder)
+                    os.system("python3 makeplot.py -y " + opt.year + " --mertree -d " + k + " --folder " + ofolder + " --ch " + opt.channel)
         #else:
             #print k + "not ready to be merged"
     else:
@@ -231,9 +234,9 @@ for k, v in merge_dict.items():
             print(k + " neither merged nor lumied so far")
             print("Merging and luming " + k + "...")
             if Debug:
-                print("python3 makeplot.py -y ", opt.year, " --merpart --lumi --mertree -d " + k + " --folder ", ofolder)
+                print("python3 makeplot.py -y ", opt.year, " --merpart --lumi --mertree -d " + k + " --folder "+ ofolder + " --ch " + opt.channel)
             else:
-                os.system("python3 makeplot.py -y " + opt.year + " --merpart --lumi --mertree -d " + k + " --folder " + ofolder)
+                os.system("python3 makeplot.py -y " + opt.year + " --merpart --lumi --mertree -d " + k + " --folder " + ofolder + " --ch " + opt.channel)
             print("Merged and lumied!")
         else:
             print(k + " is already merged and lumied")

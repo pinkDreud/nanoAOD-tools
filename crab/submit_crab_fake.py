@@ -41,7 +41,7 @@ def cfg_writer(sample, isMC, outdir):
     f.write("config.JobType.allowUndistributedCMSSW = True\n")
     f.write("config.JobType.inputFiles = ['crab_script_fake.py','../scripts/haddnano.py', '../scripts/keep_and_drop.txt']\n") #hadd nano will not be needed once nano tools are in cmssw
     f.write("config.JobType.sendPythonFolder = True\n")
-    if isMC:
+    if True:#isMC:
         f.write("config.JobType.maxMemoryMB = 5000\n")         
         f.write("config.JobType.maxJobRuntimeMin = 2750\n")
         #f.write("config.JobType.numCores = 8\n")
@@ -58,7 +58,10 @@ def cfg_writer(sample, isMC, outdir):
             f.write("config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/ReReco/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_v1.txt'\n")
         elif sample.year == '2018':
             f.write("config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/13TeV/ReReco/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt'\n")
-        f.write("config.Data.unitsPerJob = 50\n")
+        if not sample.label.startswith("DataHT"):
+            f.write("config.Data.unitsPerJob = 50\n")
+        else:
+            f.write("config.Data.unitsPerJob = 1\n")
     #elif(('WJetsHT' in sample.label and not ('HT70to100' in sample.label or 'HT100to200' in sample.label or 'HT400to600' in sample.label)) or 'QCDHT' in sample.label):
         #f.write("config.Data.splitting = 'EventAwareLumiBased'\n")                            
         #f.write("config.Data.unitsPerJob = 50000\n")

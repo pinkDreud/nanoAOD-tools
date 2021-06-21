@@ -777,19 +777,18 @@ for i in range(tree.GetEntries()):
             continue
 
     if ElMu:
-        if True:#else:
-            for mu in muons:
-                if abs(mu.pt)>HighestLepPt:
-                    HighestLepPt    = copy.deepcopy(mu.pt)
-                    EleTrig         = False
-                    MuTrig          = True
-                    break
-            for ele in electrons:
-                if abs(ele.pt)>HighestLepPt:
-                    HighestLepPt    = copy.deepcopy(ele.pt)
-                    EleTrig         = True
-                    MuTrig          = False
-                    break
+        for mu in muons:
+            if abs(mu.pt)>HighestLepPt:
+                HighestLepPt    = copy.deepcopy(mu.pt)
+                EleTrig         = False
+                MuTrig          = True
+                break
+        for ele in electrons:
+            if abs(ele.pt)>HighestLepPt:
+                HighestLepPt    = copy.deepcopy(ele.pt)
+                EleTrig         = True
+                MuTrig          = False
+                break
 
     leptons = None
 

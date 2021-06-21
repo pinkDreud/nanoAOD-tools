@@ -109,7 +109,8 @@ if opt.fold == '':
 else:
     folder = opt.fold + "/" + opt.channel
 
-path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/" + opt.channel + "/"
+print(opt.fold, opt.channel, folder)
+path = "/eos/home-" + inituser + "/" + username + "/VBS/nosynch/" + folder + "/"
 print(path)
 
 subpy = ""
