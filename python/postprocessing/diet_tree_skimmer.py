@@ -558,6 +558,10 @@ systTree.branchTreesSysts(trees, "all", "ptRel_electronj2",                     
 systTree.branchTreesSysts(trees, "all", "ptRel_muonj1",                             outTreeFile, ptRel_muonj1)
 systTree.branchTreesSysts(trees, "all", "ptRel_muonj2",                             outTreeFile, ptRel_muonj2)
 
+#SFFake
+systTree.branchTreesSysts(trees, "all", "event_SFFake_vsjet2",                      outTreeFile, event_SFFake_vsjet2)
+systTree.branchTreesSysts(trees, "all", "event_SFFake_vsjet4",                      outTreeFile, event_SFFake_vsjet4)
+
 #other                                                                                    
 systTree.branchTreesSysts(trees, "all", "SF_Fake",                                  outTreeFile, SF_Fake)
 systTree.branchTreesSysts(trees, "all", "HLT_effLumi",                              outTreeFile, HLT_effLumi)

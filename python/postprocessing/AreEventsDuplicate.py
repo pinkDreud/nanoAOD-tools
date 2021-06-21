@@ -1,4 +1,4 @@
-import os, commands
+import os
 import sys
 import optparse
 import ROOT
@@ -61,7 +61,8 @@ def AreThereDuplicates(sample, isData, nev):
     perc = 0
     lepList = []
     tauList = []
-        
+    
+    lepList.append([-13, 56.51090621948242, -0.2803955078125, 0.67333984375])
     for i in range(maxEvents):
             
         if i*1.0/maxEvents*100 > perc: 
@@ -79,20 +80,19 @@ def AreThereDuplicates(sample, isData, nev):
         
         if thisLep in lepList:
             print("We've found this exact lepton!", '\n', 'Insert 1/True if you want to search for the tau too, 0/False if you do not want')
-            goForTau = Input()
+            goForTau = input()
             print('Searching for same tau: ', goForTau)
             if goForTau == 1 or goForTau == True:
                 if thisTau in tauList:
                     print("We've found this exact TAU! HOLY CAPPERONI", '\n')
         lepList.append(thisLep)
         tauList.append(thisTau)
+        if i<2: print(lepList)
 
 
 
 
-
-
-AreThereDuplicates("/eos/home-a/apiccine/VBS/nosynch/v90/ltau/DataMuB_2017/DataMuB_2017_part0.root", True, 'all')
+AreThereDuplicates("/eos/home-a/apiccine/VBS/nosynch/v90/ltau/DataMuB_2017/DataMuB_2017.root", True, 'all')
 #AreThereDuplicates("/eos/home-a/apiccine/VBS/nosynch/v90/ltau/DataMuB_2017/DataMuB_2017_part0.root", True, 10)
 
 
