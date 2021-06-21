@@ -561,7 +561,7 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
 def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
      #os.system('set LD_PRELOAD=libtcmalloc.so')
 
-     cmsreg = reg_.replace("htau", "#tau_{h}")
+     cmsreg = reg_.replace("ltau", "#tau_{h}")
 
      blind = False
      infile = {}
