@@ -757,7 +757,7 @@ for i in range(tree.GetEntries()):
     PV          = Object(event, "PV")
     HLT         = Object(event, "HLT")
     Flag        = Object(event, 'Flag')
-    met         = Object(event, "MET")
+    met         = Object(event, "PuppiMET")
     
     genpart = None
     
