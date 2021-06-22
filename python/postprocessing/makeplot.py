@@ -986,12 +986,14 @@ for year in years:
               
           wzero = 'w_nominal*PFSF*puSF*lepSF*tau_vsjet_SF*tau_vsele_SF*tau_vsmu_SF'
           cutbase = cut_dict[lep]
-          '''
+
           variables.append(variabile('countings', 'countings', wzero+'*('+cutbase+')', 1, -0.5, 0.5))
 
-          variables.append(variabile('BDT_output_SM', 'SM BDT output', wzero+'*('+cutbase+')', 8, -2., 2.))
-          variables.append(variabile('BDT_output_dim6', 'dim6 BDT output', wzero+'*('+cutbase+')', 8, -2., 2.))
-          variables.append(variabile('BDT_output_dim8', 'dim8 BDT output', wzero+'*('+cutbase+')', 8, -2., 2.))
+          variables.append(variabile('BDT_output_SM', 'SM BDT output', wzero+'*('+cutbase+')', 20, -10., 10.))#8, -2., 2.))
+          variables.append(variabile('BDT_output_dim6', 'dim6 BDT output', wzero+'*('+cutbase+')', 20, -10., 10.))#8, -2., 2.))
+          variables.append(variabile('BDT_output_dim8', 'dim8 BDT output', wzero+'*('+cutbase+')', 20, -10., 10.))#8, -2., 2.))
+
+          '''
           #variables.append(variabile('BDT_output_ele', 'eleBDT output', wzero+'*('+cutbase+')', 8, -2., 2.))
           #variables.append(variabile('BDT_output_mu', '#muBDT output', wzero+'*('+cutbase+')', 8, -2., 2.))
 
@@ -1131,11 +1133,12 @@ for year in years:
               variables.append(variabile('mT_leptau_MET', 'M_{T}(l,  ' + lep2[1] + ', MET) [GeV]',  wzero+'*('+cutbase+')', nbin_mTs, bin_mTs))
           elif opt.channel == "emu":
               variables.append(variabile('mT_' + lep12[0] + '_MET', 'M_{T}(' + lep12[1] + ', MET) [GeV]',  wzero+'*('+cutbase+')', nbin_mTs, bin_mTs))
-          '''
+
 
           #bin_deltaeta_jj = array("f", [0., 0.5, 1., 1.5, 2., 2.5, 3., 3.5, 4., 4.5, 5., 5.5, 6., 6.5, 7., 8., 9., 10.])
           #nbin_deltaeta_jj = len(bin_deltaeta_jj) - 1
           variables.append(variabile('deltaEta_jj', '#Delta #eta_{jj}',  wzero+'*('+cutbase+')', 32, -8., 8.))#nbin_deltaeta_jj, bin_deltaeta_jj))#
+          '''
           '''
           variables.append(variabile('deltaPhi_jj', '#Delta #phi_{jj}',  wzero+'*('+cutbase+')',  16, -4., 4.))
           variables.append(variabile('deltaPhi_' + lep12[0], '#Delta #phi_{' + lep12[1] + '}',  wzero+'*('+cutbase+')',  16, -4., 4.))
