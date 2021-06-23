@@ -16,30 +16,30 @@ dim8_points = [
     "0",
 ]
 
-vsJet = {"VVVL": 'VVVLoose',
-         "VVL": 'VVLoose',
-         "VL": 'VLoose',
-         "L": 'Loose',
-         "M": 'Medium',
-         "T": 'Tight',
-         "VT": 'VTight',
-         "VVT": 'VVTight',
+vsJet = {"VVVL":    'VVVLoose',
+         "VVL":     'VVLoose',
+         "VL":      'VLoose',
+         "L":       'Loose',
+         "M":       'Medium',
+         "T":       'Tight',
+         "VT":      'VTight',
+         "VVT":     'VVTight',
 }
 
-vsMu = {"VL": 'VLoose',
-        "L": 'Loose',
-        "M": 'Medium',
-        "T": 'Tight'
+vsMu = {"VL":       'VLoose',
+        "L":        'Loose',
+        "M":        'Medium',
+        "T":        'Tight'
 }
 
-vsEle = {"VVVL": 'VVVLoose',
-         "VVL": 'VVLoose',
-         "VL": 'VLoose',
-         "L": 'Loose',
-         "M": 'Medium',
-         "T": 'Tight',
-         "VT": 'VTight',
-         "VVT": 'VVTight',
+vsEle = {"VVVL":    'VVVLoose',
+         "VVL":     'VVLoose',
+         "VL":      'VLoose',
+         "L":       'Loose',
+         "M":       'Medium',
+         "T":       'Tight',
+         "VT":      'VTight',
+         "VVT":     'VVTight',
 }
 
 usage = "python diet_tree_skimmer.py [nome_del_sample_in_samples.py] 0 [file_in_input] local wpvsjet wpvsele wpvsmu"
@@ -113,16 +113,16 @@ for i in range(10):
     trees.append(None)
 #systZero = systWeights()
 # defining the operations to be done with the systWeights class
-maxSysts = 0
-addPDF = True
-addQ2 = False
-addTopPt = False
-addVHF = False
-addTTSplit = False
-addTopTagging = False
-addWTagging = False
-addTrigSF = False
-nPDF = 0
+maxSysts        = 0
+nPDF            = 0
+addPDF          = True
+addQ2           = False
+addTopPt        = False
+addVHF          = False
+addTTSplit      = False
+addTopTagging   = False
+addWTagging     = False
+addTrigSF       = False
 
 systTree = systWeights()
 systTree.prepareDefault(True, addQ2, addPDF, addTopPt, addVHF, addTTSplit)
