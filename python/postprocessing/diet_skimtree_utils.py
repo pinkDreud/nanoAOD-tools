@@ -441,36 +441,18 @@ def IsNotTheSameObject(obj1, obj2):
     return True
     
 
-def LepVetoOneCollection(GoodLepton, collection, relIsoCut, ptCut, etaCut, isMu):
+def DietLepVetoOneCollection(GoodLepton, collection, relIsoCut, ptCut, etaCut, isMu):
     i=0
-    #print("relisocut:", relIsoCut)
+
     for i in range(len(collection)):
         lep=collection[i]
         veto = False
-        '''
+
         if IsNotTheSameObject(GoodLepton, lep): 
             if isMu:
-                print(i, "pdgId:", abs(lep.pdgId), "pt:", lep.pt, "iso", lep.pfRelIso04_all, "eta", lep.eta)
-                if lep.pfRelIso04_all>=relIsoCut:#passa al prossimo se non passa la selezione loose su iso
-                    continue
-            else:
-                print(i, "pdgId:", abs(lep.pdgId), "pt:", lep.pt, "iso", lep.jetRelIso, "eta", lep.eta)
-                if lep.jetRelIso>=relIsoCut:#passa al prossimo se non passa la selezione loose su iso
-                    continue
-            if lep.pt<ptCut:#passa al prossimo se non passa la selezione loose su pt
-                continue
-            if abs(lep.eta)>etaCut:#passa al prossimo se non passa la selezione loose su eta
-                continue
-            veto = False
-            return veto
-        '''
-        if IsNotTheSameObject(GoodLepton, lep): 
-            if isMu:
-                #print(i, "pdgId:", abs(lep.pdgId), "pt:", lep.pt, "iso", lep.pfRelIso04_all, "eta", lep.eta)
                 if not (lep.pfRelIso04_all<relIsoCut and lep.pt>ptCut and abs(lep.eta)<etaCut and lep.looseId):
                     continue
             else:
-                #print(i, "pdgId:", abs(lep.pdgId), "pt:", lep.pt, "iso", lep.jetRelIso, "eta", lep.eta)
                 if not (lep.jetRelIso<relIsoCut and lep.pt>ptCut and abs(lep.eta)<etaCut and lep.mvaFall17V2Iso_WPL):
                     continue
 
@@ -480,12 +462,9 @@ def LepVetoOneCollection(GoodLepton, collection, relIsoCut, ptCut, etaCut, isMu)
     veto = True
     return veto
 
-
-    
-
-def LepVeto(GoodLepton, ElectronCollection, MuonCollection):
-    eleveto = LepVetoOneCollection(GoodLepton, ElectronCollection, REL_ISO_CUT_LEP_VETO_ELE, PT_CUT_LEP_VETO_ELE, ETA_CUT_LEP_VETO_ELE, False)
-    muveto = LepVetoOneCollection(GoodLepton, MuonCollection, REL_ISO_CUT_LEP_VETO_MU, PT_CUT_LEP_VETO_MU, ETA_CUT_LEP_VETO_MU, True)
+def DietLepVeto(GoodElectron, GoodMuon, ElectronCollection, MuonCollection):
+    eleveto = LepVetoOneCollection(GoodElectron, ElectronCollection, REL_ISO_CUT_LEP_VETO_ELE, PT_CUT_LEP_VETO_ELE, ETA_CUT_LEP_VETO_ELE, False)
+    muveto = LepVetoOneCollection(GoodMuon, MuonCollection, REL_ISO_CUT_LEP_VETO_MU, PT_CUT_LEP_VETO_MU, ETA_CUT_LEP_VETO_MU, True)
     return bool(eleveto and muveto)
 
 #semplifica la macro

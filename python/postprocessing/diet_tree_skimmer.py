@@ -837,6 +837,11 @@ for i in range(tree.GetEntries()):
     else:
         pass_lepton_selection[0] = 0
     
+    if DietLepVeto(tightele, tightmu, muons, electrons):
+        pass_lepton_veto[0] = 1
+    else:
+        pass_lepton_veto[0] = 0
+
     electron_pt[0]              =   tightele.pt
     electron_eta[0]             =   tightele.eta
     electron_phi[0]             =   tightele.phi
