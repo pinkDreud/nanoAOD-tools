@@ -1007,7 +1007,7 @@ for year in years:
         variables.append(variabile('BDT_output_dim6', 'dim6 BDT output', wzero+'*('+cutbase+')', 8, -2., 2.))#20, -10., 10.))
         variables.append(variabile('BDT_output_dim8', 'dim8 BDT output', wzero+'*('+cutbase+')', 8, -2., 2.))#20, -10., 10.))
 
-        '''
+
         #variables.append(variabile('BDT_output_ele', 'eleBDT output', wzero+'*('+cutbase+')', 8, -2., 2.))
         #variables.append(variabile('BDT_output_mu', '#muBDT output', wzero+'*('+cutbase+')', 8, -2., 2.))
         
@@ -1066,7 +1066,7 @@ for year in years:
 
         variables.append(variabile('leadjet_eta', 'Lead jet #eta',  wzero+'*('+cutbase+')', 10, -2.5, 2.5))
         variables.append(variabile('leadjet_phi', 'Lead jet #Phi',  wzero+'*('+cutbase+')',  14, -3.50, 3.50))
-        '''
+
         '''
         bin_ak8leadjet_pt = array("f", [0., 100., 200., 300., 400., 500., 600., 800., 1200.])
         nbin_ak8leadjet_pt = len(bin_ak8leadjet_pt)-1
@@ -1096,7 +1096,7 @@ for year in years:
         variables.append(variabile('AK8subleadjet_tau32', 'AK8 Sublead jet #tau_{32}',  wzero+'*('+cutbase+')',  10, 0., 1.))
         variables.append(variabile('AK8subleadjet_tau43', 'AK8 Sublead jet #tau_{43}',  wzero+'*('+cutbase+')',  10, 0., 1.))
         '''
-        '''
+
         bin_subleadjet_pt = array("f", [0., 100., 250., 500.])
         nbin_subleadjet_pt = len(bin_subleadjet_pt) - 1
         variables.append(variabile('subleadjet_pt', 'Sublead jet p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_subleadjet_pt, bin_subleadjet_pt))#40, 30, 1000))
@@ -1153,7 +1153,7 @@ for year in years:
         #bin_deltaeta_jj = array("f", [0., 0.5, 1., 1.5, 2., 2.5, 3., 3.5, 4., 4.5, 5., 5.5, 6., 6.5, 7., 8., 9., 10.])
         #nbin_deltaeta_jj = len(bin_deltaeta_jj) - 1
         variables.append(variabile('deltaEta_jj', '#Delta #eta_{jj}',  wzero+'*('+cutbase+')', 32, -8., 8.))#nbin_deltaeta_jj, bin_deltaeta_jj))#
-        '''
+
         '''
         variables.append(variabile('deltaPhi_jj', '#Delta #phi_{jj}',  wzero+'*('+cutbase+')',  16, -4., 4.))
         variables.append(variabile('deltaPhi_' + lep12[0], '#Delta #phi_{' + lep12[1] + '}',  wzero+'*('+cutbase+')',  16, -4., 4.))
@@ -1179,7 +1179,7 @@ for year in years:
         variables.append(variabile('deltaTheta_lepj1', 'cos(#Delta#theta_{l j_{1}})',  wzero+'*('+cutbase+')', 10, 0., 1.))
         variables.append(variabile('deltaTheta_lepj2', 'cos(#Delta#theta_{l j_{2}})',  wzero+'*('+cutbase+')', 10, 0., 1.))
         '''
-        '''
+
         bin_ptRel = array("f", [0., 25., 50., 75., 100., 125, 150., 200., 250., 300., 400., 500.])
         nbin_ptRel = len(bin_ptRel) - 1
         
@@ -1191,7 +1191,6 @@ for year in years:
         variables.append(variabile('ptRel_lepj2', 'relative p_{T} l j_{2}',  wzero+'*('+cutbase+')', nbin_ptRel, bin_ptRel))
         
         variables.append(variabile('event_RT', 'R_{T}',  wzero+'*('+cutbase+')', 30, 0., 3.))
-        '''
 
         for sample in dataset_new:
             print(sample)
@@ -1205,11 +1204,11 @@ for year in years:
                     if opt.count:
                         if not os.path.exists(pathplot + 'countings/'):
                             os.makedirs(pathplot + 'countings/')
-                            if not os.path.exists(pathplot + 'countings/' + cut_tag):
-                                os.makedirs(pathplot + 'countings/' + cut_tag)
-                            if not os.path.exists(pathplot + 'countings/' + cut_tag + "/" + var._name + ".txt"):
-                                tmp_f = open(pathplot + 'countings/' + cut_tag + "/" + var._name + ".txt", "w")
-                                tmp_f.close()
+                        if not os.path.exists(pathplot + 'countings/' + cut_tag):
+                            os.makedirs(pathplot + 'countings/' + cut_tag)
+                        if not os.path.exists(pathplot + 'countings/' + cut_tag + "/" + var._name + ".txt"):
+                            tmp_f = open(pathplot + 'countings/' + cut_tag + "/" + var._name + ".txt", "w")
+                            tmp_f.close()
                     if (("GenPart" in var._name) or ("MC_" in var._name)) and "Data" in sample.label:
                         continue
                     plot(lep, opt.channel, var, sample, cut_tag, "")

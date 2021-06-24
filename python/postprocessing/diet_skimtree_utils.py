@@ -463,8 +463,8 @@ def DietLepVetoOneCollection(GoodLepton, collection, relIsoCut, ptCut, etaCut, i
     return veto
 
 def DietLepVeto(GoodElectron, GoodMuon, ElectronCollection, MuonCollection):
-    eleveto = LepVetoOneCollection(GoodElectron, ElectronCollection, REL_ISO_CUT_LEP_VETO_ELE, PT_CUT_LEP_VETO_ELE, ETA_CUT_LEP_VETO_ELE, False)
-    muveto = LepVetoOneCollection(GoodMuon, MuonCollection, REL_ISO_CUT_LEP_VETO_MU, PT_CUT_LEP_VETO_MU, ETA_CUT_LEP_VETO_MU, True)
+    eleveto = DietLepVetoOneCollection(GoodElectron, ElectronCollection, REL_ISO_CUT_LEP_VETO_ELE, PT_CUT_LEP_VETO_ELE, ETA_CUT_LEP_VETO_ELE, False)
+    muveto = DietLepVetoOneCollection(GoodMuon, MuonCollection, REL_ISO_CUT_LEP_VETO_MU, PT_CUT_LEP_VETO_MU, ETA_CUT_LEP_VETO_MU, True)
     return bool(eleveto and muveto)
 
 #semplifica la macro
