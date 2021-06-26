@@ -1119,11 +1119,11 @@ for year in years:
         #variables.append(variabile('event_Zeppenfeld', 'event Zeppenfeld',  wzero+'*('+cutbase+')', 24, -6, 6))
         variables.append(variabile(lep1[0] + '_Zeppenfeld_over_deltaEta_jj', 'z_{l}',  wzero+'*('+cutbase+')', 12, -1.5, 1.5))
         
-        
+        '''        
         bin_taupt = array("f", [0., 50., 100., 200., 300., 500.])
         nbin_taupt = len(bin_taupt) - 1
         variables.append(variabile(lep2[0] + '_pt',  lep2[1] + ' p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_taupt, bin_taupt))
-        '''
+
         variables.append(variabile(lep2[0] + '_mass',  lep2[1] + ' mass [GeV]',  wzero+'*('+cutbase+')', 20, 0., 2.))
         '''
         variables.append(variabile(lep2[0] + '_eta', lep2[1] + ' #eta',  wzero+'*('+cutbase+')', 12, -3., 3.))
@@ -1199,14 +1199,14 @@ for year in years:
         
         variables.append(variabile('nJets', 'n jets',  wzero+'*('+cutbase+')',  11, -0.5, 10.5))
         variables.append(variabile('nBJets', 'n bjets (DeepJet M)',  wzero+'*('+cutbase+')',  6, -0.5, 5.5))
-        
+        '''
         if opt.blinded:
             bin_metpt = array("f", [0., 10., 20., 30., 40.])
         else:
             bin_metpt = array("f", [0., 20., 50., 100., 150., 200., 300., 500.])
         nbin_metpt = len(bin_metpt) - 1
         variables.append(variabile('MET_pt', 'p_{T}^{miss} [GeV]',  wzero+'*('+cutbase+')', nbin_metpt, bin_metpt))
-
+        '''
         if opt.sr:
             bin_mjj = array("f", [500., 600., 800., 1000., 1200., 2000.])
         else:
