@@ -297,8 +297,97 @@ def mergepart(dataset):
                 new_columns.append(i.split('[')[0])
             df.columns = new_columns
             
-            to_keep = ['lepton_pt', 'lepton_eta', 'lepton_phi', 'lepton_mass', 'lepton_pdgid', 'lepton_pfRelIso04', 'tau_pt', 'tau_eta', 'tau_phi', 'tau_mass', 'tau_DecayMode', 'tau_DeepTauVsEle_raw', 'tau_DeepTauVsMu_raw', 'tauleadTk_ptOverTau', 'tauleadTk_deltaPhi', 'tauleadTk_deltaEta', 'tauleadTk_Gamma', 'taujet_relpt', 'taujet_deltaPhi', 'taujet_deltaEta', 'taujet_HadGamma', 'taujet_EmGamma', 'taujet_HEGamma', 'leadjet_pt', 'leadjet_eta', 'leadjet_phi', 'leadjet_mass', 'leadjet_DeepFlv_b', 'leadjet_DeepCSVv2_b', 'AK8leadjet_pt', 'AK8leadjet_eta', 'AK8leadjet_phi', 'AK8leadjet_mass', 'AK8leadjet_tau21', 'AK8leadjet_tau32', 'AK8leadjet_tau43', 'leadjet_dRAK48', 'subleadjet_pt', 'subleadjet_eta', 'subleadjet_phi', 'subleadjet_mass', 'subleadjet_DeepFlv_b', 'subleadjet_DeepCSVv2_b', 'AK8subleadjet_pt', 'AK8subleadjet_eta', 'AK8subleadjet_phi', 'AK8subleadjet_mass', 'AK8subleadjet_tau21', 'AK8subleadjet_tau32', 'AK8subleadjet_tau43', 'subleadjet_dRAK48', 'nJets', 'MET_pt', 'MET_phi', 'm_jj', 'm_1T', 'm_o1', 'mT_lep_MET', 'mT_tau_MET', 'mT_leptau_MET', 'm_taulep', 'm_jjtau', 'm_jjtaulep', 'deltaPhi_jj', 'deltaPhi_taulep', 'deltaPhi_tauj1', 'deltaPhi_tauj2', 'deltaPhi_lepj1', 'deltaPhi_lepj2', 'deltaEta_jj', 'deltaEta_taulep', 'deltaEta_tauj1', 'deltaEta_tauj2', 'deltaEta_lepj1', 'deltaEta_lepj2', 'deltaTheta_jj', 'deltaTheta_taulep', 'deltaTheta_tauj1', 'deltaTheta_tauj2', 'deltaTheta_lepj1', 'deltaTheta_lepj2', 'ptRel_jj', 'ptRel_taulep', 'ptRel_tauj1', 'ptRel_tauj2', 'ptRel_lepj1', 'ptRel_lepj2', 'lepton_Zeppenfeld_over_deltaEta_jj', 'tau_Zeppenfeld_over_deltaEta_jj', 'event_Zeppenfeld_over_deltaEta_jj', 'event_RT']
-
+            to_keep = ['lepton_pt',
+                       'lepton_eta',
+                       'lepton_phi',
+                       'lepton_mass',
+                       'lepton_pdgid',
+                       'lepton_pfRelIso04',
+                       'tau_pt',
+                       'tau_eta',
+                       'tau_phi',
+                       'tau_mass',
+                       'tau_DecayMode',
+                       'tau_DeepTauVsEle_raw',
+                       'tau_DeepTauVsMu_raw',
+                       'tauleadTk_ptOverTau',
+                       'tauleadTk_deltaPhi',
+                       'tauleadTk_deltaEta',
+                       'tauleadTk_Gamma',
+                       'taujet_relpt',
+                       'taujet_deltaPhi',
+                       'taujet_deltaEta',
+                       'taujet_HadGamma',
+                       'taujet_EmGamma',
+                       'taujet_HEGamma',
+                       'leadjet_pt',
+                       'leadjet_eta',
+                       'leadjet_phi',
+                       'leadjet_mass',
+                       'leadjet_DeepFlv_b',
+                       'leadjet_DeepCSVv2_b',
+                       'AK8leadjet_pt',
+                       'AK8leadjet_eta',
+                       'AK8leadjet_phi',
+                       'AK8leadjet_mass',
+                       'AK8leadjet_tau21',
+                       'AK8leadjet_tau32',
+                       'AK8leadjet_tau43',
+                       'leadjet_dRAK48',
+                       'subleadjet_pt',
+                       'subleadjet_eta',
+                       'subleadjet_phi',
+                       'subleadjet_mass',
+                       'subleadjet_DeepFlv_b',
+                       'subleadjet_DeepCSVv2_b',
+                       'AK8subleadjet_pt',
+                       'AK8subleadjet_eta',
+                       'AK8subleadjet_phi',
+                       'AK8subleadjet_mass',
+                       'AK8subleadjet_tau21',
+                       'AK8subleadjet_tau32',
+                       'AK8subleadjet_tau43',
+                       'subleadjet_dRAK48',
+                       'nJets',
+                       'MET_pt',
+                       'MET_phi',
+                       'm_jj',
+                       'mT_lep_MET',
+                       'mT_tau_MET',
+                       'mT_leptau_MET',
+                       'm_taulep',
+                       'm_jjtau',
+                       'm_jjtaulep',
+                       'deltaPhi_jj',
+                       'deltaPhi_taulep',
+                       'deltaPhi_tauj1',
+                       'deltaPhi_tauj2',
+                       'deltaPhi_lepj1',
+                       'deltaPhi_lepj2',
+                       'deltaEta_jj',
+                       'deltaEta_taulep',
+                       'deltaEta_tauj1',
+                       'deltaEta_tauj2',
+                       'deltaEta_lepj1',
+                       'deltaEta_lepj2',
+                       'deltaTheta_jj',
+                       'deltaTheta_taulep',
+                       'deltaTheta_tauj1',
+                       'deltaTheta_tauj2',
+                       'deltaTheta_lepj1',
+                       'deltaTheta_lepj2',
+                       'ptRel_jj',
+                       'ptRel_taulep',
+                       'ptRel_tauj1',
+                       'ptRel_tauj2',
+                       'ptRel_lepj1',
+                       'ptRel_lepj2',
+                       'lepton_Zeppenfeld_over_deltaEta_jj',
+                       'tau_Zeppenfeld_over_deltaEta_jj',
+                       'event_Zeppenfeld_over_deltaEta_jj',
+                       'event_RT',
+            ]
+            
             X = df[to_keep].to_numpy()
 
             '''
@@ -322,12 +411,14 @@ def mergepart(dataset):
             '''
 
             # update root file with BDT branch
-            BDT_output_SM_array = clf_SM.decision_function(X)
-            BDT_output_dim6_array = clf_dim6.decision_function(X)
-            BDT_output_dim8_array = clf_dim8.decision_function(X)
-            #BDT_output_array = clf.decision_function(X)
-            #BDT_output_ele_array = clf_ele.decision_function(X)
-            #BDT_output_mu_array = clf_mu.decision_function(X)
+            BDT_output_SM_array = clf_SM.predict_proba(X)[:,1]
+            BDT_output_dim6_array = clf_dim6.predict_proba(X)[:,1]
+            BDT_output_dim8_array = clf_dim8.predict_proba(X)[:,1]
+
+            #BDT_output_SM_array = clf_SM.decision_function(X)
+            #BDT_output_dim6_array = clf_dim6.decision_function(X)
+            #BDT_output_dim8_array = clf_dim8.decision_function(X)
+
             myfile = ROOT.TFile(file_path, 'update')
             mytree = myfile.Get("events_all")
             listOfNewBranches = []
@@ -943,6 +1034,7 @@ else:
                if 'DataEle' in v.label or 'FakeEle' in v.label or 'PromptEle' in v.label:
                     continue
           dataset_dict[str(v.year)].append(v)
+
 for v in dataset_dict.values():
      print([o.label for o in v])
 #print(dataset_dict.keys())
@@ -1003,9 +1095,9 @@ for year in years:
 
         variables.append(variabile('countings', 'countings', wzero+'*('+cutbase+')', 1, -0.5, 0.5))
 
-        variables.append(variabile('BDT_output_SM', 'SM BDT output', wzero+'*('+cutbase+')', 8, -2., 2.))#20, -10., 10.))#
-        variables.append(variabile('BDT_output_dim6', 'dim6 BDT output', wzero+'*('+cutbase+')', 8, -2., 2.))#20, -10., 10.))
-        variables.append(variabile('BDT_output_dim8', 'dim8 BDT output', wzero+'*('+cutbase+')', 8, -2., 2.))#20, -10., 10.))
+        variables.append(variabile('BDT_output_SM', 'SM BDT output', wzero+'*('+cutbase+')', 10, 0., 1.))
+        variables.append(variabile('BDT_output_dim6', 'dim6 BDT output', wzero+'*('+cutbase+')', 10, 0., 1.))
+        variables.append(variabile('BDT_output_dim8', 'dim8 BDT output', wzero+'*('+cutbase+')', 10, 0., 1.))
 
 
         #variables.append(variabile('BDT_output_ele', 'eleBDT output', wzero+'*('+cutbase+')', 8, -2., 2.))
@@ -1031,6 +1123,7 @@ for year in years:
         bin_taupt = array("f", [0., 50., 100., 200., 300., 500.])
         nbin_taupt = len(bin_taupt) - 1
         variables.append(variabile(lep2[0] + '_pt',  lep2[1] + ' p_{T} [GeV]',  wzero+'*('+cutbase+')', nbin_taupt, bin_taupt))
+        variables.append(variabile(lep2[0] + '_mass',  lep2[1] + ' mass [GeV]',  wzero+'*('+cutbase+')', nbin_taupt, bin_taupt))
         
         variables.append(variabile(lep2[0] + '_eta', lep2[1] + ' #eta',  wzero+'*('+cutbase+')', 12, -3., 3.))
         #variables.append(variabile(lep2[0] + '_Zeppenfeld', lep2[1] + ' Zeppenfeld',  wzero+'*('+cutbase+')', 20, -5, 5))
@@ -1154,7 +1247,7 @@ for year in years:
         #nbin_deltaeta_jj = len(bin_deltaeta_jj) - 1
         variables.append(variabile('deltaEta_jj', '#Delta #eta_{jj}',  wzero+'*('+cutbase+')', 32, -8., 8.))#nbin_deltaeta_jj, bin_deltaeta_jj))#
 
-        '''
+
         variables.append(variabile('deltaPhi_jj', '#Delta #phi_{jj}',  wzero+'*('+cutbase+')',  16, -4., 4.))
         variables.append(variabile('deltaPhi_' + lep12[0], '#Delta #phi_{' + lep12[1] + '}',  wzero+'*('+cutbase+')',  16, -4., 4.))
         variables.append(variabile('deltaPhi_tauj1', '#Delta #phi_{#tau j_{1}}',  wzero+'*('+cutbase+')',  16, -4., 4.))
@@ -1171,7 +1264,7 @@ for year in years:
         bin_deltaeta_jj = array("f", [-1., -0.8, -0.4, 0.4, 0.8, 1.])
         nbin_deltaeta_jj = len(bin_deltaeta_jj) - 1
         
-        
+        '''        
         variables.append(variabile('deltaTheta_jj', 'cos(#Delta#theta_{jj})',  wzero+'*('+cutbase+')',  nbin_deltaeta_jj, bin_deltaeta_jj))
         variables.append(variabile('deltaTheta_' + lep12[0], 'cos(#Delta#theta_{' + lep12[1] + '})',  wzero+'*('+cutbase+')',  10, 0., 1.))
         variables.append(variabile('deltaTheta_tauj1', 'cos(#Delta#theta_{#tau j_{1}})',  wzero+'*('+cutbase+')',  10, 0., 1.))

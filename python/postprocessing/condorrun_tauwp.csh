@@ -71,14 +71,11 @@ python diet_submit_condor.py -d VBS_SSWW_FT2_0p5_INT_2017  -f v90/emu
 python diet_submit_condor.py -d VBS_SSWW_FT2_0_2017  -f v90/emu
 python diet_submit_condor.py -d VBS_SSWW_FT2_0_2017  -f v90/emu
 python diet_submit_condor.py -d VBS_SSWW_aQGC_2017  -f v90/emu
-python diet_submit_condor.py -d QCDHT_100to200_2017  -f v90/emu
 python diet_submit_condor.py -d QCDHT_200to300_2017  -f v90/emu
 python diet_submit_condor.py -d QCDHT_300to500_2017  -f v90/emu
 python diet_submit_condor.py -d QCDHT_500to700_2017  -f v90/emu
 python diet_submit_condor.py -d QCDHT_700to1000_2017  -f v90/emu
 python diet_submit_condor.py -d QCDHT_1000to1500_2017  -f v90/emu
-python diet_submit_condor.py -d QCDHT_1500to2000_2017  -f v90/emu
-python diet_submit_condor.py -d QCDHT_2000toInf_2017  -f v90/emu
 python diet_submit_condor.py -d ZZTo2L2Nu_2017  -f v90/emu
 python diet_submit_condor.py -d ZZJJTo4L_EWK_2017  -f v90/emu
 python diet_submit_condor.py -d ZZJJTo4L_QCD_2017  -f v90/emu
@@ -87,7 +84,6 @@ python diet_submit_condor.py -d GluGluToContinToZZTo2e2mu_2017  -f v90/emu
 python diet_submit_condor.py -d GluGluToContinToZZTo2e2tau_2017  -f v90/emu
 python diet_submit_condor.py -d GluGluToContinToZZTo2mu2nu_2017  -f v90/emu
 python diet_submit_condor.py -d GluGluToContinToZZTo2mu2tau_2017  -f v90/emu
-python diet_submit_condor.py -d GluGluToContinToZZTo4e_2017  -f v90/emu
 python diet_submit_condor.py -d GluGluToContinToZZTo4mu_2017  -f v90/emu
 python diet_submit_condor.py -d GluGluToContinToZZTo4tau_2017  -f v90/emu
 python diet_submit_condor.py -d TT_SemiLep2017  -f v90/emu
@@ -120,7 +116,6 @@ python diet_submit_condor.py -d WZZ_2017  -f v90/emu
 python diet_submit_condor.py -d ZZZ_2017  -f v90/emu
 python diet_submit_condor.py -d WWG_2017  -f v90/emu
 python diet_submit_condor.py -d WWto2L2Nu_2017  -f v90/emu
-python diet_submit_condor.py -d GluGluToWWToENuENu_2017  -f v90/emu
 python diet_submit_condor.py -d GluGluToWWToENuMNu2017  -f v90/emu
 python diet_submit_condor.py -d GluGluToWWToENuTNu2017  -f v90/emu
 python diet_submit_condor.py -d GluGluToWWToMNuENu_2017  -f v90/emu
