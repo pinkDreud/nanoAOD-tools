@@ -1,0 +1,16 @@
+Proxy_filename          = x509up
+Proxy_path              = /afs/cern.ch/user/a/apiccine/private/$(Proxy_filename)
+universe                = vanilla
+x509userproxy           = $(Proxy_path)
+use_x509userproxy       = true
+should_transfer_files   = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files    = $(Proxy_path), samples/samples.py, diet_skimtree_utils.py, CutsAndValues_bu.py, FR_vsjet2_vsmuT.root, FR_vsjet4_vsmuT.root, ./data/leptonSF/Muon_RunBCDEF_SF_ID_2017.root, TauIDSFTool.py, EFTOperator_dict.py, __init__.py, ./data
+transfer_output_remaps  = "DataEleF_2017_part24.root=/eos/home-a/apiccine/VBS/nosynch/v90/emu/DataEleF_2017/DataEleF_2017_part24.root"
++JobFlavour             = "testmatch"
+executable              = diet_tree_skimmer.py
+arguments               = DataEleF_2017 24 root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/SingleElectron/DataEleF_2017/210619_080030/0001/tree_hadd_1201.root,root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/SingleElectron/DataEleF_2017/210619_080030/0001/tree_hadd_1202.root,root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/SingleElectron/DataEleF_2017/210619_080030/0001/tree_hadd_1203.root,root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/SingleElectron/DataEleF_2017/210619_080030/0001/tree_hadd_1204.root,root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/SingleElectron/DataEleF_2017/210619_080030/0001/tree_hadd_1205.root,root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/SingleElectron/DataEleF_2017/210619_080030/0001/tree_hadd_1206.root,root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/SingleElectron/DataEleF_2017/210619_080030/0001/tree_hadd_1207.root,root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/SingleElectron/DataEleF_2017/210619_080030/0001/tree_hadd_1208.root,root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/SingleElectron/DataEleF_2017/210619_080030/0001/tree_hadd_1209.root,root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/SingleElectron/DataEleF_2017/210619_080030/0001/tree_hadd_1210.root remote 
+output                  = condor_v90/emu/output/DataEleF_2017_part24.out
+error                   = condor_v90/emu/error/DataEleF_2017_part24.err
+log                     = condor_v90/emu/log/DataEleF_2017_part24.log
+queue

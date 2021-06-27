@@ -684,7 +684,7 @@ for i in range(tree.GetEntries()):
     PV          = Object(event, "PV")
     HLT         = Object(event, "HLT")
     Flag        = Object(event, 'Flag')
-    met         = Object(event, "MET")
+    met         = Object(event, "PuppiMET")
     
     njets       = len(jets)
     nJets[0]    = len(jets)
@@ -837,6 +837,11 @@ for i in range(tree.GetEntries()):
     else:
         pass_lepton_selection[0] = 0
     
+    if DietLepVeto(tightele, tightmu, electrons, muons):
+        pass_lepton_veto[0] = 1
+    else:
+        pass_lepton_veto[0] = 0
+
     electron_pt[0]              =   tightele.pt
     electron_eta[0]             =   tightele.eta
     electron_phi[0]             =   tightele.phi
