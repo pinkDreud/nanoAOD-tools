@@ -441,7 +441,7 @@ VHToNonbb_2017.sigma =  2.127#pb
 VHToNonbb_2017.year = 2017
 VHToNonbb_2017.dataset = "/VHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8/"+tag_2017+"-v1/NANOAODSIM"
 
-WrongSign_2017 = sample(ROOT.kAzure-9, 1, 1001, "Leptonic t#bar{t} + WS", "WrongSign_2017")
+WrongSign_2017 = sample(ROOT.kGreen-10, 1, 1001, "Wrong Sign", "WrongSign_2017")
 WrongSign_2017.year = 2017
 WrongSign_2017.components = [WWto2L2Nu_2017, GluGluToWWToENuENu_2017, GluGluToWWToENuMNu2017, 
                             GluGluToWWToENuTNu2017, GluGluToWWToMNuENu_2017, GluGluToWWToMNuMNu2017, 
@@ -603,7 +603,7 @@ WJets_Fake_2017.components = [WJetsHT70to100_Fake_2017, WJetsHT100to200_Fake_201
 
 
 ################################ WZ ################################
-WZ_2017 = sample(ROOT.kYellow-7, 1, 1001, "WZ", "WZ_2017")
+WZ_2017 = sample(ROOT.kYellow-4, 1, 1001, "WZ", "WZ_2017")
 WZ_2017.sigma = 47.13
 WZ_2017.year = 2017
 WZ_2017.dataset = "/WZ_TuneCP5_13TeV-pythia8/RunIIFall17NanoAODv7-PU2017_12Apr2018_Nano02Apr2020_PU2017_EXT_102X_mc2017_realistic_v8-v1/NANOAODSIM"
@@ -2864,10 +2864,10 @@ class_list=[
     VG_2017,
     WpWpJJ_QCD_2017,
     TVX_2017,
+    Other_2017,
     TTTo2L2Nu_2017,
     WZ_2017,
     #OtherWS_2017,
-    Other_2017,
     WrongSign_2017,
     ZZtoLep_2017,
     ##DYJetsToLL_2017,

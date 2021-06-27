@@ -64,7 +64,7 @@ set LD_PRELOAD=libtcmalloc.so
 
 
 ###### muon #######
-python makeplot.py -y 2017 --lep muon --bveto -f $folder -s --cut "abs(lepton_eta)<2." --wfake incl_vsjet2 #--blinded
+python makeplot.py -y 2017 --lep muon --bveto -f $folder -s --wfake incl_vsjet2 #--blinded
 #python makeplot.py -y 2017 --lep muon --bveto -f $folder -s --wfake sep_vsjet2 #--blinded
 
 #python makeplot.py -y 2017 --lep muon --bveto -f $folder -s --wfake incl_vsjet2 --bdt #--blinded
