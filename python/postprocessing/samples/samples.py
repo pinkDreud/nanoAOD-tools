@@ -2761,11 +2761,6 @@ merge_dict={
     'VBS_SSWW_FT2_2p5_2017':VBS_SSWW_FT2_2p5_2017,
     'VBS_SSWW_FT2_0p5_2017':VBS_SSWW_FT2_0p5_2017,
     'VBS_SSWW_FT2_0_2017':VBS_SSWW_FT2_0_2017,
-    'sm_2017':sm_2017,
-    'sm_lin_quad_cW_2017':sm_lin_quad_cW_2017,
-    'quad_cW_2017':quad_cW_2017,
-    'sm_lin_quad_cHW_2017':sm_lin_quad_cHW_2017,
-    'quad_cHW_2017':quad_cHW_2017,
     #'VBS_SSWW_aQGC_2017':VBS_SSWW_aQGC_2017,
     ### fake contributions from here...
     'QCD_2017':QCD_2017,
@@ -2788,7 +2783,7 @@ merge_dict={
 
 
 class_list=[
-    ##WpWpJJ_EWK_2017,
+    #WpWpJJ_EWK_2017,
     #VBS_SSWW_LL_SM_2017,
     #VBS_SSWW_TL_SM_2017,
     #VBS_SSWW_TT_SM_2017,
@@ -2826,7 +2821,7 @@ class_list=[
     #VBS_SSWW_FM0_0_2017,
     #VBS_SSWW_FM1_25_SM_2017,
     #VBS_SSWW_FM1_5_SM_2017,
-    ##VBS_SSWW_FM1_25_BSM_2017,
+    #VBS_SSWW_FM1_25_BSM_2017,
     #VBS_SSWW_FM1_5_BSM_2017,
     #VBS_SSWW_FM1_25_2017,
     VBS_SSWW_FM1_5_2017,
@@ -2880,7 +2875,7 @@ class_list=[
     ##DYJetsM_2017,
     ##TT_2017,
     ##QCD_2017,
-    ##WJets_2017,
+    #W#Jets_2017,
     FakeMu_2017,
     FakeMuPromptTau_2017,
     PromptMuFakeTau_2017,
