@@ -2872,6 +2872,8 @@ class_list=[
     TTTo2L2Nu_2017,
     WZ_2017,
     OtherWS_2017,
+    #Other_2017,
+    #WrongSign_2017,
     ZZtoLep_2017,
     ##DYJetsToLL_2017,
     ##DYJetsToLL_Fake_2017,

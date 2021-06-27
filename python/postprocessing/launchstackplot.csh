@@ -4,9 +4,10 @@ set folder = v90
 
 #rm -rf /eos/home-a/apiccine/VBS/nosynch/$folder/stack_vsjet2/ #countings
 #rm -rf /eos/home-a/apiccine/VBS/nosynch/$folder/stack_vsjet4/ #countings
+#rm -rf /eos/home-a/apiccine/VBS/nosynch/$folder/stack/ #countings
 
 ###### electron #######
-python makeplot.py -y 2017 --lep electron --bveto -f $folder -s --wfake incl_vsjet4 
+python makeplot.py -y 2017 --lep electron --bveto -f $folder -s --wfake incl_vsjet4 #--cut "abs(lepton_eta)<2." 
 #python makeplot.py -y 2017 --lep electron --bveto -f $folder -s --wfake sep_vsjet4 
 
 #python makeplot.py -y 2017 --lep electron --bveto -f $folder -s --wfake sep_vsjet4 --bdt #--blinded
@@ -17,7 +18,7 @@ python makeplot.py -y 2017 --lep electron --bveto -f $folder -s --wfake incl_vsj
 
 set LD_PRELOAD=libtcmalloc.so
 
-python makeplot.py -y 2017 --lep electron --sr -f $folder -s --wfake incl_vsjet4 
+#python makeplot.py -y 2017 --lep electron --sr -f $folder -s --wfake incl_vsjet4 
 #python makeplot.py -y 2017 --lep electron --sr -f $folder -s --wfake sep_vsjet4 
 
 #python makeplot.py -y 2017 --lep electron --sr -f $folder -s --wfake sep_vsjet4 --bdt #--blinded
@@ -28,7 +29,7 @@ python makeplot.py -y 2017 --lep electron --sr -f $folder -s --wfake incl_vsjet4
 
 set LD_PRELOAD=libtcmalloc.so
 
-python makeplot.py -y 2017 --lep electron --wjets -f $folder -s --wfake incl_vsjet4
+#python makeplot.py -y 2017 --lep electron --wjets -f $folder -s --wfake incl_vsjet4
 #python makeplot.py -y 2017 --lep electron --wjets -f $folder -s --wfake sep_vsjet4
 
 #python makeplot.py -y 2017 --lep electron --wjets -f $folder -s --wfake incl_vsjet4 --bdt 
@@ -39,7 +40,7 @@ python makeplot.py -y 2017 --lep electron --wjets -f $folder -s --wfake incl_vsj
 
 set LD_PRELOAD=libtcmalloc.so
 
-python makeplot.py -y 2017 --lep electron --ttbar -f $folder -s --wfake incl_vsjet4
+#python makeplot.py -y 2017 --lep electron --ttbar -f $folder -s --wfake incl_vsjet4
 #python makeplot.py -y 2017 --lep electron --ttbar -f $folder -s --wfake sep_vsjet4
 
 #python makeplot.py -y 2017 --lep electron --ttbar -f $folder -s --wfake incl_vsjet4 --bdt 
@@ -50,7 +51,7 @@ python makeplot.py -y 2017 --lep electron --ttbar -f $folder -s --wfake incl_vsj
 
 set LD_PRELOAD=libtcmalloc.so
 
-python makeplot.py -y 2017 --lep electron --qcd -f $folder -s --wfake incl_vsjet4
+#python makeplot.py -y 2017 --lep electron --qcd -f $folder -s --wfake incl_vsjet4
 #python makeplot.py -y 2017 --lep electron --qcd -f $folder -s --wfake sep_vsjet4
 
 #python makeplot.py -y 2017 --lep electron --qcd -f $folder -s --wfake incl_vsjet4 --bdt 
@@ -63,7 +64,7 @@ set LD_PRELOAD=libtcmalloc.so
 
 
 ###### muon #######
-python makeplot.py -y 2017 --lep muon --bveto -f $folder -s --wfake incl_vsjet2 #--blinded
+python makeplot.py -y 2017 --lep muon --bveto -f $folder -s --cut "abs(lepton_eta)<2." --wfake incl_vsjet2 #--blinded
 #python makeplot.py -y 2017 --lep muon --bveto -f $folder -s --wfake sep_vsjet2 #--blinded
 
 #python makeplot.py -y 2017 --lep muon --bveto -f $folder -s --wfake incl_vsjet2 --bdt #--blinded
@@ -74,7 +75,7 @@ python makeplot.py -y 2017 --lep muon --bveto -f $folder -s --wfake incl_vsjet2 
 
 set LD_PRELOAD=libtcmalloc.so
 
-python makeplot.py -y 2017 --lep muon --sr -f $folder -s --wfake incl_vsjet2 #--blinded
+#python makeplot.py -y 2017 --lep muon --sr -f $folder -s --wfake incl_vsjet2 #--blinded
 #python makeplot.py -y 2017 --lep muon --sr -f $folder -s --wfake sep_vsjet2 #--blinded
 
 #python makeplot.py -y 2017 --lep muon --sr -f $folder -s --wfake incl_vsjet2 --bdt #--blinded
@@ -85,7 +86,7 @@ python makeplot.py -y 2017 --lep muon --sr -f $folder -s --wfake incl_vsjet2 #--
 
 set LD_PRELOAD=libtcmalloc.so
 
-python makeplot.py -y 2017 --lep muon --wjets -f $folder -s --wfake incl_vsjet2
+#python makeplot.py -y 2017 --lep muon --wjets -f $folder -s --wfake incl_vsjet2
 #python makeplot.py -y 2017 --lep muon --wjets -f $folder -s --wfake sep_vsjet2
 
 #python makeplot.py -y 2017 --lep muon --wjets -f $folder -s --wfake incl_vsjet2 --bdt
@@ -96,7 +97,7 @@ python makeplot.py -y 2017 --lep muon --wjets -f $folder -s --wfake incl_vsjet2
 
 set LD_PRELOAD=libtcmalloc.so
 
-python makeplot.py -y 2017 --lep muon --ttbar -f $folder -s --wfake incl_vsjet2
+#python makeplot.py -y 2017 --lep muon --ttbar -f $folder -s --wfake incl_vsjet2
 #python makeplot.py -y 2017 --lep muon --ttbar -f $folder -s --wfake sep_vsjet2
 
 #python makeplot.py -y 2017 --lep muon --ttbar -f $folder -s --wfake incl_vsjet2 --bdt
@@ -107,7 +108,7 @@ python makeplot.py -y 2017 --lep muon --ttbar -f $folder -s --wfake incl_vsjet2
 
 set LD_PRELOAD=libtcmalloc.so
 
-python makeplot.py -y 2017 --lep muon --qcd -f $folder -s --wfake incl_vsjet2
+#python makeplot.py -y 2017 --lep muon --qcd -f $folder -s --wfake incl_vsjet2
 #python makeplot.py -y 2017 --lep muon --qcd -f $folder -s --wfake sep_vsjet2
 
 #python makeplot.py -y 2017 --lep muon --qcd -f $folder -s --wfake incl_vsjet2 --bdt
