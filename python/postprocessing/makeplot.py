@@ -555,7 +555,7 @@ def plot(lep, reg, variable, sample, cut_tag, syst=""):
           cut = cutbase + "*(" + l1fstr + "_TightRegion==1&&" + l2fstr + "_TightRegion==1)"
 
      if not ('Fake' in str(sample.label) or 'Data' in str(sample.label)):
-        cut = cut + "*(" + l1fstr + "_isPrompt==1&&" + l2fstr + "_isPrompt==5)"
+        cut = cut + "*((" + l1fstr + "_isPrompt==1||" + l1fstr + "_isPrompt==15)&&" + l2fstr + "_isPrompt==5)"
 
      nbins = variable._nbins
      histoname = "h_" + variable._name + "_" + cut_tag

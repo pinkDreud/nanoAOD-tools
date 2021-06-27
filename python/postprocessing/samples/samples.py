@@ -2777,6 +2777,8 @@ merge_dict={
     'VG_2017':VG_2017,
     'TVX_2017':TVX_2017,
     'OtherWS_2017':OtherWS_2017,
+    'Other_2017':Other_2017,
+    'WrongSign_2017':WrongSign_2017,
     'TTTo2L2Nu_2017':TTTo2L2Nu_2017,
     'WZ_2017':WZ_2017,
     'DataMu_2017':DataMu_2017,
