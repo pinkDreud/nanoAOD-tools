@@ -748,7 +748,7 @@ def makestack(lep_, reg_, variabile_, samples_, cut_tag_, syst_, lumi):
                 continue
             if 'DataHT' in s.label or 'DataMET' in s.label:
                 continue
-        print "histoname:", histoname
+
         tmp = (ROOT.TH1F)(infile[s.label].Get(histoname))
         tmp.SetLineColor(ROOT.kBlack)
         tmp.SetName(s.leglabel)
