@@ -7,7 +7,7 @@ set folder = v90
 #rm -rf /eos/home-a/apiccine/VBS/nosynch/$folder/stack/ #countings
 
 ###### electron #######
-python makeplot.py -y 2017 --lep electron --bveto -f $folder -s --wfake incl_vsjet4 #--cut "abs(lepton_eta)<2." 
+python makeplot.py -y 2017 --lep electron --bveto -f $folder -s --wfake incl_vsjet4 #--cut "abs(lepton_eta)<2.&&abs(tau_eta)<2.&&tau_mass<1.5" 
 #python makeplot.py -y 2017 --lep electron --bveto -f $folder -s --wfake sep_vsjet4 
 
 #python makeplot.py -y 2017 --lep electron --bveto -f $folder -s --wfake sep_vsjet4 --bdt #--blinded
