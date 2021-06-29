@@ -359,6 +359,7 @@ def SelectJet(jetCollection, GoodTau, GoodMu):
     if jetCollection[0].pt<PT_CUT_JET or jetCollection[0].jetId<2:
         return -999
     if ( (jetCollection[0].pt>=PT_CUT_JET and jetCollection[0].pt<50.) and jetCollection[0].puId<7 ):
+        return -999
     #select higher pT jet
     GoodJet=jetCollection[0]
     #if the jet matches in dR one of the previously selected particles (e, tau), than it searches in the other jets
@@ -499,8 +500,8 @@ def get_HT(jets):
         HT += jet.pt
     return HT
 
-def trig_map(HLT, PV, year, runPeriod):
-    isGoodPV = True#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+def trig_map(HLT, PV, year, runPeriod, flag):
+    isGoodPV = copy.deepcopy(flag.ecalBadCalibFilterV2) #(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
     passMu = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
     passEle = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
     passHT = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
