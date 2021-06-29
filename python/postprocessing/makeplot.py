@@ -222,7 +222,7 @@ def mergepart(dataset):
         check = ROOT.TFile.Open(filerepo + sample.label + "/"  + sample.label + "_merged.root ")
         print("Number of entries of the file %s are %s" %(filerepo + sample.label + "/"  + sample.label + "_merged.root", (check.Get("events_all")).GetEntries()))
 
-        if not folder.startswith('FR') and opt.channel=='ltau':
+        if (not folder.startswith('FR') and opt.channel=='ltau') or not 'Fake' in opt.folder:
               
             # insert BDT output value into merged file
             print("Processing events with Tommaso's BDT...")
