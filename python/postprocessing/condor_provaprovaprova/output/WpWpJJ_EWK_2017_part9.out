@@ -1,0 +1,13 @@
+['root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/WpWpJJ_EWK_TuneCP5_13TeV-madgraph-pythia8/WpWpJJ_EWK_2017/210420_122652/0000/tree_hadd_9.root']
+Starting running at 2021-06-16 12:34:25.885275
+Adding root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/WpWpJJ_EWK_TuneCP5_13TeV-madgraph-pythia8/WpWpJJ_EWK_2017/210420_122652/0000/tree_hadd_9.root to the chain
+Name: Events Title: 
+Number of events in chain 1799
+Number of events in tree from chain 1799
+isMC:  True
+gen?:  True  pdf?:  True
+Event # 1  out of  1799
+Event # 1001  out of  1799
+Number of events in output tree 49
+Ending running at 2021-06-16 12:46:37.148154
+ So long, and thanks for all the fish
