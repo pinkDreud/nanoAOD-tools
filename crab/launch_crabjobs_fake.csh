@@ -16,5 +16,5 @@ reset
 
 set year = '2017'
 #python submit_crab_fake.py -d ZZtoLep_$year --status -t HT
-#python submit_crab_fake.py -d OtherWS_$year --status -t HT
-python submit_crab_fake.py -d DataHT_$year --status -t HT
+python submit_crab_fake.py -d OtherWS_$year --status -t HT
+#python submit_crab_fake.py -d DataHT_$year --status -t HT

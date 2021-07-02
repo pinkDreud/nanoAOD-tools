@@ -3,6 +3,7 @@ root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/WWZTo3L1Nu2Q_4f_TuneC
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/WWZTo3L1Nu2Q_4f_TuneCP5_13TeV_amcatnlo_pythia8/WWZTo3L1Nu2Q_2017_FakeHT/210626_174727/0000/tree_hadd_3.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/WWZTo3L1Nu2Q_4f_TuneCP5_13TeV_amcatnlo_pythia8/WWZTo3L1Nu2Q_2017_FakeHT/210626_174727/0000/tree_hadd_4.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/WWZTo3L1Nu2Q_4f_TuneCP5_13TeV_amcatnlo_pythia8/WWZTo3L1Nu2Q_2017_FakeHT/210626_174727/0000/tree_hadd_5.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/WWZTo3L1Nu2Q_4f_TuneCP5_13TeV_amcatnlo_pythia8/WWZTo3L1Nu2Q_2017_FakeHT/210626_174727/0000/tree_hadd_6.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/WWZTo3L1Nu2Q_4f_TuneCP5_13TeV_amcatnlo_pythia8/WWZTo3L1Nu2Q_2017_FakeHT/210626_174727/0000/tree_hadd_7.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/WWZTo3L1Nu2Q_4f_TuneCP5_13TeV_amcatnlo_pythia8/WWZTo3L1Nu2Q_2017_FakeHT/210626_174727/0000/tree_hadd_8.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/WWZTo3L1Nu2Q_4f_TuneCP5_13TeV_amcatnlo_pythia8/WWZTo3L1Nu2Q_2017_FakeHT/210626_174727/0000/tree_hadd_9.root
