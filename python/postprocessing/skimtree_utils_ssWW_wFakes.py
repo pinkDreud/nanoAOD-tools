@@ -474,7 +474,7 @@ def matchObjectCollectionMultiple(objs,collection,dRmax=0.4,presel=lambda x,y: T
     return pairs
 
 def pass_MET(flag): #returns the True if the event pass the MET Filter requiriments otherwise False
-    return flag.goodVertices and flag.globalSuperTightHalo2016Filter and flag.HBHENoiseFilter and flag.HBHENoiseIsoFilter and flag.EcalDeadCellTriggerPrimitiveFilter and flag.BadPFMuonFilter
+    return flag.goodVertices and flag.globalSuperTightHalo2016Filter and flag.HBHENoiseFilter and flag.HBHENoiseIsoFilter and flag.EcalDeadCellTriggerPrimitiveFilter and flag.BadPFMuonFilter and flag.ecalBadCalibFilterV2
 
 def bjet_filter(jets, tagger, WP): #returns collections of b jets and no b jets (discriminated with btaggers)
     # b-tag working points: mistagging efficiency tight = 0.1%, medium 1% and loose = 10% 
@@ -501,7 +501,7 @@ def get_HT(jets):
     return HT
 
 def trig_map(HLT, PV, year, runPeriod, flag):
-    isGoodPV = copy.deepcopy(flag.ecalBadCalibFilterV2) #(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+    isGoodPV = copy.deepcopy(pass_MET(flag)) #(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
     passMu = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
     passEle = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
     passHT = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness

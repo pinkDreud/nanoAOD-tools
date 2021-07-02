@@ -740,8 +740,8 @@ for i in range(tree.GetEntries()):
     
     if Debug:
         print("\nevento n. " + str(i))
-        #if i > 1000:
-            #break
+        if i > 10000:
+            break
     
     if i%500 == 0 and not Debug:#
         print("Event #", i+1, " out of ", tree.GetEntries())
@@ -813,7 +813,7 @@ for i in range(tree.GetEntries()):
             continue
 
     #print "------ ", i
-    passMu, passEle, passHT, noTrigger = trig_map(HLT, PV, year, runPeriod)
+    passMu, passEle, passHT, noTrigger = trig_map(HLT, PV, year, runPeriod, Flag)
 
     if noTrigger: continue
 

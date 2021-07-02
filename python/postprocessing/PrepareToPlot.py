@@ -16,8 +16,8 @@ parser.add_option('--ch', dest='channel', type=str, default = 'ltau', help='Sele
 
 (opt, args) = parser.parse_args()
 
-username = 'mmagheri' #str(os.environ.get('USER'))
-inituser = 'm' #str(os.environ.get('USER')[0])
+username = str(os.environ.get('USER'))
+inituser = str(os.environ.get('USER')[0])
 
 crabpath = ''
 if opt.ct == 'HT':
@@ -133,6 +133,7 @@ for k, v in merge_dict.items():
         continue
 
     if hasattr(v, 'components'):
+        print("in components", v.label)
         #print(k, k.startswith(opt.dat))
         for c in v.components:
             if opt.dat != 'all':
