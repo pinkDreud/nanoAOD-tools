@@ -16,8 +16,8 @@ parser.add_option('--ch', dest='channel', type=str, default = 'ltau', help='Sele
 
 (opt, args) = parser.parse_args()
 
-username = str(os.environ.get('USER'))
-inituser = str(os.environ.get('USER')[0])
+username = 'mmagheri' #str(os.environ.get('USER'))
+inituser = 'm' #str(os.environ.get('USER')[0])
 
 crabpath = ''
 if opt.ct == 'HT':
@@ -61,13 +61,13 @@ def CondoredList(samplename):
     return condlist
 
 def DoesSampleExist(samplename):
-    if samplename+".txt" not in os.listdir("../../crab/macros/files/"):
+    if samplename+".txt" not in os.listdir(crabpath):
         return False
     else:
         return True
 
 def AreAllCondored(crabname, condorname):
-    storelist = [line for line in open("../../crab/macros/files/"+crabname+".txt")]
+    storelist = [line for line in open(crabpath+crabname+".txt")]
 
     condoredlist = CondoredList(condorname)
 
@@ -77,7 +77,7 @@ def AreAllCondored(crabname, condorname):
         condoredlist.remove(condorname+".root")
 
     lenstore = len(storelist)
-
+    
     if 'Data' in crabname:
         remainder = int(lenstore%split)
         lenstore = int(lenstore/split)

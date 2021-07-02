@@ -147,6 +147,8 @@ def FindSecondJet(jet, jetCollection, GoodTau, GoodMu):
         if abs(jetCollection[k].eta)>ETA_CUT_JET: continue
         if jetCollection[k].pt<PT_CUT_JET or jetCollection[k].jetId<2:
             return -1
+        if ( (jetCollection[k].pt>=PT_CUT_JET and jetCollection[k].pt<50) and jetCollection[k].puId<7) :
+            return -1
         if abs(jet.eta-jetCollection[k].eta)>DELTAETA_JJ_CUT:
             if deltaR(jet.eta, jet.phi, GoodTau.eta, GoodTau.phi)>DR_OVERLAP_CONE_TAU or deltaR(jet.eta, jet.phi, GoodMu.eta, GoodMu.phi)>DR_OVERLAP_CONE_OTHER:
                 return k
@@ -350,10 +352,14 @@ def LepVeto(GoodLepton, ElectronCollection, MuonCollection):
 
 #semplifica la macro
 def SelectJet(jetCollection, GoodTau, GoodMu):
+    if jetCollection==None:
+        return -999
     if len(jetCollection)<2:
         return -999
-    if jetCollection[0].pt<PT_CUT_JET or jetCollection[0].jetId<2: return -999
-    if jetCollection==None: return -999
+    if jetCollection[0].pt<PT_CUT_JET or jetCollection[0].jetId<2:
+        return -999
+    if ( (jetCollection[0].pt>=PT_CUT_JET and jetCollection[0].pt<50.) and jetCollection[0].puId<7 ):
+        return -999
     #select higher pT jet
     GoodJet=jetCollection[0]
     #if the jet matches in dR one of the previously selected particles (e, tau), than it searches in the other jets
@@ -494,8 +500,8 @@ def get_HT(jets):
         HT += jet.pt
     return HT
 
-def trig_map(HLT, PV, year, runPeriod):
-    isGoodPV = True#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
+def trig_map(HLT, PV, year, runPeriod, flag):
+    isGoodPV = copy.deepcopy(flag.ecalBadCalibFilterV2) #(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
     passMu = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
     passEle = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
     passHT = False#(PV.ndof>4 and abs(PV.z)<20 and math.hypot(PV.x, PV.y)<2) #basic requirements on the PV's goodness
@@ -513,7 +519,7 @@ def trig_map(HLT, PV, year, runPeriod):
     elif(year == 2017):#and runPeriod != 'B'):
         if(HLT.IsoMu27 or HLT.Mu50):#HLT.IsoMu24 or 
             passMu = True
-        if(HLT.Ele35_WPTight_Gsf or HLT.Ele32_WPTight_Gsf_L1DoubleEG):# or HLT.Photon200):#HLT.Ele27_WPTight_Gsf or 
+        if(HLT.Ele35_WPTight_Gsf or HLT.Ele32_WPTight_Gsf_L1DoubleEG): #or HLT.Photon200):#HLT.Ele27_WPTight_Gsf or 
             passEle = True  
         if(HLT.PFHT250 or HLT.PFHT350):# or HLT.PFHT370 or HLT.PFHT430 or HLT.PFHT510 or HLT.PFHT590 or HLT.PFHT680 or HLT.PFHT780 or HLT.PFHT890):
             passHT = True

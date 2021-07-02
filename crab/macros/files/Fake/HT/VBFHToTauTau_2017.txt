@@ -7,6 +7,7 @@ root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13T
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13TeV_amcatnloFXFX_pythia8/VBFHToTauTau_2017_FakeHT/210626_180827/0000/tree_hadd_7.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13TeV_amcatnloFXFX_pythia8/VBFHToTauTau_2017_FakeHT/210626_180827/0000/tree_hadd_8.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13TeV_amcatnloFXFX_pythia8/VBFHToTauTau_2017_FakeHT/210626_180827/0000/tree_hadd_9.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13TeV_amcatnloFXFX_pythia8/VBFHToTauTau_2017_FakeHT/210626_180827/0000/tree_hadd_10.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13TeV_amcatnloFXFX_pythia8/VBFHToTauTau_2017_FakeHT/210626_180827/0000/tree_hadd_11.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13TeV_amcatnloFXFX_pythia8/VBFHToTauTau_2017_FakeHT/210626_180827/0000/tree_hadd_12.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13TeV_amcatnloFXFX_pythia8/VBFHToTauTau_2017_FakeHT/210626_180827/0000/tree_hadd_13.root
@@ -50,9 +51,11 @@ root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13T
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13TeV_amcatnloFXFX_pythia8/VBFHToTauTau_2017_FakeHT/210626_180827/0000/tree_hadd_51.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13TeV_amcatnloFXFX_pythia8/VBFHToTauTau_2017_FakeHT/210626_180827/0000/tree_hadd_52.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13TeV_amcatnloFXFX_pythia8/VBFHToTauTau_2017_FakeHT/210626_180827/0000/tree_hadd_53.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13TeV_amcatnloFXFX_pythia8/VBFHToTauTau_2017_FakeHT/210626_180827/0000/tree_hadd_54.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13TeV_amcatnloFXFX_pythia8/VBFHToTauTau_2017_FakeHT/210626_180827/0000/tree_hadd_55.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13TeV_amcatnloFXFX_pythia8/VBFHToTauTau_2017_FakeHT/210626_180827/0000/tree_hadd_56.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13TeV_amcatnloFXFX_pythia8/VBFHToTauTau_2017_FakeHT/210626_180827/0000/tree_hadd_57.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13TeV_amcatnloFXFX_pythia8/VBFHToTauTau_2017_FakeHT/210626_180827/0000/tree_hadd_58.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13TeV_amcatnloFXFX_pythia8/VBFHToTauTau_2017_FakeHT/210626_180827/0000/tree_hadd_59.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13TeV_amcatnloFXFX_pythia8/VBFHToTauTau_2017_FakeHT/210626_180827/0000/tree_hadd_60.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13TeV_amcatnloFXFX_pythia8/VBFHToTauTau_2017_FakeHT/210626_180827/0000/tree_hadd_61.root
@@ -62,3 +65,4 @@ root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13T
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13TeV_amcatnloFXFX_pythia8/VBFHToTauTau_2017_FakeHT/210626_180827/0000/tree_hadd_65.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13TeV_amcatnloFXFX_pythia8/VBFHToTauTau_2017_FakeHT/210626_180827/0000/tree_hadd_66.root
 root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13TeV_amcatnloFXFX_pythia8/VBFHToTauTau_2017_FakeHT/210626_180827/0000/tree_hadd_67.root
+root://cms-xrd-global.cern.ch//store/user/apiccine/VBSFake/VBFHToTauTau_M125_13TeV_amcatnloFXFX_pythia8/VBFHToTauTau_2017_FakeHT/210626_180827/0000/tree_hadd_68.root
