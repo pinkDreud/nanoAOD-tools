@@ -2224,7 +2224,12 @@ DataHTnoB_2017.components = [DataHTC_2017, DataHTD_2017, DataHTE_2017, DataHTF_2
 
 SampleHTFake_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "SampleHTFake_2017")
 SampleHTFake_2017.year = 2017
-SampleHTFake_2017.components = [DataHTB_2017, DataHTC_2017, DataHTD_2017, DataHTE_2017, DataHTF_2017, WJetsHT70to100_2017, WJetsHT100to200_2017, WJetsHT200to400_2017, WJetsHT400to600_2017, WJetsHT600to800_2017, WJetsHT800to1200_2017, WJetsHT1200to2500_2017, WJetsHT2500toInf_2017, DY1JetsToLL_2017, DY2JetsToLL_2017, DY3JetsToLL_2017, DY4JetsToLL_2017, DYJetsToLLM5to50_2017]
+SampleHTFake_2017.components = [DataHTB_2017, DataHTC_2017, DataHTD_2017, DataHTE_2017, DataHTF_2017, WJetsHT70to100_2017, WJetsHT100to200_2017, WJetsHT200to400_2017, WJetsHT400to600_2017, WJetsHT600to800_2017, WJetsHT800to1200_2017, WJetsHT1200to2500_2017, WJetsHT2500toInf_2017, DY1JetsToLL_2017, DY2JetsToLL_2017, DY3JetsToLL_2017, DY4JetsToLL_2017, DYJetsToLLM5to50_2017, ZZTo2L2Nu_2017, ZZJJTo4L_EWK_2017, ZZJJTo4L_QCD_2017, GluGluToContinToZZTo2e2nu_2017, GluGluToContinToZZTo2e2mu_2017, GluGluToContinToZZTo2e2tau_2017, GluGluToContinToZZTo2mu2nu_2017, GluGluToContinToZZTo2mu2tau_2017, GluGluToContinToZZTo4e_2017, GluGluToContinToZZTo4mu_2017, GluGluToContinToZZTo4tau_2017]
+
+SampleHTFakepart_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "SampleHTFake_2017")
+SampleHTFakepart_2017.year = 2017
+SampleHTFakepart_2017.components = [ WJetsHT70to100_2017, WJetsHT100to200_2017, WJetsHT200to400_2017, WJetsHT400to600_2017, WJetsHT600to800_2017, WJetsHT800to1200_2017, WJetsHT1200to2500_2017, WJetsHT2500toInf_2017, DY1JetsToLL_2017, DY2JetsToLL_2017, DY3JetsToLL_2017, DY4JetsToLL_2017, DYJetsToLLM5to50_2017, ZZTo2L2Nu_2017, ZZJJTo4L_EWK_2017, ZZJJTo4L_QCD_2017, GluGluToContinToZZTo2e2nu_2017, GluGluToContinToZZTo2e2mu_2017, GluGluToContinToZZTo2e2tau_2017, GluGluToContinToZZTo2mu2nu_2017, GluGluToContinToZZTo2mu2tau_2017, GluGluToContinToZZTo4e_2017, GluGluToContinToZZTo4mu_2017, GluGluToContinToZZTo4tau_2017]
+
 
 FakeElePromptTau_2017 = sample(ROOT.kGray+1, 1, 1001, "Fake e Prompt #tau", "FakeElePromptTau_2017")
 FakeElePromptTau_2017.year = 2017
@@ -2504,7 +2509,7 @@ sample_dict={
     'DataHT_2017':DataHT_2017, 'DataHTnoB_2017':DataHTnoB_2017, 'DataHTB_2017':DataHTB_2017, 'DataHTC_2017':DataHTC_2017, 'DataHTD_2017':DataHTD_2017, 'DataHTE_2017':DataHTE_2017, 'DataHTF_2017':DataHTF_2017,
     'DataMET_2017':DataMET_2017, 'DataMETB_2017':DataMETB_2017, 'DataMETC_2017':DataMETC_2017, 'DataMETD_2017':DataMETD_2017, 'DataMETE_2017':DataMETE_2017, 'DataMETF_2017':DataMETF_2017,
 
-    'SampleEleFake_2017': SampleEleFake_2017, 'SampleMuFake_2017': SampleMuFake_2017, 'SampleHTFake_2017': SampleHTFake_2017,
+    'SampleEleFake_2017': SampleEleFake_2017, 'SampleMuFake_2017': SampleMuFake_2017, 'SampleHTFake_2017': SampleHTFake_2017, 'SampleHTFakepart_2017': SampleHTFakepart_2017,
 
     ###### 2018 ######
     'WpWpJJ_EWK_2018':WpWpJJ_EWK_2018,
