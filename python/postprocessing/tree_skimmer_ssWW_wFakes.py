@@ -112,7 +112,7 @@ print("Number of events in chain " + str(chain.GetEntries()))
 print("Number of events in tree from chain " + str((chain.GetTree()).GetEntries()))
 tree = InputTree(chain)
 isMC = True
-if ('Data' in sample.label):
+if ('Data' in sample.name):
     isMC = False
 
 MCReco = MCReco * isMC
@@ -120,6 +120,14 @@ MCReco = MCReco * isMC
 IsDim8 = False
 if 'aQGC' in sample.name:
     IsDim8 = True
+
+dataEle = False
+dataMu = False
+if 'DataMu' in sample.name:
+    dataMu = True
+if 'DataEle' in sample.name:
+    dataEle = True
+
 
 #Cut_dict = {}
 
@@ -740,8 +748,8 @@ for i in range(tree.GetEntries()):
     
     if Debug:
         print("\nevento n. " + str(i))
-        if i > 10000:
-            break
+        #if i > 30000:
+            #break
     
     if i%500 == 0 and not Debug:#
         print("Event #", i+1, " out of ", tree.GetEntries())
@@ -801,13 +809,6 @@ for i in range(tree.GetEntries()):
     else:
         runPeriod = sample.runP
 
-    dataEle = False
-    dataMu = False
-    if 'DataMu' in sample.label:
-        dataMu = True
-    if 'DataEle' in sample.label:
-        dataEle = True
-
     if not isMC:
         if not Flag.eeBadScFilter:
             continue
@@ -817,89 +818,115 @@ for i in range(tree.GetEntries()):
 
     if noTrigger: continue
 
-    '''
-    doublecounting = True
-    if(isMC):
-        doublecounting = False
-    #Double counting removal
-    if('DataMu' in sample.label and passMu):
-        doublecounting = False
-    if('DataEle' in sample.label and (not passMu and passEle)):
-        doublecounting = False
-
-    if doublecounting:
+    indexGoodEle, ele_TightRegion = SelectLepton(electrons, False) 
+    indexGoodMu, mu_TightRegion = SelectLepton(muons, True) 
+ 
+    if indexGoodEle < 0 and indexGoodMu < 0:
         continue
-    '''
+
+    ele_lepton_veto = -1
+    mu_lepton_veto = -1
+
+    if indexGoodEle >= 0:
+        ele_lepton_veto = LepVeto(electrons[indexGoodEle], electrons, muons)
+    if indexGoodMu >= 0:
+        mu_lepton_veto = LepVeto(muons[indexGoodMu], electrons, muons)
 
     SingleEle=False
     SingleMu=False
     ElMu=False
 
-    HighestLepPt=-999.
     LeadLepFamily="not selected"
     
-    #if passEle and not HLT.Ele32_WPTight_Gsf_L1DoubleEG:
-    #print("Errore")#Questo ora non dovrebbe succedere
-
-    #print("n ele:", len(electrons), "n mu:", len(muons)) 
-    
+    indexGoodLep = -1
+    leptons = None
 
     if 'DataHT' not in sample.label:
         if passEle and not passMu:
-            if len(electrons)>0:  
-                SingleEle=True
-                LeadLepFamily="electrons"
-                HighestLepPt=copy.deepcopy(electrons[0].pt)
-                #print("HighestLepPt:", HighestLepPt)
+            if indexGoodEle>=0 and ele_lepton_veto:
+                indexGoodLep = copy.deepcopy(indexGoodEle)
+                lepton_TightRegion[0] = copy.deepcopy(ele_TightRegion)
+                SingleEle = True
+                SingleMu = False
             else:
                 continue
 
         elif passMu and not passEle:
-            if len(muons)>0:
-                SingleMu=True
-                LeadLepFamily="muons"
-                HighestLepPt=copy.deepcopy(muons[0].pt)
+            if indexGoodMu>=0 and mu_lepton_veto:
+                indexGoodLep = copy.deepcopy(indexGoodMu)
+                lepton_TightRegion[0] = copy.deepcopy(mu_TightRegion)
+                SingleEle = False
+                SingleMu = True
             else:
                 continue
 
         elif passMu and passEle:
             ElMu=True
-
-    else:
-        if passHT:
-            ElMu=True
+        
         else:
             continue
 
-    #print("HighestLepPt:", HighestLepPt)
-    #print("passEle:", passEle, "\tpassMu:", passMu)
+
+    else:
+        if passHT:
+            ElMu = True
+        else:
+            continue
 
     if ElMu:
-        for mu in muons:
-            if abs(mu.pt)>HighestLepPt:
-                HighestLepPt=copy.deepcopy(mu.pt)
-                SingleEle = False
-                SingleMu = True
-                break
-        for ele in electrons:
-            if abs(ele.pt)>HighestLepPt:
-                HighestLepPt=copy.deepcopy(ele.pt)
+        if indexGoodMu<0 and indexGoodEle>=0 and ele_lepton_veto:
+            indexGoodLep = copy.deepcopy(indexGoodEle)
+            lepton_TightRegion[0] = copy.deepcopy(ele_TightRegion)
+            SingleEle = True
+            SingleMu = False
+
+        elif indexGoodMu>=0 and mu_lepton_veto and indexGoodEle<0:
+            indexGoodLep = copy.deepcopy(indexGoodMu)
+            lepton_TightRegion[0] = copy.deepcopy(mu_TightRegion)
+            SingleMu = True
+            SingleEle = False
+                
+        elif indexGoodMu>=0 and indexGoodEle>=0:
+            if ele_lepton_veto and not mu_lepton_veto:
+                indexGoodLep = copy.deepcopy(indexGoodEle)
+                lepton_TightRegion[0] = copy.deepcopy(ele_TightRegion)
                 SingleEle = True
                 SingleMu = False
-                break
-    
-    leptons = None
+            elif not ele_lepton_veto and mu_lepton_veto:            
+                indexGoodLep = copy.deepcopy(indexGoodMu)
+                lepton_TightRegion[0] = copy.deepcopy(mu_TightRegion)
+                SingleMu = True
+                SingleEle = False
 
-    #if SingleEle==False and HighestLepPt>0: SingleMu=True
+            elif ele_lepton_veto and mu_lepton_veto:
+                if electrons[indexGoodEle].pt > muons[indexGoodMu].pt:
+                    indexGoodLep = copy.deepcopy(indexGoodEle)
+                    lepton_TightRegion[0] = copy.deepcopy(ele_TightRegion)
+                    SingleEle = True
+                    SingleMu = False
+                else:
+                    indexGoodLep = copy.deepcopy(indexGoodMu)
+                    lepton_TightRegion[0] = copy.deepcopy(mu_TightRegion)
+                    SingleMu = True
+                    SingleEle = False
+         
+            else:
+                continue
+
+        else:
+            continue
+
     vTrigEle, vTrigMu, vTrigHT = trig_finder(HLT, sample.year, sample.label)
     
     if SingleEle==True:
-        if isMC: HLT_effLumi[0] = lumiFinder("Ele", vTrigEle)
+        if isMC: 
+            HLT_effLumi[0] = lumiFinder("Ele", vTrigEle)
         leptons = electrons
     elif SingleMu==True:
-        if isMC: HLT_effLumi[0] = lumiFinder("Mu", vTrigMu)
+        if isMC:
+            HLT_effLumi[0] = lumiFinder("Mu", vTrigMu)
         leptons = muons
-    
+
     elif not (SingleMu or SingleEle):
         continue
 
@@ -908,71 +935,68 @@ for i in range(tree.GetEntries()):
     if SingleMu and dataEle:
         continue
 
-    #print("SingleEle:", SingleEle, "\tSingleMu:", SingleMu)
-    #print("lepton id:", leptons[0].pdgId)
-    #if (SingleEle or SingleMu): Cut_dict[1][1]+=1
+    if lepton_TightRegion[0]==1:
+        lepton_LnTRegion[0] = 0
+    elif lepton_TightRegion[0]==0:
+        lepton_LnTRegion[0] = 1
+    else:
+        lepton_LnTRegion[0] = -999
     
-    MET_pt[0]   =   met.pt  
-    MET_phi[0]  =   met.phi
-
-    indexGoodLep, lepton_TightRegion[0] = SelectLepton(leptons, SingleMu) 
-    
-    if lepton_TightRegion[0]==1:    lepton_LnTRegion[0] = 0
-    elif lepton_TightRegion[0]==0:  lepton_LnTRegion[0] = 1
-    else: lepton_LnTRegion[0] = -999
-
-
     if indexGoodLep<0 or indexGoodLep>=len(leptons) or (lepton_TightRegion[0]<0 and lepton_LnTRegion[0]<0): 
-        #systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
-        #systTree.fillTreesSysts(trees, "all")
         if Debug:
             print("exiting at lepton selection (without saving)")
         continue
+
 
     if lepton_TightRegion[0]==1 or lepton_LnTRegion[0]==1:
         pass_lepton_selection[0] = 1
     else:
         pass_lepton_selection[0] = 0
 
-    #if (SingleEle==1 or SingleMu==1) and pass_lepton_selection[0]==1: Cut_dict[2][1]+=1
-    tightlep = leptons[indexGoodLep]
+    pass_lepton_veto[0] = 1
 
-    if abs(tightlep.pdgId)==13:
-        lepton_pt[0]                =   tightlep.corrected_pt
-    elif abs(tightlep.pdgId)==11:
-        lepton_pt[0]                =   tightlep.pt
-    lepton_eta[0]               =   tightlep.eta
-    lepton_phi[0]               =   tightlep.phi
-    lepton_mass[0]              =   tightlep.mass
-    lepton_pdgid[0]             =   tightlep.pdgId
+    GoodLep = leptons[indexGoodLep]
+
+    #print("passEle:", passEle, "passMu:", passMu, 'SingleEle:', SingleEle, 'SingleMu:', SingleMu, "indexGoodEle:", indexGoodEle, "indexGoodMu:", indexGoodMu, "GoodLep_pdgid:", GoodLep.pdgId)
+    print("passEle:", passEle, "passMu:", passMu, 'SingleEle:', SingleEle, 'SingleMu:', SingleMu, "indexGoodLep:", indexGoodLep, "tightlep_pdgid:", GoodLep.pdgId, "pass_lepton_veto:", pass_lepton_veto[0])
+
+    MET_pt[0]   =   met.pt  
+    MET_phi[0]  =   met.phi
+
+    if abs(GoodLep.pdgId)==13:
+        lepton_pt[0]                =   GoodLep.corrected_pt
+    elif abs(GoodLep.pdgId)==11:
+        lepton_pt[0]                =   GoodLep.pt
+    lepton_eta[0]               =   GoodLep.eta
+    lepton_phi[0]               =   GoodLep.phi
+    lepton_mass[0]              =   GoodLep.mass
+    lepton_pdgid[0]             =   GoodLep.pdgId
     if SingleMu==1:
-        lepton_pfRelIso04[0]        =   tightlep.pfRelIso04_all
+        lepton_pfRelIso04[0]        =   GoodLep.pfRelIso04_all
     elif SingleEle==1:
-        lepton_pfRelIso04[0]        =   tightlep.jetRelIso
+        lepton_pfRelIso04[0]        =   GoodLep.jetRelIso
 
     #if not isMC:
-    if abs(tightlep.pdgId)==11:
+    if abs(GoodLep.pdgId)==11:
         lepton_SFFake_vsjet4[0] = SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0], 'vsjet4')
         lepton_SFFake_vsjet2[0] = SFFakeRatio_ele_calc(lepton_pt[0], lepton_eta[0], 'vsjet2')
-    elif abs(tightlep.pdgId)==13:
+    elif abs(GoodLep.pdgId)==13:
         lepton_SFFake_vsjet4[0] = SFFakeRatio_mu_calc(lepton_pt[0], lepton_eta[0], 'vsjet4')
         lepton_SFFake_vsjet2[0] = SFFakeRatio_mu_calc(lepton_pt[0], lepton_eta[0], 'vsjet2')
     #else:
     if isMC:
-        lepton_isPrompt[0] = tightlep.genPartFlav
-
-    GoodLep=tightlep
+        lepton_isPrompt[0] = GoodLep.genPartFlav
     
-    mT_lep_MET[0]=mTlepMet(met, tightlep.p4())
+    mT_lep_MET[0]=mTlepMet(met, GoodLep.p4())
 
     if isMC:
-        tightlep_SF = tightlep.effSF
-        #tightlep_SF = Lepton_IDIso_SF(tightlep)
-        #tightlep_SFUp = tightlep.effSF_errUp
-        #tightlep_SFDown = tightlep.effSF_errDown
-        systTree.setWeightName("lepSF", copy.deepcopy(tightlep_SF))
-        #systTree.setWeightName("lepUp", copy.deepcopy(tightlep_SFUp))
-        #systTree.setWeightName("lepDown", copy.deepcopy(tightlep_SFDown))
+        GoodLep_SF = GoodLep.effSF
+        #GoodLep_SF = Lepton_IDIso_SF(GoodLep)
+        #GoodLep_SFUp = GoodLep.effSF_errUp
+        #GoodLep_SFDown = GoodLep.effSF_errDown
+        systTree.setWeightName("lepSF", copy.deepcopy(GoodLep_SF))
+        #systTree.setWeightName("lepUp", copy.deepcopy(GoodLep_SFUp))
+        #systTree.setWeightName("lepDown", copy.deepcopy(GoodLep_SFDown))
 
         PF_SF = chain.PrefireWeight
         PF_SFUp = chain.PrefireWeight_Up
@@ -987,14 +1011,8 @@ for i in range(tree.GetEntries()):
         systTree.setWeightName("puSF", copy.deepcopy(PU_SF))
         systTree.setWeightName("puUp", copy.deepcopy(PU_SFUp))
         systTree.setWeightName("puDown", copy.deepcopy(PU_SFDown))
-
-    if abs(lepton_pdgid[0])==11 and lepton_pfRelIso04[0]<ISO_CUT_ELE:   pass_lepton_iso[0]=1
-    elif abs(lepton_pdgid[0])==13 and lepton_pfRelIso04[0]<ISO_CUT_MU:  pass_lepton_iso[0]=1
-    else: pass_lepton_iso[0]=0
     
-    pass_lepton_veto[0]=LepVeto(GoodLep, electrons, muons)
-    
-    ThereIsOneTau, ltau_list = SelectAndVetoTaus(list(taus), tightlep)
+    ThereIsOneTau, ltau_list = SelectAndVetoTaus(list(taus), GoodLep)
 
     if ThereIsOneTau:
         taucont = taucont + 1

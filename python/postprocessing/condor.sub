@@ -6,11 +6,11 @@ use_x509userproxy       = true
 should_transfer_files   = YES
 when_to_transfer_output = ON_EXIT
 transfer_input_files    = $(Proxy_path), samples/samples.py, skimtree_utils_ssWW_wFakes.py, CutsAndValues_bu.py, FR_vsjet2_vsmuT.root, FR_vsjet4_vsmuT.root, ./data/leptonSF/Muon_RunBCDEF_SF_ID_2017.root, TauIDSFTool.py, EFTOperator_dict.py, __init__.py, ./data
-transfer_output_remaps  = "TTZToLLNuNu_2017_part15.root=/eos/home-a/apiccine/VBS/nosynch/v80/ltau/TTZToLLNuNu_2017/TTZToLLNuNu_2017_part15.root"
+transfer_output_remaps  = "DataEleF_2017_part24.root=/eos/home-a/apiccine/VBS/nosynch/v85/ltau/DataEleF_2017/DataEleF_2017_part24.root"
 +JobFlavour             = "testmatch"
 executable              = tree_skimmer_ssWW_wFakes.py
-arguments               = TTZToLLNuNu_2017 15 root://cms-xrd-global.cern.ch//store/user/apiccine/VBS/TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8/TTZToLLNuNu_2017/210420_100957/0000/tree_hadd_15.root remote VT VL T
-output                  = condor_v80/ltau/output/TTZToLLNuNu_2017_VTVLT_part15.out
-error                   = condor_v80/ltau/error/TTZToLLNuNu_2017_VTVLT_part15.err
-log                     = condor_v80/ltau/log/TTZToLLNuNu_2017_VTVLT_part15.log
+arguments               = DataEleF_2017 24 root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/SingleElectron/DataEleF_2017/210619_080030/0001/tree_hadd_1201.root,root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/SingleElectron/DataEleF_2017/210619_080030/0001/tree_hadd_1202.root,root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/SingleElectron/DataEleF_2017/210619_080030/0001/tree_hadd_1203.root,root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/SingleElectron/DataEleF_2017/210619_080030/0001/tree_hadd_1204.root,root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/SingleElectron/DataEleF_2017/210619_080030/0001/tree_hadd_1205.root,root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/SingleElectron/DataEleF_2017/210619_080030/0001/tree_hadd_1206.root,root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/SingleElectron/DataEleF_2017/210619_080030/0001/tree_hadd_1207.root,root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/SingleElectron/DataEleF_2017/210619_080030/0001/tree_hadd_1208.root,root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/SingleElectron/DataEleF_2017/210619_080030/0001/tree_hadd_1209.root,root://cms-xrd-global.cern.ch//store/user/apiccine/VBS_PG/SingleElectron/DataEleF_2017/210619_080030/0001/tree_hadd_1210.root remote VT VL T
+output                  = condor_v85/ltau/output/DataEleF_2017_VTVLT_part24.out
+error                   = condor_v85/ltau/error/DataEleF_2017_VTVLT_part24.err
+log                     = condor_v85/ltau/log/DataEleF_2017_VTVLT_part24.log
 queue
