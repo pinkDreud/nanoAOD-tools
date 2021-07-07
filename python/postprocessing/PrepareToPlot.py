@@ -107,12 +107,12 @@ for k, v in merge_dict.items():
     kpath = path+k+"/"
 
     if opt.ct == '':
-        if k.startswith('DY'):#k.startswith('TT_'):
+        if k.startswith('DY'): #k.startswith('TT_'):
             continue
 
     #print(k)
     else:
-        if not (k.startswith('DataHT') or k.startswith('DY') or k.startswith('WJets')):# or k.startswith('TT_')):
+        if not (k.startswith('DataHT') or k.startswith('DY') or k.startswith('WJets') or k.startswith('ZZtoLep')): # or k.startswith('TT_')):
             continue
 
     if k.startswith('Fake'):

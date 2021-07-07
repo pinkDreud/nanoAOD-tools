@@ -2791,7 +2791,7 @@ merge_dict={
     'WZ_2017':WZ_2017,
     'DataMu_2017':DataMu_2017,
     'DataEle_2017':DataEle_2017,
-    #'DataHT_2017':DataHT_2017,
+    'DataHT_2017':DataHT_2017,
 }
 
 
