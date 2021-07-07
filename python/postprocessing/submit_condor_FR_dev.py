@@ -4,11 +4,11 @@ import optparse
 import sys
 
 
-usage = 'python submit_condor_FR_dev.py -d dataset_name -f destination_folder --wp working_point'
+usage = 'python submit_condor_FR_dev.py -d dataset_name -f destination_folder --wpvsJet working_point_deepTau_vsJet'
 parser = optparse.OptionParser(usage)
 parser.add_option('-d', '--dat', dest='dat', type=str, default = '', help='Please enter a dataset name')
 parser.add_option('-f', '--folder', dest='folder', type=str, default = '', help='Please enter a destination folder')
-parser.add_option('--wp', dest='wp', type=str, default = 'VTLT', help='Please enter working point!')
+parser.add_option('--wpvsJet', dest='wpvsJet', type=str, default = '2', help='Please enter working point for deeptauVsJet!')
 parser.add_option('--max', dest='maxj', type=int, default = 0, help='Please enter working point!')
 parser.add_option('--trig', dest='trig', type=str, default = 'HT', help='Please enter trigger (electron, muon, HT)')
 parser.add_option('--infold', dest = 'infold', type = str, default= 'Fake', help = 'input folder for the crabbed files')
@@ -38,11 +38,11 @@ def sub_writer(sample, n, files, folder):
     f.write("transfer_output_remaps  = \""+ sample.label + "_part" + str(n) + ".root=/eos/home-"+inituser + "/" + username+"/VBS/nosynch/" + folder + "/" + sample.label +"/"+ sample.label + "_part" + str(n) + ".root\"\n")
     f.write("+JobFlavour             = \"workday\"\n") # options are espresso = 20 minutes, microcentury = 1 hour, longlunch = 2 hours, workday = 8 hours, tomorrow = 1 day, testmatch = 3 days, nextweek     = 1 week
     f.write("executable              = FakeRatio_dev.py\n")
-    f.write("arguments               = " + sample.label + " " + str(n) + " " + str(files) + " remote " + str(opt.trig) + "\n")
+    f.write("arguments               = " + sample.label + " " + str(n) + " " + str(files) + " remote " + str(opt.trig) + " " + str(opt.wpvsJet) + "\n")
     #f.write("input                   = input.txt\n")
-    f.write("output                  = condor_FRTau2/output/"+ sample.label + "_part" + str(n) + ".out\n")
-    f.write("error                   = condor_FRTau2/error/"+ sample.label +  "_part" + str(n) + ".err\n")
-    f.write("log                     = condor_FRTau2/log/"+ sample.label + "_part" + str(n) + ".log\n")
+    f.write("output                  = condor_FRTau" + str(opt.wpvsJet) + "/output/"+ sample.label + "_part" + str(n) + ".out\n")
+    f.write("error                   = condor_FRTau" + str(opt.wpvsJet) + "/error/"+ sample.label +  "_part" + str(n) + ".err\n")
+    f.write("log                     = condor_FRTau" + str(opt.wpvsJet) + "/log/"+ sample.label + "_part" + str(n) + ".log\n")
 
     f.write("queue\n")
 
@@ -57,12 +57,12 @@ else:
     print("You are launching a single sample and not an entire bunch of samples")
     samples.append(dataset)
 
-if not os.path.exists("condor_FRTau2/output"):
-    os.makedirs("condor_FRTau2/output")
-if not os.path.exists("condor_FRTau2/error"):
-    os.makedirs("condor_FRTau2/error")
-if not os.path.exists("condor_FRTau2/log"):
-    os.makedirs("condor_FRTau2/log")
+if not os.path.exists("condor_FRTau" + str(opt.wpvsJet) + "/output"):
+    os.makedirs("condor_FRTau" + str(opt.wpvsJet) + "/output")
+if not os.path.exists("condor_FRTau" + str(opt.wpvsJet) + "/error"):
+    os.makedirs("condor_FRTau" + str(opt.wpvsJet) + "/error")
+if not os.path.exists("condor_FRTau" + str(opt.wpvsJet) + "/log"):
+    os.makedirs("condor_FRTau" + str(opt.wpvsJet) + "/log")
 
 if(uid == 0):
     print("Please insert your uid")
@@ -102,7 +102,7 @@ for sample in samples:
             os.popen('condor_submit condor.sub')
             print('condor_submit condor.sub')
             #os.popen("python tree_skimmer_ssWW.py " " + sample.label + " " + str(i) + " " + str(files))
-            print("python FakeRatio_dev.py " + sample.label + " " + str(i) + " " + str(files) + " remote " + str(opt.trig))
+            print("python FakeRatio_dev.py " + sample.label + " " + str(i) + " " + str(files) + " remote " + str(opt.trig) + " " + str(opt.wpvsJet))
     else:
         for i in range(len(files_list)/split+1):
             if os.path.exists(opath + sample.label + "_part" + str(i) + ".root"):
@@ -112,4 +112,4 @@ for sample in samples:
             print('condor_submit condor.sub')
             os.popen('condor_submit condor.sub')
             #os.popen("python tree_skimmer_ssWW.py " + sample.label + " " + str(i) + " " + ",".join( e for e in files_list[split*i:split*(i+1)]))
-            print("python FakeRatio_dev.py " + sample.label + " " + str(i) + " " + ",".join( e for e in files_list[split*i:extmax]) + " remote " + str(opt.trig))
+            print("python FakeRatio_dev.py " + sample.label + " " + str(i) + " " + ",".join( e for e in files_list[split*i:extmax]) + " remote " + str(opt.trig) + " " + str(opt.wpvsJet))

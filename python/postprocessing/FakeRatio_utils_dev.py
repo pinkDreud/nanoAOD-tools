@@ -370,14 +370,14 @@ def Veto_Tau_ZMass(i, taus, ele, mu): #return 0 if the event is okay, 1 if there
         return 0
     #return false if we have tau+lepton (tau,e,mu)  within 15 GeV from the Z with .5 distance in 
 
-def Veto_Tau_Leptons(taus, ele, mu):
+def Veto_Tau_Leptons(taus, ele, mu, vsJetWP):
     #print "taus:" , len(taus) 
     nTau=0
     idxl = []
     if len(taus)==0: 
         return 1, idxl
     for i, tau in enumerate(taus):
-        if tau.idDeepTau2017v2p1VSjet>=4 and tau.idDeepTau2017v2p1VSe>=4  and tau.idDeepTau2017v2p1VSmu>=8 and tau.idDecayModeNewDMs: 
+        if tau.idDeepTau2017v2p1VSjet>=vsJetWP and tau.idDeepTau2017v2p1VSe>=4  and tau.idDeepTau2017v2p1VSmu>=8 and tau.idDecayModeNewDMs: 
             nTau+=1
             idxl.append(i)
     if nTau!=1:

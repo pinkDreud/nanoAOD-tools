@@ -20,15 +20,17 @@ import copy
 from array import array
 from FakeRatio_utils_dev import *
 
-usage = "python FakeRatio_apc.py [nome_del_sample_in_samples.py] 0 [file_in_input] [local_or_remote] [chosen_trigger]"
+usage = "python FakeRatio_dev.py [nome_del_sample_in_samples.py] 0 [file_in_input] [local_or_remote] [chosen_trigger] [vsJetWP]"
 
 chosenTrigger = ""
+
+tauVsJet = int(sys.argv[6])
+print("vs jet WP loose: ", tauVsJet)
 
 if sys.argv[5]=="Ele" or sys.argv[5]=="Mu" or sys.argv[5]=="HT":
     chosenTrigger = sys.argv[5]
 
 print("Saving events with trigger: ", chosenTrigger)
-
 
 if sys.argv[4] == 'remote':
     from samples import *
@@ -428,7 +430,7 @@ for i in range(tree.GetEntries()):
     electrons   = Collection(event, "Electron")
     muons       = Collection(event, "Muon")
     jets        = Collection(event, "Jet")
-    njets       = len(jets)
+    njets       = len(list(jets))
     fatjets     = Collection(event, "FatJet")
     taus        = Collection(event, "Tau")
     HT          = Object(event, "HT")
@@ -483,6 +485,7 @@ for i in range(tree.GetEntries()):
         systTree.fillTreesSysts(trees, "all")
         continue
 
+    print("chosen trigger ")
     if isMC:
         vTrigEle, vTrigMu, vTrigHT = trig_finder(HLT, sample.year, sample.label)
         if chosenTrigger == "Ele": HLT_effLumi[0] = lumiFinder(chosenTrigger, vTrigEle)
@@ -499,9 +502,9 @@ for i in range(tree.GetEntries()):
 
     #Taus
 
-    Veto_TauLeptons[0], idx_list_tau  =   Veto_Tau_Leptons(taus, electrons, muons)    #1 if there's another lepton, 0 if not
-
-    if len(taus) > 0 and len(idx_list_tau)>0:
+    Veto_TauLeptons[0], idx_list_tau  =   Veto_Tau_Leptons(taus, electrons, muons, tauVsJet)    #1 if there's another lepton, 0 if not
+    print("tau chosen")
+    if len(list(taus)) > 0 and len(idx_list_tau)>0:
         idx_tau = idx_list_tau[0]
         #Veto_TauZMass[0]    =   Veto_Tau_ZMass(idx_tau, taus, electrons, muons)      #1 if there's another lepton in the Z mass range, 0 if not
         mT_tauMET[0]                    =   mTlepMet(met, taus[idx_tau].p4())
@@ -516,7 +519,7 @@ for i in range(tree.GetEntries()):
 
     #light leptons
     #nLeps_LightLeptonsVL[0]      = Veto_Light_Leptons_VL(list(electrons), list(muons))
-    nLeps_LightLeptons[0], idx_list_e, idx_list_m  = Veto_Light_Leptons(list(electrons), list(muons))
+    nLeps_LightLeptons[0], idx_list_e, idx_list_m  = Veto_Light_Leptons(electrons, muons)
     #nLeps_LightLeptonsTight[0]   = Veto_Light_Leptons_tight(list(electrons), list(muons))
 
     isEle = None
@@ -544,7 +547,7 @@ for i in range(tree.GetEntries()):
             idx_lep = idx_list_m[0]
         #print leptons[idx_lep].pdgId
         #if len(leptons)>0 and isEle != None:
-
+        print("lepquantities")
         lepGood=None
         lepGood_p4 = ROOT.TLorentzVector()
         lepGood = leptons[idx_lep]
@@ -598,9 +601,9 @@ for i in range(tree.GetEntries()):
             FatJet_numberSeparate[0] = 0
             countfj = 0
 
-            if min(lenfatjet, len(fatjets))>0:
+            if min(lenfatjet, len(list(fatjets)))>0:
                 print("FatJet are here!")
-            while countfj < min(lenfatjet, len(fatjets)):
+            while countfj < min(lenfatjet, len(list(fatjets))):
                 fj = fatjets[countfj]
                 if fj.pt>30 and deltaR(fj.eta, fj.phi, FakeLepton_eta[0], FakeLepton_phi[0])>0.8:
                     FatJet_numberSeparate[0]+=1
@@ -631,7 +634,7 @@ for i in range(tree.GetEntries()):
                 FakeLepton_isTight[0]       =   lepGood.tightId
             if isMC:
                 FakeLepton_isPrompt[0]      =   lepGood.genPartFlav
-
+    print("event selected")
     systTree.setWeightName("w_nominal",copy.deepcopy(w_nominal_all[0]))
     systTree.fillTreesSysts(trees, "all")
 

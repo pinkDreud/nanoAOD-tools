@@ -2224,7 +2224,11 @@ DataHTnoB_2017.components = [DataHTC_2017, DataHTD_2017, DataHTE_2017, DataHTF_2
 
 SampleHTFake_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "SampleHTFake_2017")
 SampleHTFake_2017.year = 2017
-SampleHTFake_2017.components = [DataHTB_2017, DataHTC_2017, DataHTD_2017, DataHTE_2017, DataHTF_2017, WJetsHT70to100_2017, WJetsHT100to200_2017, WJetsHT200to400_2017, WJetsHT400to600_2017, WJetsHT600to800_2017, WJetsHT800to1200_2017, WJetsHT1200to2500_2017, WJetsHT2500toInf_2017, DY1JetsToLL_2017, DY2JetsToLL_2017, DY3JetsToLL_2017, DY4JetsToLL_2017, DYJetsToLLM5to50_2017]
+SampleHTFake_2017.components = [DataHTB_2017, DataHTC_2017, DataHTD_2017, DataHTE_2017, DataHTF_2017, WJetsHT70to100_2017, WJetsHT100to200_2017, WJetsHT200to400_2017, WJetsHT400to600_2017, WJetsHT600to800_2017, WJetsHT800to1200_2017, WJetsHT1200to2500_2017, WJetsHT2500toInf_2017, DY1JetsToLL_2017, DY2JetsToLL_2017, DY3JetsToLL_2017, DY4JetsToLL_2017, DYJetsToLLM5to50_2017, ZZTo2L2Nu_2017, ZZJJTo4L_EWK_2017, ZZJJTo4L_QCD_2017, GluGluToContinToZZTo2e2nu_2017, GluGluToContinToZZTo2e2mu_2017, GluGluToContinToZZTo2e2tau_2017, GluGluToContinToZZTo2mu2nu_2017, GluGluToContinToZZTo2mu2tau_2017, GluGluToContinToZZTo4e_2017, GluGluToContinToZZTo4mu_2017, GluGluToContinToZZTo4tau_2017]
+
+SampleHTFakepart_2017 = sample(ROOT.kBlack, 1, 1001, "Data", "SampleHTFake_2017")
+SampleHTFakepart_2017.year = 2017
+SampleHTFakepart_2017.components = [ WJetsHT70to100_2017, WJetsHT100to200_2017, WJetsHT200to400_2017, WJetsHT400to600_2017, WJetsHT600to800_2017, WJetsHT800to1200_2017, WJetsHT1200to2500_2017, WJetsHT2500toInf_2017, DY1JetsToLL_2017, DY2JetsToLL_2017, DY3JetsToLL_2017, DY4JetsToLL_2017, DYJetsToLLM5to50_2017, ZZTo2L2Nu_2017, ZZJJTo4L_EWK_2017, ZZJJTo4L_QCD_2017, GluGluToContinToZZTo2e2nu_2017, GluGluToContinToZZTo2e2mu_2017, GluGluToContinToZZTo2e2tau_2017, GluGluToContinToZZTo2mu2nu_2017, GluGluToContinToZZTo2mu2tau_2017, GluGluToContinToZZTo4e_2017, GluGluToContinToZZTo4mu_2017, GluGluToContinToZZTo4tau_2017]
 
 FakeElePromptTau_2017 = sample(ROOT.kGray+1, 1, 1001, "Fake e Prompt #tau", "FakeElePromptTau_2017")
 FakeElePromptTau_2017.year = 2017
@@ -2341,6 +2345,13 @@ DataHTD_2018.dataset = '/JetHT/Run2018D-'+tag_data + '-v1/NANOAOD'
 DataHT_2018 = sample(ROOT.kBlack, 1, 1001, "Data", "DataHT_2018")
 DataHT_2018.year = 2018
 DataHT_2018.components = [DataHTA_2018, DataHTB_2018, DataHTC_2018, DataHTD_2018]
+
+
+
+SampleHTFake_2018 = sample(ROOT.kBlack, 1, 1001, "Data", "SampleHTFake_2018")
+SampleHTFake_2018.year = 2017
+SampleHTFake_2018.components = [DataHTB_2018, DataHTC_2018, DataHTD_2018, WJetsHT70to100_2018, WJetsHT100to200_2018, WJetsHT200to400_2018, WJetsHT400to600_2018, WJetsHT600to800_2018, WJetsHT800to1200_2018, WJetsHT1200to2500_2018, WJetsHT2500toInf_2018, DY1JetsToLL_2018, DY2JetsToLL_2018, DY3JetsToLL_2018, DY4JetsToLL_2018, ZZTo2L2Nu_2018, ZZJJTo4L_EWK_2018, ZZJJTo4L_QCD_2018, GluGluToContinToZZTo2e2nu_2018, GluGluToContinToZZTo2e2mu_2018, GluGluToContinToZZTo2e2tau_2018, GluGluToContinToZZTo2mu2nu_2018, GluGluToContinToZZTo2mu2tau_2018, GluGluToContinToZZTo4e_2018, GluGluToContinToZZTo4mu_2018, GluGluToContinToZZTo4tau_2018]
+
 
 FakeElePromptTau_2018 = sample(ROOT.kGray+1, 1, 1001, "Fake e Prompt #tau", "FakeElePromptTau_2018")
 FakeElePromptTau_2018.year = 2018
@@ -2504,7 +2515,7 @@ sample_dict={
     'DataHT_2017':DataHT_2017, 'DataHTnoB_2017':DataHTnoB_2017, 'DataHTB_2017':DataHTB_2017, 'DataHTC_2017':DataHTC_2017, 'DataHTD_2017':DataHTD_2017, 'DataHTE_2017':DataHTE_2017, 'DataHTF_2017':DataHTF_2017,
     'DataMET_2017':DataMET_2017, 'DataMETB_2017':DataMETB_2017, 'DataMETC_2017':DataMETC_2017, 'DataMETD_2017':DataMETD_2017, 'DataMETE_2017':DataMETE_2017, 'DataMETF_2017':DataMETF_2017,
 
-    'SampleEleFake_2017': SampleEleFake_2017, 'SampleMuFake_2017': SampleMuFake_2017, 'SampleHTFake_2017': SampleHTFake_2017,
+    'SampleEleFake_2017': SampleEleFake_2017, 'SampleMuFake_2017': SampleMuFake_2017, 'SampleHTFake_2017': SampleHTFake_2017, 'SampleHTFakepart_2017': SampleHTFakepart_2017, 
 
     ###### 2018 ######
     'WpWpJJ_EWK_2018':WpWpJJ_EWK_2018,
@@ -2606,6 +2617,7 @@ sample_dict={
     'quad_cW_2018':quad_cW_2018,
     'sm_lin_quad_cHW_2018':sm_lin_quad_cHW_2018,
     'quad_cHW_2018':quad_cHW_2018,
+
     ### fake contributions form here...
     'QCD_2018':QCD_2018, 'QCDHT_100to200_2018':QCDHT_100to200_2018, 'QCDHT_200to300_2018':QCDHT_200to300_2018, 'QCDHT_300to500_2018':QCDHT_300to500_2018, 'QCDHT_500to700_2018':QCDHT_500to700_2018, 'QCDHT_700to1000_2018':QCDHT_700to1000_2018, 'QCDHT_1000to1500_2018':QCDHT_1000to1500_2018, 'QCDHT_1500to2000_2018':QCDHT_1500to2000_2018, 'QCDHT_2000toInf_2018':QCDHT_2000toInf_2018,
     'ZZtoLep_2018':ZZtoLep_2018, 'ZZTo2L2Nu_2018':ZZTo2L2Nu_2018, 'ZZJJTo4L_EWK_2018':ZZJJTo4L_EWK_2018, 'ZZJJTo4L_QCD_2018':ZZJJTo4L_QCD_2018, 'GluGluToContinToZZTo2e2nu_2018':GluGluToContinToZZTo2e2nu_2018, 'GluGluToContinToZZTo2e2mu_2018':GluGluToContinToZZTo2e2mu_2018, 'GluGluToContinToZZTo2e2tau_2018':GluGluToContinToZZTo2e2tau_2018, 'GluGluToContinToZZTo2mu2nu_2018':GluGluToContinToZZTo2mu2nu_2018, 'GluGluToContinToZZTo2mu2tau_2018':GluGluToContinToZZTo2mu2tau_2018, 'GluGluToContinToZZTo4e_2018':GluGluToContinToZZTo4e_2018, 'GluGluToContinToZZTo4mu_2018':GluGluToContinToZZTo4mu_2018, 'GluGluToContinToZZTo4tau_2018':GluGluToContinToZZTo4tau_2018,
@@ -2613,6 +2625,7 @@ sample_dict={
     'TT_2018':TT_2018, 'TT_SemiLep_2018':TT_SemiLep_2018, 'TT_Had_2018':TT_Had_2018,#'TT_DiLep_2018':TT_DiLep_2018, 
     'WJets_2018':WJets_2018, 'WJetsHT70to100_2018':WJetsHT70to100_2018, 'WJetsHT100to200_2018':WJetsHT100to200_2018, 'WJetsHT200to400_2018':WJetsHT200to400_2018, 'WJetsHT400to600_2018':WJetsHT400to600_2018, 'WJetsHT600to800_2018':WJetsHT600to800_2018, 'WJetsHT800to1200_2018':WJetsHT800to1200_2018, 'WJetsHT1200to2500_2018':WJetsHT1200to2500_2018, 'WJetsHT2500toInf_2018':WJetsHT2500toInf_2018,
     'DYJetsToLL_2018':DYJetsToLL_2018, 'DY1JetsToLL_2018':DY1JetsToLL_2018, 'DY2JetsToLL_2018':DY2JetsToLL_2018, 'DY3JetsToLL_2018':DY3JetsToLL_2018, 'DY4JetsToLL_2018':DY4JetsToLL_2018, 
+    'SampleHTFake_2018': SampleHTFake_2018,
     #'DYJetsToLL_Fake_2018':DYJetsToLL_Fake_2018, 'DY1JetsToLL_Fake_2018':DY1JetsToLL_Fake_2018, 'DY2JetsToLL_Fake_2018':DY2JetsToLL_Fake_2018, 'DY3JetsToLL_Fake_2018':DY3JetsToLL_Fake_2018, 'DY4JetsToLL_Fake_2018':DY4JetsToLL_Fake_2018,
     #'DYJetsM_2018':DYJetsM_2018, 'DYJetsToLLM5to50_2018':DYJetsToLLM5to50_2018, 'DYJetsToLLM50_2018':DYJetsToLLM50_2018,
     # to here
