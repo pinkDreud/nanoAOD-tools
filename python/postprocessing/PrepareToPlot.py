@@ -111,7 +111,7 @@ for k, v in merge_dict.items():
             continue
 
     else:
-        if not (k.startswith('DataHT') or k.startswith('DY') or k.startswith('WJets') or k.startswith('ZZtoLep')):
+        if not (k.startswith('DataHT') or k.startswith('DY') or k.startswith('WJets') or k.startswith('GluGluToContin') or k.startswith('ZZ')):
             continue
 
     if k.startswith('Fake'):
